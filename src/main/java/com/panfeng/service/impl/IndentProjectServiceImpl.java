@@ -1,0 +1,169 @@
+package com.panfeng.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+
+import com.panfeng.domain.GlobalConstant;
+import com.panfeng.persist.FlowDateMapper;
+import com.panfeng.persist.IndentFlowMapper;
+import com.panfeng.persist.IndentProjectMapper;
+import com.panfeng.resource.model.ActivitiTask;
+import com.panfeng.resource.model.FlowDate;
+import com.panfeng.resource.model.IndentFlow;
+import com.panfeng.resource.model.IndentProject;
+import com.panfeng.resource.model.UserViewModel;
+import com.panfeng.service.IndentActivitiService;
+import com.panfeng.service.IndentCommentService;
+import com.panfeng.service.IndentProjectService;
+import com.panfeng.service.UserTempService;
+
+@Service
+public class IndentProjectServiceImpl implements IndentProjectService {
+
+	@Autowired
+	IndentProjectMapper indentProjectMapper;
+	@Autowired
+	IndentActivitiService indentActivitiService;
+	@Autowired
+	IndentFlowMapper indentFlowMapper;
+	@Autowired
+	FlowDateMapper flowDateMapper;
+	@Autowired
+	IndentCommentService indentCommentService;
+	@Autowired
+	ApplicationContext applicationContext;
+
+	@Override
+	public boolean save(IndentProject indentProject) {
+		indentProjectMapper.save(indentProject);
+		if (indentProject != null) {
+			indentCommentService.createSystemMsg(
+					"创建了 " + indentProject.getProjectName() + "项目",
+					indentProject);
+			return indentActivitiService.startProcess(indentProject);
+		}
+		return false;
+	}
+
+	@Override
+	public long update(IndentProject indentProject) {
+		return indentProjectMapper.update(indentProject);
+	}
+
+	@Override
+	public long delete(IndentProject indentProject) {
+		return indentProjectMapper.delete(indentProject);
+	}
+
+	@Override
+	public List<IndentProject> findProjectList(IndentProject indentProject) {
+		UserTempService ust = applicationContext.getBean(UserTempService.class);
+		String userType = indentProject.getUserType();
+		long userId = indentProject.getUserId();
+		UserViewModel userViewModel = ust.getInfo(userType, userId);
+		String userName = userViewModel.getOrgName();
+		List<IndentProject> list=null;
+		switch (userType) {
+		// 用户身份 -- 客户
+		case GlobalConstant.ROLE_CUSTOMER:
+			indentProject.setUserName(userName);
+			list= indentProjectMapper
+					.findProjectByUserName(indentProject);
+			break;
+		// 用户身份 -- 供应商
+		case GlobalConstant.ROLE_PROVIDER:
+			indentProject.setTeamName(userName);
+			list= indentProjectMapper
+					.findProjectByUserName(indentProject);
+			break;
+		// 用户身份 -- 视频管家
+		case GlobalConstant.ROLE_MANAGER:
+			list= indentProjectMapper.findProjectList(indentProject);
+			break;
+		}
+		return list;
+	}
+
+	@Override
+	public IndentProject getProjectInfo(IndentProject indentProject) {
+		return indentProjectMapper.findProjectInfo(indentProject);
+	}
+
+	@Override
+	public IndentProject getRedundantProject(IndentProject indentProject) {
+		indentProject = indentProjectMapper.findProjectInfo(indentProject);
+		List<IndentFlow> listDates = indentFlowMapper
+				.findFlowDateByIndentId(indentProject);
+		IndentFlow.indentProjectFillDate(indentProject, listDates);
+		return indentProject;
+	}
+
+	@Override
+	public boolean updateIndentProject(IndentProject indentProject) {
+		// update project
+		long l = indentProjectMapper.update(indentProject);
+		if (l > 0) {
+			List<IndentFlow> listDates = indentFlowMapper
+					.findFlowDateByIndentId(indentProject);
+			List<FlowDate> dates = IndentFlow.getFlowDates(listDates);
+			IndentFlow.updateFlowDates(indentProject, dates);
+			for (FlowDate flowDate : dates) {
+				flowDateMapper.update(flowDate);
+			}
+			indentCommentService.createSystemMsg(
+					"更新了 " + indentProject.getProjectName() + "项目",
+					indentProject);
+			;
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public ActivitiTask getTaskInfo(IndentProject indentProject) {
+		String taskName = indentProject.getTask().getName();
+		List<ActivitiTask> activitiTasks = indentActivitiService
+				.getHistoryProcessTask(indentProject);
+
+		ActivitiTask at = null;
+		for (ActivitiTask activitiTask : activitiTasks) {
+			if (activitiTask.getName().equals(taskName)) {
+				at = activitiTask;
+				break;
+			}
+		}
+		if (at != null) {
+			// 填充预计时间
+			IndentFlow indentFlow = indentFlowMapper.findFlowDateByFlowKey(
+					indentProject.getId(), at.getTaskDefinitionKey());
+			at.setScheduledTime(new FlowDate(indentFlow.getFdId(), indentFlow
+					.getFdFlowId(), indentFlow.getFdStartTime(), indentFlow
+					.getFdTaskId()));
+		} else {
+			at = new ActivitiTask();
+		}
+		return at;
+	}
+
+	@Override
+	public String[] getTags() {
+		String[] tags = new String[6];
+		tags[0] = "网站下单";
+		tags[1] = "友情推荐";
+		tags[2] = "活动下单";
+		tags[3] = "渠道优惠";
+		tags[4] = "团购下单";
+		tags[5] = "媒体推广";
+		return tags;
+	}
+
+	@Override
+	public boolean cancelProject(IndentProject indentProject) {
+		indentProject.setState(IndentProject.PROJECT_CANCEL);
+		long l = indentProjectMapper.cancelProject(indentProject);
+		return (l > 0);
+	}
+}

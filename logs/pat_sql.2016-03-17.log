@@ -1,0 +1,57 @@
+2016-03-17 14:22:06,296 INFO                    
+SELECT MAX(r.POS) FROM RIGHTS r 
+ {executed in 2 msec}
+2016-03-17 14:22:06,431 INFO                    
+SELECT MAX(r.CODE) FROM RIGHTS r WHERE r.POS = 0 
+ {executed in 1 msec}
+2016-03-17 14:37:31,890 INFO                    
+SELECT MAX(r.POS) FROM RIGHTS r 
+ {executed in 1 msec}
+2016-03-17 14:38:02,291 INFO                    
+SELECT MAX(r.POS) FROM RIGHTS r 
+ {executed in 1 msec}
+2016-03-17 14:39:30,973 INFO                    
+SELECT MAX(r.POS) FROM RIGHTS r 
+ {executed in 1 msec}
+2016-03-17 14:40:03,342 INFO                    
+SELECT MAX(r.POS) FROM RIGHTS r 
+ {executed in 1 msec}
+2016-03-17 14:40:38,704 INFO                    
+SELECT MAX(r.POS) FROM RIGHTS r 
+ {executed in 1 msec}
+2016-03-17 14:41:36,293 INFO                    
+SELECT MAX(r.POS) FROM RIGHTS r 
+ {executed in 1 msec}
+2016-03-17 14:42:44,948 INFO                    
+SELECT MAX(r.POS) FROM RIGHTS r 
+ {executed in 1 msec}
+2016-03-17 14:43:10,253 INFO                    
+SELECT MAX(r.POS) FROM RIGHTS r 
+ {executed in 1 msec}
+2016-03-17 14:50:06,959 INFO                    
+SELECT MAX(r.POS) FROM RIGHTS r 
+ {executed in 1 msec}
+2016-03-17 14:50:07,040 INFO                    
+INSERT INTO RIGHTS( RIGHTNAME, URL, RIGHTDESCRIPTION, ICON, PID, SEQ, status, RESOURCETYPE, 
+POS, CODE, ISCOMMON ) VALUES ( '根节点', NULL, 'root', NULL, NULL, 0, 1, 0, 0, 1, true ) 
+ {executed in 5 msec}
+2016-03-17 14:51:42,680 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE 1 = 1 AND r.RIGHTID = 22 
+ {executed in 2 msec}
+2016-03-17 14:51:59,044 INFO                    
+SELECT MAX(r.POS) FROM RIGHTS r 
+ {executed in 1 msec}
+2016-03-17 14:51:59,126 INFO                    
+SELECT MAX(r.CODE) FROM RIGHTS r WHERE r.POS = 0 
+ {executed in 2 msec}
+2016-03-17 14:51:59,145 INFO                    
+INSERT INTO RIGHTS( RIGHTNAME, URL, RIGHTDESCRIPTION, ICON, PID, SEQ, status, RESOURCETYPE, 
+POS, CODE, ISCOMMON ) VALUES ( '根节点', NULL, 'root', NULL, NULL, 0, 1, 0, 0, 2, false ) 
+ {executed in 5 msec}
+2016-03-17 14:52:21,840 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE 1 = 1 AND r.RIGHTID = 23 
+ {executed in 2 msec}

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.TeamMapper">
+
+	<cache />
+
+	<select id="listWithPagination" resultType="Team">
+		<![CDATA[
+			SELECT t.TEAMID AS teamId,
+				   t.TEAMNAME AS teamName,
+				   t.TEAMPHOTOURL AS teamPhotoUrl,
+				   t.TEAMDESCRIPTION AS teamDescription,
+				   t.RECOMMENDATION AS recommendation,
+				   t.CITY AS city,
+				   t.LINKMAN AS linkman,
+				   t.WEBCHAT AS webchat,
+				   t.QQ AS qq,
+				   t.OFFICIALSITE AS officialSite,
+				   t.SCALE AS scale,
+				   t.ESTABLISHDATE AS establishDate,
+				   t.BUSINESS AS business,
+				   t.BUSINESSDESC AS businessDesc,
+				   t.PRICERANGE AS priceRange,
+				   t.DEMAND AS demand,
+				   t.INFORESOURCE AS infoResource,
+				   t.DESCRIPTION AS description,
+				   DATE_FORMAT(t.CREATEDATE,'%Y-%m-%d %T') AS createDate,
+				   DATE_FORMAT(t.UPDATEDATE,'%Y-%m-%d') AS updateDate,
+				   t.PHONENUMBER AS phoneNumber,
+				   t.EMAIL AS email,
+				   t.ADDRESS AS address,
+				   t.FLAG AS flag,
+				   t.LOGINNAME AS loginName
+			FROM TEAM t
+				WHERE 1 = 1
+					AND t.flag <> 3
+		]]>
+		<if test="teamId != null and teamId != ''">
+			AND t.TEAMID = ${teamId}
+		</if>
+		<if test="flag != null and flag != ''">
+			AND t.FLAG = #{flag}
+		</if>
+		<if test="priceRange != null and priceRange != ''">
+			AND t.PRICERANGE = #{priceRange}
+		</if>
+		
+		<if test="business != null and business != ''">
+			<foreach collection="business" item="bus" separator="OR" open="AND (" close=")">
+				t.BUSINESS LIKE CONCAT(CONCAT('%',#{bus}),'%')
+			</foreach>
+			
+		</if>
+		<![CDATA[		   
+			ORDER BY t.OD ASC,UPDATEDATE DESC,CREATEDATE DESC
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+
+	<select id="maxSize" resultType="long">
+		<![CDATA[
+			SELECT COUNT(1)
+			FROM TEAM t
+				WHERE 1 = 1
+					AND t.flag <> 3
+		]]>
+		<if test="teamId != null and teamId != ''">
+			AND t.TEAMID = ${teamId}
+		</if>
+		
+		<if test="flag != null and flag != ''">
+			AND t.FLAG = #{flag}
+		</if>
+		
+		<if test="loginName != null and loginName != ''">
+			AND t.LOGINNAME = #{loginName}
+		</if>
+		
+		<if test="priceRange != null and priceRange != ''">
+			AND t.PRICERANGE = #{priceRange}
+		</if>
+		
+		<if test="business != null and business != ''">
+			<foreach collection="business" item="bus" separator="OR" open="AND (" close=")">
+				t.BUSINESS LIKE CONCAT(CONCAT('%',#{bus}),'%')
+			</foreach>
+			
+		</if>
+	</select>
+
+	<insert id="save" useGeneratedKeys="true" keyProperty="teamId"
+		parameterType="Team">
+		<![CDATA[
+			INSERT INTO TEAM (
+				TEAMNAME ,
+				TEAMPHOTOURL ,
+				TEAMDESCRIPTION ,
+				OD,
+				PHONENUMBER,
+				PASSWORD,
+				EMAIL,
+				ADDRESS,
+				FLAG,
+				LOGINNAME,
+				RECOMMENDATION,
+				CITY,
+				LINKMAN,
+				WEBCHAT,
+				QQ,
+				OFFICIALSITE,
+				SCALE,
+				ESTABLISHDATE,
+				BUSINESS,
+				BUSINESSDESC,
+				PRICERANGE,
+				DEMAND,
+				INFORESOURCE,
+				DESCRIPTION
+			) VALUES (
+				#{teamName},
+				#{teamPhotoUrl},
+				#{teamDescription},
+				${od},
+				#{phoneNumber},
+				#{password},
+				#{email},
+				#{address},
+				#{flag},
+				#{loginName},
+				#{recommendation},
+				${city},
+				#{linkman},
+				#{webchat},
+				#{qq},
+				#{officialSite},
+				#{scale},
+				#{establishDate},
+				#{business},
+				#{businessDesc},
+				${priceRange},
+				#{demand},
+				${infoResource},
+				#{description}
+			)
+		]]>
+	</insert>
+
+	<delete id="delete">
+		<![CDATA[
+			DELETE FROM TEAM
+				WHERE TEAMID = ${teamId}
+		]]>
+	</delete>
+
+	<update id="update">
+		<![CDATA[
+			UPDATE TEAM
+				SET TEAMNAME = #{teamName},
+					TEAMDESCRIPTION = #{teamDescription},
+					EMAIL = #{email},
+					ADDRESS = #{address},
+					FLAG = ${flag},
+					RECOMMENDATION = #{recommendation},
+					CITY = ${city},
+					LINKMAN = #{linkman},
+					WEBCHAT = #{webchat},
+					QQ = #{qq},
+					OFFICIALSITE = #{officialSite},
+					SCALE = #{scale},
+					ESTABLISHDATE = #{establishDate},
+					BUSINESS = #{business},
+					BUSINESSDESC = #{businessDesc},
+					PRICERANGE = ${priceRange},
+					DEMAND = #{demand},
+					INFORESOURCE = ${infoResource},
+					DESCRIPTION = #{description},
+					PHONENUMBER = #{phoneNumber}
+		]]>
+		<if test="od != null and od != ''">
+			<![CDATA[
+				,OD = ${od}
+			]]>
+		</if>
+		<if test="loginName != null and loginName != ''">
+			<![CDATA[
+				,LOGINNAME = #{loginName}
+			]]>
+		</if>
+		<if test="phoneNumber != null and phoneNumber != ''">
+			<![CDATA[
+				,PHONENUMBER = #{phoneNumber}
+			]]>
+		</if>
+		<![CDATA[
+			WHERE TEAMID = ${teamId}
+		]]>
+	</update>
+
+	<update id="saveTeamPhotoUrl">
+		<![CDATA[
+			UPDATE TEAM
+				SET TEAMPHOTOURL = #{teamPhotoUrl}
+			WHERE TEAMID = ${teamId}
+		]]>
+	</update>
+
+	<select id="findTeamByArray" resultType="Team">
+		<![CDATA[
+			SELECT t.TEAMID AS teamId,
+				   t.TEAMPHOTOURL AS teamPhotoUrl
+			FROM TEAM t
+			WHERE 1 = 1 
+				AND t.flag <> 3
+		]]>
+		<if test="ids != null and ids != ''">
+			AND TEAMID IN
+			<foreach collection="ids" open="(" close=")" item="id"
+				separator=",">
+				${id}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="findTeamById" resultType="Team">
+		<![CDATA[
+			SELECT t.TEAMID AS teamId,
+				   t.TEAMNAME AS teamName,
+				   t.FLAG AS flag,
+				   t.TEAMPHOTOURL AS teamPhotoUrl,
+				   t.TEAMDESCRIPTION AS teamDescription,
+				   t.RECOMMENDATION AS recommendation,
+				   t.CITY AS city,
+				   t.LINKMAN AS linkman,
+				   t.WEBCHAT AS webchat,
+				   t.QQ AS qq,
+				   t.OFFICIALSITE AS officialSite,
+				   t.SCALE AS scale,
+				   t.ESTABLISHDATE AS establishDate,
+				   t.BUSINESS AS business,
+				   t.BUSINESSDESC AS businessDesc,
+				   t.PRICERANGE AS priceRange,
+				   t.DEMAND AS demand,
+				   t.INFORESOURCE AS infoResource,
+				   t.DESCRIPTION AS description,
+				   t.PHONENUMBER AS phoneNumber,
+				   t.EMAIL AS email,
+				   t.ADDRESS AS address,
+				   t.LOGINNAME AS loginName
+			FROM TEAM t
+			WHERE TEAMID = ${teamId}
+		]]>
+	</select>
+
+	<select id="getAll" resultType="Team">
+		<![CDATA[
+			SELECT t.TEAMID AS teamId,
+				   t.TEAMNAME AS teamName,
+				   t.TEAMPHOTOURL AS teamPhotoUrl,
+				   t.TEAMDESCRIPTION AS teamDescription,
+				   t.OD AS od,
+				   t.RECOMMENDATION AS recommendation,
+				   t.CITY AS city,
+				   t.LINKMAN AS linkman,
+				   t.WEBCHAT AS webchat,
+				   t.QQ AS qq,
+				   t.OFFICIALSITE AS officialSite,
+				   t.SCALE AS scale,
+				   t.ESTABLISHDATE AS establishDate,
+				   t.BUSINESS AS business,
+				   t.BUSINESSDESC AS businessDesc,
+				   t.PRICERANGE AS priceRange,
+				   t.DEMAND AS demand,
+				   t.INFORESOURCE AS infoResource,
+				   t.DESCRIPTION AS description,
+				   t.EMAIL AS email,
+				   t.ADDRESS AS address,
+				   t.LOGINNAME AS loginName
+			FROM TEAM t
+			WHERE 1 = 1
+				AND TEAMNAME != ''
+				AND t.flag <> 3
+		]]>
+	</select>
+	
+	<select id="checkTeam" resultType="Team">
+		<![CDATA[
+			SELECT t.TEAMID AS teamId,
+				   t.TEAMNAME AS teamName,
+				   t.TEAMPHOTOURL AS teamPhotoUrl,
+				   t.TEAMDESCRIPTION AS teamDescription,
+				   t.PHONENUMBER AS phoneNumber,
+				   t.EMAIL AS email,
+				   t.ADDRESS AS address,
+				   t.FLAG AS flag,
+				   t.LOGINNAME AS loginName,
+				   t.RECOMMENDATION AS recommendation
+			FROM TEAM t
+				WHERE t.LOGINNAME = #{loginName}
+					AND t.PASSWORD = #{password}
+		]]>
+	</select>
+	
+	<update id="recover">
+		<![CDATA[
+			UPDATE TEAM
+				SET PASSWORD = #{password}
+			WHERE PHONENUMBER = #{phoneNumber}
+		]]>
+	</update>
+	
+	<update id="updateTeamInfomation">
+		<![CDATA[
+			UPDATE TEAM
+				SET TEAMNAME = #{teamName},
+					TEAMDESCRIPTION = #{teamDescription},
+					EMAIL = #{email},
+					ADDRESS = #{address},
+					UPDATEDATE = CURRENT_TIMESTAMP,
+					CITY = ${city},
+					LINKMAN = #{linkman},
+					WEBCHAT = #{webchat},
+					QQ = #{qq},
+					OFFICIALSITE = #{officialSite},
+					SCALE = #{scale},
+					ESTABLISHDATE = #{establishDate},
+					BUSINESS = #{business},
+					BUSINESSDESC = #{businessDesc},
+					PRICERANGE = ${priceRange},
+					DEMAND = #{demand},
+					INFORESOURCE = ${infoResource},
+					DESCRIPTION = #{description},
+					PHONENUMBER = #{phoneNumber}
+			WHERE TEAMID = ${teamId}
+		]]>
+	</update>
+	
+	<update id="updatePasswordByLoginName">
+		<![CDATA[
+			UPDATE TEAM
+				SET PASSWORD = #{password}
+			WHERE LOGINNAME = #{loginName}
+		]]>
+	</update>
+	
+	<update id="updateTeamStatus">
+		<![CDATA[
+			UPDATE TEAM
+				SET FLAG = 0
+			WHERE TEAMID = ${teamId}
+		]]>
+	</update>
+	
+	<select id="checkExist" resultType="long">
+		<![CDATA[
+			SELECT COUNT(1)
+			FROM TEAM t
+				WHERE 1 = 1
+		]]>
+		<if test="phoneNumber != null and phoneNumber != ''">
+			AND t.PHONENUMBER = #{phoneNumber}
+		</if>
+		<if test="loginName != null and loginName != ''">
+			AND t.LOGINNAME = #{loginName}
+		</if>
+	</select>
+	
+	
+		<select id="findTeamByNameOrContact" resultType="Team">
+		<![CDATA[
+			SELECT 
+				   t.TEAMID AS teamId,
+				   t.TEAMNAME AS teamName,
+				   t.PHONENUMBER AS phoneNumber,
+				   t.LOGINNAME AS loginName
+			 FROM TEAM t WHERE 1=1
+		]]>
+		
+		<if test="teamName != null and teamName != ''">
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')  
+		</if>
+		<if test="loginName != null and loginName != ''">
+			AND t.LOGINNAME LIKE CONCAT('%',#{loginName},'%') 
+		</if>
+		<if test="(loginName == null or loginName == '') and (teamName == null or teamName == '') ">
+			AND 1=2
+		</if>
+	</select>
+</mapper>

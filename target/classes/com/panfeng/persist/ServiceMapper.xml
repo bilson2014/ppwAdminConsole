@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.ServiceMapper">
+
+	<cache />
+
+	<resultMap type="Service" id="ServiceRM">
+		<id property="serviceId" column="serviceId"/>
+		<result property="serviceName" column="serviceName"/>
+		<result property="serviceDescription" column="serviceDescription"/>
+		<result property="servicePrice" column="servicePrice"/>
+		<result property="serviceRealPrice" column="serviceRealPrice"/>
+		<result property="serviceDiscount" column="serviceDiscount"/>
+		<result property="serviceOd" column="serviceOd"/>
+		<result property="mcoms" column="mcoms"/>
+		<association property="product" javaType="Product" column="productId"
+			resultMap="productRM" />
+	</resultMap>
+	
+	<resultMap type="Product" id="productRM">
+		<id property="productId" column="productId" />
+		<result property="videoUrl" column="videoUrl" />
+		<result property="videoDescription" column="videoDescription" />
+		<result property="pDescription" column="pDescription" />
+		<result property="productName" column="productName" />
+		<result property="picHDUrl" column="picHDUrl" />
+		<result property="picLDUrl" column="picLDUrl" />
+		<result property="productType" column="productType" />
+		<result property="uploadDate" column="uploadDate" />
+		<result property="recommend" column="recommend" />
+		<result property="supportCount" column="supportCount" />
+		<result property="videoLength" column="videoLength" />
+		<association property="team" column="teamId" javaType="Team"
+			resultMap="teamRM" />
+	</resultMap>
+	
+	<resultMap type="Team" id="teamRM">
+		<id property="teamId" column="teamId" />
+		<result property="teamName" column="teamName" />
+		<result property="teamPhotoUrl" column="teamPhotoUrl" />
+		<result property="teamDescription" column="teamDescription" />
+		<result property="od" column="od" />
+		<result property="createDate" column="createDate" />
+	</resultMap>
+	
+	<select id="listWithPagination" resultType="Service">
+		<![CDATA[
+			SELECT s.SERVICEID AS serviceId,
+				   s.SERVICENAME AS serviceName,
+				   s.SERVICEDESCRIPTION AS serviceDescription,
+				   s.SERVICEPRICE AS servicePrice,
+				   s.SERVICEREALPRICE AS serviceRealPrice,
+				   s.SERVICEDISCOUNT AS serviceDiscount,
+				   s.SERVICEOD AS serviceOd,
+				   s.MCOMS AS mcoms,
+				   s.PRODUCTID AS productId,
+				   p.PRODUCTNAME AS productName
+			FROM SERVICE s
+			LEFT JOIN PRODUCT p
+			ON s.PRODUCTID = p.PRODUCTID
+			WHERE 1 = 1
+		]]>
+		<if test="productId != null and productId != ''">
+			AND s.PRODUCTID = ${productId}
+		</if>
+		<![CDATA[
+			ORDER BY s.SERVICEOD,SERVICEID
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+	
+	<select id="maxSize" resultType="long">
+		<![CDATA[
+			SELECT COUNT(1) 
+				FROM SERVICE s
+			WHERE 1 = 1
+		]]>
+		<if test="productId != null and productId != ''">
+			AND s.PRODUCTID = ${productId}
+		</if>
+	</select>
+	
+	<select id="findServiceById" resultMap="ServiceRM">
+		<![CDATA[
+			SELECT s.SERVICEID AS serviceId,
+				   s.SERVICENAME AS serviceName,
+				   s.SERVICEDESCRIPTION AS serviceDescription,
+				   s.SERVICEPRICE AS servicePrice,
+				   s.SERVICEREALPRICE AS serviceRealPrice,
+				   s.SERVICEDISCOUNT AS serviceDiscount,
+				   s.SERVICEOD AS serviceOd,
+				   s.MCOMS AS mcoms,
+				   pro.PRODUCTID AS productId,
+				   pro.VIDEOURL AS videoUrl,
+				   pro.VIDEODESCRIPTION AS videoDescription,
+				   pro.PDESCRIPTION AS pDescription,
+				   pro.PRODUCTNAME AS productName,
+				   pro.PICHDURL AS picHDUrl,
+				   pro.PICLDURL AS picLDUrl,
+				   pro.PRODUCTTYPE AS productType,
+				   DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d %T') AS uploadDate,
+				   pro.RECOMMEND AS recommend,
+				   pro.SUPPORTCOUNT AS supportCount,
+				   pro.VIDEOLENGTH AS videoLength,
+				   t.TEAMID AS teamId,
+				   t.TEAMNAME AS teamName,
+				   t.TEAMPHOTOURL AS teamPhotoUrl,
+				   t.TEAMDESCRIPTION AS teamDescription,
+				   t.OD AS od,
+				   DATE_FORMAT(t.CREATEDATE,'%Y-%m-%d %T') AS createDate
+			FROM SERVICE s 
+			LEFT JOIN PRODUCT pro ON s.PRODUCTID = pro.PRODUCTID
+			LEFT JOIN TEAM t ON pro.TEAMID = t.TEAMID
+			WHERE s.SERVICEID = ${serviceId}
+		]]>
+	</select>
+	
+	<delete id="deleteByProduct">
+		<![CDATA[
+			DELETE FROM SERVICE
+				WHERE PRODUCTID = ${productId}
+		]]>
+	</delete>
+
+	<delete id="delete">
+		<![CDATA[
+			DELETE FROM SERVICE
+				WHERE SERVICEID = ${serviceId}
+		]]>
+	</delete>
+	
+	<insert id="save" useGeneratedKeys="true" keyProperty="serviceId"
+		parameterType="Service">
+		<![CDATA[
+			INSERT INTO SERVICE (
+				SERVICENAME,
+				SERVICEDESCRIPTION,
+				SERVICEPRICE,
+				SERVICEREALPRICE,
+				SERVICEDISCOUNT,
+				SERVICEOD,
+				MCOMS,
+				PRODUCTID
+			) VALUES (
+				#{serviceName},
+				#{serviceDescription},
+				${servicePrice},
+				${serviceRealPrice},
+				${serviceDiscount},
+				${serviceOd},
+				${mcoms},
+				${productId}
+			)
+		]]>
+	</insert>
+	
+	<update id="update">
+		<![CDATA[
+			UPDATE SERVICE
+				SET SERVICENAME = #{serviceName},
+					SERVICEDESCRIPTION = #{serviceDescription},
+					SERVICEPRICE = ${servicePrice},
+					SERVICEREALPRICE = ${serviceRealPrice},
+					SERVICEDISCOUNT = ${serviceDiscount},
+					SERVICEOD = ${serviceOd},
+					MCOMS = ${mcoms},
+					PRODUCTID = ${productId},
+					UPDATEDATE = CURRENT_TIMESTAMP
+			WHERE SERVICEID = ${serviceId}
+		]]>
+	</update>
+	
+	<select id="loadService" resultType="Service">
+		<![CDATA[
+			SELECT s.SERVICEID AS serviceId,
+					   s.SERVICENAME AS serviceName,
+					   s.SERVICEDESCRIPTION AS serviceDescription,
+					   s.SERVICEPRICE AS servicePrice,
+					   s.SERVICEREALPRICE AS serviceRealPrice,
+					   s.SERVICEDISCOUNT AS serviceDiscount,
+					   s.SERVICEOD AS serviceOd,
+					   s.MCOMS AS mcoms,
+					   pro.PRODUCTID AS productId,
+					   pro.PRODUCTNAME AS productName
+				FROM SERVICE s 
+				LEFT JOIN PRODUCT pro ON s.PRODUCTID = pro.PRODUCTID
+				WHERE s.PRODUCTID = ${productId}
+				ORDER BY SERVICEOD 
+		]]>
+	</select>
+	
+	<select id="loadSingleService" resultType="Service">
+		<![CDATA[
+				SELECT s.SERVICEID AS serviceId,
+					   s.SERVICEPRICE AS servicePrice,
+					   s.SERVICEREALPRICE AS serviceRealPrice,
+					   s.MCOMS as mcoms
+				FROM SERVICE s 
+				WHERE s.PRODUCTID = ${productId}
+				ORDER BY SERVICEOD ASC
+				LIMIT 1
+		]]>
+	</select>
+	
+	<update id="updatePriceAndMcoms">
+		<![CDATA[
+			UPDATE SERVICE
+				SET SERVICEPRICE = ${servicePrice},
+					MCOMS = ${mcoms},
+					SERVICEREALPRICE = ${serviceRealPrice},
+					UPDATEDATE = CURRENT_TIMESTAMP
+			WHERE SERVICEID = ${serviceId}
+		]]>
+	</update>
+	
+	<select id="loadServiceById" resultType="Service">
+		<![CDATA[
+			SELECT s.SERVICEID AS serviceId,
+				   s.SERVICENAME AS serviceName,
+				   s.SERVICEDESCRIPTION AS serviceDescription,
+				   s.SERVICEPRICE AS servicePrice,
+				   s.SERVICEREALPRICE AS serviceRealPrice,
+				   s.SERVICEDISCOUNT AS serviceDiscount,
+				   s.SERVICEOD AS serviceOd,
+				   s.MCOMS AS mcoms
+			FROM SERVICE s 
+			WHERE s.SERVICEID = ${serviceId}
+		]]>
+	</select>
+</mapper>

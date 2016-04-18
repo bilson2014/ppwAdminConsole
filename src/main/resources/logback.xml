@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+				%d %-5level %X{session} %X{username} %-15X{client} %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="sql" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+				%d %-5level %X{session} %X{username} %-15X{client} %n%msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="sql-file"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/pat_sql.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/pat_sql.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d %-5level %X{session} %X{username} %-15X{client} %n%msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="service-file"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/pat_service.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/pat_service.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d %-5level %X{session} %X{username} %-15X{client} %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="error-file"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/pat_error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/pat_error.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d %-5level %X{session} %X{username} %-15X{client} %n%msg%n</pattern>
+		</encoder>
+	</appender>
+	<!-- jdbc.resultsettable jdbc.sqlonly jdbc.sqltiming jdbc.audit jdbc.resultset 
+		jdbc.connection -->
+	<logger name="jdbc.sqltiming" level="info" additivity="false">
+		<appender-ref ref="sql" />
+		<appender-ref ref="sql-file" />
+	</logger>
+	<logger name="debug" level="info" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	<logger name="service" level="info" additivity="false">
+		<appender-ref ref="console" />
+		<appender-ref ref="service-file" />
+	</logger>
+	<logger name="error" level="warn" additivity="false">
+		<appender-ref ref="console" />
+		<appender-ref ref="error-file" />
+	</logger>
+	<root level="error">
+		<appender-ref ref="console" />
+		<appender-ref ref="error-file" />
+	</root>
+</configuration>

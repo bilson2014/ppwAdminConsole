@@ -1,0 +1,65 @@
+2016-03-29 13:01:50,015 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 4 msec}
+2016-03-29 13:02:23,005 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 3 msec}
+2016-03-29 13:02:39,244 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 4 msec}
+2016-03-29 15:11:27,508 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 6 msec}
+2016-03-29 15:11:50,205 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 5 msec}
+2016-03-29 15:12:04,709 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 4 msec}
+2016-03-29 15:13:53,077 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 5 msec}
+2016-03-29 15:13:53,322 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 4 msec}
+2016-03-29 15:14:10,290 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 4 msec}
+2016-03-29 15:14:10,479 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 3 msec}
+2016-03-29 15:25:41,773 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 3 msec}
+2016-03-29 15:26:15,521 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 5 msec}
+2016-03-29 15:32:13,257 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 6 msec}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+
+	version="2.0">
+	<description>Security functions library</description>
+	<tlib-version>1.0</tlib-version>
+	<short-name>r</short-name>
+
+	<!-- 一个参数的URL -->
+	<tag>
+		<name>permission</name>
+		<tag-class>com.panfeng.taglib.SecurityTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>uri</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<!-- 两个参数的URL -->
+	<tag>
+		<name>mulparampermission</name>
+		<tag-class>com.panfeng.taglib.SecurityTagMultipleParam</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>uri</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		
+		<attribute>
+			<name>uri2</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<!-- 当前角色 -->
+	<tag>
+		<name>identity</name>
+		<tag-class>com.panfeng.taglib.IdentityTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>role</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<!-- 输出登录名 -->
+	<tag>
+		<name>outName</name>
+		<tag-class>com.panfeng.taglib.OutNameTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+	
+</taglib>

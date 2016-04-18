@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.IndentProjectMapper">
+
+	<cache />
+	<insert id="save" useGeneratedKeys="true" keyProperty="id"
+		parameterType="IndentProject">
+		<![CDATA[
+		INSERT INTO INDENT_PROJECT (
+			IP_PROJECT_NAME,
+			IP_USER_NAME,
+			IP_USER_CONTACT,
+			IP_USER_PHONE,
+			IP_TEAM_NAME,
+			IP_TEAM_CONTACT,
+			IP_TEAM_PHONE,
+			IP_PRICE,
+			IP_USER_TYPE,
+			IP_USER_ID,
+			IP_DESCRIPTION,
+			IP_SERIAL,
+			IP_SOURCE,
+			IP_STATE
+		)VALUES (
+			#{projectName},
+			#{userName},
+			#{userContact},
+			#{userPhone},
+			#{teamName},
+			#{teamContact},
+			#{teamPhone},
+			#{price},
+			#{userType},
+			${userId},
+			#{description},
+			#{serial},
+			#{source},
+			${state}
+		);
+		]]>
+	</insert>
+
+	<update id="update">
+		<![CDATA[
+			UPDATE INDENT_PROJECT i SET 
+				i.IP_PROJECT_NAME =#{projectName} ,
+				i.IP_USER_NAME =#{userName} ,
+				i.IP_USER_CONTACT =#{userContact} ,
+				i.IP_USER_PHONE=#{userPhone} ,
+				i.IP_TEAM_NAME =#{teamName} ,
+				i.IP_TEAM_CONTACT =#{teamContact} ,
+				i.IP_TEAM_PHONE =#{teamPhone},
+				i.IP_PRICE =#{price},
+				i.IP_DESCRIPTION = #{description},
+				i.IP_USER_TYPE=#{userType},
+				i.IP_USER_ID=${userId},
+				i.IP_SERIAL=#{serial},
+				i.IP_SOURCE=#{source},
+				i.IP_STATE=${state}
+			WHERE i.IP_ID = ${id};
+		]]>
+	</update>
+	
+	<update id="cancelProject" parameterType="long">
+		<![CDATA[
+			UPDATE INDENT_PROJECT i SET
+				i.IP_STATE=${state}
+			WHERE i.IP_ID = ${id};
+		]]>
+	</update>
+	<delete id="delete">
+		<![CDATA[
+			DELETE FROM INDENT_PROJECT
+				WHERE ID = ${id}
+		]]>
+	</delete>
+
+	<select id="findProjectList" resultType="IndentProject">
+		<![CDATA[
+			SELECT 
+				i.IP_ID AS id,
+				i.IP_PROJECT_NAME AS projectName,
+				i.IP_USER_NAME AS userName,
+				i.IP_USER_CONTACT AS userContact,
+				i.IP_USER_PHONE AS userPhone,
+				i.IP_TEAM_NAME AS teamName,
+				i.IP_TEAM_CONTACT AS teamContact,
+				i.IP_TEAM_PHONE AS teamPhone,
+				i.IP_PRICE AS price,
+				i.IP_USER_TYPE AS userType,
+				i.IP_USER_ID AS userId,
+				i.IP_DESCRIPTION AS description,
+				i.IP_SERIAL AS serial,
+				i.IP_SOURCE AS source,
+				i.IP_STATE AS state
+			FROM INDENT_PROJECT i WHERE i.IP_USER_TYPE =#{userType}  AND i.IP_USER_ID=${userId} ORDER BY i.IP_ID DESC;
+		]]>
+	</select>
+
+	<select id="findProjectInfo" resultType="IndentProject">
+		<![CDATA[
+			SELECT 
+				i.IP_ID AS id,
+				i.IP_PROJECT_NAME AS projectName,
+				i.IP_USER_NAME AS userName,
+				i.IP_USER_CONTACT AS userContact,
+				i.IP_USER_PHONE AS userPhone,
+				i.IP_TEAM_NAME AS teamName,
+				i.IP_TEAM_CONTACT AS teamContact,
+				i.IP_TEAM_PHONE AS teamPhone,
+				i.IP_PRICE AS price,
+				i.IP_USER_TYPE AS userType,
+				i.IP_USER_ID AS userId,
+				i.IP_DESCRIPTION AS description,
+				i.IP_SERIAL AS serial,
+				i.IP_SOURCE AS source,
+				i.IP_STATE AS state
+			FROM INDENT_PROJECT i WHERE i.IP_ID = #{id};
+		]]>
+	</select>
+	
+	<select id="findProjectByUserName" resultType="IndentProject">
+		<![CDATA[
+			SELECT 
+				i.IP_ID AS id,
+				i.IP_PROJECT_NAME AS projectName,
+				i.IP_USER_NAME AS userName,
+				i.IP_USER_CONTACT AS userContact,
+				i.IP_USER_PHONE AS userPhone,
+				i.IP_TEAM_NAME AS teamName,
+				i.IP_TEAM_CONTACT AS teamContact,
+				i.IP_TEAM_PHONE AS teamPhone,
+				i.IP_PRICE AS price,
+				i.IP_USER_TYPE AS userType,
+				i.IP_USER_ID AS userId,
+				i.IP_DESCRIPTION AS description,
+				i.IP_SERIAL AS serial,
+				i.IP_SOURCE AS source,
+				i.IP_STATE AS state
+			FROM INDENT_PROJECT i WHERE 1=1
+		]]>
+		<if test="userName != null and userName != ''">
+			AND i.IP_USER_NAME = #{userName}
+		</if>
+		<if test="teamName != null and teamName != ''">
+			AND i.IP_TEAM_NAME = #{teamName} 
+		</if>
+		<if test="(userName == null or userName == '') and (teamName == null or teamName == '') ">
+			AND 1=2
+		</if>
+	</select>
+</mapper>

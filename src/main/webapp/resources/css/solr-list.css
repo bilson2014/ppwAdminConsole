@@ -1,0 +1,40 @@
+@CHARSET "UTF-8";
+
+.search-content {
+	display: inline-block;
+}
+
+#shelper {
+	overflow: hidden;
+	position: absolute;
+	top: 10px;
+	left: 0;
+	width: 120px;
+	border: 1px solid #CCC;
+	background: #fff;
+	z-index: 999;
+}
+
+#solrInput {
+	width: 120px;
+}
+
+#shelper li {
+	padding: 0;
+	line-height: 22px;
+	cursor: pointer;
+	width: 120px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+#shelper .search-item {
+	float: left;
+	width: 190px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+#shelper .on{ background:#f0f0f0;}

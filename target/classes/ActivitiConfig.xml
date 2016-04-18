@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		                   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		                   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		                   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		                   http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		                   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<!-- Activiti引擎配置 -->
+	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+		<property name="processEngineName" value="spring"></property>
+		<!-- 使用原有数据源和事务，当作Activiti数据源 -->
+		<property name="dataSource" ref="dataSource" />
+		<property name="transactionManager" ref="transactionManager" />
+		<!-- drop-create true（保留历史数据） -->
+		<property name="databaseSchemaUpdate" value="true" />
+		<property name="jobExecutorActivate" value="false" />
+		<!-- 自动扫描 流程文件 -->
+		<property name="deploymentResources" value="classpath*:*.bpmn"></property>
+	</bean>
+
+	<!-- Activiti引擎工厂 -->
+	<bean id="processEngineFactory" class="org.activiti.spring.ProcessEngineFactoryBean">
+		<property name="processEngineConfiguration" ref="processEngineConfiguration" />
+	</bean>
+
+	<!-- Activiti的Service -->
+	<bean id="repositoryService" factory-bean="processEngineFactory"
+		factory-method="getRepositoryService" />
+	<bean id="runtimeService" factory-bean="processEngineFactory"
+		factory-method="getRuntimeService" />
+	<bean id="formService" factory-bean="processEngineFactory"
+		factory-method="getFormService" />
+	<bean id="identityService" factory-bean="processEngineFactory"
+		factory-method="getIdentityService" />
+	<bean id="taskService" factory-bean="processEngineFactory"
+		factory-method="getTaskService" />
+	<bean id="historyService" factory-bean="processEngineFactory"
+		factory-method="getHistoryService" />
+	<bean id="managementService" factory-bean="processEngineFactory"
+		factory-method="getManagementService" />
+
+</beans>

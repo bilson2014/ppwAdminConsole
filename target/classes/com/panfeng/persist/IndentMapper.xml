@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.IndentMapper">
+	
+	<cache />
+	
+	<resultMap type="Indent" id="IndentRM">
+		<id property="indentId" column="indentId"/>
+		<result property="indentName" column="indentName"/>
+		<result property="indentNum" column="indentNum"/>
+		<result property="indentPrice" column="indentPrice"/>
+		<result property="second" column="second"/>
+		<result property="indent_tele" column="indent_tele"/>
+		<result property="indent_recomment" column="indent_recomment"/>
+		<result property="indentType" column="indentType"/>
+		<result property="serviceId" column="serviceId"/>
+		<result property="userId" column="userId"/>
+		<result property="orderDate" column="orderDate"/>
+		<result property="service_name" column="service_name"/>
+		<result property="service_price" column="service_price"/>
+		<result property="service_discount" column="service_discount"/>
+		<result property="service_realPrice" column="service_realPrice"/>
+		<result property="product_name" column="product_name"/>
+		<result property="team_name" column="team_name"/>
+		<result property="user_name" column="user_name"/>
+		<result property="user_email" column="user_email"/>
+		<association property="user" javaType="User" column="userId" 
+			resultMap="userRM"/>
+		<association property="service" javaType="Service" column="serviceId"
+			resultMap="serviceRM" />
+	</resultMap>
+	
+	<resultMap type="User" id="userRM">
+		<id property="id" column="id"/>
+		<result property="userName" column="userName"/>
+	</resultMap>
+	
+	<resultMap type="Service" id="serviceRM">
+		<id property="serviceId" column="serviceId"/>
+		<result property="serviceName" column="serviceName"/>
+		<result property="serviceDescription" column="serviceDescription"/>
+		<result property="servicePrice" column="servicePrice"/>
+		<result property="serviceRealPrice" column="serviceRealPrice"/>
+		<result property="serviceDiscount" column="serviceDiscount"/>
+		<result property="serviceOd" column="serviceOd"/>
+		<association property="product" javaType="Product" column="productId"
+			resultMap="productRM" />
+	</resultMap>
+	
+	<resultMap type="Product" id="productRM">
+		<id property="productId" column="productId" />
+		<result property="videoUrl" column="videoUrl" />
+		<result property="videoDescription" column="videoDescription" />
+		<result property="pDescription" column="pDescription" />
+		<result property="productName" column="productName" />
+		<result property="picHDUrl" column="picHDUrl" />
+		<result property="picLDUrl" column="picLDUrl" />
+		<result property="productType" column="productType" />
+		<result property="uploadDate" column="uploadDate" />
+		<result property="recommend" column="recommend" />
+		<result property="supportCount" column="supportCount" />
+		<result property="videoLength" column="videoLength" />
+	</resultMap>
+	
+	
+	<select id="listWithPagination" resultMap="IndentRM">
+		<![CDATA[
+			SELECT ind.INDENTID AS indentId,
+				   ind.INDENTNAME AS indentName,
+				   ind.INDENTNUM AS indentNum,
+				   ind.INDENTPRICE AS indentPrice,
+				   ind.SECOND AS second,
+				   ind.INDENTTYPE AS indentType,
+				   ind.SERVICEID AS serviceId,
+				   ind.USERID AS userId,
+				   ind.INDENT_TELE AS indent_tele,
+				   ind.INDENT_RECOMMENT AS indent_recomment,
+				   ser.SERVICENAME AS service_Name,
+				   ser.SERVICEPRICE AS service_price,
+				   ser.SERVICEDISCOUNT AS service_discount,
+				   ser.SERVICEREALPRICE AS service_realPrice,
+				   pro.PRODUCTNAME AS product_name,
+				   t.teamName AS team_name,
+				   u.USERNAME AS user_name,
+				   u.EMAIL AS user_email,
+				   DATE_FORMAT(ind.ORDERDATE,'%Y-%m-%d %T') AS orderDate,
+				   u.ID AS id,
+				   u.USERNAME AS userName,
+				   u.TELEPHONE AS telephone,
+				   u.EMAIL AS email,
+				   ser.SERVICEID AS serviceId,
+				   ser.SERVICENAME AS serviceName,
+				   ser.SERVICEPRICE AS servicePrice,
+				   ser.SERVICEDISCOUNT AS serviceDiscount,
+				   ser.SERVICEREALPRICE AS serviceRealPrice,
+				   pro.PRODUCTID AS productId,
+				   pro.PRODUCTNAME AS productName,
+				   pro.PRODUCTTYPE AS productType,
+				   DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d %T') AS uploadDate,
+				   pro.RECOMMEND AS recommend,
+				   pro.SUPPORTCOUNT AS supportCount
+			FROM INDENT ind 
+			LEFT JOIN USERS u ON ind.userId = u.id
+			LEFT JOIN SERVICE ser ON ser.SERVICEID = ind.SERVICEID
+			LEFT JOIN PRODUCT pro ON pro.PRODUCTID = ind.PRODUCTID
+			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
+			WHERE 1 = 1
+		]]>
+		<if test="indentId != null and indentId != ''">
+			AND ind.INDENTID LIKE CONCAT(CONCAT('%',#{indentId}),'%')
+		</if>
+		<if test="indentType != null and indentType != ''">
+			AND ind.INDENTTYPE = ${indentType}
+		</if>
+		<if test="userId != null and userId != ''">
+			AND ind.USERID = ${userId}
+		</if>
+		<if test="serviceId != null and serviceId != ''">
+			AND ind.SERVICEID = ${serviceId}
+		</if>
+		<![CDATA[
+			ORDER BY ind.ORDERDATE desc
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+	
+	<select id="maxSize" resultType="long">
+		<![CDATA[
+			SELECT COUNT(1) 
+				FROM INDENT ind 
+			LEFT JOIN USERS u ON ind.userId = u.id
+			LEFT JOIN SERVICE ser ON ser.SERVICEID = ind.SERVICEID
+			LEFT JOIN PRODUCT pro ON pro.PRODUCTID = ind.PRODUCTID
+			LEFT JOIN TEAM t ON t.TEAMID = ind.TEAMID
+			WHERE 1 = 1
+		]]>
+		<if test="indentId != null and indentId != ''">
+			AND ind.INDENTID LIKE CONCAT(CONCAT('%',#{indentId}),'%')
+		</if>
+		<if test="indentType != null and indentType != ''">
+			AND ind.INDENTTYPE = ${indentType}
+		</if>
+		<if test="userId != null and userId != ''">
+			AND ind.USERID = ${userId}
+		</if>
+		<if test="serviceId != null and serviceId != ''">
+			AND ind.SERVICEID = ${serviceId}
+		</if>
+	</select>
+	
+	<select id="findIndentById" resultMap="IndentRM">
+		<![CDATA[
+			SELECT ind.INDENTID AS indentId,
+				   ind.INDENTNAME AS indentName,
+				   ind.INDENTNUM AS indentNum,
+				   ind.INDENTPRICE AS indentPrice,
+				   ind.SECOND AS second,
+				   ind.INDENTTYPE AS indentType,
+				   ind.SERVICEID AS serviceId,
+				   ind.USERID AS userId,
+				   ind.INDENT_TELE as indent_tele,
+				   ind.INDENT_RECOMMENT AS indent_recomment,
+				   ser.SERVICENAME AS service_Name,
+				   ser.SERVICEPRICE AS service_price,
+				   ser.SERVICEDISCOUNT AS service_discount,
+				   ser.SERVICEREALPRICE AS service_realPrice,
+				   pro.PRODUCTNAME AS product_name,
+				   t.teamName AS team_name,
+				   u.USERNAME AS user_name,
+				   u.EMAIL AS user_email,
+				   DATE_FORMAT(ind.ORDERDATE,'%Y-%m-%d %T') AS orderDate,
+				   u.ID AS id,
+				   u.USERNAME AS userName,
+				   u.TELEPHONE AS telephone,
+				   u.EMAIL AS email,
+				   ser.SERVICEID AS serviceId,
+				   ser.SERVICENAME AS serviceName,
+				   ser.SERVICEPRICE AS servicePrice,
+				   ser.SERVICEDISCOUNT AS serviceDiscount,
+				   ser.SERVICEREALPRICE AS serviceRealPrice,
+				   pro.PRODUCTID AS productId,
+				   pro.PRODUCTNAME AS productName,
+				   pro.PRODUCTTYPE AS productType,
+				   DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d %T') AS uploadDate,
+				   pro.RECOMMEND AS recommend,
+				   pro.SUPPORTCOUNT AS supportCount
+			FROM INDENT ind 
+			LEFT JOIN USERS u ON ind.userId = u.id
+			LEFT JOIN SERVICE ser ON ser.SERVICEID = ind.SERVICEID
+			LEFT JOIN PRODUCT pro ON pro.PRODUCTID = ind.PRODUCTID
+			LEFT JOIN TEAM t ON t.TEAMID = ind.TEAMID
+			WHERE ind.INDENTID = ${indentId}
+		]]>
+	</select>
+	
+	<insert id="save">
+		<![CDATA[
+			INSERT INTO INDENT(
+				INDENTNAME,
+				INDENTNUM,
+				INDENTTYPE,
+				SERVICEID,
+				USERID,
+				INDENT_TELE,
+				INDENT_RECOMMENT
+			) VALUES (
+				#{indentName},
+				#{indentNum},
+				${indentType},
+				${serviceId},
+				${userId},
+				#{INDENT_TELE},
+				#{indent_recomment}
+			)
+		]]>
+	</insert>
+	
+	<update id="update">
+		<![CDATA[
+			UPDATE INDENT
+				SET INDENTNAME = #{indentName},
+					SECOND = #{second},
+					INDENTPRICE = ${indentPrice},
+					INDENTTYPE = ${indentType},
+					INDENT_TELE = #{indent_tele},
+					ORDERDATE = DATE_FORMAT(#{orderDate},'%Y-%m-%d %T'),
+					INDENT_RECOMMENT = #{indent_recomment}
+				WHERE INDENTID = ${indentId}
+		]]>
+	</update>
+	
+	<delete id="delete">
+		<![CDATA[
+			DELETE 
+				FROM INDENT
+			WHERE INDENTID = ${indentId}
+		]]>
+	</delete>
+	
+	<delete id="deleteByUserId">
+		<![CDATA[
+			DELETE 
+				FROM INDENT
+			WHERE USERID = ${userId}
+		]]>
+	</delete>
+	
+	<delete id="deleteByServiceId">
+		<![CDATA[
+			DELETE
+				FROM INDENT
+			WHERE SERVICEID = ${serviceId}
+		]]>
+	</delete>
+	
+	<insert id="order">
+		<![CDATA[
+			INSERT INTO INDENT(
+				INDENTNAME,
+				TEAMID,
+				SERVICEID,
+				PRODUCTID,
+				INDENTPRICE,
+				SECOND,
+				INDENT_TELE,
+				INDENT_RECOMMENT
+			) VALUES (
+				#{indentName},
+				${teamId},
+				${serviceId},
+				${productId},
+				${indentPrice},
+				${second},
+				#{indent_tele},
+				#{indent_recomment}
+			)
+		]]>
+	</insert>
+	
+	<select id="checkStatus" resultType="long">
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM INDENT t
+			WHERE t.INDENTTYPE = ${indentType}
+		]]>
+	</select>
+</mapper>

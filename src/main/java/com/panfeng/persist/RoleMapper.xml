@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.RoleMapper">
+	
+	<resultMap type="Role" id="RoleMap">
+		<id property="roleId" column="roleId" />
+		<result property="roleName" column="roleName" />
+		<result property="roleValue" column="roleValue" />
+		<result property="roleDescription" column="roleDescription" />
+		<result property="createDate" column="createDate" />
+		<result property="updateDate" column="updateDate" />
+	</resultMap>
+	
+	<resultMap type="Role" id="RoleRightMap" extends="RoleMap">
+		<collection property="rights" ofType="Right">
+			<id property="rightId" column="rightId" />
+			<result property="rightName" column="rightName" />
+			<result property="rightDescription" column="rightDescription" />
+			<result property="url" column="url" />
+			<result property="pos" column="pos" />
+			<result property="code" column="code" />
+		</collection>
+	</resultMap>
+
+	<select id="findRoleById" resultMap="RoleRightMap">
+		<![CDATA[
+			SELECT r.ROLEID,
+				   r.ROLENAME,
+				   r.ROLEDESCRIPTION,
+				   r.ROLEVALUE,
+				   DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate,
+				   ri.RIGHTID,
+				   ri.RIGHTNAME,
+				   ri.URL,
+				   ri.POS,
+				   ri.CODE
+			FROM ROLE r 
+				   LEFT JOIN ROLE_RIGHT link
+				   		ON r.ROLEID = link.ROLEID
+				   LEFT JOIN RIGHTS ri
+				   		ON ri.RIGHTID = link.RIGHTID
+			WHERE 1 = 1
+					AND r.ROLEID = ${roleId}
+		]]>
+	</select>
+
+	<select id="all" resultType="Role">
+		<![CDATA[
+			SELECT r.ROLEID,
+				   r.ROLENAME,
+				   r.ROLEVALUE,
+				   r.ROLEDESCRIPTION
+			FROM ROLE r
+		]]>
+	</select>
+
+	<insert id="save" useGeneratedKeys="true" keyProperty="roleId"
+		parameterType="Role">
+		<![CDATA[
+			INSERT INTO ROLE(ROLENAME,
+				   ROLEDESCRIPTION)
+			VALUES (
+				#{roleName},
+				#{roleDescription}
+			)
+		]]>
+	</insert>
+	
+	<insert id="saveRelativity">
+		<![CDATA[
+			INSERT INTO ROLE_RIGHT(ROLEID,
+				   RIGHTID)
+			VALUES (
+				${role.roleId},
+				${right.rightId}
+			)
+		]]>
+	</insert>
+	
+	<select id="listWithPagination" resultMap="RoleRightMap">
+		<![CDATA[
+			SELECT r.ROLEID,
+				   r.ROLENAME,
+				   r.ROLEDESCRIPTION,
+				   r.ROLEVALUE,
+				   DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate,
+				   ri.RIGHTID,
+				   ri.RIGHTNAME,
+				   ri.URL,
+				   ri.POS,
+				   ri.CODE
+			FROM ROLE r 
+				   LEFT JOIN ROLE_RIGHT link
+				   		ON r.ROLEID = link.ROLEID
+				   LEFT JOIN RIGHTS ri
+				   		ON ri.RIGHTID = link.RIGHTID
+			WHERE 1 = 1
+		]]>
+		<if test="roleName != null and roleName != ''">
+			AND r.ROLENAME LIKE CONCAT(CONCAT('%',#{roleName}),'%')
+		</if>
+		<![CDATA[
+			ORDER BY r.ROLEID ASC
+		]]>
+	</select>
+	
+	<select id="maxSize" resultType="java.lang.Long">
+		<![CDATA[
+			SELECT COUNT(1)
+			FROM ROLE r 
+			WHERE 1 = 1
+		]]>
+		<if test="roleName != null and roleName != ''">
+			AND r.ROLENAME LIKE CONCAT(CONCAT('%',#{roleName}),'%')
+		</if>
+	</select>
+	
+	<update id="update">
+		<![CDATA[
+			UPDATE ROLE
+				SET ROLENAME = #{roleName},
+					ROLEDESCRIPTION = #{roleDescription},
+					UPDATEDATE = CURRENT_TIMESTAMP
+			WHERE ROLEID = ${roleId}
+		]]>
+	</update>
+	
+	<delete id="delete">
+		<![CDATA[
+			DELETE FROM ROLE
+				WHERE ROLEID = ${roleId}
+		]]>
+	</delete>
+	
+	<delete id="deleteRoleRightLink">
+		<![CDATA[
+			DELETE FROM ROLE_RIGHT
+				WHERE ROLEID = ${roleId}
+		]]>
+	</delete>
+	
+	<delete id="deleteEmployeeRoleLink">
+		<![CDATA[
+			DELETE FROM EMPLOYEE_ROLE
+				WHERE ROLEID = ${roleId}
+		]]>
+	</delete>
+	
+	<insert id="grant">
+		<![CDATA[
+			INSERT INTO ROLE_RIGHT(ROLEID,RIGHTID)
+				VALUES
+		]]>
+		<foreach collection="resourceIds" item="rightId"
+				separator=",">
+				(${roleId},${rightId})
+		</foreach>
+	</insert>
+	
+	<select id="getRightsByRole" resultType="java.lang.Long">
+		<![CDATA[
+			SELECT RIGHTID
+				FROM ROLE_RIGHT
+			WHERE ROLEID = ${roleId}
+		]]>
+	</select>
+</mapper>

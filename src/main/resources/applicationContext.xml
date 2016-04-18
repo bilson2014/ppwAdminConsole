@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		                   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		                   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		                   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		                   http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		                   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<import resource="ActivitiConfig.xml"/>
+	
+	<import resource="DataSourceConfig.xml"/>
+	
+	<import resource="RedisConfig.xml"/>
+
+	<context:property-placeholder location="classpath:jdbc.properties,classpath:redis.properties" />
+
+	<context:component-scan base-package="com.panfeng.service,
+										  com.panfeng.dao,
+										  com.panfeng.fs,
+										  com.panfeng.listener" />
+
+	<context:annotation-config />
+
+	<tx:annotation-driven />
+
+	<!-- log here -->
+	<bean id="callMonitor" class="com.panfeng.util.CallMonitor" />
+
+	<aop:aspectj-autoproxy>
+		<aop:include name="callMonitor" />
+	</aop:aspectj-autoproxy>
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="uploadTempDir" value="${upload.path}" />
+	</bean>
+	
+</beans>

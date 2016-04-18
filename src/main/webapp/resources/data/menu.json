@@ -1,0 +1,65 @@
+[{
+	"id":1,
+	"text":"团队管理",
+	"attributes":{
+		"url":"portal/team-list"
+	}	
+},{
+	"id":2,
+	"text":"项目管理",
+	"attributes":{
+		"url":"portal/product-list"
+	}	
+},{
+	"id":3,
+	"text":"服务管理",
+	"attributes":{
+		"url":"portal/service-list"
+	}
+},{
+	"id":4,
+	"text":"检索类别管理",
+	"attributes":{
+		"url":"portal/item-list"
+	}
+},{
+	"id":5,
+	"text":"用户管理",
+	"attributes":{
+		"url":"portal/user-list"
+	}
+},{
+	"id":6,
+	"text":"订单管理",
+	"attributes":{
+		"url":"portal/indent-list"
+	}
+},{
+	"id":7,
+	"text":"搜索管理",
+	"attributes":{
+		"url":"portal/solr-list"
+	}
+},{
+	"id":8,
+	"text":"系统管理",
+	"children":[{
+		"id":81,
+		"text":"人员管理",
+		"attributes":{
+			"url":"portal/employee-list"
+		}
+	},{
+		"id":82,
+		"text":"角色管理",
+		"attributes":{
+			"url":"portal/role-list"
+		}
+	},{
+		"id":83,
+		"text":"权限管理",
+		"attributes":{
+			"url":"portal/right-list"
+		}
+	}]
+}]

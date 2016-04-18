@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.IndentResourceMapper">
+
+	<cache />
+
+	<insert id="save" useGeneratedKeys="true" keyProperty="ir_id"
+		parameterType="long">
+		<![CDATA[
+		INSERT INTO INDENT_RESOURCE (
+			IR_ORIGINALNAME,
+			IR_FORMATNAME,
+			IR_INDENTID,
+			IR_PROCESSINSTANCEID,
+			IR_TASKID,
+			IR_TYPE,
+			IR_USERTYPE,
+			IR_USERID
+		)VALUES(
+			#{irOriginalName},
+			#{irFormatName},
+			${irIndentId},
+			#{irProcessInstanceId},
+			#{irTaskId},
+			#{irtype},
+			#{irUserType},
+			${irUserId}
+		);
+		]]>
+	</insert>
+
+
+
+	<delete id="delete" parameterType="long">
+		<![CDATA[
+			DELETE FROM INDENT_RESOURCE 
+				WHERE IR_ID = ${irId}
+		]]>
+	</delete>
+
+	<delete id="deleteIndentResourceList" parameterType="long">
+		<![CDATA[
+			DELETE FROM INDENT_RESOURCE 
+				WHERE IR_INDENTID = ${id}
+		]]>
+	</delete>
+
+
+	<update id="update" parameterType="long">
+		<![CDATA[
+			UPDATE INDENT_RESOURCE IR  SET
+				ir.IR_ORIGINALNAME=#{irOriginalName},
+				ir.IR_FORMATNAME=#{irFormatName},
+				ir.IR_INDENTID=${irIndentId},
+				ir.IR_PROCESSINSTANCEID=#{irProcessInstanceId},
+				ir.IR_TASKID=#{irTaskId},
+				ir.IR_TYPE=#{irtype},
+				ir.IR_USERTYPE=#{irUserType},
+				ir.IR_USERID=${irUserId}
+			WHERE ir.IR_ID=${irId};
+		]]>
+	</update>
+
+	<select id="findResourcetListByIndentId" resultType="IndentResource">
+		<![CDATA[
+		SELECT 
+			ir.IR_ID AS irId,
+			ir.IR_ORIGINALNAME AS irOriginalName,
+			ir.IR_FORMATNAME AS irFormatName,
+			ir.IR_INDENTID AS irIndentId,
+			ir.IR_PROCESSINSTANCEID AS irProcessInstanceId,
+			ir.IR_TASKID AS irTaskId,
+			DATE_FORMAT(ir.IR_CREATEDATE,'%Y-%m-%d %T') AS irCreateDate,
+			ir.IR_TYPE AS irtype,
+			ir.IR_USERTYPE AS irUserType,
+			ir.IR_USERID AS irUserId
+		 FROM INDENT_RESOURCE ir WHERE ir.IR_INDENTID=${id} ORDER BY ir.IR_ID DESC; 
+		]]>
+	</select>
+	
+	<select id="findIndentListByTaskId" resultType="IndentResource">
+		<![CDATA[
+		SELECT 
+			ir.IR_ID AS irId,
+			ir.IR_ORIGINALNAME AS irOriginalName,
+			ir.IR_FORMATNAME AS irFormatName,
+			ir.IR_INDENTID AS irIndentId,
+			ir.IR_PROCESSINSTANCEID AS irProcessInstanceId,
+			ir.IR_TASKID AS irTaskId,
+			DATE_FORMAT(ir.IR_CREATEDATE,'%Y-%m-%d %T') AS irCreateDate,
+			ir.IR_TYPE AS irtype,
+			ir.IR_USERTYPE AS irUserType,
+			ir.IR_USERID AS irUserId
+		 FROM INDENT_RESOURCE ir WHERE ir.IR_PROCESSINSTANCEID=#{processInstanceId} AND ir.IR_TASKID=#{taskDefinitionKey} ;
+		]]>
+	</select>
+
+	<select id="findResourceById" resultType="IndentResource">
+		<![CDATA[
+		SELECT 
+			ir.IR_ID as irId,
+			ir.IR_ORIGINALNAME AS irOriginalName,
+			ir.IR_FORMATNAME AS irFormatName ,
+			ir.IR_INDENTID AS irIndentId,
+			ir.IR_PROCESSINSTANCEID AS irProcessInstanceId ,
+			ir.IR_TASKID AS irTaskId,
+			DATE_FORMAT(ir.IR_CREATEDATE,'%Y-%m-%d %T') AS IR_CREATEDATE,
+			ir.IR_TYPE AS irtype,
+			ir.IR_USERTYPE AS irUserType,
+			ir.IR_USERID AS irUserId
+		 FROM INDENT_RESOURCE ir WHERE ir.IR_ID=${irId}; 
+		]]>
+	</select>
+</mapper>
