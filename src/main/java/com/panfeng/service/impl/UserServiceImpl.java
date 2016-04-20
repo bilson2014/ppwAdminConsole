@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.UserMapper;
 import com.panfeng.resource.model.User;
 import com.panfeng.resource.view.UserView;
 import com.panfeng.service.UserService;
+import com.panfeng.util.DataUtil;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -151,6 +153,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public long simpleSave(final User user) {
 		
+		user.setPassword(DataUtil.md5(GlobalConstant.PROJECT_USER_INIT_PASSWORD));
 		final long ret = mapper.simpleSave(user);
 		return ret;
 	}

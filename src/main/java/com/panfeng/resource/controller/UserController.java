@@ -99,7 +99,7 @@ public class UserController extends BaseController {
 		return dataGrid;
 	}
 	
-	@RequestMapping(value = "/user/update",method = RequestMethod.POST)
+	@RequestMapping(value = "/user/update",method = RequestMethod.POST,produces = "application/json; chartset=UTF-8")
 	public long update(final User user){
 		
 		final long ret = userService.update(user);
@@ -377,6 +377,7 @@ public class UserController extends BaseController {
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(user.getId());
 		
+		
 		final Role role = roleService.findRoleById(3l); // 获取用户角色
 		final List<Role> roles = new ArrayList<Role>();
 		roles.add(role);
@@ -388,6 +389,7 @@ public class UserController extends BaseController {
 		user.calculateRightSum();
 		info.setSum(user.getRightSum());
 		info.setEmail(user.getEmail());
+		info.setPhoto(user.getImgFileName());
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put(GlobalConstant.SESSION_INFO, info);

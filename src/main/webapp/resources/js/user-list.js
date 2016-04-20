@@ -133,8 +133,9 @@ $().ready(function(){
 		showFooter : false,
 		toolbar : '#toolbar',
 		onAfterEdit:function(index , record){
+			console.log(record);
+			delete record.roles;
 			$.post(flag =='add' ? getContextPath() + '/portal/user/save' : getContextPath() + '/portal/user/update', record , function(result){
-				
 				datagrid.datagrid('clearSelections');
 				datagrid.datagrid('reload');
 				$.message('操作成功!');

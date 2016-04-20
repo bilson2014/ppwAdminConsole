@@ -66,8 +66,6 @@ public class EmployeeController extends BaseController{
 	@RequestMapping("/editEmpwd")
 	public long editPassword(final HttpServletRequest request,final String oldPwd,final String pwd){
 		
-		// TODO 从session集中存储中获取当前用户名
-		//final SessionInfo info = (SessionInfo) request.getSession().getAttribute(GlobalConstant.SESSION_INFO);
 		final SessionInfo info = (SessionInfo) infoService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
 		
 		if(info != null){

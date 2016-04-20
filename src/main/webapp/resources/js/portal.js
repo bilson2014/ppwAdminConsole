@@ -124,12 +124,12 @@ function editUserPwd(){
 		width : 300,
 		height : 250,
 		href : getContextPath() + '/portal/editEmployeePwd',
-		buttons : [ {
+		buttons : [{
 			text : '修改',
 			handler : function() {
 				var f = parent.$.modalDialog.handler.find('#editUserPwdForm');
 				f.submit();
 			}
-		} ]
+		}]
 	});
 }

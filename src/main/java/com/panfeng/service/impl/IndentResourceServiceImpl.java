@@ -110,7 +110,7 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 
 				indent_ResourceMapper.save(resource);
 
-				onlineDocService.convertFile(resource);
+				//onlineDocService.convertFile(resource);
 			}
 
 			return true;

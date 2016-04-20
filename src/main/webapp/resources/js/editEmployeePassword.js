@@ -2,7 +2,6 @@ $().ready(function(){
 	$('#editUserPwdForm').form({
 		url : getContextPath() + '/portal/editEmpwd',
 		onSubmit : function() {
-			alert('dddd');
 			progressLoad();
 			
 			// 加密
