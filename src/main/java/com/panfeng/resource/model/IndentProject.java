@@ -160,6 +160,15 @@ public class IndentProject extends BaseObject {
 	private Map<String, String> time = new HashMap<>();
 	private ActivitiTask task = new ActivitiTask();
 	private String tag = "";
+	private UserViewModel userViewModel=null; 
+
+	public UserViewModel getUserViewModel() {
+		return userViewModel;
+	}
+
+	public void setUserViewModel(UserViewModel userViewModel) {
+		this.userViewModel = userViewModel;
+	}
 
 	public ActivitiTask getTask() {
 		return task;

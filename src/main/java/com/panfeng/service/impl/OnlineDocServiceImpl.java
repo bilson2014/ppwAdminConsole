@@ -19,9 +19,10 @@ import com.panfeng.util.VerifyFileUtils;
 public class OnlineDocServiceImpl implements OnlineDocService {
 	@Autowired
 	IndentResourceService indentResourceService;
-
 	String pdf2html = Constants.PDF2HTML;
-
+	public static String NOTAVAILABLE= "not_available";
+	public static String CONVER="conver";
+	
 	public String convertFile(IndentResource indentResource) {
 		new Thread(new Runnable() {
 
@@ -54,15 +55,10 @@ public class OnlineDocServiceImpl implements OnlineDocService {
 		String fileName = indentResource.getIrFormatName();
 
 		String Name = indentResource.getIrFormatName();
-		String extName=FileUtils.getExtName(Name, ".");
+		String extName = FileUtils.getExtName(Name, ".");
 		boolean isDoc = VerifyFileUtils.verifyDocFile(extName);
 		if (isDoc) {
 			String name = fileName.substring(0, fileName.indexOf('.'));
-			//File output = new File(Constants.FILE_PROFIX
-			//		+ Constants.PROJECT_DOC);
-			//File file = new File(output.getAbsolutePath(), name + ".html");
-			// if (!file.exists())
-			// convertFile(indentResource);
 			return name + ".html";
 		} else {
 			File output = new File(Constants.FILE_PROFIX

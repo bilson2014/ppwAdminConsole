@@ -1,7 +1,10 @@
 package com.panfeng.service.impl;
 
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,8 @@ import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.FlowDateMapper;
 import com.panfeng.persist.IndentFlowMapper;
 import com.panfeng.persist.IndentProjectMapper;
+import com.panfeng.poi.GenerateExcel;
+import com.panfeng.poi.ProjectPoiAdapter;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.FlowDate;
 import com.panfeng.resource.model.IndentFlow;
@@ -165,5 +170,36 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		indentProject.setState(IndentProject.PROJECT_CANCEL);
 		long l = indentProjectMapper.cancelProject(indentProject);
 		return (l > 0);
+	}
+
+	@Override
+	public void getReport(IndentProject indentProject,OutputStream outputStream) {
+		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
+		GenerateExcel ge = new GenerateExcel();
+		List<IndentProject> list = indentProjectMapper.findProjectList(indentProject);
+		UserTempService userTempService=applicationContext.getBean(UserTempService.class);
+		for (IndentProject indentProject2 : list) {
+			List<IndentFlow> listDates = indentFlowMapper
+					.findFlowDateByIndentId(indentProject2);
+			IndentFlow.indentProjectFillDate(indentProject2, listDates);
+			ActivitiTask at = indentActivitiService
+					.getCurrentTask(indentProject2);
+			if (at.getId().equals("")) {
+				List<HistoricTaskInstance> listHistoricTaskInstances = indentActivitiService
+						.getHistoryProcessTask_O(indentProject2);
+				HistoricTaskInstance historicTaskInstance = listHistoricTaskInstances
+						.get(listHistoricTaskInstances.size() - 1);
+				at.setId("");
+				at.setName("已完成");
+				SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
+				at.setCreateTime(simpleDateFormat.format(historicTaskInstance.getEndTime()));
+			}
+			indentProject2.setTask(at);
+			//填充管家
+			UserViewModel userViewModel=userTempService.getInfo(indentProject2.getUserType(), indentProject2.getUserId());
+			indentProject2.setUserViewModel(userViewModel);;
+			projectPoiAdapter.getData().add(indentProject2);
+		}
+		ge.generate(projectPoiAdapter,outputStream);
 	}
 }
