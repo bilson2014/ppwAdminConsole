@@ -27,6 +27,8 @@
 				   s.STAFFIMAGEURL AS staffImageUrl
 			FROM STAFF s 
 			WHERE 1 = 1
+			
+			ORDER BY s.OD,s.STAFFID ASC
 		]]>
 	</select>
 	
@@ -48,6 +50,10 @@
 				${id}
 			</foreach>
 		</if>
+		
+		<![CDATA[
+			ORDER BY s.OD,s.STAFFID ASC
+		]]>
 	</select>
 	
 	<select id="listWithPagination" resultType="Staff">
@@ -66,7 +72,7 @@
 			AND s.STAFFNAME LIKE CONCAT(CONCAT('%',#{staffName}),'%')
 		</if>
 		<![CDATA[
-			ORDER BY s.STAFFID DESC
+			ORDER BY s.OD,s.STAFFID ASC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
@@ -88,11 +94,13 @@
 			INSERT INTO STAFF(STAFFNAME,
 				   STAFFPOSITION,
 				   STAFFEDUCATION,
+				   OD,
 				   STAFFDESCRIPTION)
 			VALUES (
 				#{staffName},
 				#{staffPosition},
 				#{staffEducation},
+				${od},
 				#{staffDescription}
 			)
 		]]>
@@ -104,6 +112,7 @@
 					SET STAFFNAME = #{staffName},
 						STAFFPOSITION = #{staffPosition},
 						STAFFEDUCATION = #{staffEducation},
+						OD = ${od},
 						STAFFDESCRIPTION = #{staffDescription},
 						UPDATEDATE = CURRENT_TIMESTAMP
 			WHERE STAFFID = ${staffId}

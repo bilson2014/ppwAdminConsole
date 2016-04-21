@@ -19,6 +19,8 @@ public class Staff extends BaseObject {
 	private String staffImageUrl = null;
 	
 	private String updateDate = null;
+	
+	private int od = 0; // 排序
 
 	public long getStaffId() {
 		return staffId;
@@ -74,6 +76,14 @@ public class Staff extends BaseObject {
 
 	public void setUpdateDate(String updateDate) {
 		this.updateDate = updateDate;
+	}
+
+	public int getOd() {
+		return od;
+	}
+
+	public void setOd(int od) {
+		this.od = od;
 	}
 	
 }

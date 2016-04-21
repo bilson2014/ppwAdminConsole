@@ -72,6 +72,10 @@
 	                <input name="staffImage" type="file"/>
 	            </div>
 	            <div class="fitem">
+	                <label>排序:</label>
+	                <input name="od" class="easyui-numberbox" required="true" precision="0" value="0">
+	            </div>
+	            <div class="fitem">
 	                <label>人员简介:</label>
 	                <input name="staffDescription" class="easyui-textbox" required="true" multiline="true" style="height: 100px;">
 	            </div>
