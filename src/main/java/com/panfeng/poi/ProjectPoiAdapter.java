@@ -1,8 +1,8 @@
 package com.panfeng.poi;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -55,7 +55,7 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 
 		XSSFRow xssfRow = sheet.createRow(0);
 		XSSFCell xssfCell = xssfRow.createCell(0);
-		xssfCell.setCellValue("我是标题");
+		xssfCell.setCellValue("项目报表");
 		xssfCell.setCellStyle(PoiUtils.getDefaultTitleStyle(workbook));
 		xssfRow = sheet.createRow(2);
 
@@ -159,28 +159,24 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		xssfRow.createCell(0).setCellValue(entity.getId());
 		xssfRow.createCell(1).setCellValue(entity.getUserName());
 		xssfRow.createCell(2).setCellValue(entity.getSource());
-		xssfRow.createCell(3).setCellValue("管家");
-		/*xssfRow.createCell(4).setCellValue(entity.getGtstarttime());
-		xssfRow.createCell(5).setCellValue(entity.getFastarttime());
-		xssfRow.createCell(6).setCellValue(entity.getSwstarttime());
-		xssfRow.createCell(7).setCellValue(entity.getZzstarttime());
-		xssfRow.createCell(8).setCellValue(entity.getJfstarttime());*/
-
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		if(entity.getUserViewModel()!=null){
+			xssfRow.createCell(3).setCellValue(entity.getUserViewModel().getUserName());
+		}
+		Map<String, String> time = entity.getTime();
+		if(time!=null){
+			xssfRow.createCell(4).setCellValue(time.get("gt"));
+			xssfRow.createCell(5).setCellValue(time.get("fa"));
+			xssfRow.createCell(6).setCellValue(time.get("sw"));
+			xssfRow.createCell(7).setCellValue(time.get("zz"));
+			xssfRow.createCell(8).setCellValue(time.get("jf"));
+		}
 		if (!entity.getTask().getId().equals("")) {
 			xssfRow.createCell(9).setCellValue(entity.getTask().getName());
-			xssfRow.createCell(10).setCellValue(
-					simpleDateFormat.format(entity.getTask().getCreateTime()));
-			xssfRow.createCell(11).setCellValue("状态");
-			xssfRow.createCell(12).setCellValue("解决方法");
-			xssfRow.createCell(21).setCellValue("");
+			xssfRow.createCell(10).setCellValue(entity.getTask().getCreateTime());
 		} else {
 			xssfRow.createCell(9).setCellValue(entity.getTask().getName());
 			xssfRow.createCell(10).setCellValue("~");
-			xssfRow.createCell(11).setCellValue("状态");
-			xssfRow.createCell(12).setCellValue("解决方法");
-			xssfRow.createCell(21).setCellValue(
-					simpleDateFormat.format(entity.getTask().getCreateTime()));
+			xssfRow.createCell(21).setCellValue(entity.getTask().getCreateTime());
 		}
 
 		xssfRow.createCell(13).setCellValue("");

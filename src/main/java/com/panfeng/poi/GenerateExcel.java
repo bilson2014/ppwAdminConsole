@@ -1,7 +1,5 @@
 package com.panfeng.poi;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -14,11 +12,8 @@ public class GenerateExcel {
 	private int row = 0;
 
 	@SuppressWarnings("unchecked")
-	public File generate(@SuppressWarnings("rawtypes") PoiBaseAdapter adapter) {
-		String filepath = "test.xlsx";
+	public void generate(@SuppressWarnings("rawtypes") PoiBaseAdapter adapter,OutputStream outputStream) {
 		try {
-			OutputStream outputStream = new FileOutputStream(filepath);
-
 			// 创建文档
 			XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
 			// 创建一个新的页
@@ -35,6 +30,5 @@ public class GenerateExcel {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		return new File("filepath");
 	}
 }

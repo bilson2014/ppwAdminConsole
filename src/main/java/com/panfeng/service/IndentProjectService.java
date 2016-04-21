@@ -1,5 +1,6 @@
 package com.panfeng.service;
 
+import java.io.OutputStream;
 import java.util.List;
 
 import com.panfeng.resource.model.ActivitiTask;
@@ -26,4 +27,6 @@ public interface IndentProjectService {
 	public String[] getTags();
 	
 	public boolean cancelProject(IndentProject indentProject);
+	
+	public void getReport(IndentProject indentProject,OutputStream outputStream);
 }

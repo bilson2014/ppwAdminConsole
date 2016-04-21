@@ -1,7 +1,14 @@
 package com.panfeng.resource.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,13 +64,37 @@ public class ProjectController extends BaseController {
 			@RequestBody final IndentProject indentProject) {
 		return indentProjectService.updateIndentProject(indentProject);
 	}
-	
+
 	@RequestMapping("/getProjectTags")
 	public String[] getProjectTags() {
 		return indentProjectService.getTags();
 	}
+
 	@RequestMapping("/cancelProject")
-	public boolean cancelProject(@RequestBody final IndentProject indentProject){
+	public boolean cancelProject(@RequestBody final IndentProject indentProject) {
 		return indentProjectService.cancelProject(indentProject);
+	}
+
+	@RequestMapping("/get/report")
+	public void getReport(@RequestBody final IndentProject indentProject,
+			final HttpServletResponse response) {
+		try {
+			response.reset();
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("application/octet-stream");
+			String dateString=	DateUtils.formatDate(new Date(), "yyyy-MM-dd");
+			String filename=URLEncoder.encode("管家报表"+dateString+".xlsx", "UTF-8");
+			response.setHeader("Content-Disposition", "attachment; filename=\""
+					+  filename+ "\"\r\n");
+			OutputStream outputStream = response.getOutputStream();
+			indentProjectService.getReport(indentProject, outputStream);
+			if(outputStream!=null){
+				outputStream.flush();
+				outputStream.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

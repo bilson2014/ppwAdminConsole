@@ -7,4 +7,5 @@ public interface OnlineDocService {
 	public String getFile(IndentResource indentResource);
 
 	public String convertFile(IndentResource indentResource);
+	
 }
