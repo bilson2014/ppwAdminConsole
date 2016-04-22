@@ -135,6 +135,18 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'indent_description',
+						title : 'CRM备注',
+						width : 150,
+						align : 'center',
+						editor : {
+							type : 'validatebox' ,
+							options : {
+								required:false ,
+								missingMessage : '请填写订单备注!'
+							}
+						}
+					},{
 						field : 'service_name',
 						title : '服务名称',
 						width : 120,

@@ -40,6 +40,8 @@ public class Indent extends BaseObject {
 	
 	private String indent_recomment = null; // 订单备注
 	
+	private String indent_description = null; // CRM备注
+	
 	// ------------------------  冗余字段  ------------------------
 	
 	private String service_name = null; 
@@ -252,6 +254,14 @@ public class Indent extends BaseObject {
 
 	public void setIndent_recomment(String indent_recomment) {
 		this.indent_recomment = indent_recomment;
+	}
+
+	public String getIndent_description() {
+		return indent_description;
+	}
+
+	public void setIndent_description(String indent_description) {
+		this.indent_description = indent_description;
 	}
 
 }

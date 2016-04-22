@@ -4,12 +4,13 @@
 
 	<select id="findManagerById" resultType="VersionManager">
 		<![CDATA[
-			SELECT m.MANAGERID,
-				   m.MANAGERLOGINNAME,
-				   m.MANAGERREALNAME,
-				   m.MANAGERPASSWORD,
-				   m.MANAGERDESCRIPTION,
-				   m.MANAGEREMAIL,
+			SELECT m.MANAGERID AS managerId,
+				   m.MANAGERLOGINNAME AS managerLoginName,
+				   m.MANAGERREALNAME AS managerRealName,
+				   m.MANAGERPASSWORD AS managerPassword,
+				   m.MANAGERDESCRIPTION AS managerDescription,
+				   m.MANAGEREMAIL AS managerEmail,
+				   m.PHONENUMBER AS phoneNumber,
 				   DATE_FORMAT(m.UPDATEDATE,'%Y-%m-%d %T') AS uploadDate
 			FROM VERSIONMANAGER m 
 			WHERE 1 = 1
@@ -19,11 +20,12 @@
 	
 	<select id="listWithPagination" resultType="VersionManager">
 		<![CDATA[
-			SELECT m.MANAGERID,
-				   m.MANAGERLOGINNAME,
-				   m.MANAGERREALNAME,
-				   m.MANAGERDESCRIPTION,
-				   m.MANAGEREMAIL,
+			SELECT m.MANAGERID AS managerId,
+				   m.MANAGERLOGINNAME AS managerLoginName,
+				   m.MANAGERREALNAME AS managerRealName,
+				   m.MANAGERDESCRIPTION AS managerDescription,
+				   m.MANAGEREMAIL AS managerEmail,
+				   m.PHONENUMBER AS phoneNumber,
 				   DATE_FORMAT(m.UPDATEDATE,'%Y-%m-%d %T') AS uploadDate
 			FROM VERSIONMANAGER m 
 			WHERE 1 = 1
@@ -50,12 +52,13 @@
 
 	<select id="doLogin" resultType="VersionManager">
 		<![CDATA[
-			SELECT m.MANAGERID,
-				   m.MANAGERLOGINNAME,
-				   m.MANAGERREALNAME,
-				   m.MANAGERPASSWORD,
-				   m.MANAGERDESCRIPTION,
-				   m.MANAGEREMAIL,
+			SELECT m.MANAGERID AS managerId,
+				   m.MANAGERLOGINNAME AS managerLoginName,
+				   m.MANAGERREALNAME AS managerRealName,
+				   m.MANAGERPASSWORD AS managerPassword,
+				   m.MANAGERDESCRIPTION AS managerDescription,
+				   m.MANAGEREMAIL AS managerEmail,
+				   m.PHONENUMBER AS phoneNumber,
 				   DATE_FORMAT(m.UPDATEDATE,'%Y-%m-%d %T') AS uploadDate
 			FROM VERSIONMANAGER m 
 			WHERE  m.MANAGERLOGINNAME = #{loginName}
@@ -70,13 +73,15 @@
 				   MANAGERREALNAME,
 				   MANAGERPASSWORD,
 				   MANAGERDESCRIPTION,
-				   MANAGEREMAIL)
+				   MANAGEREMAIL,
+				   PHONENUMBER)
 			VALUES (
 				#{managerLoginName},
 				#{managerRealName},
 				#{managerPassword},
 				#{managerDescription},
-				#{managerEmail}
+				#{managerEmail},
+				#{phoneNumber}
 			)
 		]]>
 	</insert>
@@ -90,6 +95,10 @@
 			<if test="managerPassword != null and managerPassword != ''">
 						MANAGERPASSWORD = #{managerPassword},
 			</if>
+			
+			<if test="phoneNumber != null and phoneNumber != ''">
+						PHONENUMBER = #{phoneNumber},
+			</if>
 		<![CDATA[
 						MANAGERDESCRIPTION = #{managerDescription},
 						MANAGEREMAIL = #{managerEmail},
@@ -102,9 +111,9 @@
 	<update id="editPassword">
 		<![CDATA[
 			UPDATE VERSIONMANAGER
-					SET MANAGERPASSWORD = #{managerPassword},
+					SET MANAGERPASSWORD = #{password},
 						UPDATEDATE = CURRENT_TIMESTAMP
-			WHERE MANAGERID = ${managerId}
+			WHERE PHONENUMBER = #{phoneNumber}
 		]]>
 		
 	</update>
@@ -115,5 +124,13 @@
 				WHERE MANAGERID = ${managerId}
 		]]>
 	</delete>
+	
+	<select id="checkPhoneNumber" resultType="java.lang.Long">
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM VERSIONMANAGER
+			WHERE PHONENUMBER = #{phoneNumber}
+		]]>
+	</select>
 	
 </mapper>

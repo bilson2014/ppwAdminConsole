@@ -20,27 +20,28 @@ $().ready(function(){
 					{
 						field : 'managerLoginName',
 						title : '登录名',
-						width : 60,
 						align : 'center'
 					},{
 						field : 'managerRealName',
 						title : '姓名',
-						width : 100,
+						align : 'center'
+					},{
+						field : 'phoneNumber' ,
+						title : '手机号',
 						align : 'center'
 					},{
 						field : 'updateDate' ,
 						title : '更新时间' ,
-						width : 120,
-						align : 'center'
-					},{
-						field : 'managerDescription' ,
-						title : '人员简介',
 						align : 'center'
 					},{
 						field : 'managerEmail' ,
 						title : '邮箱',
+						align : 'center'
+					},{
+						field : 'managerDescription' ,
+						title : '人员简介',
 						align : 'center',
-						hidden : true
+						width: 200
 					}]],
 		pagination: true ,
 		pageSize : 50,

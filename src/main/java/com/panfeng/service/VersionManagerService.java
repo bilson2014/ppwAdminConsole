@@ -19,6 +19,8 @@ public interface VersionManagerService {
 
 	public VersionManager doLogin(final String loginName,final String password);
 
-	public long editPassword(final long managerId, final String managerPassword);
+	public long editPassword(final String phoneNumber, final String managerPassword);
+
+	public long checkPhoneNumber(final String phoneNumber);
 
 }

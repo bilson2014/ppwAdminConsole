@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -177,6 +178,17 @@ public class VersionManagerController extends BaseController{
 		return false;
 	}
 	
+	@RequestMapping("/manager/static/checkNumber/{phoneNumber}")
+	public long isNumberExist(@PathVariable("phoneNumber") final String phoneNumber,final HttpServletRequest request){
+		
+		if(ValidateUtil.isValid(phoneNumber)){
+			final long count = service.checkPhoneNumber(phoneNumber);
+			return count;
+		}
+		
+		return 0l;
+	}
+	
 	/**
 	 * 修改密码
 	 */
@@ -184,7 +196,7 @@ public class VersionManagerController extends BaseController{
 	public boolean editPassword(final HttpServletRequest request,@RequestBody final VersionManager manager){
 		
 		if(manager != null){
-			final long ret = service.editPassword(manager.getManagerId(),manager.getManagerPassword());
+			final long ret = service.editPassword(manager.getPhoneNumber(),manager.getManagerPassword());
 			if(ret > 0)
 				return true;
 		}

@@ -61,9 +61,15 @@ public class VersionManagerServiceImpl implements VersionManagerService {
 		return manager;
 	}
 
-	public long editPassword(final long managerId,final String pwd) {
+	public long editPassword(final String phoneNumber,final String pwd) {
 		
-		final long ret = mapper.editPassword(managerId, pwd);
+		final long ret = mapper.editPassword(phoneNumber, pwd);
+		return ret;
+	}
+
+	public long checkPhoneNumber(final String phoneNumber) {
+		
+		final long ret = mapper.checkPhoneNumber(phoneNumber);
 		return ret;
 	}
 

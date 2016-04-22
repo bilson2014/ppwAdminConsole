@@ -25,6 +25,8 @@ public class VersionManager extends Customer {
 	private String updateDate = null; // 更新时间
 	
 	private String managerEmail = null; // 邮箱
+	
+	private String phoneNumber = null; // 电话号码
 
 	public long getManagerId() {
 		return managerId;
@@ -88,6 +90,14 @@ public class VersionManager extends Customer {
 
 	public void setManagerEmail(String managerEmail) {
 		this.managerEmail = managerEmail;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 	
 }
