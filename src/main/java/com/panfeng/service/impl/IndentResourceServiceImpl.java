@@ -18,6 +18,7 @@ import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.IndentComment;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
+import com.panfeng.service.FileStatusService;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentResourceService;
@@ -53,6 +54,8 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	private ApplicationContext applicationContext;
 
 	private static ResourcesType resourcesIndentMedia = ResourcesType.INDENT_MEDIA;
+	@Autowired
+	private FileStatusService fileStatusService;
 
 	@Override
 	public List<IndentResource> findIndentList(IndentProject indentProject) {
@@ -61,10 +64,25 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 		// 获取多例的服务
 		UserTempService userTempService = applicationContext
 				.getBean(UserTempService.class);
+
+		List<String> key = new ArrayList<>();
+		// 获取所有资源文件ID集合
 		for (IndentResource indentResource : list) {
+			key.add(Long.toString(indentResource.getIrId()));
+		}
+		// 获取redis 内文件状态集合 -->System.arraycopy();
+		
+		String[] keyarray = key.toArray(new String[key.size()]);
+		List<String> states = fileStatusService.find(
+				"r_" + indentProject.getId(), keyarray);
+		IndentResource indentResource;
+		for (int i = 0; i < list.size(); i++) {
+			indentResource=list.get(i);
+			// 添加用户信息
 			indentResource.setUserViewModel(userTempService.getInfo(
 					indentResource.getIrUserType(),
 					indentResource.getIrUserId()));
+			indentResource.setState(states.get(i));
 		}
 		return list;
 	};
@@ -104,13 +122,11 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 				resource.setIrProcessInstanceId(at.getProcessInstanceId());
 
 				// TODO 添加文件过滤
-
+				indent_ResourceMapper.save(resource);
 				// 转换文件
 				onlineDocService.convertFile(resource);
 
-				indent_ResourceMapper.save(resource);
-
-				//onlineDocService.convertFile(resource);
+				// onlineDocService.convertFile(resource);
 			}
 
 			return true;
@@ -190,16 +206,14 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	@Override
 	public List<String> getTags() {
 		List<String> tags = new ArrayList<String>();
-		tags.add("脚本");
-		tags.add("分镜");
-		tags.add("合同");
-		tags.add("订购单");
-		tags.add("修改建议");
-		tags.add("需求单");
-		tags.add("样片");
-		tags.add("脚本");
-		tags.add("成片");
+		tags.add("需求文档");
+		tags.add("Q&A文档");
+		tags.add("排期表");
+		tags.add("策划方案");
+		tags.add("制作导演信息");
+		tags.add("分镜头脚本");
 		tags.add("花絮");
+		tags.add("成片");
 		return tags;
 	}
 

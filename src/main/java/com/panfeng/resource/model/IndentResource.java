@@ -116,6 +116,17 @@ public class IndentResource extends BaseObject {
 	}
 	///冗余字段///////////////////////
 	private UserViewModel userViewModel=null;
+	
+	private String state="";
+
+	
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
 
 	public UserViewModel getUserViewModel() {
 		return userViewModel;

@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import com.panfeng.resource.model.IndentProject;
+import com.panfeng.resource.model.IndentResource;
+
 public class FileUtils {
 
 	/**
@@ -154,5 +157,16 @@ public class FileUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	/**
+	 * 生成redis 储存文件的key
+	 * @param indentProject
+	 * @return
+	 */
+	public static String  getRedisKey(IndentProject indentProject){
+		return "r_"+indentProject.getId();
+	}
+	public static String  getRedisKey(IndentResource indentResource){
+		return "r_"+indentResource.getIrIndentId();
 	}
 }

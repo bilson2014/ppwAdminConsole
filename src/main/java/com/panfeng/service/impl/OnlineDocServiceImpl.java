@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.resource.model.IndentResource;
+import com.panfeng.service.FileStatusService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.OnlineDocService;
 import com.panfeng.util.Constants;
@@ -19,15 +20,21 @@ import com.panfeng.util.VerifyFileUtils;
 public class OnlineDocServiceImpl implements OnlineDocService {
 	@Autowired
 	IndentResourceService indentResourceService;
+	@Autowired
+	FileStatusService fileStatusService;
 	String pdf2html = Constants.PDF2HTML;
-	public static String NOTAVAILABLE= "not_available";
-	public static String CONVER="conver";
-	
+
+	public static final String TRANSFORMATION = "transformation";
+	public static final String FINISH = "finish";
+	public static final String FAIL = "fail";
+
 	public String convertFile(IndentResource indentResource) {
 		new Thread(new Runnable() {
-
 			@Override
 			public void run() {
+				System.out.println(indentResource.getIrIndentId()+"~"+indentResource.getIrId());
+				fileStatusService.save(FileUtils.getRedisKey(indentResource),
+						indentResource.getIrId() + "", TRANSFORMATION);
 				String fileName = indentResource.getIrFormatName();
 				String extName = FileUtils.getExtName(fileName, ".");
 				boolean isDoc = VerifyFileUtils.verifyDocFile(extName);
@@ -43,6 +50,9 @@ public class OnlineDocServiceImpl implements OnlineDocService {
 							+ "/FileConversion/convert",
 							multipartEntityBuilder, output.getAbsolutePath());
 				}
+				System.out.println(indentResource.getIrIndentId()+"~"+indentResource.getIrId());
+				fileStatusService.save(FileUtils.getRedisKey(indentResource),
+						indentResource.getIrId() + "", FINISH);
 			}
 		}).start();
 
