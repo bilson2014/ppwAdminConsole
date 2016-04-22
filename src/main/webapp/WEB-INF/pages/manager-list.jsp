@@ -72,6 +72,10 @@
 	                <input name="managerPassword" type="password" class="easyui-textbox" prompt="Password" iconCls="icon-lock">
 	            </div>
 	            <div class="fitem">
+	                <label>手机:</label>
+	                <input class="easyui-validatebox textbox" validtype="mobile" name="phoneNumber" required="true"/>
+	            </div>
+	            <div class="fitem">
 	                <label>邮箱:</label>
 	                <input class="easyui-validatebox" validType="email" name="managerEmail" required="true"/>
 	            </div>

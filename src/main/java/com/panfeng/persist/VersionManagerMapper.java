@@ -23,6 +23,8 @@ public interface VersionManagerMapper {
 	
 	public VersionManager doLogin(@Param("loginName") final String loginName,@Param("password") final String pwd);
 	
-	public long editPassword(@Param("managerId") final long managerId,@Param("password") final String pwd);
+	public long editPassword(@Param("phoneNumber") final String phoneNumber,@Param("password") final String pwd);
+
+	public long checkPhoneNumber(@Param("phoneNumber") final String phoneNumber);
 
 }
