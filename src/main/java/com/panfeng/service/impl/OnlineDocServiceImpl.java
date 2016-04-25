@@ -76,7 +76,7 @@ public class OnlineDocServiceImpl implements OnlineDocService {
 			File file = new File(output.getAbsolutePath(), fileName);
 			if (!file.exists()) {
 				File file1 = indentResourceService.getFile(indentResource);
-				file1.renameTo(file);
+				FileUtils.copyFile(file1, file);
 			}
 			return fileName;
 		}
