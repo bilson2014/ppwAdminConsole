@@ -343,6 +343,7 @@ function saveFuc(){ // 注册 保存按钮
 			$('#dlg').dialog('close');
 			datagrid.datagrid('reload');
 			progressClose();
+			$.message('操作成功!');
 		}
 	});
 }

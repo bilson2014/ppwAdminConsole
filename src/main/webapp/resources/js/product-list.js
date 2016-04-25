@@ -447,6 +447,7 @@ function save(){
 			$('#dlg').dialog('close');
 			datagrid.datagrid('reload');
 			progressClose();
+			$.message('操作成功!');
 		}
 	});
 	
