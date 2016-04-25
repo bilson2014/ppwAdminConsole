@@ -11,7 +11,7 @@
 				   m.MANAGERDESCRIPTION AS managerDescription,
 				   m.MANAGEREMAIL AS managerEmail,
 				   m.PHONENUMBER AS phoneNumber,
-				   DATE_FORMAT(m.UPDATEDATE,'%Y-%m-%d %T') AS uploadDate
+				   DATE_FORMAT(m.UPDATEDATE,'%Y-%m-%d %T') AS updateDate
 			FROM VERSIONMANAGER m 
 			WHERE 1 = 1
 					AND m.MANAGERID = ${managerId}
@@ -26,7 +26,7 @@
 				   m.MANAGERDESCRIPTION AS managerDescription,
 				   m.MANAGEREMAIL AS managerEmail,
 				   m.PHONENUMBER AS phoneNumber,
-				   DATE_FORMAT(m.UPDATEDATE,'%Y-%m-%d %T') AS uploadDate
+				   DATE_FORMAT(m.UPDATEDATE,'%Y-%m-%d %T') AS updateDate
 			FROM VERSIONMANAGER m 
 			WHERE 1 = 1
 		]]>
@@ -59,7 +59,7 @@
 				   m.MANAGERDESCRIPTION AS managerDescription,
 				   m.MANAGEREMAIL AS managerEmail,
 				   m.PHONENUMBER AS phoneNumber,
-				   DATE_FORMAT(m.UPDATEDATE,'%Y-%m-%d %T') AS uploadDate
+				   DATE_FORMAT(m.UPDATEDATE,'%Y-%m-%d %T') AS updateDate
 			FROM VERSIONMANAGER m 
 			WHERE  m.MANAGERLOGINNAME = #{loginName}
 			   AND m.MANAGERPASSWORD = #{password}
