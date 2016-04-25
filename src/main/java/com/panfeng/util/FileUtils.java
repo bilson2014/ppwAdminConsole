@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 
 import com.panfeng.resource.model.IndentProject;
@@ -168,5 +169,31 @@ public class FileUtils {
 	}
 	public static String  getRedisKey(IndentResource indentResource){
 		return "r_"+indentResource.getIrIndentId();
+	}
+	//复制文件
+	public static void copyFile(File source, File target) {  
+	    InputStream fis = null;
+	    OutputStream fos = null;
+	    try {
+	        fis = new FileInputStream(source);
+	        fos = new FileOutputStream(target);
+	        byte[] buf = new byte[1024];
+	        int i;
+	        while ((i = fis.read(buf)) != -1){
+	            fos.write(buf, 0, i);
+	        }
+	    }
+	    catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	    	try {
+				if(fis!=null)
+					fis.close();
+				if(fos!=null)
+					fos.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	    }  
 	}
 }
