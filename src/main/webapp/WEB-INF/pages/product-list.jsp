@@ -155,17 +155,18 @@
 					</div>
 				</div>
 				
-				<div class="online">
-					<div class="lable l-width">封面图片</div>
-					<div class="d-float f-width">
-						<input type="file" id="picLDFile" name="uploadFiles" class="p-file" />
-					</div>
-				</div>
 				
 				<div class="online">
 					<div class="lable l-width">缩略图</div>
 					<div class="d-float f-width">
 						<input type="file" id="picHDFile" name="uploadFiles" class="p-file" />
+					</div>
+				</div>
+				
+				<div class="online">
+					<div class="lable l-width">封面图片</div>
+					<div class="d-float f-width">
+						<input type="file" id="picLDFile" name="uploadFiles" class="p-file" />
 					</div>
 				</div>
 				

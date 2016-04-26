@@ -284,10 +284,8 @@ public class ProductController extends BaseController {
 			final Product product) {
 		
 		final long productId = product.getProductId(); // product id
-		final Product originalProduct = proService.findProductById(productId); // 获取
-																				// 未更改前的
-																				// product
-																				// 对象,用于删除修改过的文件
+		final Product originalProduct = proService.findProductById(productId);
+		// 获取未更改前的product对象,用于删除修改过的文件
 		final List<String> pathList = new ArrayList<String>(); // 路径集合
 
 		try {
