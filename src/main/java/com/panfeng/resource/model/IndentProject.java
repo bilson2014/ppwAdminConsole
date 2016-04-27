@@ -15,8 +15,8 @@ public class IndentProject extends BaseObject {
 
 	private long id = -1;
 	private String projectName = "";
-	private String userName = "";
-	private String userContact = "";
+	private String userName = ""; // 客户公司名称
+	private String userContact = ""; // 客户名称
 	private String userPhone = "";
 	private String teamName = "";
 	private String teamContact = "";

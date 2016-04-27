@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.IndentProject;
+import com.panfeng.resource.view.IndentProjectView;
 
 public interface IndentProjectService {
 
@@ -29,4 +30,16 @@ public interface IndentProjectService {
 	public boolean cancelProject(IndentProject indentProject);
 	
 	public void getReport(IndentProject indentProject,OutputStream outputStream);
+
+	/**
+	 * 后台分页显示项目信息
+	 * @param view 条件
+	 */
+	public List<IndentProject> listWithPagination(final IndentProjectView view);
+
+	/**
+	 * 查询项目总数
+	 * @param view 条件
+	 */
+	public long maxSize(final IndentProjectView view);
 }

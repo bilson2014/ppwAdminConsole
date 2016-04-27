@@ -3,6 +3,7 @@ package com.panfeng.persist;
 import java.util.List;
 
 import com.panfeng.resource.model.IndentProject;
+import com.panfeng.resource.view.IndentProjectView;
 
 public interface IndentProjectMapper {
 
@@ -19,5 +20,9 @@ public interface IndentProjectMapper {
 	public List<IndentProject> findProjectByUserName(IndentProject indentProject);
 	
 	public long cancelProject(IndentProject indentProject);
+
+	public List<IndentProject> listWithPagination(final IndentProjectView view);
+
+	public long maxSize(final IndentProjectView view);
 	
 }

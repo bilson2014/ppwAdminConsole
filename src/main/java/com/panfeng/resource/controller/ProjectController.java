@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.client.utils.DateUtils;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.resource.model.IndentProject;
+import com.panfeng.resource.view.DataGrid;
+import com.panfeng.resource.view.IndentProjectView;
+import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.IndentProjectService;
 
 @RestController
@@ -95,5 +99,30 @@ public class ProjectController extends BaseController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	// 跳转项目列表
+	@RequestMapping("/project-list")
+	public ModelAndView view(final HttpServletRequest request){
+		
+		return new ModelAndView("project-list");
+	}
+	
+	@RequestMapping("/list")
+	public DataGrid<IndentProject> list(final IndentProjectView view,final PageFilter pf){
+		
+		final long page = pf.getPage();
+		final long rows = pf.getRows();
+		view.setBegin((page - 1) * rows);
+		view.setLimit(rows);
+		
+		DataGrid<IndentProject> dataGrid = new DataGrid<IndentProject>();
+		final List<IndentProject> list = indentProjectService.listWithPagination(view);
+		dataGrid.setRows(list);
+		
+		final long total = indentProjectService.maxSize(view);
+		dataGrid.setTotal(total);
+		return dataGrid;
 	}
 }
