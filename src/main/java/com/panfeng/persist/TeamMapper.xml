@@ -371,7 +371,7 @@
 				   t.TEAMID AS teamId,
 				   t.TEAMNAME AS teamName,
 				   t.PHONENUMBER AS phoneNumber,
-				   t.LOGINNAME AS loginName
+				   t.LINKMAN AS loginName
 			 FROM TEAM t WHERE 1=1
 		]]>
 		

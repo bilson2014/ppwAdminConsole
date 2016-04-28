@@ -175,10 +175,10 @@
 				SELECT 
 				i.IP_ID AS id,
 				i.IP_PROJECT_NAME AS projectName,
-				u.userName AS userName,
+				u.USERCOMPANY AS userName,
 				i.IP_USER_CONTACT AS userContact,
 				i.IP_USER_PHONE AS userPhone,
-				t.teamName AS teamName,
+				t.TEAMNAME AS teamName,
 				i.IP_TEAM_CONTACT AS teamContact,
 				i.IP_TEAM_PHONE AS teamPhone,
 				i.IP_PRICE AS price,
@@ -193,9 +193,9 @@
 			LEFT JOIN VERSIONMANAGER VM
 				ON VM.MANAGERID = i.IP_USER_ID
 			LEFT JOIN USERS u 
-			ON i.ip_customerId=u.id 
+				ON i.ip_customerId=u.id 
 			LEFT JOIN TEAM t
-			ON i.ip_teamId=t.teamId
+				ON i.ip_teamId=t.teamId
 			WHERE 1 = 1
 		]]>
 		
