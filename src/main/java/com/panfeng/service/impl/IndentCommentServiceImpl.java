@@ -3,7 +3,6 @@ package com.panfeng.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.panfeng.domain.GlobalConstant;
@@ -19,7 +18,7 @@ public class IndentCommentServiceImpl implements IndentCommentService {
 	@Autowired
 	private IndentCommentMapper indent_CommentMapper;
 	@Autowired
-	private ApplicationContext applicationContext;
+	private UserTempService userTempService;
 
 	@Override
 	public long addComment(IndentComment ic) {
@@ -29,8 +28,6 @@ public class IndentCommentServiceImpl implements IndentCommentService {
 	public List<IndentComment> getIndentCommentList(IndentProject indentProject) {
 		List<IndentComment> list = indent_CommentMapper
 				.findCommentByIndentId(indentProject);
-		//获取多例的服务
-		UserTempService  userTempService= applicationContext.getBean(UserTempService.class);
 		for (IndentComment indentComment : list) {
 			indentComment
 					.setUserViewModel(userTempService.getInfo(
@@ -57,8 +54,6 @@ public class IndentCommentServiceImpl implements IndentCommentService {
 	}
 	@Override
 	public void createSystemMsg(String msg, IndentProject indentProject) {
-		UserTempService userTempService = applicationContext
-				.getBean(UserTempService.class);
 		// 创建系统消息
 		IndentComment indentComment = new IndentComment();
 		indentComment.setIcUserId(888);

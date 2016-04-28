@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,7 +50,7 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	private OnlineDocService onlineDocService;
 
 	@Autowired
-	private ApplicationContext applicationContext;
+	private UserTempService userTempService;
 
 	private static ResourcesType resourcesIndentMedia = ResourcesType.INDENT_MEDIA;
 	@Autowired
@@ -62,9 +61,6 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 		List<IndentResource> list = indent_ResourceMapper
 				.findResourcetListByIndentId(indentProject);
 		// 获取多例的服务
-		UserTempService userTempService = applicationContext
-				.getBean(UserTempService.class);
-
 		List<String> key = new ArrayList<>();
 		// 获取所有资源文件ID集合
 		for (IndentResource indentResource : list) {

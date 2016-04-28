@@ -8,10 +8,8 @@
 		<![CDATA[
 		INSERT INTO INDENT_PROJECT (
 			IP_PROJECT_NAME,
-			IP_USER_NAME,
 			IP_USER_CONTACT,
 			IP_USER_PHONE,
-			IP_TEAM_NAME,
 			IP_TEAM_CONTACT,
 			IP_TEAM_PHONE,
 			IP_PRICE,
@@ -25,10 +23,8 @@
 			IP_TEAMID
 		)VALUES (
 			#{projectName},
-			#{userName},
 			#{userContact},
 			#{userPhone},
-			#{teamName},
 			#{teamContact},
 			#{teamPhone},
 			#{price},
@@ -48,10 +44,8 @@
 		<![CDATA[
 			UPDATE INDENT_PROJECT i SET 
 				i.IP_PROJECT_NAME =#{projectName} ,
-				i.IP_USER_NAME =#{userName} ,
 				i.IP_USER_CONTACT =#{userContact} ,
 				i.IP_USER_PHONE=#{userPhone} ,
-				i.IP_TEAM_NAME =#{teamName} ,
 				i.IP_TEAM_CONTACT =#{teamContact} ,
 				i.IP_TEAM_PHONE =#{teamPhone},
 				i.IP_PRICE =#{price},
@@ -94,10 +88,8 @@
 			SELECT 
 				i.IP_ID AS id,
 				i.IP_PROJECT_NAME AS projectName,
-				i.IP_USER_NAME AS userName,
 				i.IP_USER_CONTACT AS userContact,
 				i.IP_USER_PHONE AS userPhone,
-				i.IP_TEAM_NAME AS teamName,
 				i.IP_TEAM_CONTACT AS teamContact,
 				i.IP_TEAM_PHONE AS teamPhone,
 				i.IP_PRICE AS price,
@@ -108,8 +100,12 @@
 				i.IP_SOURCE AS source,
 				i.IP_STATE AS state,
 				i.IP_CUSTOMERID AS customerId,
-				i.IP_TEAMID AS teamId
-			FROM INDENT_PROJECT i WHERE i.IP_USER_TYPE =#{userType}  AND i.IP_USER_ID=${userId} ORDER BY i.IP_ID DESC;
+				i.IP_TEAMID AS teamId,
+				u.userName AS userName,
+				t.teamName AS  teamName
+			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
+			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
+     		HAVING i.IP_USER_TYPE =#{userType}  AND i.IP_USER_ID=${userId} ORDER BY i.IP_ID DESC;
 		]]>
 	</select>
 
@@ -118,10 +114,8 @@
 			SELECT 
 				i.IP_ID AS id,
 				i.IP_PROJECT_NAME AS projectName,
-				i.IP_USER_NAME AS userName,
 				i.IP_USER_CONTACT AS userContact,
 				i.IP_USER_PHONE AS userPhone,
-				i.IP_TEAM_NAME AS teamName,
 				i.IP_TEAM_CONTACT AS teamContact,
 				i.IP_TEAM_PHONE AS teamPhone,
 				i.IP_PRICE AS price,
@@ -132,8 +126,12 @@
 				i.IP_SOURCE AS source,
 				i.IP_STATE AS state,
 				i.IP_CUSTOMERID AS customerId,
-				i.IP_TEAMID AS teamId
-			FROM INDENT_PROJECT i WHERE i.IP_ID = #{id};
+				i.IP_TEAMID AS teamId,
+				u.userName AS userName,
+				t.teamName AS  teamName
+			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
+			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
+     		HAVING i.IP_ID = #{id}
 		]]>
 	</select>
 	
@@ -142,10 +140,8 @@
 			SELECT 
 				i.IP_ID AS id,
 				i.IP_PROJECT_NAME AS projectName,
-				i.IP_USER_NAME AS userName,
 				i.IP_USER_CONTACT AS userContact,
 				i.IP_USER_PHONE AS userPhone,
-				i.IP_TEAM_NAME AS teamName,
 				i.IP_TEAM_CONTACT AS teamContact,
 				i.IP_TEAM_PHONE AS teamPhone,
 				i.IP_PRICE AS price,
@@ -156,8 +152,12 @@
 				i.IP_SOURCE AS source,
 				i.IP_STATE AS state,
 				i.IP_CUSTOMERID AS customerId,
-				i.IP_TEAMID AS teamId
-			FROM INDENT_PROJECT i WHERE 1=1
+				i.IP_TEAMID AS teamId,
+				u.userName AS userName,
+				t.teamName AS  teamName
+			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
+			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
+     		HAVING 1=1		
 		]]>
 		<if test="userName != null and userName != ''">
 			AND i.IP_USER_NAME = #{userName}
@@ -172,13 +172,13 @@
 	
 	<select id="listWithPagination" resultType="IndentProject">
 		<![CDATA[
-			SELECT 
+				SELECT 
 				i.IP_ID AS id,
 				i.IP_PROJECT_NAME AS projectName,
-				i.IP_USER_NAME AS userName,
+				u.userName AS userName,
 				i.IP_USER_CONTACT AS userContact,
 				i.IP_USER_PHONE AS userPhone,
-				i.IP_TEAM_NAME AS teamName,
+				t.teamName AS teamName,
 				i.IP_TEAM_CONTACT AS teamContact,
 				i.IP_TEAM_PHONE AS teamPhone,
 				i.IP_PRICE AS price,
@@ -192,6 +192,10 @@
 			FROM INDENT_PROJECT i 
 			LEFT JOIN VERSIONMANAGER VM
 				ON VM.MANAGERID = i.IP_USER_ID
+			LEFT JOIN USERS u 
+			ON i.ip_customerId=u.id 
+			LEFT JOIN TEAM t
+			ON i.ip_teamId=t.teamId
 			WHERE 1 = 1
 		]]>
 		
