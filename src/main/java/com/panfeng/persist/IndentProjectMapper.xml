@@ -20,7 +20,9 @@
 			IP_DESCRIPTION,
 			IP_SERIAL,
 			IP_SOURCE,
-			IP_STATE
+			IP_STATE,
+			IP_CUSTOMERID,
+			IP_TEAMID
 		)VALUES (
 			#{projectName},
 			#{userName},
@@ -35,7 +37,9 @@
 			#{description},
 			#{serial},
 			#{source},
-			${state}
+			${state},
+			${customerId},
+			${teamId}
 		);
 		]]>
 	</insert>
@@ -56,7 +60,9 @@
 				i.IP_USER_ID=${userId},
 				i.IP_SERIAL=#{serial},
 				i.IP_SOURCE=#{source},
-				i.IP_STATE=${state}
+				i.IP_STATE=${state},
+				i.IP_CUSTOMERID=${customerId},
+				i.IP_TEAMID=${teamId}
 			WHERE i.IP_ID = ${id};
 		]]>
 	</update>
@@ -92,7 +98,9 @@
 				i.IP_DESCRIPTION AS description,
 				i.IP_SERIAL AS serial,
 				i.IP_SOURCE AS source,
-				i.IP_STATE AS state
+				i.IP_STATE AS state,
+				i.IP_CUSTOMERID AS customerId,
+				i.IP_TEAMID AS teamId
 			FROM INDENT_PROJECT i WHERE i.IP_USER_TYPE =#{userType}  AND i.IP_USER_ID=${userId} ORDER BY i.IP_ID DESC;
 		]]>
 	</select>
@@ -114,7 +122,9 @@
 				i.IP_DESCRIPTION AS description,
 				i.IP_SERIAL AS serial,
 				i.IP_SOURCE AS source,
-				i.IP_STATE AS state
+				i.IP_STATE AS state,
+				i.IP_CUSTOMERID AS customerId,
+				i.IP_TEAMID AS teamId
 			FROM INDENT_PROJECT i WHERE i.IP_ID = #{id};
 		]]>
 	</select>
@@ -136,7 +146,9 @@
 				i.IP_DESCRIPTION AS description,
 				i.IP_SERIAL AS serial,
 				i.IP_SOURCE AS source,
-				i.IP_STATE AS state
+				i.IP_STATE AS state,
+				i.IP_CUSTOMERID AS customerId,
+				i.IP_TEAMID AS teamId
 			FROM INDENT_PROJECT i WHERE 1=1
 		]]>
 		<if test="userName != null and userName != ''">
