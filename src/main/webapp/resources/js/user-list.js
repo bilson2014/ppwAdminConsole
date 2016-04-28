@@ -41,6 +41,18 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'userCompany',
+						title : '客户公司',
+						width : 150,
+						align : 'center' ,
+						editor : {
+							type : 'validatebox' ,
+							options : {
+								required : false , 
+								missingMessage : '请填写客户公司!'
+							}
+						}
+					},{
 						field : 'sex' ,
 						title : '性别' ,
 						align : 'center' ,
@@ -133,7 +145,6 @@ $().ready(function(){
 		showFooter : false,
 		toolbar : '#toolbar',
 		onAfterEdit:function(index , record){
-			console.log(record);
 			delete record.roles;
 			$.post(flag =='add' ? getContextPath() + '/portal/user/save' : getContextPath() + '/portal/user/update', record , function(result){
 				datagrid.datagrid('clearSelections');
