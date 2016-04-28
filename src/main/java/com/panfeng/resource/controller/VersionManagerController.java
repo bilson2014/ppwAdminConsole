@@ -142,13 +142,6 @@ public class VersionManagerController extends BaseController{
 		return ret;
 	}
 	
-	@RequestMapping("/manager/getAll")
-	public List<VersionManager> getAll(){
-		
-		final List<VersionManager> list = service.all();
-		return list;
-	}
-	
 	// --------------------  前端方法 ----------------
 	
 	/**
