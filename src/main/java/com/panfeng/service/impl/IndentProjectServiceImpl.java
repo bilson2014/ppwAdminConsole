@@ -68,20 +68,17 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public List<IndentProject> findProjectList(IndentProject indentProject) {
 		String userType = indentProject.getUserType();
-		long userId = indentProject.getUserId();
-		UserViewModel userViewModel = userTempService.getInfo(userType, userId);
-		String userName = userViewModel.getOrgName();
+		//UserViewModel userViewModel = userTempService.getInfo(userType, userId);
+		//String userName = userViewModel.getOrgName();
 		List<IndentProject> list=null;
 		switch (userType) {
 		// 用户身份 -- 客户
 		case GlobalConstant.ROLE_CUSTOMER:
-			indentProject.setUserName(userName);
 			list= indentProjectMapper
 					.findProjectByUserName(indentProject);
 			break;
 		// 用户身份 -- 供应商
 		case GlobalConstant.ROLE_PROVIDER:
-			indentProject.setTeamName(userName);
 			list= indentProjectMapper
 					.findProjectByUserName(indentProject);
 			break;
