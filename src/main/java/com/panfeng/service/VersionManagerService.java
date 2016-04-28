@@ -23,4 +23,6 @@ public interface VersionManagerService {
 
 	public long checkPhoneNumber(final String phoneNumber);
 
+	public List<VersionManager> all();
+
 }

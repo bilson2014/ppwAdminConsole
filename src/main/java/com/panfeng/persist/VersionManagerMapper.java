@@ -27,4 +27,6 @@ public interface VersionManagerMapper {
 
 	public long checkPhoneNumber(@Param("phoneNumber") final String phoneNumber);
 
+	public List<VersionManager> all();
+
 }

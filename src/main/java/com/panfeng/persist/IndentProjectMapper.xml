@@ -155,21 +155,28 @@
 			SELECT 
 				i.IP_ID AS id,
 				i.IP_PROJECT_NAME AS projectName,
-				i.IP_USER_NAME AS userName,
-				i.IP_USER_CONTACT AS userContact,
-				i.IP_USER_PHONE AS userPhone,
-				i.IP_TEAM_NAME AS teamName,
-				i.IP_TEAM_CONTACT AS teamContact,
-				i.IP_TEAM_PHONE AS teamPhone,
+				u.USERNAME AS userName,
+				u.REALNAME AS userContact,
+				u.TELEPHONE AS userPhone,
+				t.TEAMNAME AS teamName,
+				t.LINKMAN AS teamContact,
+				t.phoneNumber AS teamPhone,
 				i.IP_PRICE AS price,
 				i.IP_USER_TYPE AS userType,
 				i.IP_USER_ID AS userId,
 				i.IP_DESCRIPTION AS description,
 				i.IP_SERIAL AS serial,
 				i.IP_SOURCE AS source,
-				i.IP_STATE AS state
+				i.IP_STATE AS state,
+				VM.MANAGERREALNAME AS managerRealName
 			FROM INDENT_PROJECT i 
-			WHERE 1=1
+			LEFT JOIN VERSIONMANAGER VM
+				ON VM.MANAGERID = i.IP_USER_ID
+			LEFT JOIN USERS u
+				ON u.ID = i.IP_CUSTOMERID 
+			LEFT JOIN TEAM t
+				ON t.TEAMID = i.IP_TEAMID
+			WHERE 1 = 1
 		]]>
 		
 		<if test="projectId != null and projectId != ''">
