@@ -42,4 +42,12 @@ public interface IndentProjectService {
 	 * @param view 条件
 	 */
 	public long maxSize(final IndentProjectView view);
+	
+	public long delete(final long[] ids);
+
+	public List<IndentProject> getAllTeam();
+
+	public List<IndentProject> getAllUser();
+	
+	public List<IndentProject> getAllVersionManager();
 }

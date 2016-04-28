@@ -7,6 +7,7 @@ import java.util.List;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.FlowDateMapper;
@@ -24,6 +25,7 @@ import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.UserTempService;
+import com.panfeng.util.ValidateUtil;
 
 @Service
 public class IndentProjectServiceImpl implements IndentProjectService {
@@ -211,4 +213,34 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		final long total = indentProjectMapper.maxSize(view);
 		return total;
 	}
+
+	@Transactional
+	public long delete(final long[] ids) {
+		
+		if(ValidateUtil.isValid(ids)){
+			for (final long id : ids) {
+				indentProjectMapper.deleteById(id);
+			}
+		}
+		return 1l;
+	}
+
+	public List<IndentProject> getAllTeam() {
+		
+		final List<IndentProject> list = indentProjectMapper.getAllTeam();
+		return list;
+	}
+
+	public List<IndentProject> getAllUser() {
+		
+		final List<IndentProject> list = indentProjectMapper.getAllUser();
+		return list;
+	}
+	
+	public List<IndentProject> getAllVersionManager() {
+		
+		final List<IndentProject> list = indentProjectMapper.getAllVersionManager();
+		return list;
+	}
+	
 }

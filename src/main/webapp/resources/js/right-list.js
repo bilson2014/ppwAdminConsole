@@ -105,8 +105,8 @@ function delFun(){
 				$.post(getContextPath() + '/portal/right/delete', {ids:ids},function(result){
 					
 					// 刷新数据
-					datagrid.datagrid('clearSelections');
-					datagrid.datagrid('reload');
+					treegrid.treegrid('clearSelections');
+					treegrid.treegrid('reload');
 					$.message('操作成功!');
 				});
 			} else {

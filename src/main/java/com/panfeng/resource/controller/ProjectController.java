@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -131,5 +132,41 @@ public class ProjectController extends BaseController {
 		
 		final long ret = indentProjectService.update(project);
 		return ret;
+	}
+	
+	@RequestMapping(value = "/updateInfo",method = RequestMethod.POST )
+	public long updateInfo(final IndentProject project){
+		
+		final long ret = indentProjectService.update(project);
+		return ret;
+	}
+	
+	@RequestMapping("/delete")
+	public long delete(final long[] ids){
+		
+		final long ret = indentProjectService.delete(ids);
+		return ret;
+	}
+	
+	// 获取所有的供应商
+	@RequestMapping("/getAllTeam")
+	public List<IndentProject> allTeam(){
+		
+		final List<IndentProject> list = indentProjectService.getAllTeam();
+		return list;
+	}
+	
+	@RequestMapping("/getAllUser")
+	public List<IndentProject> allUser(){
+		
+		final List<IndentProject> list = indentProjectService.getAllUser();
+		return list;
+	}
+	
+	@RequestMapping("/getAllVersionManager")
+	public List<IndentProject> allManager(){
+		
+		final List<IndentProject> list = indentProjectService.getAllVersionManager();
+		return list;
 	}
 }

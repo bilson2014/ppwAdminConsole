@@ -74,10 +74,18 @@
 			WHERE i.IP_ID = ${id};
 		]]>
 	</update>
+	
 	<delete id="delete">
 		<![CDATA[
 			DELETE FROM INDENT_PROJECT
 				WHERE ID = ${id}
+		]]>
+	</delete>
+	
+	<delete id="deleteById" >
+		<![CDATA[
+			DELETE FROM INDENT_PROJECT
+				WHERE ID = ${projectId}
 		]]>
 	</delete>
 
@@ -167,12 +175,12 @@
 			SELECT 
 				i.IP_ID AS id,
 				i.IP_PROJECT_NAME AS projectName,
-				u.USERNAME AS userName,
-				u.REALNAME AS userContact,
-				u.TELEPHONE AS userPhone,
-				t.TEAMNAME AS teamName,
-				t.LINKMAN AS teamContact,
-				t.phoneNumber AS teamPhone,
+				i.IP_USER_NAME AS userName,
+				i.IP_USER_CONTACT AS userContact,
+				i.IP_USER_PHONE AS userPhone,
+				i.IP_TEAM_NAME AS teamName,
+				i.IP_TEAM_CONTACT AS teamContact,
+				i.IP_TEAM_PHONE AS teamPhone,
 				i.IP_PRICE AS price,
 				i.IP_USER_TYPE AS userType,
 				i.IP_USER_ID AS userId,
@@ -184,10 +192,6 @@
 			FROM INDENT_PROJECT i 
 			LEFT JOIN VERSIONMANAGER VM
 				ON VM.MANAGERID = i.IP_USER_ID
-			LEFT JOIN USERS u
-				ON u.ID = i.IP_CUSTOMERID 
-			LEFT JOIN TEAM t
-				ON t.TEAMID = i.IP_TEAMID
 			WHERE 1 = 1
 		]]>
 		
@@ -214,5 +218,37 @@
 		<if test="state != null and state != ''">
 			AND i.STATE = ${state}
 		</if>
+	</select>
+	
+	<select id="getAllUser" resultType="IndentProject">
+		<![CDATA[
+			SELECT u.ID AS customerId,
+				   u.USERNAME AS userName,
+				   u.TELEPHONE AS userPhone,
+				   u.REALNAME as userContact
+			FROM USERS u
+		]]>
+	</select>
+	
+	<select id="getAllTeam" resultType="IndentProject">
+		<![CDATA[
+			SELECT t.TEAMID AS teamId,
+				   t.TEAMNAME AS teamName,
+				   t.LINKMAN AS teamContact,
+				   t.PHONENUMBER AS phoneNumber
+			FROM TEAM t
+			WHERE 1 = 1
+				AND TEAMNAME != ''
+				AND t.flag = 1
+		]]>
+	</select>
+	
+	<select id="getAllVersionManager" resultType="IndentProject">
+		<![CDATA[
+			SELECT m.MANAGERID AS userId,
+				   m.MANAGERREALNAME AS managerRealName
+			FROM VERSIONMANAGER m 
+			WHERE 1 = 1
+		]]>
 	</select>
 </mapper>

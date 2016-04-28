@@ -2,6 +2,8 @@ package com.panfeng.persist;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.view.IndentProjectView;
 
@@ -24,5 +26,21 @@ public interface IndentProjectMapper {
 	public List<IndentProject> listWithPagination(final IndentProjectView view);
 
 	public long maxSize(final IndentProjectView view);
+
+	public long deleteById(@Param("projectId") final long id);
 	
+	/**
+	 * 获取所有客户
+	 */
+	public List<IndentProject> getAllUser();
+	
+	/**
+	 * 获取所有供应商
+	 */
+	public List<IndentProject> getAllTeam();
+	
+	/**
+	 * 获取所有视频管家
+	 */
+	public List<IndentProject> getAllVersionManager();
 }

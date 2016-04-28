@@ -1,10 +1,11 @@
 package com.panfeng.resource.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.panfeng.domain.BaseObject;
 
-public class IndentProject extends BaseObject {
+public class IndentProjectBAK extends BaseObject {
 
 	private static final long serialVersionUID = 4610963805615371485L;
 
@@ -12,8 +13,8 @@ public class IndentProject extends BaseObject {
 	public final static int PROJECT_CANCEL = 1;
 	public final static int PROJECT_FINISH = 2;
 
-	private long id = 0l; // 项目流程ID
-	private String projectName = ""; //  
+	private long id = -1;
+	private String projectName = "";
 	private String userName = ""; // 客户公司名称
 	private String userContact = ""; // 客户名称
 	private String userPhone = "";
@@ -31,9 +32,9 @@ public class IndentProject extends BaseObject {
 	
 	private String managerRealName = null; // 管家名字
 	
-	private Long customerId = null; // 客户ID
+	private long customerId = 0l; // 客户ID
 	
-	private Long teamId = null; // 供应商ID
+	private long teamId = 0l; // 供应商ID
 
 	public long getId() {
 		return id;
@@ -107,7 +108,7 @@ public class IndentProject extends BaseObject {
 		this.teamPhone = teamPhone;
 	}
 
-	public IndentProject() {
+	public IndentProjectBAK() {
 		super();
 	}
 
@@ -162,10 +163,10 @@ public class IndentProject extends BaseObject {
 		this.state = state;
 	}
 
-	private Map<String, String> time = null;
-	private ActivitiTask task = null;
+	private Map<String, String> time = new HashMap<>();
+	private ActivitiTask task = new ActivitiTask();
 	private String tag = "";
-	private UserViewModel userViewModel = null; 
+	private UserViewModel userViewModel=null; 
 
 	public UserViewModel getUserViewModel() {
 		return userViewModel;
@@ -207,19 +208,19 @@ public class IndentProject extends BaseObject {
 		this.managerRealName = managerRealName;
 	}
 
-	public Long getCustomerId() {
+	public long getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(Long customerId) {
+	public void setCustomerId(long customerId) {
 		this.customerId = customerId;
 	}
 
-	public Long getTeamId() {
+	public long getTeamId() {
 		return teamId;
 	}
 
-	public void setTeamId(Long teamId) {
+	public void setTeamId(long teamId) {
 		this.teamId = teamId;
 	}
 

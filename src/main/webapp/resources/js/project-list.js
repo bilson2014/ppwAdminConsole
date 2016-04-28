@@ -64,22 +64,20 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'managerRealName' ,
+						field : 'userId' ,
 						title : '视频管家' ,
 						align : 'center' ,
-						width : 70,
+						formatter : function(value,row,index){
+							return '<span>'+ row.managerRealName +'</span>' ;
+						},
 						editor : {
 							type : 'combobox' ,
 							options : {
-								url : getContextPath() + '/portal/manager/getAll',
+								url : getContextPath() + '/project/getAllVersionManager',
 								valueField:'userId',
 								textField:'managerRealName',
 								required : true ,
-								missingMessage : '请选择视频管家!',
-								onSelect : function(){
-									// 当选择一条数据时
-									alert('hehe');
-								}
+								missingMessage : '请选择视频管家!'
 							}
 						}
 					},{
@@ -88,18 +86,21 @@ $().ready(function(){
 						width : 110,
 						align : 'center'
 					},{
-						field : 'userContact' ,
+						field : 'customerId' ,
 						title : '客户' ,
 						align : 'center' ,
 						width : 70,
+						formatter : function(value,row,index){
+							return '<span>'+ row.userContact +'</span>' ;
+						},
 						editor : {
 							type : 'combobox' ,
 							options : {
-								url : getContextPath() + '/portal/user/loadAll',
+								url : getContextPath() + '/project/getAllUser',
 								valueField:'customerId',
 								textField:'userName',
 								required : true ,
-								missingMessage : '请选择所属项目!'
+								missingMessage : '请选择客户!'
 							}
 						}
 					},{
@@ -108,22 +109,21 @@ $().ready(function(){
 						width : 110,
 						align : 'center'
 					},{
-						field : 'teamName',
+						field : 'teamId',
 						title : '供应商名称',
 						width : 70,
 						align : 'center' ,
+						formatter : function(value,row,index){
+							return '<span>'+ row.teamName +'</span>' ;
+						},
 						editor : {
 							type : 'combobox' ,
 							options : {
-								url : getContextPath() + '/portal/user/loadAll',
-								valueField:'id',
-								textField:'userName',
+								url : getContextPath() + '/project/getAllTeam',
+								valueField:'teamId',
+								textField:'teamName',
 								required : true ,
-								missingMessage : '请选择所属项目!',
-								onSelect : function(){
-									// 当选择一条数据时
-									alert('hehe');
-								}
+								missingMessage : '请选择供应商信息!'
 							}
 						}
 					},{
@@ -159,7 +159,10 @@ $().ready(function(){
 		showFooter : false,
 		toolbar : '#toolbar',
 		onAfterEdit:function(index , record){
-			$.post(flag =='add' ? getContextPath() + '/portal/service/save' : getContextPath() + '/portal/service/update', record , function(result){
+			delete record.time;
+			delete record.task;
+			delete record.userViewModel;
+			$.post(flag =='add' ? getContextPath() + '/project/save' : getContextPath() + '/project/updateInfo', record , function(result){
 				datagrid.datagrid('clearSelections');
 				datagrid.datagrid('reload');
 				$.message('操作成功!');
@@ -224,7 +227,7 @@ function delFuc(){
 					ids += arr[i].id + ',';
 				}
 				ids = ids.substring(0,ids.length-1);
-				$.post(getContextPath() + '/project/cancelProject', {ids:ids},function(result){
+				$.post(getContextPath() + '/project/delete', {ids:ids},function(result){
 					
 					// 刷新数据
 					datagrid.datagrid('clearSelections');
