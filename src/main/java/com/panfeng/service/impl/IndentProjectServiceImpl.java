@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.panfeng.domain.GlobalConstant;
@@ -40,7 +39,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Autowired
 	IndentCommentService indentCommentService;
 	@Autowired
-	ApplicationContext applicationContext;
+	UserTempService userTempService;
 
 	@Override
 	public boolean save(IndentProject indentProject) {
@@ -66,10 +65,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public List<IndentProject> findProjectList(IndentProject indentProject) {
-		UserTempService ust = applicationContext.getBean(UserTempService.class);
 		String userType = indentProject.getUserType();
 		long userId = indentProject.getUserId();
-		UserViewModel userViewModel = ust.getInfo(userType, userId);
+		UserViewModel userViewModel = userTempService.getInfo(userType, userId);
 		String userName = userViewModel.getOrgName();
 		List<IndentProject> list=null;
 		switch (userType) {
@@ -122,7 +120,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			indentCommentService.createSystemMsg(
 					"更新了 " + indentProject.getProjectName() + "项目",
 					indentProject);
-			;
 			return true;
 		}
 		return false;
@@ -178,7 +175,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
 		List<IndentProject> list = indentProjectMapper.findProjectList(indentProject);
-		UserTempService userTempService=applicationContext.getBean(UserTempService.class);
 		for (IndentProject indentProject2 : list) {
 			List<IndentFlow> listDates = indentFlowMapper
 					.findFlowDateByIndentId(indentProject2);
@@ -198,7 +194,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			indentProject2.setTask(at);
 			//填充管家
 			UserViewModel userViewModel=userTempService.getInfo(indentProject2.getUserType(), indentProject2.getUserId());
-			indentProject2.setUserViewModel(userViewModel);;
+			indentProject2.setUserViewModel(userViewModel);
 			projectPoiAdapter.getData().add(indentProject2);
 		}
 		ge.generate(projectPoiAdapter,outputStream);

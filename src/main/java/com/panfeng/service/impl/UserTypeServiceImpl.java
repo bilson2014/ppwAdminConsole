@@ -1,10 +1,6 @@
 package com.panfeng.service.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.panfeng.domain.GlobalConstant;
@@ -18,7 +14,6 @@ import com.panfeng.resource.model.VersionManager;
 import com.panfeng.service.UserTempService;
 
 @Service
-@Scope("prototype")
 public class UserTypeServiceImpl implements UserTempService {
 	@Autowired
 	private UserMapper userMapper;
@@ -26,20 +21,6 @@ public class UserTypeServiceImpl implements UserTempService {
 	private TeamMapper teamMapper;
 	@Autowired
 	private VersionManagerMapper versionManagerMapper;
-
-	// temp cache
-	private Map<Long, UserViewModel> cache = new HashMap<>();
-
-	// 创建key
-	private long buildKey(String userType, long userId) {
-		long key = 0;
-		char[] ch = userType.toCharArray();
-		for (int i = 0; i < ch.length; i++) {
-			key += (int) ch[i];
-		}
-		key += userId;
-		return key;
-	}
 
 	// 创建对象
 	public UserViewModel buildObject(String userType, long userId) {
@@ -101,15 +82,6 @@ public class UserTypeServiceImpl implements UserTempService {
 
 	@Override
 	public UserViewModel getInfo(String userType, long userId) {
-		long key = buildKey(userType, userId);
-		UserViewModel cacheobj = cache.get(key);
-		// synchronized
-		if (cacheobj != null) {
-			return cacheobj;
-		} else {
-			UserViewModel t = buildObject(userType, userId);
-			cache.put(key, cacheobj);
-			return t;
-		}
+		return buildObject(userType, userId);
 	}
 }
