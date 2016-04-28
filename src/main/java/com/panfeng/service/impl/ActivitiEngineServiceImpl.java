@@ -192,6 +192,7 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 				.processInstanceId(processInstanceId).singleResult();
 		return processInstance != null ? processInstance.isSuspended() : false;
 	}
+
 	@Override
 	public boolean isFinish(String processDefinitionKey,
 			String processInstanceBusinessKey, String processInstanceId) {

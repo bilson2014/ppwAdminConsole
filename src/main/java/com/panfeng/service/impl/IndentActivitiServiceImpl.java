@@ -126,7 +126,8 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
 		if (isFinish) {
-			IndentProject indentProject2=indentProjectMapper.findProjectInfo(indentProject);
+			IndentProject indentProject2 = indentProjectMapper
+					.findProjectInfo(indentProject);
 			// 更新项目状态
 			indentProject2.setState(IndentProject.PROJECT_FINISH);
 			indentProjectMapper.update(indentProject2);
@@ -206,7 +207,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				getIndentCurrentFlowId(indentProject));
 		if (res) {
 			indentCommentService.createSystemMsg(
-					"跳转了任务节点 ," + indentProject.getProjectName() + "项目",
+					"跳转了任务节点 ," + indentProject.getProjectName() ,
 					indentProject);
 		}
 		return res;
@@ -299,7 +300,6 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				if (nextTask.getTaskDefinitionKey()
 						.equals(activityImpl.getId())) {
 					activitiTask.setCreateTime(nextTask.getCreateTime());
-					break;
 				}
 			}
 			listactivitiTask.add(activitiTask);
@@ -313,5 +313,30 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		return activitiEngineService.getHistoryProcess(processDefinitionKey,
 				String.valueOf(indentFlow.getIfIndentId()),
 				indentFlow.getIfFlowId());
+	}
+
+	@Override
+	public boolean jumpPrevTask(IndentProject indentProject) {
+		String activityId = "";
+		ActivitiTask activitiTask = getCurrentTask(indentProject);
+		if (activitiTask != null) {
+			String currKey = activitiTask.getTaskDefinitionKey();
+			List<ActivitiTask> list = getNodes(indentProject);
+			ActivitiTask activitiTask2;
+			for (int i = 0; i < list.size(); i++) {
+				activitiTask2 = list.get(i);
+				if (activitiTask2.getTaskDefinitionKey().equals(currKey)
+						&& i != 0) {
+					activityId = list.get(i - 1).getTaskDefinitionKey();
+					break;
+				}
+			}
+			if (activityId.equals("")) {
+				return false;
+			}
+		} else {
+			return false;
+		}
+		return jumpTask(indentProject, activityId);
 	}
 }

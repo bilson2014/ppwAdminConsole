@@ -14,7 +14,7 @@ public interface IndentActivitiService {
 	ActivitiTask getCurrentTask(IndentProject indentProject);
 
 	List<ActivitiTask> getAfterTask(IndentProject indentProject);
-
+	
 	HistoricProcessInstance getHistoryProcess(IndentProject indentProject);
 
 	List<ActivitiTask> getHistoryProcessTask(IndentProject indentProject);
@@ -30,6 +30,8 @@ public interface IndentActivitiService {
 	boolean removeProcess(IndentProject indentProject);
 
 	boolean jumpTask(IndentProject indentProject, String activityId);
+	
+	boolean jumpPrevTask(IndentProject indentProject);
 
 	List<ActivitiTask> getNodes(IndentProject indentProject);
 
@@ -39,5 +41,5 @@ public interface IndentActivitiService {
 
 	List<HistoricTaskInstance> getHistoryProcessTask_O(
 			IndentProject indentProject);
-
+	
 }
