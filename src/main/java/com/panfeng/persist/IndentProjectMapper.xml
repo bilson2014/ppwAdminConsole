@@ -159,13 +159,13 @@
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
      		HAVING 1=1		
 		]]>
-		<if test="userName != null and userName != ''">
-			AND i.IP_USER_NAME = #{userName}
+		<if test="customerId != null and customerId > 0">
+			AND i.IP_CUSTOMERID = ${customerId}
 		</if>
-		<if test="teamName != null and teamName != ''">
-			AND i.IP_TEAM_NAME = #{teamName} 
+		<if test="teamId != null and teamId > 0">
+			AND i.IP_TEAM_NAME = ${teamId}
 		</if>
-		<if test="(userName == null or userName == '') and (teamName == null or teamName == '') ">
+		<if test="(customerId != null and customerId > 0) and (teamId != null and teamId > 0) ">
 			AND 1=2
 		</if>
 	</select>
