@@ -45,6 +45,8 @@ public class User extends Customer{
 	
 	private String imgFileName = null; // 头像文件名称
 	
+	private String userCompany = null; // 客户公司
+	
 	public long getId() {
 		return id;
 	}
@@ -187,6 +189,14 @@ public class User extends Customer{
 
 	public void setImgFileName(String imgFileName) {
 		this.imgFileName = imgFileName;
+	}
+
+	public String getUserCompany() {
+		return userCompany;
+	}
+
+	public void setUserCompany(String userCompany) {
+		this.userCompany = userCompany;
 	}
 
 }

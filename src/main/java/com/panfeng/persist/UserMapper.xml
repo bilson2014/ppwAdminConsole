@@ -14,7 +14,8 @@
 				   u.IMGURL AS imgUrl,
 				   u.SEX AS sex,
 				   u.QQ AS qq,
-				   u.REALNAME as realName,
+				   u.REALNAME AS realName,
+				   u.USERCOMPANY AS userCompany,
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
 			FROM USERS u
@@ -33,6 +34,7 @@
 				   u.SEX AS sex,
 				   u.QQ AS qq,
 				   u.REALNAME as realName,
+				   u.USERCOMPANY AS userCompany,
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
 			FROM USERS u
@@ -69,6 +71,7 @@
 				   u.SEX AS sex,
 				   u.QQ AS qq,
 				   u.REALNAME as realName,
+				   u.USERCOMPANY AS userCompany,
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
 			FROM USERS u
@@ -87,7 +90,8 @@
 				IMGURL,
 				SEX,
 				REALNAME,
-				QQ
+				QQ,
+				USERCOMPANY
 			) VALUES(
 				#{userName},
 				#{telephone},
@@ -97,7 +101,8 @@
 				#{imgUrl},
 				${sex},
 				#{realName},
-				#{qq}
+				#{qq},
+				#{userCompany}
 			)
 		]]>
 	</insert>
@@ -137,7 +142,8 @@
 				   IMGURL = #{imgUrl},
 				   SEX = ${sex},
 				   REALNAME = #{realName},
-				   QQ = #{qq}
+				   QQ = #{qq},
+				   USERCOMPANY = #{userCompany}
 			WHERE ID = ${id}
 		]]>
 	</update>
@@ -153,6 +159,7 @@
 				   u.SEX AS sex,
 				   u.QQ AS qq,
 				   u.REALNAME as realName,
+				   u.USERCOMPANY AS userCompany,
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
 			FROM USERS u
@@ -191,7 +198,8 @@
 					SEX = ${sex},
 					REALNAME = #{realName},
 					email = #{email},
-					qq = #{qq}
+					qq = #{qq},
+					USERCOMPANY = #{userCompany}
 			WHERE id = ${id}
 		]]>
 	</update>
@@ -261,7 +269,8 @@
 			SELECT u.ID AS id,
 				   u.USERNAME AS userName,
 				   u.TELEPHONE AS telephone,
-				   u.REALNAME as realName
+				   u.REALNAME as realName,
+				   u.USERCOMPANY AS userCompany
 			FROM USERS u
 				WHERE 1=1
 		]]>
