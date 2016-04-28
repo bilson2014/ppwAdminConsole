@@ -20,6 +20,7 @@ import com.panfeng.resource.model.FlowDate;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.UserViewModel;
+import com.panfeng.resource.view.IndentProjectView;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentProjectService;
@@ -201,5 +202,17 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			projectPoiAdapter.getData().add(indentProject2);
 		}
 		ge.generate(projectPoiAdapter,outputStream);
+	}
+
+	public List<IndentProject> listWithPagination(final IndentProjectView view) {
+		
+		List<IndentProject> list = indentProjectMapper.listWithPagination(view);
+		return list;
+	}
+
+	public long maxSize(final IndentProjectView view) {
+		
+		final long total = indentProjectMapper.maxSize(view);
+		return total;
 	}
 }

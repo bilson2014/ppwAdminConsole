@@ -127,6 +127,12 @@ public class UserController extends BaseController {
 		return ret;
 	}
 	
+	@RequestMapping("/user/loadAll")
+	public List<User> allUser(){
+		final List<User> list = userService.all();
+		return list;
+	}
+	
 	/**
 	 * 前台登录验证操作
 	 * @param user
