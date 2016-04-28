@@ -27,8 +27,8 @@ import com.panfeng.service.IndentProjectService;
 @RequestMapping("/project")
 public class ProjectController extends BaseController {
 	@Autowired
-	private IndentProjectService indentProjectService;
-
+	private IndentProjectService indentProjectService = null;
+	
 	@RequestMapping("/save")
 	public Boolean save(@RequestBody final IndentProject indentProject) {
 		return indentProjectService.save(indentProject);
@@ -124,5 +124,12 @@ public class ProjectController extends BaseController {
 		final long total = indentProjectService.maxSize(view);
 		dataGrid.setTotal(total);
 		return dataGrid;
+	}
+	
+	@RequestMapping("/update")
+	public long update(@RequestBody final IndentProject project){
+		
+		final long ret = indentProjectService.update(project);
+		return ret;
 	}
 }

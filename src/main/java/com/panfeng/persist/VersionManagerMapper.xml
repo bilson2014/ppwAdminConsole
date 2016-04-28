@@ -133,4 +133,13 @@
 		]]>
 	</select>
 	
+	<select id="all" resultType="VersionManager">
+		<![CDATA[
+			SELECT m.MANAGERID AS managerId,
+				   m.MANAGERREALNAME AS managerRealName
+			FROM VERSIONMANAGER m 
+			WHERE	m.FLAG = 1
+		]]>
+	</select>
+	
 </mapper>

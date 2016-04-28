@@ -28,7 +28,13 @@ public class IndentProject extends BaseObject {
 	// 0 正常 1为取消 2为已完成
 	private int state = 0;
 	private String userType = "";
-	private long userId = -1;
+	private long userId = -1; // 视频管家ID
+	
+	private String managerRealName = null; // 管家名字
+	
+	private long customerId = 0l; // 客户ID
+	
+	private long teamId = 0l; // 供应商ID
 
 	public long getId() {
 		return id;
@@ -192,6 +198,30 @@ public class IndentProject extends BaseObject {
 
 	public void setTag(String tag) {
 		this.tag = tag;
+	}
+
+	public String getManagerRealName() {
+		return managerRealName;
+	}
+
+	public void setManagerRealName(String managerRealName) {
+		this.managerRealName = managerRealName;
+	}
+
+	public long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(long customerId) {
+		this.customerId = customerId;
+	}
+
+	public long getTeamId() {
+		return teamId;
+	}
+
+	public void setTeamId(long teamId) {
+		this.teamId = teamId;
 	}
 
 }

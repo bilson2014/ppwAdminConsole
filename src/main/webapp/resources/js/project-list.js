@@ -41,7 +41,7 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'status',
+						field : 'state',
 						title : '项目状态',
 						align : 'center' ,
 						formatter : function(value,row,index){
@@ -64,6 +64,25 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'managerRealName' ,
+						title : '视频管家' ,
+						align : 'center' ,
+						width : 70,
+						editor : {
+							type : 'combobox' ,
+							options : {
+								url : getContextPath() + '/portal/manager/getAll',
+								valueField:'userId',
+								textField:'managerRealName',
+								required : true ,
+								missingMessage : '请选择视频管家!',
+								onSelect : function(){
+									// 当选择一条数据时
+									alert('hehe');
+								}
+							}
+						}
+					},{
 						field : 'userName',
 						title : '客户公司',
 						width : 110,
@@ -77,14 +96,10 @@ $().ready(function(){
 							type : 'combobox' ,
 							options : {
 								url : getContextPath() + '/portal/user/loadAll',
-								valueField:'id',
+								valueField:'customerId',
 								textField:'userName',
 								required : true ,
-								missingMessage : '请选择所属项目!',
-								ONSELECT : function(){
-									// 当选择一条数据时
-									alert('hehe');
-								}
+								missingMessage : '请选择所属项目!'
 							}
 						}
 					},{
@@ -105,7 +120,7 @@ $().ready(function(){
 								textField:'userName',
 								required : true ,
 								missingMessage : '请选择所属项目!',
-								ONSELECT : function(){
+								onSelect : function(){
 									// 当选择一条数据时
 									alert('hehe');
 								}

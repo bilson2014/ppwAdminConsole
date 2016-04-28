@@ -73,4 +73,10 @@ public class VersionManagerServiceImpl implements VersionManagerService {
 		return ret;
 	}
 
+	public List<VersionManager> all() {
+		
+		final List<VersionManager> list = mapper.all();
+		return list;
+	}
+
 }
