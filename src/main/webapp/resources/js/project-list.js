@@ -144,6 +144,7 @@ function addFuc(){
 	openDialog('dlg',null);
 	formUrl = getContextPath() + '/project/saveInfo';
 	$('#projectId').val(0);
+	$('#userType').val('role_manager');
 }
 
 // 修改
@@ -165,7 +166,7 @@ function delFuc(){
 	if(arr.length <= 0 ){
 		$.message('请选择进行删除操作!');
 	} else {
-		$.messager.confirm('提示信息' , '确认删除?' , function(r){
+		$.messager.confirm('提示信息' , '确认取消流程吗?' , function(r){
 			if(r){
 				var ids = '';
 				for(var i = 0 ; i < arr.length ; i++){
