@@ -1,8 +1,10 @@
 package com.panfeng.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -148,7 +150,17 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		indentFlow.setIfIndentId(indentProject.getId());
 		indentFlow.setIfState(IndentFlow.FLOWENABLE);
 		long l = flowMapper.save(indentFlow);
-
+		//填充默认时间
+		if(indentProject.getTime()==null){
+			 Map<String,String> map=new HashMap<String, String>();
+			List<ActivitiTask> activitiTasks=getNodes(indentProject);
+			for (ActivitiTask activitiTask : activitiTasks) {
+				if(activitiTask!=null)
+					map.put(activitiTask.getTaskDefinitionKey(), "");
+			}
+			indentProject.setTime(map);
+		}
+		
 		// 获取动态节点
 		List<ActivitiTask> nodes = getNodes(indentProject);
 		// 填充流程时间节点
