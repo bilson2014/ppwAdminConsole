@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.panfeng.domain.BaseObject;
+import com.panfeng.util.ValidateUtil;
 
 public class IndentFlow extends BaseObject {
 
@@ -125,6 +126,9 @@ public class IndentFlow extends BaseObject {
 	public static void updateFlowDates(IndentProject indentProject,
 			List<FlowDate> lDates) {
 		Map<String, String> time = indentProject.getTime();
+		if(!ValidateUtil.isValid(time)){
+			time = new HashMap<String, String>();
+		}
 		for (FlowDate flowDate : lDates) {
 			// update time
 			String dateStr = time.get(flowDate.getFdTaskId())!=null&&"".equals(time.get(flowDate.getFdTaskId())) ? defaultDate

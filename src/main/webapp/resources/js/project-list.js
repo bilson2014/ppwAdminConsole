@@ -20,26 +20,12 @@ $().ready(function(){
 						field : 'projectName',
 						title : '项目名称',
 						width : 200,
-						align : 'center' ,
-						editor : {
-							type : 'validatebox' ,
-							options : {
-								required : true , 
-								missingMessage : '请填写项目名称!'
-							}
-						}
+						align : 'center'
 					},{
 						field : 'serial',
 						title : '项目序列号',
 						width : 110,
-						align : 'center',
-						editor : {
-							type : 'validatebox' ,
-							options : {
-								required : true , 
-								missingMessage : '请填写项目名称!'
-							}
-						}
+						align : 'center'
 					},{
 						field : 'state',
 						title : '项目状态',
@@ -52,80 +38,32 @@ $().ready(function(){
 							} else if( value == 2){
 								return '<span style=color:black; >完成</span>' ;
 							}
-						},
-						editor:{
-							type:'combobox' , 
-							options:{
-								data:[{id:0 , val:'正常'},{id:1 , val:'取消'},{id:2 , val:'完成'}] ,
-								valueField:'id' , 
-								textField:'val' ,
-								required:true , 
-								editable : false
-							}
 						}
 					},{
-						field : 'userId' ,
+						field : 'managerRealName' ,
 						title : '视频管家' ,
-						align : 'center' ,
-						formatter : function(value,row,index){
-							return '<span>'+ row.managerRealName +'</span>' ;
-						},
-						editor : {
-							type : 'combobox' ,
-							options : {
-								url : getContextPath() + '/project/getAllVersionManager',
-								valueField:'userId',
-								textField:'managerRealName',
-								required : true ,
-								missingMessage : '请选择视频管家!'
-							}
-						}
+						width : 110,
+						align : 'center'
 					},{
 						field : 'userName',
 						title : '客户公司',
 						width : 110,
 						align : 'center'
 					},{
-						field : 'customerId' ,
-						title : '客户' ,
+						field : 'userContact' ,
+						title : '客户联系人' ,
 						align : 'center' ,
-						width : 70,
-						formatter : function(value,row,index){
-							return '<span>'+ row.userContact +'</span>' ;
-						},
-						editor : {
-							type : 'combobox' ,
-							options : {
-								url : getContextPath() + '/project/getAllUser',
-								valueField:'customerId',
-								textField:'userName',
-								required : true ,
-								missingMessage : '请选择客户!'
-							}
-						}
+						width : 70
 					},{
 						field : 'userPhone',
 						title : '客户手机',
 						width : 110,
 						align : 'center'
 					},{
-						field : 'teamId',
+						field : 'teamName',
 						title : '供应商名称',
 						width : 70,
-						align : 'center' ,
-						formatter : function(value,row,index){
-							return '<span>'+ row.teamName +'</span>' ;
-						},
-						editor : {
-							type : 'combobox' ,
-							options : {
-								url : getContextPath() + '/project/getAllTeam',
-								valueField:'teamId',
-								textField:'teamName',
-								required : true ,
-								missingMessage : '请选择供应商信息!'
-							}
-						}
+						align : 'center'
 					},{
 						field : 'teamContact',
 						title : '供应商联系人',
@@ -137,84 +75,62 @@ $().ready(function(){
 					},{
 						field : 'source',
 						title : '项目来源',
-						align : 'center',
-						editor:{
-							type:'combobox' , 
-							options:{
-								data:[{id:0 , val:'网站下单'},{id:1 , val:'友情推荐'},{id:2 , val:'活动下单'},{id:3 , val:'渠道优惠'},{id:4 , val:'团购下单'},{id:5 , val:'媒体推广'}] ,
-								valueField:'val' , 
-								textField:'val' ,
-								required:true , 
-								editable : false
-							}
-						}
+						align : 'center'
 					},{
 						field : 'price',
 						title : '项目额度',
 						align : 'center'
+					},{
+						field : 'customerId' ,
+						title : '客户ID' ,
+						align : 'center' ,
+						width : 70,
+						hidden: true
+					},{
+						field : 'teamId' ,
+						title : '供应商ID' ,
+						align : 'center' ,
+						width : 70,
+						hidden: true
+					},{
+						field : 'userId' ,
+						title : '视频管家ID' ,
+						align : 'center' ,
+						width : 70,
+						hidden: true
 					}]],
-		pagination: true ,
-		pageSize : 20,
-		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
-		showFooter : false,
-		toolbar : '#toolbar',
-		onAfterEdit:function(index , record){
-			delete record.time;
-			delete record.task;
-			delete record.userViewModel;
-			$.post(flag =='add' ? getContextPath() + '/project/save' : getContextPath() + '/project/updateInfo', record , function(result){
-				datagrid.datagrid('clearSelections');
-				datagrid.datagrid('reload');
-				$.message('操作成功!');
-			});
-		}
+			pagination: true ,
+			pageSize : 20,
+			pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
+			showFooter : false,
+			toolbar : '#toolbar'
 	});
 	
-	service.dataInit();
 });
 
-var service = {
-	dataInit : function(){
-		$('#search-name').combobox({
-			url : getContextPath() + '/portal/service/productSelect',
-			valueField : 'productId',
-			textField : 'productName'
-		});
-	}
-}
 
 //增加
 function addFuc(){
-	if(editing == undefined){
-		flag = 'add';
-		//1 先取消所有的选中状态
-		datagrid.datagrid('unselectAll');
-		//2追加一行
-		datagrid.datagrid('appendRow',{});
-		//3获取当前页的行号
-		editing = datagrid.datagrid('getRows').length -1;
-		//4开启编辑状态
-		datagrid.datagrid('beginEdit', editing);
-	}
+	$('#fm').form('clear');
+	openDialog('dlg',null);
+	formUrl = getContextPath() + '/project/saveInfo';
+	$('input[name="id"]').val(0);
 }
 
-//修改
+// 修改
 function editFuc(){
-	var arr = datagrid.datagrid('getSelections');
-	if(arr.length != 1){
-		$.message('只能选择一条记录进行修改!');
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length == 1){
+		$('#fm').form('clear');
+		$('#fm').form('load',rows[0]);
+		openDialog('dlg',rows[0]);
+		formUrl = getContextPath() + '/project/updateInfo';
 	} else {
-		if(editing == undefined){
-			flag = 'edit';
-			//根据行记录对象获取该行的索引位置
-			editing = datagrid.datagrid('getRowIndex' , arr[0]);
-			//开启编辑状态
-			datagrid.datagrid('beginEdit',editing);
-		}
+		$.message('只能选择一条记录进行修改!');
 	}
 }
 
-//删除
+// 删除
 function delFuc(){
 	var arr = datagrid.datagrid('getSelections');
 	if(arr.length <= 0 ){
@@ -241,16 +157,6 @@ function delFuc(){
 	}
 }
 
-//保存
-function saveFuc(){
-	//保存之前进行数据的校验 , 然后结束编辑并释放编辑状态字段 
-	datagrid.datagrid('beginEdit', editing);
-	if(datagrid.datagrid('validateRow',editing)){
-		datagrid.datagrid('endEdit', editing);
-		editing = undefined;
-	}
-}
-
 // 取消
 function cancelFuc(){
 	//回滚数据 
@@ -258,12 +164,95 @@ function cancelFuc(){
 	editing = undefined;
 }
 
-// 查询
+// 确认事件
+function save(){
+	
+	progressLoad();
+	$('#fm').form('submit',{
+		url : formUrl,
+		onSubmit : function() {
+			var flag = $(this).form('validate');
+			
+			if(!flag){
+				progressClose();
+				$.message('请将信息填写完整!');
+			}
+			return flag;
+		},
+		success : function(result) {
+			$('#dlg').dialog('close');
+			datagrid.datagrid('reload');
+			progressClose();
+			$.message('操作成功!');
+		}
+	});
+}
+
+// 打开dialog
+function openDialog(id,data){
+	$('#' + id).dialog({
+		modal : true,
+		onOpen : function(event, ui) {
+			
+			$('#customerId').combobox({
+				url : getContextPath() + '/project/getAllUser',
+				valueField : 'customerId',
+				textField : 'userName',
+				onSelect : function(record){
+					$('#userContact').textbox('setValue',record.userContact);
+					$('#userPhone').textbox('setValue',record.userPhone);
+				}
+			});
+			
+			$('#teamId').combobox({
+				url : getContextPath() + '/project/getAllTeam',
+				valueField : 'teamId',
+				textField : 'teamName',
+				onSelect : function(record){
+					console.info(record);
+					$('#teamContact').textbox('setValue',record.teamContact);
+					$('#teamPhone').textbox('setValue',record.teamPhone);
+				}
+			});
+			
+			$('#userId').combobox({
+				url : getContextPath() + '/project/getAllVersionManager',
+				valueField : 'userId',
+				textField : 'managerRealName'
+			});
+			
+			if(data != null && data != undefined && data != ''){
+				var userId = data.userId;
+				if(userId != null && userId != undefined && userId != ''){
+					$('#userId').combobox('setValue',userId);
+				}else {
+					$('#userId').combobox('setValue','');
+				}
+				
+				var teamId = data.teamId;
+				if(teamId != null && teamId != undefined && teamId != ''){
+					$('#teamId').combobox('setValue',teamId);
+				}else {
+					$('#teamId').combobox('setValue','');
+				}
+				
+				var customerId = data.customerId;
+				if(customerId != null && customerId != undefined && customerId != ''){
+					$('#customerId').combobox('setValue',customerId);
+				}else {
+					$('#customerId').combobox('setValue','');
+				}
+			}
+		},
+	}).dialog('open').dialog('center');
+}
+
+//查询
 function searchFun(){
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
 
-//清除
+// 清除
 function cleanFun() {
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {});

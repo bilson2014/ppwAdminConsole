@@ -145,6 +145,7 @@
 	            				<option value="29" >呼和浩特</option>
 	            				<option value="30" >拉萨</option>
 	            				<option value="31" >乌鲁木齐</option>
+	            				<option value="32" >天津</option>
 	            			</select>
 	            		</td>
 	            	</tr>

@@ -23,6 +23,7 @@ import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.IndentProjectView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.IndentProjectService;
+import com.panfeng.util.ValidateUtil;
 
 @RestController
 @RequestMapping("/project")
@@ -32,6 +33,7 @@ public class ProjectController extends BaseController {
 	
 	@RequestMapping("/save")
 	public Boolean save(@RequestBody final IndentProject indentProject) {
+		
 		return indentProjectService.save(indentProject);
 	}
 
@@ -141,11 +143,24 @@ public class ProjectController extends BaseController {
 		return ret;
 	}
 	
+	@RequestMapping("/saveInfo")
+	public Boolean saveInfo(final IndentProject indentProject) {
+		
+		return indentProjectService.save(indentProject);
+	}
+	
 	@RequestMapping("/delete")
 	public long delete(final long[] ids){
 		
-		final long ret = indentProjectService.delete(ids);
-		return ret;
+		if(ValidateUtil.isValid(ids)){
+			for (final long id : ids) {
+				final IndentProject project = new IndentProject();
+				project.setId(id);
+				project.setState(IndentProject.PROJECT_CANCEL);
+				indentProjectService.cancelProject(project);
+			}
+		}
+		return 1l;
 	}
 	
 	// 获取所有的供应商
