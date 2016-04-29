@@ -28,8 +28,18 @@ public interface IndentProjectService {
 	public String[] getTags();
 	
 	public boolean cancelProject(IndentProject indentProject);
-	
+	/**
+	 * 生成 indentProject 所属用户的全部报表
+	 * @param indentProject
+	 * @param outputStream
+	 */
 	public void getReport(IndentProject indentProject,OutputStream outputStream);
+	/**
+	 * 生成  list 报表
+	 * @param list
+	 * @param outputStream
+	 */
+	public void getReport(List<IndentProject> list,OutputStream outputStream);
 
 	/**
 	 * 后台分页显示项目信息
