@@ -171,9 +171,13 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public void getReport(IndentProject indentProject,OutputStream outputStream) {
+		List<IndentProject> list = indentProjectMapper.findProjectList(indentProject);
+		getReport(list,outputStream);
+	}
+
+	public void getReport(List<IndentProject> list,OutputStream outputStream){
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
-		List<IndentProject> list = indentProjectMapper.findProjectList(indentProject);
 		for (IndentProject indentProject2 : list) {
 			List<IndentFlow> listDates = indentFlowMapper
 					.findFlowDateByIndentId(indentProject2);
@@ -198,7 +202,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		}
 		ge.generate(projectPoiAdapter,outputStream);
 	}
-
+	
 	public List<IndentProject> listWithPagination(final IndentProjectView view) {
 		
 		List<IndentProject> list = indentProjectMapper.listWithPagination(view);
