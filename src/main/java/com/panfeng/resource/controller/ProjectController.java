@@ -191,4 +191,29 @@ public class ProjectController extends BaseController {
 		final List<IndentProject> list = indentProjectService.getAllProject();
 		return list;
 	}
+	
+	@RequestMapping("/export")
+	public void export(final IndentProjectView view ,final HttpServletResponse response){
+		try {
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("application/octet-stream");
+			String dateString=	DateUtils.formatDate(new Date(), "yyyy-MM-dd");
+			String filename=URLEncoder.encode("项目列表"+dateString+".xlsx", "UTF-8");
+			response.setHeader("Content-Disposition", "attachment; filename=\""
+					+  filename+ "\"\r\n");
+			OutputStream outputStream = response.getOutputStream();
+			// 获取所有的项目 
+			view.setBegin(0);
+			view.setLimit(999999999l);
+			List<IndentProject> list = indentProjectService.listWithPagination(view);
+			indentProjectService.getReport(list, outputStream);
+			if(outputStream!=null){
+				outputStream.flush();
+				outputStream.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

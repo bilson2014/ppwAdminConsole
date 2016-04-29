@@ -276,7 +276,7 @@ function openDialog(id,data){
 	}).dialog('open').dialog('center');
 }
 
-//查询
+// 查询
 function searchFun(){
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
@@ -285,4 +285,18 @@ function searchFun(){
 function cleanFun() {
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {});
+}
+
+// 报表导出
+function exportFun(){
+	
+	var condition = $.toJSON({
+		projectId : $('#search-projectId').val().trim(),
+		state : $('#search-state option:selected').val(),
+		userId : $('#search-userId').val(),
+		teamId : $('#search-teamId').val(),
+		source : $('#search-source option:selected').val()
+	});
+	
+	download(getContextPath() + '/project/export', condition);
 }

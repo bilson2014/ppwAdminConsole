@@ -26,7 +26,7 @@
 					</td>
 					<th>项目状态:</th>
 					<td>
-						<select id="search-state" name="state" editable="false" class="easyui-combobox" >
+						<select id="search-state" name="state" editable="false" class="easyui-combobox" style="width: 70px;">
 							<option value="0" selected>正常</option>
             				<option value="1" >取消</option>
             				<option value="2" >完成</option>
@@ -53,7 +53,11 @@
 						</select>
 					</td>
 					<td>
-						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
+						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
+						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
+						<r:permission uri="/project/export">
+							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="exportFun();">报表导出</a>
+						</r:permission>
 					</td>
 				</tr>
 			</table>
@@ -74,7 +78,7 @@
 		</r:permission>
 		
 		<r:permission uri="/project/delete">
-			<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
+			<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">取消流程</a>
 		</r:permission>
 		
 		<r:mulparampermission uri2="/project/save" uri="/project/updateInfo">
@@ -84,101 +88,103 @@
 		<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 	</div>
 	
-	<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 500px;"
+	<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 400px;"
             closed="true" buttons="#dlg-buttons" title="项目信息">
 	        <form id="fm" method="post">
 	        	<input id="projectId" name="id" type="hidden">
 	        	<input id="userType" name="userType" type="hidden">
 	        	
-	            <div class="online">
-					<div class="lable l-width">项目编号</div>
-					<div class="d-float f-width">
-						<input id="serial" name="serial" class="easyui-textbox" required="true" />
-					</div>
-					
-					<div class="lable l-width">项目状态</div>
-					<div class="d-float f-width">
-						<select id="state" name="state" class="easyui-combobox" editable="false">
-							<option value="0" selected>正常</option>
-            				<option value="1" >取消</option>
-            				<option value="2" >完成</option>
-						</select>
-					</div>
-				</div>
-				
-				<div class="online">
-					<div class="lable l-width">项目名称</div>
-					<div class="d-float f-width1">
-						<input id="projectName" name="projectName" class="easyui-textbox" required="true"/>
-					</div>
-					<div class="lable-right l-width">项目来源</div>
-					<div class="d-float f-width1">
-						<select id="source" name="source" class="easyui-combobox" editable="false">
-							<option value="网站下单" selected>网站下单</option>
-            				<option value="友情推荐" >友情推荐</option>
-            				<option value="活动下单" >活动下单</option>
-            				<option value="渠道优惠" >渠道优惠</option>
-            				<option value="团购下单" >团购下单</option>
-            				<option value="媒体推广" >媒体推广</option>
-						</select>
-					</div>
-				</div>
-				
-				<div class="online">
-					<div class="lable l-width">视频管家</div>
-					<div class="d-float f-width1">
-						<input id="userId" name="userId" class="easyui-combobox" editable="false"  />
-					</div>
-					
-					<div class="lable l-width">客户名称</div>
-					<div class="d-float f-width1">
-						<input id="customerId" name="customerId" class="easyui-combobox" required="true"/>
-					</div>
-				</div>
-				
-				<div class="online">
-					
-					<div class="lable-right l-width">客户联系人</div>
-					<div class="d-float f-width1">
-						<input id="userContact" name="userContact" class="easyui-textbox" required="true" />
-					</div>
-					
-					<div class="lable l-width">客户手机</div>
-					<div class="d-float f-width1">
-						<input id="userPhone" name="userPhone" class="easyui-textbox" required="true"/>
-					</div>
-				</div>
-				
-				<div class="online">
-					
-					<div class="lable-right l-width">供应商名称</div>
-					<div class="d-float f-width1">
-						<input id="teamId" name="teamId" class="easyui-combobox" editable="false" />
-					</div>
-					
-					<div class="lable l-width">供应商联系人</div>
-					<div class="d-float f-width1">
-						<input id="teamContact" name="teamContact" class="easyui-textbox" required="true"/>
-					</div>
-				</div>
-				
-				<div class="online">
-					
-					<div class="lable-right l-width">供应商电话</div>
-					<div class="d-float f-width1">
-						<input id="teamPhone" name="teamPhone" class="easyui-textbox" required="true" />
-					</div>
-					
-					<div class="lable l-width">项目价格</div>
-					<div class="d-float f-width1">
-						<input id="price" name="price" class="easyui-textbox" required="true"/>
-					</div>
-				</div>
-				
-				<div class="textarea-position">
-					<div class="lable l-width">项目描述</div>
-					<textarea class="easyui-textbox" id="description" name="description" multiline="true" style="height: 50px;"></textarea>
-				</div>
+	        	<table style="width: 98%;">
+	        		<tr>
+	        			<th>项目编号</th>
+	        			<td>
+	        				<input id="serial" name="serial" class="easyui-textbox" required="true" />
+	        			</td>
+	        			
+	        			<th>项目状态</th>
+	        			<td>
+	        				<select id="state" name="state" class="easyui-combobox" editable="false" style="width: 90%;">
+								<option value="0" selected>正常</option>
+	            				<option value="1" >取消</option>
+	            				<option value="2" >完成</option>
+							</select>
+	        			</td>
+	        		</tr>
+	        		
+	        		<tr>
+	        			<th>项目名称</th>
+	        			<td>
+	        				<input id="projectName" name="projectName" class="easyui-textbox" required="true"/>
+	        			</td>
+	        			
+	        			<th>项目来源</th>
+	        			<td>
+	        				<select id="source" name="source" class="easyui-combobox" editable="false" style="width: 90%;">
+								<option value="网站下单" selected>网站下单</option>
+	            				<option value="友情推荐" >友情推荐</option>
+	            				<option value="活动下单" >活动下单</option>
+	            				<option value="渠道优惠" >渠道优惠</option>
+	            				<option value="团购下单" >团购下单</option>
+	            				<option value="媒体推广" >媒体推广</option>
+							</select>
+	        			</td>
+	        		</tr>
+	        		
+	        		<tr>
+	        			<th>视频管家</th>
+	        			<td>
+	        				<input id="userId" name="userId" class="easyui-combobox" editable="false"  />
+	        			</td>
+	        			
+	        			<th>客户名称</th>
+	        			<td>
+	        				<input id="customerId" name="customerId" class="easyui-combobox" required="true"/>
+	        			</td>
+	        		</tr>
+	        		
+	        		<tr>
+	        			<th>客户联系人</th>
+	        			<td>
+	        				<input id="userContact" name="userContact" class="easyui-textbox" required="true" />
+	        			</td>
+	        			
+	        			<th>客户手机</th>
+	        			<td>
+	        				<input id="userPhone" name="userPhone" class="easyui-textbox" required="true"/>
+	        			</td>
+	        		</tr>
+	        		
+	        		<tr>
+	        			<th>供应商名称</th>
+	        			<td>
+	        				<input id="teamId" name="teamId" class="easyui-combobox" editable="false" />
+	        			</td>
+	        			
+	        			<th>供应商联系人</th>
+	        			<td>
+	        				<input id="teamContact" name="teamContact" class="easyui-textbox" required="true"/>
+	        			</td>
+	        		</tr>
+	        		
+	        		<tr>
+	        			<th>供应商电话</th>
+	        			<td>
+	        				<input id="teamPhone" name="teamPhone" class="easyui-textbox" required="true" />
+	        			</td>
+	        			
+	        			<th>项目价格</th>
+	        			<td>
+	        				<input id="price" name="price" class="easyui-textbox" required="true"/>
+	        			</td>
+	        		</tr>
+	        		
+	        		<tr>
+	        			<th>项目描述</th>
+	        			<td colspan="3">
+	        				<input class="easyui-textbox text-area" id="description" name="description" multiline="true" style="height: 100px;width: 92%;" prompt="在此填写对项目的描述" />
+	        			</td>
+	        		</tr>
+	        	</table>
 	        </form>
 	    </div>
 	    
