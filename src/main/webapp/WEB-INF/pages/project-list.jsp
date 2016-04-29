@@ -20,8 +20,38 @@
 		<form id="searchForm">
 			<table>
 				<tr>
-					<th>所属项目:</th>
-					<td><input id="search-name" name="productId" placeholder="请输入项目名"/></td>
+					<th>项目名称:</th>
+					<td>
+						<input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称"/>
+					</td>
+					<th>项目状态:</th>
+					<td>
+						<select id="search-state" name="state" editable="false" class="easyui-combobox" >
+							<option value="0" selected>正常</option>
+            				<option value="1" >取消</option>
+            				<option value="2" >完成</option>
+						</select>
+					</td>
+					<th>视频管家</th>
+					<td>
+						<input id="search-userId" name="userId" class="easyui-combobox" placeholder="请输入视频管家名称"/>
+					</td>
+					<th>供应商</th>
+					<td>
+						<input id="search-teamId" name="teamId" class="easyui-combobox" placeholder="请输入供应商名称"/>
+					</td>
+					<th>项目来源</th>
+					<td>
+						<select id="search-source" name="source" class="easyui-combobox" editable="false" >
+							<option value="">-- 请选择 --</option>
+							<option value="网站下单">网站下单</option>
+            				<option value="友情推荐" >友情推荐</option>
+            				<option value="活动下单" >活动下单</option>
+            				<option value="渠道优惠" >渠道优惠</option>
+            				<option value="团购下单" >团购下单</option>
+            				<option value="媒体推广" >媒体推广</option>
+						</select>
+					</td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 					</td>
@@ -58,6 +88,7 @@
             closed="true" buttons="#dlg-buttons" title="项目信息">
 	        <form id="fm" method="post">
 	        	<input id="projectId" name="id" type="hidden">
+	        	<input id="userType" name="userType" type="hidden">
 	        	
 	            <div class="online">
 					<div class="lable l-width">项目编号</div>

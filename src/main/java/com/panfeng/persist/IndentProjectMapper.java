@@ -43,4 +43,9 @@ public interface IndentProjectMapper {
 	 * 获取所有视频管家
 	 */
 	public List<IndentProject> getAllVersionManager();
+
+	/**
+	 * 获取项目
+	 */
+	public List<IndentProject> getAllProject();
 }

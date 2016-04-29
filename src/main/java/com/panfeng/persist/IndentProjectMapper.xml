@@ -205,7 +205,19 @@
 		</if>
 		
 		<if test="state != null and state != ''">
-			AND i.STATE = ${state}
+			AND i.STATE = #{state}
+		</if>
+		
+		<if test="userId != null and userId != ''">
+			AND i.IP_USER_ID = ${userId}
+		</if>
+		
+		<if test="teamId != null and teamId != ''">
+			AND i.ip_teamId = ${teamId}
+		</if>
+		
+		<if test="source != null and source != ''">
+			AND i.IP_SOURCE = #{source}
 		</if>
 	</select>
 	
@@ -221,7 +233,19 @@
 		</if>
 		
 		<if test="state != null and state != ''">
-			AND i.STATE = ${state}
+			AND i.STATE = #{state}
+		</if>
+		
+		<if test="userId != null and userId != ''">
+			AND i.IP_USER_ID = ${userId}
+		</if>
+		
+		<if test="teamId != null and teamId != ''">
+			AND i.ip_teamId = ${teamId}
+		</if>
+		
+		<if test="source != null and source != ''">
+			AND i.IP_SOURCE = #{source}
 		</if>
 	</select>
 	
@@ -256,4 +280,16 @@
 			WHERE 1 = 1
 		]]>
 	</select>
+	
+	
+	<select id="getAllProject" resultType="IndentProject">
+		<![CDATA[
+			SELECT 
+				i.IP_ID AS id,
+				i.IP_PROJECT_NAME AS projectName
+			FROM INDENT_PROJECT i 
+			WHERE 1 = 1
+		]]>
+	</select>
+	
 </mapper>

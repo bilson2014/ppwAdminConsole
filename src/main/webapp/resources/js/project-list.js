@@ -98,6 +98,12 @@ $().ready(function(){
 						align : 'center' ,
 						width : 70,
 						hidden: true
+					},{
+						field : 'userType' ,
+						title : '创建类型' ,
+						align : 'center' ,
+						width : 70,
+						hidden: true
 					}]],
 			pagination: true ,
 			pageSize : 20,
@@ -106,7 +112,30 @@ $().ready(function(){
 			toolbar : '#toolbar'
 	});
 	
+	project.initData();
 });
+
+var project = {
+	initData : function(){
+		$('#search-teamId').combobox({
+			url : getContextPath() + '/project/getAllTeam',
+			valueField : 'teamId',
+			textField : 'teamName'
+		});
+		
+		$('#search-userId').combobox({
+			url : getContextPath() + '/project/getAllVersionManager',
+			valueField : 'userId',
+			textField : 'managerRealName'
+		});
+		
+		$('#search-projectId').combobox({
+			url : getContextPath() + '/project/getAllProject',
+			valueField : 'id',
+			textField : 'projectName'
+		});
+	}
+}
 
 
 //增加
@@ -114,7 +143,7 @@ function addFuc(){
 	$('#fm').form('clear');
 	openDialog('dlg',null);
 	formUrl = getContextPath() + '/project/saveInfo';
-	$('input[name="id"]').val(0);
+	$('#projectId').val(0);
 }
 
 // 修改

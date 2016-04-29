@@ -184,4 +184,11 @@ public class ProjectController extends BaseController {
 		final List<IndentProject> list = indentProjectService.getAllVersionManager();
 		return list;
 	}
+	
+	@RequestMapping("/getAllProject")
+	public List<IndentProject> allProject(){
+		
+		final List<IndentProject> list = indentProjectService.getAllProject();
+		return list;
+	}
 }

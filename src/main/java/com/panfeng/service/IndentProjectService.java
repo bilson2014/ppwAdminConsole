@@ -50,4 +50,6 @@ public interface IndentProjectService {
 	public List<IndentProject> getAllUser();
 	
 	public List<IndentProject> getAllVersionManager();
+
+	public List<IndentProject> getAllProject();
 }

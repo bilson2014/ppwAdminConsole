@@ -239,5 +239,11 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		final List<IndentProject> list = indentProjectMapper.getAllVersionManager();
 		return list;
 	}
+
+	public List<IndentProject> getAllProject() {
+		
+		final List<IndentProject> list = indentProjectMapper.getAllProject();
+		return list;
+	}
 	
 }
