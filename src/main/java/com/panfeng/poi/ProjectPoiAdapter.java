@@ -186,7 +186,7 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		xssfRow.createCell(17).setCellValue(entity.getTeamName());
 		xssfRow.createCell(18).setCellValue(entity.getTeamContact());
 		xssfRow.createCell(19).setCellValue(entity.getTeamPhone());
-		xssfRow.createCell(20).setCellValue(entity.getPrice());
+		xssfRow.createCell(20).setCellValue(entity.getPriceFinish());
 	}
 
 	@Override

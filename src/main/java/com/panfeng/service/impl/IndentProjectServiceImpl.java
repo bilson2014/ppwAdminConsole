@@ -68,23 +68,22 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public List<IndentProject> findProjectList(IndentProject indentProject) {
 		String userType = indentProject.getUserType();
-		//UserViewModel userViewModel = userTempService.getInfo(userType, userId);
-		//String userName = userViewModel.getOrgName();
-		List<IndentProject> list=null;
+		// UserViewModel userViewModel = userTempService.getInfo(userType,
+		// userId);
+		// String userName = userViewModel.getOrgName();
+		List<IndentProject> list = null;
 		switch (userType) {
 		// 用户身份 -- 客户
 		case GlobalConstant.ROLE_CUSTOMER:
-			list= indentProjectMapper
-					.findProjectByUserName(indentProject);
+			list = indentProjectMapper.findProjectByUserName(indentProject);
 			break;
 		// 用户身份 -- 供应商
 		case GlobalConstant.ROLE_PROVIDER:
-			list= indentProjectMapper
-					.findProjectByUserName(indentProject);
+			list = indentProjectMapper.findProjectByUserName(indentProject);
 			break;
 		// 用户身份 -- 视频管家
 		case GlobalConstant.ROLE_MANAGER:
-			list= indentProjectMapper.findProjectList(indentProject);
+			list = indentProjectMapper.findProjectList(indentProject);
 			break;
 		}
 		return list;
@@ -153,12 +152,18 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public String[] getTags() {
 		String[] tags = new String[6];
-		tags[0] = "网站下单";
-		tags[1] = "友情推荐";
-		tags[2] = "活动下单";
-		tags[3] = "渠道优惠";
-		tags[4] = "团购下单";
-		tags[5] = "媒体推广";
+		// tags[0] = "网站下单";
+		// tags[1] = "友情推荐";
+		// tags[2] = "活动下单";
+		// tags[3] = "渠道优惠";
+		// tags[4] = "团购下单";
+		// tags[5] = "媒体推广";
+		tags[0] = "电话下单";
+		tags[1] = "个人信息下单";
+		tags[2] = "系统下单";
+		tags[3] = "重复下单";
+		tags[4] = "活动下单";
+		tags[5] = "渠道优惠";
 		return tags;
 	}
 
@@ -170,12 +175,13 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	}
 
 	@Override
-	public void getReport(IndentProject indentProject,OutputStream outputStream) {
-		List<IndentProject> list = indentProjectMapper.findProjectList(indentProject);
-		getReport(list,outputStream);
+	public void getReport(IndentProject indentProject, OutputStream outputStream) {
+		List<IndentProject> list = indentProjectMapper
+				.findProjectList(indentProject);
+		getReport(list, outputStream);
 	}
 
-	public void getReport(List<IndentProject> list,OutputStream outputStream){
+	public void getReport(List<IndentProject> list, OutputStream outputStream) {
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
 		for (IndentProject indentProject2 : list) {
@@ -191,34 +197,37 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 						.get(listHistoricTaskInstances.size() - 1);
 				at.setId("");
 				at.setName("已完成");
-				SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd");
-				at.setCreateTime(simpleDateFormat.format(historicTaskInstance.getEndTime()));
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd");
+				at.setCreateTime(simpleDateFormat.format(historicTaskInstance
+						.getEndTime()));
 			}
 			indentProject2.setTask(at);
-			//填充管家
-			UserViewModel userViewModel=userTempService.getInfo(indentProject2.getUserType(), indentProject2.getUserId());
+			// 填充管家
+			UserViewModel userViewModel = userTempService.getInfo(
+					indentProject2.getUserType(), indentProject2.getUserId());
 			indentProject2.setUserViewModel(userViewModel);
 			projectPoiAdapter.getData().add(indentProject2);
 		}
-		ge.generate(projectPoiAdapter,outputStream);
+		ge.generate(projectPoiAdapter, outputStream);
 	}
-	
+
 	public List<IndentProject> listWithPagination(final IndentProjectView view) {
-		
+
 		List<IndentProject> list = indentProjectMapper.listWithPagination(view);
 		return list;
 	}
 
 	public long maxSize(final IndentProjectView view) {
-		
+
 		final long total = indentProjectMapper.maxSize(view);
 		return total;
 	}
 
 	@Transactional
 	public long delete(final long[] ids) {
-		
-		if(ValidateUtil.isValid(ids)){
+
+		if (ValidateUtil.isValid(ids)) {
 			for (final long id : ids) {
 				indentProjectMapper.deleteById(id);
 			}
@@ -227,27 +236,28 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	}
 
 	public List<IndentProject> getAllTeam() {
-		
+
 		final List<IndentProject> list = indentProjectMapper.getAllTeam();
 		return list;
 	}
 
 	public List<IndentProject> getAllUser() {
-		
+
 		final List<IndentProject> list = indentProjectMapper.getAllUser();
 		return list;
 	}
-	
+
 	public List<IndentProject> getAllVersionManager() {
-		
-		final List<IndentProject> list = indentProjectMapper.getAllVersionManager();
+
+		final List<IndentProject> list = indentProjectMapper
+				.getAllVersionManager();
 		return list;
 	}
 
 	public List<IndentProject> getAllProject() {
-		
+
 		final List<IndentProject> list = indentProjectMapper.getAllProject();
 		return list;
 	}
-	
+
 }
