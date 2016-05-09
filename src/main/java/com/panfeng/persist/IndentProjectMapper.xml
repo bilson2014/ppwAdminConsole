@@ -11,7 +11,6 @@
 			IP_USER_PHONE,
 			IP_TEAM_CONTACT,
 			IP_TEAM_PHONE,
-			IP_PRICE,
 			IP_USER_TYPE,
 			IP_USER_ID,
 			IP_DESCRIPTION,
@@ -19,14 +18,17 @@
 			IP_SOURCE,
 			IP_STATE,
 			IP_CUSTOMERID,
-			IP_TEAMID
+			IP_TEAMID,
+			
+			IP_PRICE_FIRST,
+			IP_PRICE_LAST,
+			IP_PRICE_FINISH
 		)VALUES (
 			#{projectName},
 			#{userContact},
 			#{userPhone},
 			#{teamContact},
 			#{teamPhone},
-			#{price},
 			#{userType},
 			${userId},
 			#{description},
@@ -34,7 +36,10 @@
 			#{source},
 			${state},
 			${customerId},
-			${teamId}
+			${teamId},
+			${priceFirst},
+			${priceLast},
+			${priceFinish}
 		);
 		]]>
 	</insert>
@@ -47,7 +52,6 @@
 				i.IP_USER_PHONE=#{userPhone} ,
 				i.IP_TEAM_CONTACT =#{teamContact} ,
 				i.IP_TEAM_PHONE =#{teamPhone},
-				i.IP_PRICE =#{price},
 				i.IP_DESCRIPTION = #{description},
 				i.IP_USER_TYPE=#{userType},
 				i.IP_USER_ID=${userId},
@@ -55,7 +59,10 @@
 				i.IP_SOURCE=#{source},
 				i.IP_STATE=${state},
 				i.IP_CUSTOMERID=${customerId},
-				i.IP_TEAMID=${teamId}
+				i.IP_TEAMID=${teamId},
+				i.IP_PRICE_FIRST=${priceFirst},
+				i.IP_PRICE_LAST=${priceLast},
+				i.IP_PRICE_FINISH=${priceFinish}
 			WHERE i.IP_ID = ${id};
 		]]>
 	</update>
@@ -91,7 +98,6 @@
 				i.IP_USER_PHONE AS userPhone,
 				i.IP_TEAM_CONTACT AS teamContact,
 				i.IP_TEAM_PHONE AS teamPhone,
-				i.IP_PRICE AS price,
 				i.IP_USER_TYPE AS userType,
 				i.IP_USER_ID AS userId,
 				i.IP_DESCRIPTION AS description,
@@ -101,7 +107,11 @@
 				i.IP_CUSTOMERID AS customerId,
 				i.IP_TEAMID AS teamId,
 				u.userName AS userName,
-				t.teamName AS  teamName
+				t.teamName AS  teamName,
+				i.IP_PRICE_FIRST AS priceFirst,
+				i.IP_PRICE_LAST AS priceLast,
+				i.IP_PRICE_FINISH AS priceFinish
+				
 			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
      		HAVING i.IP_USER_TYPE =#{userType}  AND i.IP_USER_ID=${userId} ORDER BY i.IP_ID DESC;
@@ -117,7 +127,6 @@
 				i.IP_USER_PHONE AS userPhone,
 				i.IP_TEAM_CONTACT AS teamContact,
 				i.IP_TEAM_PHONE AS teamPhone,
-				i.IP_PRICE AS price,
 				i.IP_USER_TYPE AS userType,
 				i.IP_USER_ID AS userId,
 				i.IP_DESCRIPTION AS description,
@@ -127,7 +136,11 @@
 				i.IP_CUSTOMERID AS customerId,
 				i.IP_TEAMID AS teamId,
 				u.userName AS userName,
-				t.teamName AS  teamName
+				t.teamName AS  teamName,
+				i.IP_PRICE_FIRST AS priceFirst,
+				i.IP_PRICE_LAST AS priceLast,
+				i.IP_PRICE_FINISH AS priceFinish
+				
 			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
      		HAVING i.IP_ID = #{id}
@@ -143,7 +156,6 @@
 				i.IP_USER_PHONE AS userPhone,
 				i.IP_TEAM_CONTACT AS teamContact,
 				i.IP_TEAM_PHONE AS teamPhone,
-				i.IP_PRICE AS price,
 				i.IP_USER_TYPE AS userType,
 				i.IP_USER_ID AS userId,
 				i.IP_DESCRIPTION AS description,
@@ -153,7 +165,10 @@
 				i.IP_CUSTOMERID AS customerId,
 				i.IP_TEAMID AS teamId,
 				u.userName AS userName,
-				t.teamName AS  teamName
+				t.teamName AS  teamName,
+				i.IP_PRICE_FIRST AS priceFirst,
+				i.IP_PRICE_LAST AS priceLast,
+				i.IP_PRICE_FINISH AS priceFinish
 			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
      		HAVING 1=1		
@@ -180,7 +195,6 @@
 				t.TEAMNAME AS teamName,
 				i.IP_TEAM_CONTACT AS teamContact,
 				i.IP_TEAM_PHONE AS teamPhone,
-				i.IP_PRICE AS price,
 				i.IP_USER_TYPE AS userType,
 				i.IP_USER_ID AS userId,
 				i.IP_DESCRIPTION AS description,
@@ -189,7 +203,10 @@
 				i.IP_STATE AS state,
 				i.IP_CUSTOMERID	AS customerId,
 				i.ip_teamId AS teamId,
-				VM.MANAGERREALNAME AS managerRealName
+				VM.MANAGERREALNAME AS managerRealName,
+				i.IP_PRICE_FIRST AS priceFirst,
+				i.IP_PRICE_LAST AS priceLast,
+				i.IP_PRICE_FINISH AS priceFinish
 			FROM INDENT_PROJECT i 
 			LEFT JOIN VERSIONMANAGER VM
 				ON VM.MANAGERID = i.IP_USER_ID

@@ -20,7 +20,6 @@ public class IndentProject extends BaseObject {
 	private String teamName = "";
 	private String teamContact = "";
 	private String teamPhone = "";
-	private String price = "";
 	private String description = "";
 	private String serial = "";
 	private String source = "";
@@ -28,6 +27,12 @@ public class IndentProject extends BaseObject {
 	private int state = 0;
 	private String userType = "";
 	private long userId = -1; // 视频管家ID
+	
+	//价格字段
+	private double priceFirst =0.00;//预计起始价格
+	private double priceLast =0.00;//预计结束价格
+	private double priceFinish =0.00;//最终价格
+
 	
 	private String managerRealName = null; // 管家名字
 	
@@ -143,16 +148,35 @@ public class IndentProject extends BaseObject {
 		this.serial = serial;
 	}
 
-	public String getPrice() {
-		return price;
-	}
 
-	public void setPrice(String price) {
-		this.price = price;
-	}
-
+	
+	
 	// -----------------------------
 	// 冗余taskdate--------------------------------------
+
+	public double getPriceFirst() {
+		return priceFirst;
+	}
+
+	public void setPriceFirst(double priceFirst) {
+		this.priceFirst = priceFirst;
+	}
+
+	public double getPriceLast() {
+		return priceLast;
+	}
+
+	public void setPriceLast(double priceLast) {
+		this.priceLast = priceLast;
+	}
+
+	public double getPriceFinish() {
+		return priceFinish;
+	}
+
+	public void setPriceFinish(double priceFinish) {
+		this.priceFinish = priceFinish;
+	}
 
 	public int getState() {
 		return state;
