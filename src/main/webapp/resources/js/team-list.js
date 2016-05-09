@@ -12,7 +12,7 @@ $().ready(function(){
 		url : getContextPath() + '/portal/team/list',
 		idField : 'teamId' ,
 		title : '供应商管理列表' , 
-		fitColumns : true ,
+		//fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -67,7 +67,57 @@ $().ready(function(){
 							} else if(value == 6){
 								return '<span style=color:black; >成都</span>' ;
 							} else if(value == 7){
-								return '<span style=color:black; >其他</span>' ;
+								return '<span style=color:black; >石家庄</span>' ;
+							} else if(value == 8){
+								return '<span style=color:black; >沈阳</span>' ;
+							} else if(value == 9){
+								return '<span style=color:black; >哈尔滨</span>' ;
+							} else if(value == 10){
+								return '<span style=color:black; >杭州</span>' ;
+							} else if(value == 11){
+								return '<span style=color:black; >福州</span>' ;
+							} else if(value == 12){
+								return '<span style=color:black; >济南</span>' ;
+							} else if(value == 13){
+								return '<span style=color:black; >昆明</span>' ;
+							} else if(value == 14){
+								return '<span style=color:black; >兰州</span>' ;
+							} else if(value == 15){
+								return '<span style=color:black; >台北</span>' ;
+							} else if(value == 16){
+								return '<span style=color:black; >南宁</span>' ;
+							} else if(value == 17){
+								return '<span style=color:black; >银川</span>' ;
+							} else if(value == 18){
+								return '<span style=color:black; >太原</span>' ;
+							} else if(value == 19){
+								return '<span style=color:black; >长春</span>' ;
+							} else if(value == 20){
+								return '<span style=color:black; >南京</span>' ;
+							} else if(value == 21){
+								return '<span style=color:black; >合肥</span>' ;
+							} else if(value == 22){
+								return '<span style=color:black; >南昌</span>' ;
+							} else if(value == 23){
+								return '<span style=color:black; >郑州</span>' ;
+							} else if(value == 24){
+								return '<span style=color:black; >长沙</span>' ;
+							} else if(value == 25){
+								return '<span style=color:black; >海口</span>' ;
+							} else if(value == 26){
+								return '<span style=color:black; >贵阳</span>' ;
+							} else if(value == 27){
+								return '<span style=color:black; >西安</span>' ;
+							} else if(value == 28){
+								return '<span style=color:black; >西宁</span>' ;
+							} else if(value == 29){
+								return '<span style=color:black; >呼和浩特</span>' ;
+							} else if(value == 30){
+								return '<span style=color:black; >拉萨</span>' ;
+							} else if(value == 31){
+								return '<span style=color:black; >乌鲁木齐</span>' ;
+							} else if(value == 32){
+								return '<span style=color:black; >天津</span>' ;
 							}
 						}
 					},{
