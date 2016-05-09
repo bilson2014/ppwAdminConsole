@@ -62,4 +62,11 @@ public interface IndentProjectService {
 	public List<IndentProject> getAllVersionManager();
 
 	public List<IndentProject> getAllProject();
+	
+	/**
+	 * 获取当年所有有效的项目
+	 * @return
+	 */
+	public String getProjectSerialID();
+	
 }

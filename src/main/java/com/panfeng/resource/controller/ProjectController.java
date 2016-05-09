@@ -215,5 +215,9 @@ public class ProjectController extends BaseController {
 			e.printStackTrace();
 		}
 	}
+	@RequestMapping("/get/SerialID")
+	public String getProjectSerialID(){
+		return "{\"id\":"+indentProjectService.getProjectSerialID()+"}";
+	}
 	
 }

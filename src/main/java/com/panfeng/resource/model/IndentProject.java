@@ -39,6 +39,19 @@ public class IndentProject extends BaseObject {
 	private Long customerId = null; // 客户ID
 	
 	private Long teamId = null; // 供应商ID
+	
+	private String updateTime=null;
+	
+	private String referrer=null; //友情推荐人
+	
+	
+	public String getReferrer() {
+		return referrer;
+	}
+
+	public void setReferrer(String referrer) {
+		this.referrer = referrer;
+	}
 
 	public long getId() {
 		return id;
@@ -245,6 +258,14 @@ public class IndentProject extends BaseObject {
 
 	public void setTeamId(Long teamId) {
 		this.teamId = teamId;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
 	}
 
 }

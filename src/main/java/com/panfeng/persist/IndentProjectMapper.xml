@@ -19,10 +19,10 @@
 			IP_STATE,
 			IP_CUSTOMERID,
 			IP_TEAMID,
-			
 			IP_PRICE_FIRST,
 			IP_PRICE_LAST,
-			IP_PRICE_FINISH
+			IP_PRICE_FINISH,
+			IP_REFERRER
 		)VALUES (
 			#{projectName},
 			#{userContact},
@@ -36,10 +36,25 @@
 			#{source},
 			${state},
 			${customerId},
-			${teamId},
+			]]>
+			<if test="teamId != null and teamId != '' ">
+				${teamId},
+			</if>
+			<if test="teamId == null or teamId == '' ">
+				0,
+			</if>
+			<![CDATA[
 			${priceFirst},
 			${priceLast},
-			${priceFinish}
+			${priceFinish},
+			]]>
+			<if test="referrer != null and referrer != '' ">
+				#{referrer}
+			</if>
+			<if test="referrer == null or referrer == '' ">
+				''
+			</if>
+			<![CDATA[
 		);
 		]]>
 	</insert>
@@ -62,7 +77,9 @@
 				i.IP_TEAMID=${teamId},
 				i.IP_PRICE_FIRST=${priceFirst},
 				i.IP_PRICE_LAST=${priceLast},
-				i.IP_PRICE_FINISH=${priceFinish}
+				i.IP_PRICE_FINISH=${priceFinish},
+				i.IP_UPDATE_TIME=DATE_FORMAT(#{updateTime},'%Y-%m-%d'),
+				i.IP_REFERRER=#{referrer}
 			WHERE i.IP_ID = ${id};
 		]]>
 	</update>
@@ -110,7 +127,8 @@
 				t.teamName AS  teamName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
-				i.IP_PRICE_FINISH AS priceFinish
+				i.IP_PRICE_FINISH AS priceFinish,
+				i.IP_REFERRER AS referrer
 				
 			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
@@ -139,7 +157,8 @@
 				t.teamName AS  teamName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
-				i.IP_PRICE_FINISH AS priceFinish
+				i.IP_PRICE_FINISH AS priceFinish,
+				i.IP_REFERRER AS referrer
 				
 			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
@@ -168,7 +187,8 @@
 				t.teamName AS  teamName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
-				i.IP_PRICE_FINISH AS priceFinish
+				i.IP_PRICE_FINISH AS priceFinish,
+				i.IP_REFERRER AS referrer
 			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
      		HAVING 1=1		
@@ -206,7 +226,8 @@
 				VM.MANAGERREALNAME AS managerRealName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
-				i.IP_PRICE_FINISH AS priceFinish
+				i.IP_PRICE_FINISH AS priceFinish,
+				i.IP_REFERRER AS referrer
 			FROM INDENT_PROJECT i 
 			LEFT JOIN VERSIONMANAGER VM
 				ON VM.MANAGERID = i.IP_USER_ID
@@ -306,6 +327,15 @@
 				i.IP_PROJECT_NAME AS projectName
 			FROM INDENT_PROJECT i 
 			WHERE 1 = 1
+		]]>
+	</select>
+	
+	<select id="getProjectCount" resultType="long">
+		<![CDATA[
+			SELECT COUNT(*) FROM INDENT_PROJECT i 
+			WHERE i.IP_STATE IN(0,1,2) 
+			AND 
+			DATE_FORMAT(i.IP_CREATE_TIME,'%Y')=YEAR(CURDATE());
 		]]>
 	</select>
 	

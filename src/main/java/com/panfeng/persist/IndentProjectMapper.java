@@ -48,4 +48,9 @@ public interface IndentProjectMapper {
 	 * 获取项目
 	 */
 	public List<IndentProject> getAllProject();
+	
+	/**
+	 * 获取本年有效项目个数
+	 */
+	public long getProjectCount();
 }

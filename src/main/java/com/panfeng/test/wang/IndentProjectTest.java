@@ -20,6 +20,7 @@ import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.UserViewModel;
 import com.panfeng.service.IndentActivitiService;
+import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.UserTempService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -33,6 +34,10 @@ public class IndentProjectTest {
 	IndentActivitiService indentActivitiService;
 	@Autowired
 	ApplicationContext applicationContext;
+	@Autowired
+	IndentProjectMapper indentProjectMapper2;
+	@Autowired
+	IndentProjectService indentProjectService;
 	@Test
 	public void test2() {
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
@@ -101,4 +106,12 @@ public class IndentProjectTest {
 	// }
 	// return styles;
 	// }
+	@Test
+	public void getProjectCount(){
+		System.out.println(indentProjectMapper2.getProjectCount());
+	}
+	@Test
+	public void getid(){
+		System.out.println(indentProjectService.getProjectSerialID());
+	}
 }

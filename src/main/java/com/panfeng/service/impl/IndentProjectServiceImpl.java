@@ -25,6 +25,7 @@ import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.UserTempService;
+import com.panfeng.util.PathFormatUtils;
 import com.panfeng.util.ValidateUtil;
 
 @Service
@@ -45,19 +46,12 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public boolean save(IndentProject indentProject) {
+		indentProject.setSerial(getProjectSerialID());
 		indentProjectMapper.save(indentProject);
-		if (indentProject != null) {
 			indentCommentService.createSystemMsg(
 					"创建了 " + indentProject.getProjectName() + "项目",
 					indentProject);
 			return indentActivitiService.startProcess(indentProject);
-		}
-		return false;
-	}
-
-	@Override
-	public long update(IndentProject indentProject) {
-		return indentProjectMapper.update(indentProject);
 	}
 
 	@Override
@@ -106,6 +100,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public boolean updateIndentProject(IndentProject indentProject) {
 		// update project
+		indentProject.setUpdateTime(PathFormatUtils.parse("{yyyy}-{mm}-{dd}"));
 		long l = indentProjectMapper.update(indentProject);
 		if (l > 0) {
 			List<IndentFlow> listDates = indentFlowMapper
@@ -258,6 +253,26 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 		final List<IndentProject> list = indentProjectMapper.getAllProject();
 		return list;
+	}
+
+	@Override
+	public String getProjectSerialID() {
+		long count=indentProjectMapper.getProjectCount();
+		String date=PathFormatUtils.parse("{yyyy}{mm}{dd}");
+		String formatNum=count+"";
+		if(count<100){
+			if(count<10){
+				formatNum="00"+formatNum;
+			}else{
+				formatNum='0'+formatNum;				
+			}
+		}
+		return date+formatNum;
+	}
+
+	@Override
+	public long update(IndentProject indentProject) {
+		return 0;
 	}
 
 }
