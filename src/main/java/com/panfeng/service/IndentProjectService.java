@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import com.panfeng.resource.model.ActivitiTask;
+import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.view.IndentProjectView;
 
@@ -25,7 +26,7 @@ public interface IndentProjectService {
 	
 	public ActivitiTask getTaskInfo(IndentProject indentProject);
 	
-	public String[] getTags();
+	public List<BizBean> getTags();
 	
 	public boolean cancelProject(IndentProject indentProject);
 	/**

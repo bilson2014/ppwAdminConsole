@@ -2,6 +2,7 @@ package com.panfeng.service.impl;
 
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.activiti.engine.history.HistoricTaskInstance;
@@ -16,6 +17,7 @@ import com.panfeng.persist.IndentProjectMapper;
 import com.panfeng.poi.GenerateExcel;
 import com.panfeng.poi.ProjectPoiAdapter;
 import com.panfeng.resource.model.ActivitiTask;
+import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.FlowDate;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
@@ -100,7 +102,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public boolean updateIndentProject(IndentProject indentProject) {
 		// update project
-		indentProject.setUpdateTime(PathFormatUtils.parse("{yyyy}-{mm}-{dd}"));
 		long l = indentProjectMapper.update(indentProject);
 		if (l > 0) {
 			List<IndentFlow> listDates = indentFlowMapper
@@ -145,7 +146,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	}
 
 	@Override
-	public String[] getTags() {
+	public List<BizBean> getTags() {
 		String[] tags = new String[6];
 		// tags[0] = "网站下单";
 		// tags[1] = "友情推荐";
@@ -159,17 +160,22 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		tags[3] = "重复下单";
 		tags[4] = "活动下单";
 		tags[5] = "渠道优惠";
-		return tags;
+		
+		final List<BizBean> list = new ArrayList<BizBean>();
+		for (String str : tags) {
+			final BizBean bean = new BizBean();
+			bean.setName(str);
+			list.add(bean);
+		}
+		return list;
 	}
 
-	@Override
 	public boolean cancelProject(IndentProject indentProject) {
 		indentProject.setState(IndentProject.PROJECT_CANCEL);
 		long l = indentProjectMapper.cancelProject(indentProject);
 		return (l > 0);
 	}
 
-	@Override
 	public void getReport(IndentProject indentProject, OutputStream outputStream) {
 		List<IndentProject> list = indentProjectMapper
 				.findProjectList(indentProject);
@@ -272,7 +278,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public long update(IndentProject indentProject) {
-		return 0;
+		final long ret = indentProjectMapper.update(indentProject);
+		return ret;
 	}
 
 }

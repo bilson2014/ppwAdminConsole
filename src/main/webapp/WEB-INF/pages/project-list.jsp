@@ -42,15 +42,17 @@
 					</td>
 					<th>项目来源</th>
 					<td>
-						<select id="search-source" name="source" class="easyui-combobox" editable="false" >
+						<!-- <select id="search-source" name="source" class="easyui-combobox" editable="false" >
 							<option value="">-- 请选择 --</option>
-							<option value="网站下单">网站下单</option>
-            				<option value="友情推荐" >友情推荐</option>
+							<option value="网站下单" selected>网站下单</option>
+            				<option value="个人信息下单" >个人信息下单</option>
+            				<option value="系统下单" >系统下单</option>
+            				<option value="重复下单" >重复下单</option>
             				<option value="活动下单" >活动下单</option>
             				<option value="渠道优惠" >渠道优惠</option>
-            				<option value="团购下单" >团购下单</option>
-            				<option value="媒体推广" >媒体推广</option>
-						</select>
+						</select> -->
+						
+						<input id="search-source" name="source" class="easyui-combobox" placeholder="请选择项目来源" editable="false"/>
 					</td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
@@ -119,14 +121,7 @@
 	        			
 	        			<th>项目来源</th>
 	        			<td>
-	        				<select id="source" name="source" class="easyui-combobox" editable="false" style="width: 90%;">
-								<option value="网站下单" selected>网站下单</option>
-	            				<option value="友情推荐" >友情推荐</option>
-	            				<option value="活动下单" >活动下单</option>
-	            				<option value="渠道优惠" >渠道优惠</option>
-	            				<option value="团购下单" >团购下单</option>
-	            				<option value="媒体推广" >媒体推广</option>
-							</select>
+							<input id="source" name="source" class="easyui-combobox" editable="false" />
 	        			</td>
 	        		</tr>
 	        		
@@ -174,7 +169,7 @@
 	        			
 	        			<th>项目价格</th>
 	        			<td>
-	        				<input id="price" name="price" class="easyui-textbox" required="true"/>
+	        				<input id="priceFirst" name="priceFirst" class="easyui-textbox" required="true"/>
 	        			</td>
 	        		</tr>
 	        		
@@ -184,6 +179,13 @@
 	        				<input class="easyui-textbox text-area" id="description" name="description" multiline="true" style="height: 100px;width: 92%;" prompt="在此填写对项目的描述" />
 	        			</td>
 	        		</tr>
+	        		
+	        		<tr id="referrer-tr" class="hide">
+						<th>推荐人</th>
+						<td colspan="2">
+							<input id="referrer" name="referrer" class="easyui-textbox" style="width: 180px;"/>
+						</td>
+					</tr>
 	        	</table>
 	        </form>
 	    </div>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.IndentProjectView;
@@ -73,7 +74,8 @@ public class ProjectController extends BaseController {
 	}
 
 	@RequestMapping("/getProjectTags")
-	public String[] getProjectTags() {
+	public List<BizBean> getProjectTags() {
+		
 		return indentProjectService.getTags();
 	}
 

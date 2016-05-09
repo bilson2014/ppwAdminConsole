@@ -77,8 +77,12 @@ $().ready(function(){
 						title : '项目来源',
 						align : 'center'
 					},{
-						field : 'price',
+						field : 'priceFirst',
 						title : '项目额度',
+						align : 'center'
+					},{
+						field : 'priceFinsh',
+						title : '最终额度',
 						align : 'center'
 					},{
 						field : 'customerId' ,
@@ -134,6 +138,13 @@ var project = {
 			valueField : 'id',
 			textField : 'projectName'
 		});
+		
+		$('#search-source').combobox({
+			url : getContextPath() + '/project/getProjectTags',
+			valueField : 'name',
+			textField : 'name'
+		});
+		
 	}
 }
 
@@ -239,9 +250,20 @@ function openDialog(id,data){
 				valueField : 'teamId',
 				textField : 'teamName',
 				onSelect : function(record){
-					console.info(record);
 					$('#teamContact').textbox('setValue',record.teamContact);
 					$('#teamPhone').textbox('setValue',record.teamPhone);
+				}
+			});
+			
+			$('#source').combobox({
+				url : getContextPath() + '/project/getProjectTags',
+				valueField : 'name',
+				textField : 'name',
+				onSelect : function(record){
+					if(record.name == '个人信息下单'){
+						$('#referrer').val('');
+						$('#referrer-tr').show();
+					}
 				}
 			});
 			
@@ -271,6 +293,13 @@ function openDialog(id,data){
 					$('#customerId').combobox('setValue',customerId);
 				}else {
 					$('#customerId').combobox('setValue','');
+				}
+				
+				var sourceName = data.source;
+				if(sourceName != null && sourceName != undefined && sourceName != ''){
+					$('#source').combobox('setValue',sourceName);
+				}else {
+					$('#source').combobox('setValue','');
 				}
 			}
 		},

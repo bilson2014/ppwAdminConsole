@@ -43,11 +43,28 @@
 			<if test="teamId == null or teamId == '' ">
 				0,
 			</if>
-			<![CDATA[
-			${priceFirst},
-			${priceLast},
-			${priceFinish},
-			]]>
+			
+			<if test="priceFirst != null and priceFirst != '' ">
+				${priceFirst},
+			</if>
+			<if test="priceFirst == null or priceFirst == '' ">
+				0,
+			</if>
+			
+			<if test="priceLast != null and priceLast != '' ">
+				${priceLast},
+			</if>
+			<if test="priceLast == null or priceLast == '' ">
+				0,
+			</if>
+			
+			<if test="priceFinish != null and priceFinish != '' ">
+				${priceFinish},
+			</if>
+			<if test="priceFinish == null or priceFinish == '' ">
+				0,
+			</if>
+			
 			<if test="referrer != null and referrer != '' ">
 				#{referrer}
 			</if>
@@ -75,19 +92,33 @@
 				i.IP_STATE=${state},
 				i.IP_CUSTOMERID=${customerId},
 				i.IP_TEAMID=${teamId},
-				i.IP_PRICE_FIRST=${priceFirst},
-				i.IP_PRICE_LAST=${priceLast},
-				i.IP_PRICE_FINISH=${priceFinish},
-				i.IP_UPDATE_TIME=DATE_FORMAT(#{updateTime},'%Y-%m-%d'),
-				i.IP_REFERRER=#{referrer}
+				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
+				]]>
+				
+				<if test="priceFirst != null and priceFirst != '' ">
+					,i.IP_PRICE_FIRST=${priceFirst}
+				</if>
+				<if test="priceLast != null and priceLast != '' ">
+					,i.IP_PRICE_LAST=${priceLast}
+				</if>
+				
+				<if test="priceFinish != null and priceFinish != '' ">
+					,i.IP_PRICE_FINISH=${priceFinish}
+				</if>
+				
+				<if test="referrer != null and referrer != '' ">
+					,i.IP_REFERRER=#{referrer}
+				</if>
+				
+		<![CDATA[
 			WHERE i.IP_ID = ${id};
 		]]>
 	</update>
 	
 	<update id="cancelProject" parameterType="long">
 		<![CDATA[
-			UPDATE INDENT_PROJECT i SET
-				i.IP_STATE=${state}
+			UPDATE INDENT_PROJECT i
+				SET i.IP_STATE=${state}
 			WHERE i.IP_ID = ${id};
 		]]>
 	</update>
