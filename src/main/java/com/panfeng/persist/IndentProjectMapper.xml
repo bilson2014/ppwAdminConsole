@@ -65,10 +65,10 @@
 				0,
 			</if>
 			
-			<if test="referrer != null and referrer != '' ">
+			<if test="referrerId != null and referrerId != '' ">
 				${referrerId}
 			</if>
-			<if test="referrer == null or referrer == '' ">
+			<if test="referrerId == null or referrerId == '' ">
 				0
 			</if>
 			<![CDATA[
@@ -95,19 +95,23 @@
 				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 				]]>
 				
-				<if test="priceFirst != null and priceFirst != '' ">
+				<if test="priceFirst != null and priceFirst != ''">
 					,i.IP_PRICE_FIRST=${priceFirst}
 				</if>
-				<if test="priceLast != null and priceLast != '' ">
+				<if test="priceLast != null and priceLast != ''">
 					,i.IP_PRICE_LAST=${priceLast}
 				</if>
 				
-				<if test="priceFinish != null and priceFinish != '' ">
+				<if test="priceFinish != null and priceFinish != ''">
 					,i.IP_PRICE_FINISH=${priceFinish}
 				</if>
 				
-				<if test="referrer != null and referrer != '' ">
-					,i.IP_REFERRER_ID=${referrerId}
+				<if test="referrerId != null and referrerId != ''">
+					,i.IP_REFERRER_ID = ${referrerId}
+				</if>
+				
+				<if test="referrerId == 0">
+					,i.IP_REFERRER_ID = ${referrerId}
 				</if>
 				
 		<![CDATA[
@@ -284,7 +288,11 @@
 		</if>
 		
 		<if test="state != null and state != ''">
-			AND i.STATE = #{state}
+			AND i.IP_STATE = ${state}
+		</if>
+		
+		<if test="state == 0">
+			AND i.IP_STATE = ${state}
 		</if>
 		
 		<if test="userId != null and userId != ''">
@@ -312,7 +320,11 @@
 		</if>
 		
 		<if test="state != null and state != ''">
-			AND i.STATE = #{state}
+			AND i.IP_STATE = #{state}
+		</if>
+		
+		<if test="state == 0">
+			AND i.IP_STATE = ${state}
 		</if>
 		
 		<if test="userId != null and userId != ''">

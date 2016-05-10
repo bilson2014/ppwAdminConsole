@@ -78,7 +78,11 @@ $().ready(function(){
 						align : 'center'
 					},{
 						field : 'priceFirst',
-						title : '项目额度',
+						title : '项目额度最小值',
+						align : 'center'
+					},{
+						field : 'priceLast',
+						title : '项目额度最大值',
 						align : 'center'
 					},{
 						field : 'priceFinish',
@@ -240,7 +244,7 @@ function openDialog(id,data){
 				loadData(function(pro){
 					var serial = pro.serial;
 					if(serial != null && serial != undefined && serial != ''){
-						$('#serial').val(serial);
+						$('#serial').textbox('setValue',serial);
 					}
 				}, getContextPath() + '/project/get/SerialID', null);
 			}
@@ -265,14 +269,22 @@ function openDialog(id,data){
 				}
 			});
 			
+			$('#referrerId').combobox({
+				url : getContextPath() + '/portal/staff/static/list',
+				valueField : 'staffId',
+				textField : 'staffName'
+			});
+			
 			$('#source').combobox({
 				url : getContextPath() + '/project/getProjectTags',
 				valueField : 'name',
 				textField : 'name',
 				onSelect : function(record){
 					if(record.name == '个人信息下单'){
-						$('#referrer').val('');
 						$('#referrer-tr').show();
+					}else {
+						$('#referrer-tr').hide();
+						$('#referrerId').combobox('setValue','0');
 					}
 				}
 			});
@@ -308,9 +320,18 @@ function openDialog(id,data){
 				var sourceName = data.source;
 				if(sourceName != null && sourceName != undefined && sourceName != ''){
 					$('#source').combobox('setValue',sourceName);
+					if(sourceName == '个人信息下单'){
+						// 显示推荐人
+						$('#referrer-tr').show();
+						$('#referrerId').combobox('setValue',data.referrerId);
+					}else {
+						$('#referrer-tr').hide();
+						$('#referrerId').combobox('setValue','0');
+					}
 				}else {
 					$('#source').combobox('setValue','');
 				}
+				
 			}
 		},
 	}).dialog('open').dialog('center');
@@ -330,13 +351,13 @@ function cleanFun() {
 // 报表导出
 function exportFun(){
 	
-	var condition = $.toJSON({
-		projectId : $('#search-projectId').val().trim(),
-		state : $('#search-state option:selected').val(),
-		userId : $('#search-userId').val(),
-		teamId : $('#search-teamId').val(),
-		source : $('#search-source option:selected').val()
+	$('#searchForm').form('submit',{
+		url : getContextPath() + '/project/export',
+		onSubmit : function() {
+			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
+		},
+		success : function(result) {
+			
+		}
 	});
-	
-	download(getContextPath() + '/project/export', condition);
 }

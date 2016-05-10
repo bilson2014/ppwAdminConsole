@@ -27,7 +27,8 @@
 					<th>项目状态:</th>
 					<td>
 						<select id="search-state" name="state" editable="false" class="easyui-combobox" style="width: 70px;">
-							<option value="0" selected>正常</option>
+							<option value="" selected>--  请选择 --</option>
+							<option value="0" >正常</option>
             				<option value="1" >取消</option>
             				<option value="2" >完成</option>
 						</select>
@@ -42,16 +43,6 @@
 					</td>
 					<th>项目来源</th>
 					<td>
-						<!-- <select id="search-source" name="source" class="easyui-combobox" editable="false" >
-							<option value="">-- 请选择 --</option>
-							<option value="网站下单" selected>网站下单</option>
-            				<option value="个人信息下单" >个人信息下单</option>
-            				<option value="系统下单" >系统下单</option>
-            				<option value="重复下单" >重复下单</option>
-            				<option value="活动下单" >活动下单</option>
-            				<option value="渠道优惠" >渠道优惠</option>
-						</select> -->
-						
 						<input id="search-source" name="source" class="easyui-combobox" placeholder="请选择项目来源" editable="false"/>
 					</td>
 					<td>
@@ -90,7 +81,7 @@
 		<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 	</div>
 	
-	<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 400px;"
+	<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 430px;"
             closed="true" buttons="#dlg-buttons" title="项目信息">
 	        <form id="fm" method="post">
 	        	<input id="projectId" name="id" type="hidden">
@@ -100,7 +91,7 @@
 	        		<tr>
 	        			<th>项目编号</th>
 	        			<td>
-	        				<input id="serial" name="serial" class="easyui-textbox" required="true" />
+	        				<input id="serial" name="serial" class="easyui-textbox" required="true" editable="false" readonly="readonly"/>
 	        			</td>
 	        			
 	        			<th>项目状态</th>
@@ -166,10 +157,21 @@
 	        			<td>
 	        				<input id="teamPhone" name="teamPhone" class="easyui-textbox" required="true" />
 	        			</td>
-	        			
-	        			<th>项目价格</th>
+	        			<th>最终价格(元)</th>
 	        			<td>
-	        				<input id="priceFirst" name="priceFirst" class="easyui-textbox" required="true"/>
+	        				<input id="priceFinish" name="priceFinish" class="easyui-numberbox" precision="0"/>
+	        			</td>
+	        		</tr>
+	        		
+	        		<tr>
+	        			<th>预期最小值(元)</th>
+	        			<td>
+	        				<input id="priceFirst" name="priceFirst" class="easyui-numberbox" required="true" precision="0"/>
+	        			</td>
+	        			
+	        			<th>预期最大值(元)</th>
+	        			<td>
+	        				<input id="priceLast" name="priceLast" class="easyui-numberbox" required="true" precision="0"/>
 	        			</td>
 	        		</tr>
 	        		
@@ -183,7 +185,7 @@
 	        		<tr id="referrer-tr" class="hide">
 						<th>推荐人</th>
 						<td colspan="2">
-							<input id="referrer" name="referrer" class="easyui-textbox" style="width: 180px;"/>
+							<input id="referrerId" name="referrerId" class="easyui-combobox" style="width: 180px;"/>
 						</td>
 					</tr>
 	        	</table>
