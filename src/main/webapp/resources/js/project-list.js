@@ -235,6 +235,16 @@ function openDialog(id,data){
 		modal : true,
 		onOpen : function(event, ui) {
 			
+			if(data == null){
+				// 新增，则生成项目序号
+				loadData(function(pro){
+					var serial = pro.serial;
+					if(serial != null && serial != undefined && serial != ''){
+						$('#serial').val(serial);
+					}
+				}, getContextPath() + '/project/get/SerialID', null);
+			}
+			
 			$('#customerId').combobox({
 				url : getContextPath() + '/project/getAllUser',
 				valueField : 'customerId',
