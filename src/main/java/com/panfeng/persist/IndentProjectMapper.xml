@@ -22,7 +22,7 @@
 			IP_PRICE_FIRST,
 			IP_PRICE_LAST,
 			IP_PRICE_FINISH,
-			IP_REFERRER
+			IP_REFERRER_ID
 		)VALUES (
 			#{projectName},
 			#{userContact},
@@ -66,10 +66,10 @@
 			</if>
 			
 			<if test="referrer != null and referrer != '' ">
-				#{referrer}
+				${referrerId}
 			</if>
 			<if test="referrer == null or referrer == '' ">
-				''
+				0
 			</if>
 			<![CDATA[
 		);
@@ -107,7 +107,7 @@
 				</if>
 				
 				<if test="referrer != null and referrer != '' ">
-					,i.IP_REFERRER=#{referrer}
+					,i.IP_REFERRER_ID=${referrerId}
 				</if>
 				
 		<![CDATA[
@@ -159,11 +159,14 @@
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
-				i.IP_REFERRER AS referrer
+				s.staffName AS referrerName,
+				i.ip_referrer_id AS referrerId
 				
-			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
+			FROM INDENT_PROJECT i 
+			LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
-     		HAVING i.IP_USER_TYPE =#{userType}  AND i.IP_USER_ID=${userId} ORDER BY i.IP_ID DESC;
+			LEFT JOIN STAFF s ON i.ip_referrer_id = s.staffId
+     		WHERE i.IP_USER_TYPE =#{userType}  AND i.IP_USER_ID=${userId} ORDER BY i.IP_ID DESC;
 		]]>
 	</select>
 
@@ -189,11 +192,14 @@
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
-				i.IP_REFERRER AS referrer
+				s.staffName AS referrerName,
+				i.ip_referrer_id AS referrerId
 				
-			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
+			FROM INDENT_PROJECT i 
+			LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
-     		HAVING i.IP_ID = #{id}
+			LEFT JOIN STAFF s ON i.ip_referrer_id = s.staffId
+     	WHERE i.IP_ID =${id}
 		]]>
 	</select>
 	
@@ -219,10 +225,14 @@
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
-				i.IP_REFERRER AS referrer
-			FROM INDENT_PROJECT i LEFT JOIN USERS u on i.ip_customerId=u.id 
+				s.staffName AS referrerName,
+				i.ip_referrer_id AS referrerId
+				
+			FROM INDENT_PROJECT i 
+			LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
-     		HAVING 1=1		
+			LEFT JOIN STAFF s ON i.ip_referrer_id = s.staffId
+     		WHERE 1=1	
 		]]>
 		<if test="customerId != null and customerId > 0">
 			AND i.IP_CUSTOMERID = ${customerId}
@@ -258,7 +268,7 @@
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
-				i.IP_REFERRER AS referrer
+				i.IP_REFERRER_ID AS referrerId
 			FROM INDENT_PROJECT i 
 			LEFT JOIN VERSIONMANAGER VM
 				ON VM.MANAGERID = i.IP_USER_ID

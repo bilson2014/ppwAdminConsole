@@ -44,17 +44,26 @@ public class IndentProject extends BaseObject {
 	
 	private String createTime = null;
 	
-	private String referrer = null; //友情推荐人
+	private Long referrerId = null; //友情推荐人Id
 	
+	private String referrerName=null;//友情推荐人Name
 	
-	public String getReferrer() {
-		return referrer;
+	public Long getReferrerId() {
+		return referrerId;
 	}
 
-	public void setReferrer(String referrer) {
-		this.referrer = referrer;
+	public void setReferrerId(Long referrerId) {
+		this.referrerId = referrerId;
 	}
 
+	public String getReferrerName() {
+		return referrerName;
+	}
+
+	public void setReferrerName(String referrerName) {
+		this.referrerName = referrerName;
+	}
+	
 	public long getId() {
 		return id;
 	}
