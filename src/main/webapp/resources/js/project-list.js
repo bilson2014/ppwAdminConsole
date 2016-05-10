@@ -81,7 +81,7 @@ $().ready(function(){
 						title : '项目额度',
 						align : 'center'
 					},{
-						field : 'priceFinsh',
+						field : 'priceFinish',
 						title : '最终额度',
 						align : 'center'
 					},{

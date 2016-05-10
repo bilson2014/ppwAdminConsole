@@ -218,8 +218,11 @@ public class ProjectController extends BaseController {
 		}
 	}
 	@RequestMapping("/get/SerialID")
-	public String getProjectSerialID(){
-		return "{\"id\":"+indentProjectService.getProjectSerialID()+"}";
+	public IndentProject getProjectSerialID(){
+		
+		final IndentProject project = new IndentProject();
+		project.setSerial(indentProjectService.getProjectSerialID());
+		return project;
 	}
 	
 }
