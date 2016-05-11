@@ -19,6 +19,7 @@ public class PoiUtils {
 		xssfFont.setColor(new XSSFColor(Color.black));
 		xssfFont.setFontHeight(15);
 		cellStyle.setFont(xssfFont);
+		cellStyle.setBottomBorderColor(new XSSFColor(Color.black));
 		return cellStyle;
 	}
 
@@ -26,6 +27,7 @@ public class PoiUtils {
 		XSSFCellStyle cellStyle = workbook.createCellStyle();
 		cellStyle.setAlignment(HorizontalAlignment.CENTER);
 		cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		cellStyle.setBottomBorderColor(new XSSFColor(Color.black));
 		return cellStyle;
 	}
 

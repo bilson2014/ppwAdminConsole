@@ -71,10 +71,12 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		switch (userType) {
 		// 用户身份 -- 客户
 		case GlobalConstant.ROLE_CUSTOMER:
+			indentProject.setCustomerId(indentProject.getUserId());
 			list = indentProjectMapper.findProjectByUserName(indentProject);
 			break;
 		// 用户身份 -- 供应商
 		case GlobalConstant.ROLE_PROVIDER:
+			indentProject.setTeamId(indentProject.getUserId());
 			list = indentProjectMapper.findProjectByUserName(indentProject);
 			break;
 		// 用户身份 -- 视频管家

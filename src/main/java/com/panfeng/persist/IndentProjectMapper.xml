@@ -238,13 +238,13 @@
 			LEFT JOIN STAFF s ON i.ip_referrer_id = s.staffId
      		WHERE 1=1	
 		]]>
-		<if test="customerId != null and customerId > 0">
+		<if test="customerId != null and customerId != ''  ">
 			AND i.IP_CUSTOMERID = ${customerId}
 		</if>
-		<if test="teamId != null and teamId > 0">
-			AND i.IP_TEAM_NAME = ${teamId}
+		<if test="teamId != null and teamId != '' ">
+			AND i.IP_TEAMID = ${teamId}
 		</if>
-		<if test="(customerId != null and customerId > 0) and (teamId != null and teamId > 0) ">
+		<if test="(customerId == null or customerId == '' ) and (teamId == null or teamId == '' ) ">
 			AND 1=2
 		</if>
 	</select>
