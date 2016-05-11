@@ -1,8 +1,8 @@
 package com.panfeng.poi;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -19,135 +19,243 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 
 	@Override
 	public int createHead(XSSFSheet sheet, XSSFWorkbook workbook) {
-		sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 21));
+		// 设置合并单元格
+		// CellRangeAddress(起始行号，终止行号， 起始列号，终止列号);
+		// CellRangeAddress(x-begin，x-end， y-begin，y-end);
+		sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 25));
 		sheet.addMergedRegion(new CellRangeAddress(2, 4, 0, 0));
 		sheet.addMergedRegion(new CellRangeAddress(2, 4, 1, 1));
 		sheet.addMergedRegion(new CellRangeAddress(2, 4, 2, 2));
 		sheet.addMergedRegion(new CellRangeAddress(2, 4, 3, 3));
-		// 阶段预计时间
-		sheet.addMergedRegion(new CellRangeAddress(2, 2, 4, 8));
-		sheet.addMergedRegion(new CellRangeAddress(3, 4, 4, 4));
+		sheet.addMergedRegion(new CellRangeAddress(2, 4, 4, 4));
+
+		sheet.addMergedRegion(new CellRangeAddress(2, 2, 5, 14));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 5, 5));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 6, 6));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 7, 7));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 8, 8));
-		// 项目进展
-		sheet.addMergedRegion(new CellRangeAddress(2, 2, 9, 12));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 9, 9));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 10, 10));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 11, 11));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 12, 12));
-		// 说明
-		sheet.addMergedRegion(new CellRangeAddress(2, 4, 13, 13));
-		// 基础信息
-		sheet.addMergedRegion(new CellRangeAddress(2, 2, 14, 19));
-		sheet.addMergedRegion(new CellRangeAddress(3, 3, 14, 16));
-		sheet.addMergedRegion(new CellRangeAddress(3, 3, 17, 19));
-		// 价格 交付时间
-		sheet.addMergedRegion(new CellRangeAddress(2, 4, 20, 20));
-		sheet.addMergedRegion(new CellRangeAddress(2, 4, 21, 21));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 13, 13));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 14, 14));
 
-		sheet.setColumnWidth(0, 12 * 256);
-		sheet.setColumnWidth(1, 12 * 256);
-		sheet.setColumnWidth(2, 12 * 256);
-		sheet.setColumnWidth(3, 12 * 256);
-		sheet.setColumnWidth(13, 17 * 256);
+		sheet.addMergedRegion(new CellRangeAddress(2, 4, 15, 15));
 
+		sheet.addMergedRegion(new CellRangeAddress(2, 2, 16, 25));
+
+		sheet.addMergedRegion(new CellRangeAddress(3, 3, 16, 19));
+
+		sheet.addMergedRegion(new CellRangeAddress(3, 3, 20, 23));
+
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 24, 24));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 25, 25));
+
+		
+		// 填充数据
+		// 第一行 -- 二行
 		XSSFRow xssfRow = sheet.createRow(0);
+		xssfRow.setHeightInPoints(30);
 		XSSFCell xssfCell = xssfRow.createCell(0);
-		xssfCell.setCellValue("项目报表");
+		xssfCell.setCellValue("拍片网项目统筹表");
 		xssfCell.setCellStyle(PoiUtils.getDefaultTitleStyle(workbook));
+		// 三行 --》一列
 		xssfRow = sheet.createRow(2);
-
+		xssfRow.setHeightInPoints(20);
 		XSSFCellStyle cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(0);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("项目编号");
+		// 三行 --》二列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(1);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("项目名称");
+		// 三行 --》三列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(2);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("项目来源");
+		// 三行 --》四列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(3);
 		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("项目负责人");
+		xssfCell.setCellValue("个人信息下单来源");
+		// 三行 --》五列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(4);
 		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("阶段预计时间");
-		xssfCell = xssfRow.createCell(9);
+		xssfCell.setCellValue("项目负责人");
+		// 三行 --》六列 -- 十五列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(5);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("项目进展");
-		xssfCell = xssfRow.createCell(13);
+		// 三行 --》六列 -- 十六列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(15);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("说明（特殊情况）");
-		xssfCell = xssfRow.createCell(14);
+		// 三行 --》十七列 -- 二十六列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(16);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("基础信息");
 
-		xssfCell = xssfRow.createCell(20);
+		// 四行 --》六列
+		xssfRow = sheet.createRow(3);
+		xssfRow.setHeightInPoints(20);
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(5);
 		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("价格（万元）");
-		xssfCell = xssfRow.createCell(21);
+		xssfCell.setCellValue("阶段");
+		// 四行 --》七列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(6);
+		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("状态");
+
+		// 四行 --》八列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(7);
+		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("解决方法及下阶段时间点");
+
+		// 四行 --》九列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(8);
+		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("立项时间");
+
+		// 四行 --》十列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(9);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("交付时间");
 
-		xssfRow = sheet.createRow(3);
-		xssfCell = xssfRow.createCell(4);
-		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("沟通");
-		xssfCell = xssfRow.createCell(5);
-		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("方案");
-		xssfCell = xssfRow.createCell(6);
-		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("商务");
-		xssfCell = xssfRow.createCell(7);
-		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("制作");
-		xssfCell = xssfRow.createCell(8);
-		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("交付");
-
-		xssfCell = xssfRow.createCell(9);
-		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("节点");
+		// 四行 --》十一列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(10);
 		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("时间点");
+		xssfCell.setCellValue("剩余时间");
+		// 四行 --》十二列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(11);
 		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("状态");
+		xssfCell.setCellValue("延期交付时间");
+		// 四行 --》十三列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(12);
 		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("解决方法");
+		xssfCell.setCellValue("周期（天）");
+
+		// 四行 --》十四列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(13);
+		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("预算金额（元）");
+		// 四行 --》十五列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(14);
 		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("项目金额（元）");
+
+		// 四行 --》十七列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(16);
+		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("客户信息及负责人");
-		xssfCell = xssfRow.createCell(17);
+
+		// 四行 --》二十一列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(20);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("制作团队信息及导演");
 
+		// 四行 --》二十五列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(24);
+		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("当月应回款");
+
+		// 四行 --》二十六列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(25);
+		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("次月应回款");
+
+		// 五行 --》十七列
 		xssfRow = sheet.createRow(4);
-		xssfCell = xssfRow.createCell(14);
-		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("客户名称");
-		xssfCell = xssfRow.createCell(15);
-		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("负责人");
+		xssfRow.setHeightInPoints(20);
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(16);
 		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("联系方式");
+		xssfCell.setCellValue("客户名称");
+		// 五行 --》十八列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(17);
 		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("供应商名称");
+		xssfCell.setCellValue("负责人");
+		// 五行 --》十九列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(18);
 		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("负责人（导演）");
+		xssfCell.setCellValue("联系方式");
+		// 五行 --》二十列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(19);
 		xssfCell.setCellStyle(cellStyle);
-		xssfCell.setCellValue("联系方式");
+		xssfCell.setCellValue("实付金额");
 
+		// 五行 --》二十一列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(20);
+		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("供应商名称");
+		// 五行 --》二十二列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(21);
+		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("负责人（导演）");
+		// 五行 --》二十三列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(22);
+		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("联系方式");
+		// 五行 --》二十四列
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(23);
+		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("实付金额");
+
+		// 设置行宽
+		sheet.setColumnWidth(0, 14 * 256);
+		sheet.setColumnWidth(1, 14 * 256);
+		sheet.setColumnWidth(2, 15 * 256);
+		sheet.setColumnWidth(3, 16 * 256);
+		sheet.setColumnWidth(4, 16 * 256);
+		sheet.setColumnWidth(5, 14 * 256);
+		sheet.setColumnWidth(6, 20 * 256);
+		sheet.setColumnWidth(7, 23 * 256);
+		sheet.setColumnWidth(8, 14 * 256);
+		sheet.setColumnWidth(9, 14 * 256);
+		sheet.setColumnWidth(10, 14 * 256);
+		sheet.setColumnWidth(11, 14 * 256);
+		sheet.setColumnWidth(12, 14 * 256);
+		sheet.setColumnWidth(13, 14 * 256);
+		sheet.setColumnWidth(14, 14 * 256);
+		sheet.setColumnWidth(15, 23 * 256);
+		sheet.setColumnWidth(16, 25 * 256);
+		sheet.setColumnWidth(17, 14 * 256);
+		sheet.setColumnWidth(18, 18 * 256);
+		sheet.setColumnWidth(19, 14 * 256);
+		sheet.setColumnWidth(20, 25 * 256);
+		sheet.setColumnWidth(21, 14 * 256);
+		sheet.setColumnWidth(22, 18 * 256);
+		sheet.setColumnWidth(23, 14 * 256);
+		sheet.setColumnWidth(24, 14 * 256);
+		sheet.setColumnWidth(25, 14 * 256);
 		return 5;
 	}
 
@@ -155,38 +263,8 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 	public void getItemView(XSSFSheet sheet, XSSFWorkbook workbook,
 			IndentProject entity, int itemId) {
 		XSSFRow xssfRow = sheet.createRow(itemId);
-
-		xssfRow.createCell(0).setCellValue(entity.getId());
-		xssfRow.createCell(1).setCellValue(entity.getUserName());
-		xssfRow.createCell(2).setCellValue(entity.getSource());
-		if(entity.getUserViewModel()!=null){
-			xssfRow.createCell(3).setCellValue(entity.getUserViewModel().getUserName());
-		}
-		Map<String, String> time = entity.getTime();
-		if(time!=null){
-			xssfRow.createCell(4).setCellValue(time.get("gt"));
-			xssfRow.createCell(5).setCellValue(time.get("fa"));
-			xssfRow.createCell(6).setCellValue(time.get("sw"));
-			xssfRow.createCell(7).setCellValue(time.get("zz"));
-			xssfRow.createCell(8).setCellValue(time.get("jf"));
-		}
-		if (!entity.getTask().getId().equals("")) {
-			xssfRow.createCell(9).setCellValue(entity.getTask().getName());
-			xssfRow.createCell(10).setCellValue(entity.getTask().getCreateTime());
-		} else {
-			xssfRow.createCell(9).setCellValue(entity.getTask().getName());
-			xssfRow.createCell(10).setCellValue("~");
-			xssfRow.createCell(21).setCellValue(entity.getTask().getCreateTime());
-		}
-
-		xssfRow.createCell(13).setCellValue("");
-		xssfRow.createCell(14).setCellValue(entity.getUserName());
-		xssfRow.createCell(15).setCellValue(entity.getUserContact());
-		xssfRow.createCell(16).setCellValue(entity.getUserPhone());
-		xssfRow.createCell(17).setCellValue(entity.getTeamName());
-		xssfRow.createCell(18).setCellValue(entity.getTeamContact());
-		xssfRow.createCell(19).setCellValue(entity.getTeamPhone());
-		xssfRow.createCell(20).setCellValue(entity.getPriceFinish());
+		
+		
 	}
 
 	@Override

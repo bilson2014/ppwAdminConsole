@@ -299,9 +299,10 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			while (iteratorFlow.hasNext()) {
 				flowDate = iteratorFlow.next();
 				if (flowDate.getFdTaskId().equals(activityImpl.getId())) {
-					if (flowDate.getFdStartTime()
-							.equals(IndentFlow.defaultDate))
+					if (flowDate.getFdStartTime()==null || flowDate.getFdStartTime()
+							.equals(IndentFlow.defaultDate)){
 						flowDate.setFdStartTime("");
+					}
 					activitiTask.setScheduledTime(flowDate);
 					break;
 				}
