@@ -36,9 +36,8 @@ public class PoiUtils {
 		cellStyle.setAlignment(HorizontalAlignment.CENTER);
 		cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		XSSFFont xssfFont = workbook.createFont();
-		xssfFont.setColor(new XSSFColor(Color.black));
+		xssfFont.setColor(new XSSFColor(Color.red));
 		cellStyle.setFont(xssfFont);
-		cellStyle.setFillBackgroundColor(new XSSFColor(Color.red));
 		return cellStyle;
 	}
 
