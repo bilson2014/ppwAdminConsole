@@ -34,7 +34,8 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	private IndentFlowMapper flowMapper;
 	@Autowired
 	private FlowDateMapper flowDateMapper;
-	static String processDefinitionKey = "IndentFlow";
+
+	private static String processDefinitionKey = "IndentFlow";
 	@Autowired
 	private IndentCommentService indentCommentService;
 	@Autowired
@@ -118,8 +119,8 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
 		if (res) {
-			indentCommentService.createSystemMsg("完成了 "
-					+ indentProject.getTask().getName() + "任务", indentProject);
+			indentCommentService.createSystemMsg(indentProject.getTask()
+					.getName() + "任务", indentProject);
 		}
 
 		// 检测任务是否已经完成
@@ -150,17 +151,17 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		indentFlow.setIfIndentId(indentProject.getId());
 		indentFlow.setIfState(IndentFlow.FLOWENABLE);
 		long l = flowMapper.save(indentFlow);
-		//填充默认时间
-		if(indentProject.getTime()==null){
-			 Map<String,String> map=new HashMap<String, String>();
-			List<ActivitiTask> activitiTasks=getNodes(indentProject);
+		// 填充默认时间
+		if (indentProject.getTime() == null) {
+			Map<String, String> map = new HashMap<String, String>();
+			List<ActivitiTask> activitiTasks = getNodes(indentProject);
 			for (ActivitiTask activitiTask : activitiTasks) {
-				if(activitiTask!=null)
+				if (activitiTask != null)
 					map.put(activitiTask.getTaskDefinitionKey(), "");
 			}
 			indentProject.setTime(map);
 		}
-		
+
 		// 获取动态节点
 		List<ActivitiTask> nodes = getNodes(indentProject);
 		// 填充流程时间节点
@@ -169,6 +170,8 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		for (FlowDate flowDate : dates) {
 			flowDateMapper.save(flowDate);
 		}
+		indentCommentService.createSystemMsg(
+				"创建了 " + indentProject.getProjectName() + "项目", indentProject);
 		return l > 0 ? true : false;
 	}
 
@@ -180,7 +183,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				getIndentCurrentFlowId(indentProject));
 		if (res) {
 			indentCommentService.createSystemMsg(
-					"暂停了 " + indentProject.getProjectName() + "项目",
+					" 暂停了 " + indentProject.getProjectName() + "项目",
 					indentProject);
 		}
 		return res;
@@ -193,7 +196,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				getIndentCurrentFlowId(indentProject));
 		if (res) {
 			indentCommentService.createSystemMsg(
-					"恢复了 " + indentProject.getProjectName() + "项目",
+					" 恢复了 " + indentProject.getProjectName() + "项目",
 					indentProject);
 		}
 		return res;
@@ -219,7 +222,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				getIndentCurrentFlowId(indentProject));
 		if (res) {
 			indentCommentService.createSystemMsg(
-					"跳转了任务节点 ," + indentProject.getProjectName() ,
+					" 跳转了任务节点 ," + indentProject.getProjectName(),
 					indentProject);
 		}
 		return res;
@@ -299,8 +302,9 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			while (iteratorFlow.hasNext()) {
 				flowDate = iteratorFlow.next();
 				if (flowDate.getFdTaskId().equals(activityImpl.getId())) {
-					if (flowDate.getFdStartTime()==null || flowDate.getFdStartTime()
-							.equals(IndentFlow.defaultDate)){
+					if (flowDate.getFdStartTime() == null
+							|| flowDate.getFdStartTime().equals(
+									IndentFlow.defaultDate)) {
 						flowDate.setFdStartTime("");
 					}
 					activitiTask.setScheduledTime(flowDate);

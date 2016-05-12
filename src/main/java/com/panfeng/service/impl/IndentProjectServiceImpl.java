@@ -50,10 +50,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	public boolean save(IndentProject indentProject) {
 		indentProject.setSerial(getProjectSerialID());
 		indentProjectMapper.save(indentProject);
-			indentCommentService.createSystemMsg(
-					"创建了 " + indentProject.getProjectName() + "项目",
-					indentProject);
-			return indentActivitiService.startProcess(indentProject);
+		return indentActivitiService.startProcess(indentProject);
 	}
 
 	@Override
@@ -162,7 +159,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		tags[3] = "重复下单";
 		tags[4] = "活动下单";
 		tags[5] = "渠道优惠";
-		
+
 		final List<BizBean> list = new ArrayList<BizBean>();
 		for (String str : tags) {
 			final BizBean bean = new BizBean();
@@ -185,6 +182,36 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	}
 
 	public void getReport(List<IndentProject> list, OutputStream outputStream) {
+		// ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
+		// GenerateExcel ge = new GenerateExcel();
+		// for (IndentProject indentProject2 : list) {
+		// List<IndentFlow> listDates = indentFlowMapper
+		// .findFlowDateByIndentId(indentProject2);
+		// IndentFlow.indentProjectFillDate(indentProject2, listDates);
+		// ActivitiTask at = indentActivitiService
+		// .getCurrentTask(indentProject2);
+		// if (at.getId().equals("")) {
+		// List<HistoricTaskInstance> listHistoricTaskInstances =
+		// indentActivitiService
+		// .getHistoryProcessTask_O(indentProject2);
+		// HistoricTaskInstance historicTaskInstance = listHistoricTaskInstances
+		// .get(listHistoricTaskInstances.size() - 1);
+		// at.setId("");
+		// at.setName("已完成");
+		// SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+		// "yyyy-MM-dd");
+		// at.setCreateTime(simpleDateFormat.format(historicTaskInstance
+		// .getEndTime()));
+		// }
+		// indentProject2.setTask(at);
+		// // 填充管家
+		// UserViewModel userViewModel = userTempService.getInfo(
+		// indentProject2.getUserType(), indentProject2.getUserId());
+		// indentProject2.setUserViewModel(userViewModel);
+		// projectPoiAdapter.getData().add(indentProject2);
+		// }
+		// ge.generate(projectPoiAdapter, outputStream);
+
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
 		for (IndentProject indentProject2 : list) {
@@ -210,6 +237,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			UserViewModel userViewModel = userTempService.getInfo(
 					indentProject2.getUserType(), indentProject2.getUserId());
 			indentProject2.setUserViewModel(userViewModel);
+			indentProject2.setManagerRealName(userViewModel.getUserName());
 			projectPoiAdapter.getData().add(indentProject2);
 		}
 		ge.generate(projectPoiAdapter, outputStream);
@@ -265,17 +293,17 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public String getProjectSerialID() {
-		long count=indentProjectMapper.getProjectCount();
-		String date=PathFormatUtils.parse("{yyyy}{mm}{dd}");
-		String formatNum=count+"";
-		if(count<100){
-			if(count<10){
-				formatNum="00"+formatNum;
-			}else{
-				formatNum='0'+formatNum;				
+		long count = indentProjectMapper.getProjectCount();
+		String date = PathFormatUtils.parse("{yyyy}{mm}{dd}");
+		String formatNum = count + "";
+		if (count < 100) {
+			if (count < 10) {
+				formatNum = "00" + formatNum;
+			} else {
+				formatNum = '0' + formatNum;
 			}
 		}
-		return date+formatNum;
+		return date + formatNum;
 	}
 
 	@Override

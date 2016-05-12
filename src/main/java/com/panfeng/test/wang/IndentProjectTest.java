@@ -1,5 +1,9 @@
 package com.panfeng.test.wang;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -66,10 +70,17 @@ public class IndentProjectTest {
 			indentProject2.setTask(at);
 			//填充管家
 			UserViewModel userViewModel=userTempService.getInfo(indentProject2.getUserType(), indentProject2.getUserId());
-			indentProject2.setUserViewModel(userViewModel);;
+			indentProject2.setUserViewModel(userViewModel);
+			indentProject2.setManagerRealName(userViewModel.getUserName());
 			projectPoiAdapter.getData().add(indentProject2);
 		}
-		ge.generate(projectPoiAdapter,null);
+		try {
+			OutputStream outputStream=new FileOutputStream(new File("I:\\wangliming\\2016-05-12 周四\\资源\\test.xlsx"));
+			ge.generate(projectPoiAdapter,outputStream);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// public Map<String,CellStyle> createCellStyle(Workbook wb,List<StationMap>

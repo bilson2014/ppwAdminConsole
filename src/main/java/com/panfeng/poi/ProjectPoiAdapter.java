@@ -1,7 +1,7 @@
 package com.panfeng.poi;
 
-import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -12,6 +12,8 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.panfeng.resource.model.IndentProject;
+import com.panfeng.util.DateUtils;
+import com.panfeng.util.ValidateUtil;
 
 public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 
@@ -52,7 +54,6 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 24, 24));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 25, 25));
 
-		
 		// 填充数据
 		// 第一行 -- 二行
 		XSSFRow xssfRow = sheet.createRow(0);
@@ -238,7 +239,7 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		sheet.setColumnWidth(5, 14 * 256);
 		sheet.setColumnWidth(6, 20 * 256);
 		sheet.setColumnWidth(7, 23 * 256);
-		sheet.setColumnWidth(8, 14 * 256);
+		sheet.setColumnWidth(8, 20 * 256);
 		sheet.setColumnWidth(9, 14 * 256);
 		sheet.setColumnWidth(10, 14 * 256);
 		sheet.setColumnWidth(11, 14 * 256);
@@ -263,8 +264,77 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 	public void getItemView(XSSFSheet sheet, XSSFWorkbook workbook,
 			IndentProject entity, int itemId) {
 		XSSFRow xssfRow = sheet.createRow(itemId);
-		
-		
+		xssfRow.createCell(0).setCellValue(entity.getSerial());
+		xssfRow.createCell(1).setCellValue(entity.getProjectName());
+		xssfRow.createCell(2).setCellValue(entity.getSource());
+		if (ValidateUtil.isValid(entity.getSource())
+				&& entity.getSource().equals("个人信息下单")) {
+			xssfRow.createCell(3).setCellValue(entity.getReferrerName());
+		}
+		xssfRow.createCell(4).setCellValue(entity.getManagerRealName());
+		if (entity.getTask() != null) {
+			xssfRow.createCell(5).setCellValue(entity.getTask().getName());
+		}
+		// 状态
+		xssfRow.createCell(6).setCellValue("");
+		// 解决方法及下阶段时间点
+		xssfRow.createCell(7).setCellValue("");
+		// 立项时间
+		xssfRow.createCell(8).setCellValue(DateUtils.getDateByFormat2(entity.getCreateTime(), "yyyy-MM-dd"));
+		if(ValidateUtil.isValid(entity.getTime())){
+			String jfDate=entity.getTime().get("jf");
+			if(ValidateUtil.isValid(jfDate)){
+				// 交付时间
+				xssfRow.createCell(9).setCellValue(jfDate);
+				// 剩余时间
+				Date date1=DateUtils.getDateByFormat(jfDate, "yyyy-MM-dd");
+				Date date2=DateUtils.getDateByFormat(new Date(),"yyyy-MM-dd" );
+				int c=DateUtils.dateInterval(date1.getTime(),date2.getTime());
+				XSSFCellStyle xssfCellStyle=PoiUtils.getDefaultErrorCellStyle(workbook);
+				XSSFCell xssfCell=xssfRow.createCell(10);
+				xssfCell.setCellStyle(xssfCellStyle);
+				if(c<=0)
+					xssfCell.setCellValue("已过期");
+				else
+					xssfCell.setCellValue("剩余"+c+"天");
+				
+				date2=DateUtils.getDateByFormat(entity.getCreateTime(), "yyyy-MM-dd");
+				c=DateUtils.dateInterval(date1.getTime(),date2.getTime());
+				//包含结束天
+				c++;
+				// 周期（天）
+				xssfRow.createCell(12).setCellValue(c+"天");
+			}
+		}
+		// 延期交付时间
+		xssfRow.createCell(11).setCellValue("");
+		// 预算金额（元）
+		xssfRow.createCell(13).setCellValue(entity.getPriceFirst()+"元");
+		// 项目金额（元）
+		xssfRow.createCell(14).setCellValue(entity.getPriceFinish()+"元");
+		// 说明（特殊情况）
+		xssfRow.createCell(15).setCellValue("");
+		// 客户名称
+		xssfRow.createCell(16).setCellValue(entity.getUserName());
+		// 客户负责人
+		xssfRow.createCell(17).setCellValue(entity.getUserContact());
+		// 联系方式
+		xssfRow.createCell(18).setCellValue(entity.getUserPhone());
+		// 实付金额
+		xssfRow.createCell(19).setCellValue(entity.getCustomerPayment()+"元");
+		// 供应商名称
+		xssfRow.createCell(20).setCellValue(entity.getTeamName());
+		// 负责人（导演）
+		xssfRow.createCell(21).setCellValue(entity.getTeamContact());
+		// 联系方式
+		xssfRow.createCell(22).setCellValue(entity.getTeamPhone());
+		// 实付金额
+		xssfRow.createCell(23).setCellValue(entity.getProviderPayment()+"元");
+		// 当月应回款
+		xssfRow.createCell(24).setCellValue("");
+		// 次月应回款
+		xssfRow.createCell(25).setCellValue("");
+
 	}
 
 	@Override

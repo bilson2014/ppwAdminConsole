@@ -22,7 +22,9 @@
 			IP_PRICE_FIRST,
 			IP_PRICE_LAST,
 			IP_PRICE_FINISH,
-			IP_REFERRER_ID
+			IP_REFERRER_ID,
+			IP_CUSTOMER_PAYMENT,
+			IP_PROVIDER_PAYMENT
 		)VALUES (
 			#{projectName},
 			#{userContact},
@@ -66,9 +68,23 @@
 			</if>
 			
 			<if test="referrerId != null and referrerId != '' ">
-				${referrerId}
+				${referrerId},
 			</if>
 			<if test="referrerId == null or referrerId == '' ">
+				0,
+			</if>
+			
+			<if test="customerPayment != null and customerPayment != '' ">
+				${customerPayment},
+			</if>
+			<if test="customerPayment == null or customerPayment == '' ">
+				0,
+			</if>
+			
+			<if test="providerPayment != null and providerPayment != '' ">
+				${providerPayment}
+			</if>
+			<if test="providerPayment == null or providerPayment == '' ">
 				0
 			</if>
 			<![CDATA[
@@ -114,6 +130,22 @@
 					,i.IP_REFERRER_ID = ${referrerId}
 				</if>
 				
+				<if test="customerPayment != null and customerPayment != ''">
+					,i.IP_CUSTOMER_PAYMENT = ${customerPayment}
+				</if>
+				
+				<if test="customerPayment == 0">
+					,i.IP_CUSTOMER_PAYMENT = 0
+				</if>
+				
+				<if test="providerPayment != null and providerPayment != ''">
+					,i.IP_PROVIDER_PAYMENT = ${providerPayment}
+				</if>
+				
+				<if test="providerPayment == 0">
+					,i.IP_PROVIDER_PAYMENT = 0
+				</if>
+			
 		<![CDATA[
 			WHERE i.IP_ID = ${id};
 		]]>
@@ -164,7 +196,10 @@
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
 				s.staffName AS referrerName,
-				i.ip_referrer_id AS referrerId
+				i.ip_referrer_id AS referrerId,
+				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
+				i.IP_CUSTOMER_PAYMENT AS customerPayment,
+				i.IP_PROVIDER_PAYMENT AS providerPayment
 				
 			FROM INDENT_PROJECT i 
 			LEFT JOIN USERS u on i.ip_customerId=u.id 
@@ -197,7 +232,10 @@
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
 				s.staffName AS referrerName,
-				i.ip_referrer_id AS referrerId
+				i.ip_referrer_id AS referrerId,
+				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
+				i.IP_CUSTOMER_PAYMENT AS customerPayment,
+				i.IP_PROVIDER_PAYMENT AS providerPayment
 				
 			FROM INDENT_PROJECT i 
 			LEFT JOIN USERS u on i.ip_customerId=u.id 
@@ -230,7 +268,10 @@
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
 				s.staffName AS referrerName,
-				i.ip_referrer_id AS referrerId
+				i.ip_referrer_id AS referrerId,
+				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
+				i.IP_CUSTOMER_PAYMENT AS customerPayment,
+				i.IP_PROVIDER_PAYMENT AS providerPayment
 				
 			FROM INDENT_PROJECT i 
 			LEFT JOIN USERS u on i.ip_customerId=u.id 
@@ -272,7 +313,11 @@
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
-				i.IP_REFERRER_ID AS referrerId
+				i.IP_REFERRER_ID AS referrerId,
+				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
+				i.IP_CUSTOMER_PAYMENT AS customerPayment,
+				i.IP_PROVIDER_PAYMENT AS providerPayment
+				
 			FROM INDENT_PROJECT i 
 			LEFT JOIN VERSIONMANAGER VM
 				ON VM.MANAGERID = i.IP_USER_ID
