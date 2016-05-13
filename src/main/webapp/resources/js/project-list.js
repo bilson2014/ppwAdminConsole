@@ -8,7 +8,7 @@ $().ready(function(){
 		url : getContextPath() + '/project/list',
 		idField : 'id' ,
 		title : '项目管理列表' , 
-		fitColumns : true ,
+		//fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -24,7 +24,7 @@ $().ready(function(){
 					},{
 						field : 'serial',
 						title : '项目序列号',
-						width : 110,
+						width : 90,
 						align : 'center'
 					},{
 						field : 'state',
@@ -42,27 +42,22 @@ $().ready(function(){
 					},{
 						field : 'managerRealName' ,
 						title : '视频管家' ,
-						width : 110,
 						align : 'center'
 					},{
 						field : 'userName',
 						title : '客户公司',
-						width : 110,
 						align : 'center'
 					},{
 						field : 'userContact' ,
 						title : '客户联系人' ,
-						align : 'center' ,
-						width : 70
+						align : 'center' 
 					},{
 						field : 'userPhone',
 						title : '客户手机',
-						width : 110,
 						align : 'center'
 					},{
 						field : 'teamName',
 						title : '供应商名称',
-						width : 70,
 						align : 'center'
 					},{
 						field : 'teamContact',
@@ -89,28 +84,32 @@ $().ready(function(){
 						title : '最终额度',
 						align : 'center'
 					},{
+						field : 'customerPayment',
+						title : '客户实付金额',
+						align : 'center'
+					},{
+						field : 'providerPayment',
+						title : '供应商实付金额',
+						align : 'center'
+					},{
 						field : 'customerId' ,
 						title : '客户ID' ,
 						align : 'center' ,
-						width : 70,
 						hidden: true
 					},{
 						field : 'teamId' ,
 						title : '供应商ID' ,
 						align : 'center' ,
-						width : 70,
 						hidden: true
 					},{
 						field : 'userId' ,
 						title : '视频管家ID' ,
 						align : 'center' ,
-						width : 70,
 						hidden: true
 					},{
 						field : 'userType' ,
 						title : '创建类型' ,
 						align : 'center' ,
-						width : 70,
 						hidden: true
 					}]],
 			pagination: true ,

@@ -176,6 +176,18 @@
 	        		</tr>
 	        		
 	        		<tr>
+	        			<th>客户实付金额</th>
+	        			<td>
+	        				<input id="customerPayment" name="customerPayment" class="easyui-numberbox" required="false" precision="2"/>
+	        			</td>
+	        			
+	        			<th>供应商实付金额</th>
+	        			<td>
+	        				<input id="providerPayment" name="providerPayment" class="easyui-numberbox" required="false" precision="2"/>
+	        			</td>
+	        		</tr>
+	        		
+	        		<tr>
 	        			<th>项目描述</th>
 	        			<td colspan="3">
 	        				<input class="easyui-textbox text-area" id="description" name="description" multiline="true" style="height: 100px;width: 92%;" prompt="在此填写对项目的描述" />
