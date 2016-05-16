@@ -34,6 +34,8 @@ public class Indent extends BaseObject {
 	
 	private User user = null; // 关联用户
 	
+	private Salesman salesman = null; // 关联分销人
+	
 	private Long userId = null;
 	
 	private String orderDate = null;
@@ -41,6 +43,10 @@ public class Indent extends BaseObject {
 	private String indent_recomment = null; // 订单备注
 	
 	private String indent_description = null; // CRM备注
+	
+	private String salesmanUniqueId = null; // 分销人唯一编号 
+	
+	private String salesmanName = null; // 分销人名字
 	
 	// ------------------------  冗余字段  ------------------------
 	
@@ -262,6 +268,30 @@ public class Indent extends BaseObject {
 
 	public void setIndent_description(String indent_description) {
 		this.indent_description = indent_description;
+	}
+
+	public String getSalesmanUniqueId() {
+		return salesmanUniqueId;
+	}
+
+	public void setSalesmanUniqueId(String salesmanUniqueId) {
+		this.salesmanUniqueId = salesmanUniqueId;
+	}
+
+	public String getSalesmanName() {
+		return salesmanName;
+	}
+
+	public void setSalesmanName(String salesmanName) {
+		this.salesmanName = salesmanName;
+	}
+
+	public Salesman getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(Salesman salesman) {
+		this.salesman = salesman;
 	}
 
 }

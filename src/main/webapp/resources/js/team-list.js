@@ -201,7 +201,12 @@ $().ready(function(){
 						field : 'updateDate' ,
 						title : '更新时间' ,
 						align : 'center' ,
-						width : 100
+						width : 150
+					},{
+						field : 'createDate' ,
+						title : '创建时间' ,
+						align : 'center' ,
+						width : 150
 					},{
 						field : 'recommendation',
 						title : '审核意见',

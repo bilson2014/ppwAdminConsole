@@ -25,7 +25,7 @@
 				   t.INFORESOURCE AS infoResource,
 				   t.DESCRIPTION AS description,
 				   DATE_FORMAT(t.CREATEDATE,'%Y-%m-%d %T') AS createDate,
-				   DATE_FORMAT(t.UPDATEDATE,'%Y-%m-%d') AS updateDate,
+				   DATE_FORMAT(t.UPDATEDATE,'%Y-%m-%d %T') AS updateDate,
 				   t.PHONENUMBER AS phoneNumber,
 				   t.EMAIL AS email,
 				   t.ADDRESS AS address,
