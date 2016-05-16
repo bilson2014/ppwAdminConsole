@@ -328,8 +328,14 @@
 					PRICERANGE = ${priceRange},
 					DEMAND = #{demand},
 					INFORESOURCE = ${infoResource},
-					DESCRIPTION = #{description},
-					PHONENUMBER = #{phoneNumber}
+					DESCRIPTION = #{description}
+		]]>
+		
+		<if test="phoneNumber != null and phoneNumber != ''">
+				,PHONENUMBER = #{phoneNumber}
+		</if>
+		
+		<![CDATA[
 			WHERE TEAMID = ${teamId}
 		]]>
 	</update>
