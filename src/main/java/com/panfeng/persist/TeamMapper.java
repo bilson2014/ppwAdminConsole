@@ -78,5 +78,9 @@ public interface TeamMapper {
 	public long checkExist(final TeamView view);
 
 	public List<Team> findTeamByNameOrContact(final Team team);
+
+	public List<Team> verificationTeamExist(final Team team);
+
+	public long updateUniqueId(final Team provider);
 	
 }

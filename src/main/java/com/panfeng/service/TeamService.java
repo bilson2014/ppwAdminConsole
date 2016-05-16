@@ -99,4 +99,13 @@ public interface TeamService {
 	public long updateTeamStatus(final long id);
 
 	public List<Team> findTeamByName(final Team team);
+
+	public List<Team> verificationTeamExist(final Team team);
+
+	/**
+	 * 绑定第三方登录账号
+	 * @param provider
+	 * @return
+	 */
+	public long updateUniqueId(final Team provider);
 }

@@ -42,6 +42,7 @@ import com.panfeng.service.SessionInfoService;
 import com.panfeng.service.TeamService;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.FileUtils;
+import com.panfeng.util.ValidateUtil;
 
 /**
  * 团队管理控制类
@@ -534,6 +535,60 @@ public class TeamController extends BaseController {
 	public List<Team> getTeamByName(@RequestBody final Team team) {
 		List<Team> teams = service.findTeamByName(team);
 		return teams != null ? teams : new ArrayList<Team>();
+	}
+	
+	@RequestMapping("/team/thirdLogin/isExist")
+	public boolean verificationTeamExist(@RequestBody final Team provider,final HttpServletRequest request){
+		
+		final List<Team> list = service.verificationTeamExist(provider);
+		if(ValidateUtil.isValid(list)){
+			if(list.size() == 1){ // 绑定账户
+				// 清除当前session
+				sessionService.removeSession(request);
+				final Team team = list.get(0);
+				// 存入session中
+				return initSessionInfo(team, request);
+			}
+		}
+		return false;
+	}
+	
+	@RequestMapping("/team/thirdLogin/bind")
+	public boolean bind(@RequestBody final Team provider,final HttpServletRequest request){
+		
+		try {
+			// 转码
+			final String loginName = URLDecoder.decode(provider.getLoginName(), "UTF-8");
+			final String password = URLDecoder.decode(provider.getPassword(), "UTF-8");
+			final String uniqueId = URLDecoder.decode(provider.getUniqueId(), "UTF-8");
+			final String thirdLoginType = URLDecoder.decode(provider.getThirdLoginType(), "UTF-8");
+			
+			provider.setLoginName(loginName);
+			provider.setPassword(password);
+			
+			if("qqUnique".equals(thirdLoginType)){
+				provider.setQqUnique(uniqueId);
+			} else if("wbUnique".equals(thirdLoginType)){
+				provider.setWbUnique(uniqueId);
+			} else if("wechatUnique".equals(thirdLoginType)){
+				provider.setWechatUnique(uniqueId);
+			}
+			
+			final Team team = service.doLogin(provider);
+			
+			if(team != null){
+				
+				provider.setTeamId(team.getTeamId());
+				service.updateUniqueId(provider);
+				// 存入session
+				return initSessionInfo(team, request);
+			}
+		} catch (UnsupportedEncodingException e) {
+			
+			logger.error("Decoder LoginName Or Password Error On Provider Login ...");
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	/**

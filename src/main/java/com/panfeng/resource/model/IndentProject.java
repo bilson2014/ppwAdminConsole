@@ -46,11 +46,11 @@ public class IndentProject extends BaseObject {
 	
 	private Long referrerId = null; //友情推荐人Id
 	
-	private String referrerName=null;//友情推荐人Name
+	private String referrerName = null;//友情推荐人Name
 	
-	private Double customerPayment=null;//用户实付金额
+	private Double customerPayment = null;//用户实付金额
 	
-	private Double providerPayment=null;//供应商实付金额
+	private Double providerPayment = null;//供应商实付金额
 	
 	public Double getCustomerPayment() {
 		return customerPayment;

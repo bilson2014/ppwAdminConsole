@@ -66,6 +66,16 @@ public class Team extends Customer {
 
 	private String description = null; // 备注
 	
+	private String qqUnique = null; // QQToken
+	
+	private String wbUnique = null; // 微博Token
+	
+	private String wechatUnique = null; // 微信Token
+	
+	private String uniqueId = null; // 三方登录唯一ID
+	
+	private String thirdLoginType = null; // 第三方登录类型
+	
 	public long getTeamId() {
 		return teamId;
 	}
@@ -288,6 +298,46 @@ public class Team extends Customer {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public String getQqUnique() {
+		return qqUnique;
+	}
+
+	public void setQqUnique(String qqUnique) {
+		this.qqUnique = qqUnique;
+	}
+
+	public String getWbUnique() {
+		return wbUnique;
+	}
+
+	public void setWbUnique(String wbUnique) {
+		this.wbUnique = wbUnique;
+	}
+
+	public String getWechatUnique() {
+		return wechatUnique;
+	}
+
+	public void setWechatUnique(String wechatUnique) {
+		this.wechatUnique = wechatUnique;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
+	}
+
+	public String getThirdLoginType() {
+		return thirdLoginType;
+	}
+
+	public void setThirdLoginType(String thirdLoginType) {
+		this.thirdLoginType = thirdLoginType;
 	}
 	
 }

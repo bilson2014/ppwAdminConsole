@@ -148,4 +148,18 @@ public class TeamServiceImpl implements TeamService {
 		return mapper.findTeamByNameOrContact(team);
 	}
 
+	@Override
+	public List<Team> verificationTeamExist(final Team team) {
+		
+		final List<Team> list = mapper.verificationTeamExist(team);
+		return list;
+	}
+
+	@Override
+	public long updateUniqueId(final Team provider) {
+		
+		final long ret = mapper.updateUniqueId(provider);
+		return ret;
+	}
+
 }

@@ -25,15 +25,24 @@
 		<result property="team_name" column="team_name"/>
 		<result property="user_name" column="user_name"/>
 		<result property="user_email" column="user_email"/>
+		<result property="salesmanUniqueId" column="salesmanUniqueId"/>
+		<result property="salesmanName" column="salesmanName"/>
 		<association property="user" javaType="User" column="userId" 
 			resultMap="userRM"/>
 		<association property="service" javaType="Service" column="serviceId"
 			resultMap="serviceRM" />
+		<association property="salesman" javaType="Salesman" column="salesmanUniqueId"
+			resultMap="salesmanRM" />
 	</resultMap>
 	
 	<resultMap type="User" id="userRM">
 		<id property="id" column="id"/>
 		<result property="userName" column="userName"/>
+	</resultMap>
+	
+	<resultMap type="Salesman" id="salesmanRM">
+		<id property="uniqueId" column="salesmanUniqueId"/>
+		<result property="salesmanName" column="salesmanName"/>
 	</resultMap>
 	
 	<resultMap type="Service" id="serviceRM">
@@ -100,12 +109,15 @@
 				   pro.PRODUCTTYPE AS productType,
 				   DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d %T') AS uploadDate,
 				   pro.RECOMMEND AS recommend,
-				   pro.SUPPORTCOUNT AS supportCount
+				   pro.SUPPORTCOUNT AS supportCount,
+				   ind.SALESMANUNIQUEID AS salesmanUniqueId,
+				   sale.SALESMANNAME AS salesmanName
 			FROM INDENT ind 
 			LEFT JOIN USERS u ON ind.userId = u.id
 			LEFT JOIN SERVICE ser ON ser.SERVICEID = ind.SERVICEID
 			LEFT JOIN PRODUCT pro ON pro.PRODUCTID = ind.PRODUCTID
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
+			LEFT JOIN SALESMAN sale ON ind.salesmanUniqueId = sale.uniqueId
 			WHERE 1 = 1
 		]]>
 		<if test="indentId != null and indentId != ''">
@@ -134,6 +146,7 @@
 			LEFT JOIN SERVICE ser ON ser.SERVICEID = ind.SERVICEID
 			LEFT JOIN PRODUCT pro ON pro.PRODUCTID = ind.PRODUCTID
 			LEFT JOIN TEAM t ON t.TEAMID = ind.TEAMID
+			LEFT JOIN SALESMAN sale ON ind.salesmanUniqueId = sale.uniqueId
 			WHERE 1 = 1
 		]]>
 		<if test="indentId != null and indentId != ''">
@@ -206,7 +219,8 @@
 				USERID,
 				INDENT_TELE,
 				INDENT_RECOMMENT,
-				INDENT_DESCRIPTION
+				INDENT_DESCRIPTION,
+				SALESMANUNIQUEID
 			) VALUES (
 				#{indentName},
 				#{indentNum},
@@ -215,7 +229,8 @@
 				${userId},
 				#{INDENT_TELE},
 				#{indent_recomment},
-				#{indent_description}
+				#{indent_description},
+				#{salesmanUniqueId}
 			)
 		]]>
 	</insert>
@@ -230,7 +245,8 @@
 					INDENT_TELE = #{indent_tele},
 					ORDERDATE = DATE_FORMAT(#{orderDate},'%Y-%m-%d %T'),
 					INDENT_RECOMMENT = #{indent_recomment},
-					INDENT_DESCRIPTION = #{indent_description}
+					INDENT_DESCRIPTION = #{indent_description},
+					SALESMANUNIQUEID = #{salesmanUniqueId}
 				WHERE INDENTID = ${indentId}
 		]]>
 	</update>
@@ -269,7 +285,8 @@
 				INDENTPRICE,
 				SECOND,
 				INDENT_TELE,
-				INDENT_RECOMMENT
+				INDENT_RECOMMENT,
+				SALESMANUNIQUEID
 			) VALUES (
 				#{indentName},
 				${teamId},
@@ -278,7 +295,8 @@
 				${indentPrice},
 				${second},
 				#{indent_tele},
-				#{indent_recomment}
+				#{indent_recomment},
+				#{salesmanUniqueId}
 			)
 		]]>
 	</insert>

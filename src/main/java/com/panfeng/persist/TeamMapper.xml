@@ -25,7 +25,7 @@
 				   t.INFORESOURCE AS infoResource,
 				   t.DESCRIPTION AS description,
 				   DATE_FORMAT(t.CREATEDATE,'%Y-%m-%d %T') AS createDate,
-				   DATE_FORMAT(t.UPDATEDATE,'%Y-%m-%d') AS updateDate,
+				   DATE_FORMAT(t.UPDATEDATE,'%Y-%m-%d %T') AS updateDate,
 				   t.PHONENUMBER AS phoneNumber,
 				   t.EMAIL AS email,
 				   t.ADDRESS AS address,
@@ -385,4 +385,41 @@
 			AND 1=2
 		</if>
 	</select>
+	
+	<select id="verificationTeamExist" resultType="Team">
+		<![CDATA[
+			SELECT t.TEAMID AS teamId,
+				   t.TEAMNAME AS teamName,
+				   t.TEAMPHOTOURL AS teamPhotoUrl,
+				   t.TEAMDESCRIPTION AS teamDescription,
+				   t.PHONENUMBER AS phoneNumber,
+				   t.LOGINNAME AS loginName
+			FROM TEAM t 
+			WHERE QQUNIQUE = #{uniqueId}
+				OR wbUnique = #{uniqueId}
+				OR wechatUnique = #{uniqueId}
+		]]>
+	</select>
+	
+	<update id="updateUniqueId">
+		<![CDATA[
+			UPDATE TEAM 
+			SET
+		]]>
+		
+		<if test="qqUnique != null and qqUnique != ''">
+			QQUNIQUE = #{qqUnique}
+		</if>
+		
+		<if test="wbUnique != null and wbUnique != ''">
+			WBUNIQUE = #{wbUnique}
+		</if>
+		
+		<if test="wechatUnique != null and wechatUnique != ''">
+			WECHATUNIQUE = #{wechatUnique}
+		</if>
+		<where>
+			TEAMID = ${teamId}
+		</where>
+	</update>
 </mapper>

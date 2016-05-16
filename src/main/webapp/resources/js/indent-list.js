@@ -186,6 +186,27 @@ $().ready(function(){
 						title : '用户邮箱',
 						width : 150,
 						align : 'center'
+					},{
+						field : 'salesmanUniqueId',
+						title : '分销人',
+						width : 150,
+						align : 'center',
+						formatter : function(value,row,index){
+							if(row.salesmanName == null || row.salesmanName == ''){
+								row.salesmanName = '';
+							}
+							return '<span style=color:black; >'+ row.salesmanName +'</span>' ;
+						},
+						editor : {
+							type : 'combobox' ,
+							options : {
+								url : getContextPath() + '/portal/salesman/all',
+								valueField:'uniqueId',
+								textField:'salesmanName',
+								required : false ,
+								missingMessage : '请选择分销人!'
+							}
+						}
 					}]],
 		pagination: true ,
 		pageSize : 20,
@@ -195,6 +216,7 @@ $().ready(function(){
 		onAfterEdit:function(index , record){
 			delete record.service;
 			delete record.user;
+			delete record.salesman;
 			$.post(flag =='add' ? getContextPath() + '/portal/indent/save' : getContextPath() + '/portal/indent/update', record , function(result){
 				datagrid.datagrid('clearSelections');
 				datagrid.datagrid('reload');

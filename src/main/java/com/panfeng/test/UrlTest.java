@@ -18,8 +18,11 @@ public class UrlTest {
 	
 	@Test
 	public void urlTest() throws Exception{
-		final String url = "127.0.0.1:8081/Film/login/wechat/callback.do";
-		System.err.println(URLEncoder.encode(url, "UTF-8"));
+		/*final String url = "127.0.0.1:8081/Film/login/wechat/callback.do";
+		System.err.println(URLEncoder.encode(url, "UTF-8"));*/
+		final String url = "http://www.apaipian.com/provider/login/wechat/callback.do";
+		final String encodeUrl = URLEncoder.encode(url, "UTF-8");
+		System.err.println(encodeUrl);
 	}
 	
 	@Test
