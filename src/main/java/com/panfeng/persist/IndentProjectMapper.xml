@@ -154,7 +154,8 @@
 	<update id="cancelProject" parameterType="long">
 		<![CDATA[
 			UPDATE INDENT_PROJECT i
-				SET i.IP_STATE=${state}
+				SET i.IP_STATE=${state},
+					i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 			WHERE i.IP_ID = ${id};
 		]]>
 	</update>
@@ -205,7 +206,7 @@
 			LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
 			LEFT JOIN STAFF s ON i.ip_referrer_id = s.staffId
-     		WHERE i.IP_USER_TYPE =#{userType}  AND i.IP_USER_ID=${userId} ORDER BY i.IP_ID DESC;
+     		WHERE i.IP_USER_TYPE =#{userType}  AND i.IP_USER_ID=${userId} ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID DESC;
 		]]>
 	</select>
 

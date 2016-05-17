@@ -10,11 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.panfeng.domain.GlobalConstant;
 import com.panfeng.fs.impl.LocalResourceImpl;
 import com.panfeng.persist.IndentResourceMapper;
 import com.panfeng.resource.model.ActivitiTask;
-import com.panfeng.resource.model.IndentComment;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
 import com.panfeng.service.FileStatusService;
@@ -25,6 +23,7 @@ import com.panfeng.service.OnlineDocService;
 import com.panfeng.service.UserTempService;
 import com.panfeng.util.Constants;
 import com.panfeng.util.FileUtils;
+import com.panfeng.util.RedisUtils;
 import com.panfeng.util.ResourcesType;
 
 /**
@@ -67,20 +66,29 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 			key.add(Long.toString(indentResource.getIrId()));
 		}
 		// 获取redis 内文件状态集合 -->System.arraycopy();
-		
+
 		String[] keyarray = key.toArray(new String[key.size()]);
 		List<String> states = fileStatusService.find(
-				"r_" + indentProject.getId(), keyarray);
+				RedisUtils.getRedisKey(indentProject), keyarray);
+		// modify by laowang 2016/5/17 12.20 begin
+		// --->增加状态过虑,过滤转换失败和状态为删除的文件
+		List<IndentResource> filterList = new ArrayList<>();
+
 		IndentResource indentResource;
 		for (int i = 0; i < list.size(); i++) {
-			indentResource=list.get(i);
-			// 添加用户信息
-			indentResource.setUserViewModel(userTempService.getInfo(
-					indentResource.getIrUserType(),
-					indentResource.getIrUserId()));
-			indentResource.setState(states.get(i));
+			if (!states.get(i).equals(OnlineDocService.FAIL)
+					&& !states.get(i).equals(OnlineDocService.DELETE)) {
+				indentResource = list.get(i);
+				// 添加用户信息
+				indentResource.setUserViewModel(userTempService.getInfo(
+						indentResource.getIrUserType(),
+						indentResource.getIrUserId()));
+				indentResource.setState(states.get(i));
+				filterList.add(indentResource);
+			}
 		}
-		return list;
+		// modify by laowang 2016/5/17 12.30 end
+		return filterList;
 	};
 
 	@Override
@@ -97,13 +105,10 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 					filename);
 			if (write) {
 				// 添加系统评论
-				IndentComment indentComment = new IndentComment();
-				indentComment.setIcContent("上传了文件："
-						+ multipartFile.getOriginalFilename());
-				indentComment.setIcUserType(GlobalConstant.ROLE_SYSTEM);
-				indentComment.setIcUserId(888);
-				indentComment.setIcIndentId(indentProject.getId());
-				indentCommentService.addComment(indentComment);
+				indentCommentService.createSystemMsg(
+						"上传了文件：" + multipartFile.getOriginalFilename(),
+						indentProject);
+
 				// 添加资源信息
 				IndentResource resource = new IndentResource();
 				resource.setIrOriginalName(multipartFile.getOriginalFilename());
@@ -121,10 +126,7 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 				indent_ResourceMapper.save(resource);
 				// 转换文件
 				onlineDocService.convertFile(resource);
-
-				// onlineDocService.convertFile(resource);
 			}
-
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -213,4 +215,24 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 		return tags;
 	}
 
+	// add by laowang 2016.5.17 12:10 begin
+	// -->添加redis操作标准方法
+	/**
+	 * 删除资源文件（改变文件状态 -->DELETE）
+	 * 
+	 * @param indentProject
+	 */
+	public void deleteResource(IndentResource indentResource) {
+		saveResourceState(indentResource, OnlineDocService.DELETE);
+	}
+
+	/**
+	 * 更改redis内文件状态
+	 */
+	public void saveResourceState(IndentResource indentResource,
+			final String state) {
+		fileStatusService.save(RedisUtils.getRedisKey(indentResource),
+				String.valueOf(indentResource.getIrId()), state);
+	}
+	// add by laowang 2016.5.17 12.20 end
 }

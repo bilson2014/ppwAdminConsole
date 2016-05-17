@@ -115,14 +115,11 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	public boolean completeTask(IndentProject indentProject) {
 
 		boolean res = false;
+		ActivitiTask activitiTask=getCurrentTask(indentProject);
+		indentCommentService.createSystemMsg(activitiTask.getName() + "任务", indentProject);
 		res = activitiEngineService.completeTask(processDefinitionKey,
 				String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
-		if (res) {
-			indentCommentService.createSystemMsg(indentProject.getTask()
-					.getName() + "任务", indentProject);
-		}
-
 		// 检测任务是否已经完成
 
 		boolean isFinish = activitiEngineService.isFinish(processDefinitionKey,
