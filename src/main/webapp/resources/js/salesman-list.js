@@ -51,7 +51,7 @@ $().ready(function(){
 				title : '分销地址' ,
 				align : 'center',
 				formatter : function(value,row,index){
-					return '<span style=color:orange; >'+ 'http://www.apaipian.com/order/' + row.uniqueId +'</span>' ;
+					return '<span style=color:orange; >'+ getServerName() + '/salesman/order/' + row.uniqueId +'</span>' ;
 				}
 			},{
 				field : 'updateDate' ,
@@ -74,7 +74,8 @@ $().ready(function(){
 				$.message('操作成功!');
 			});
 		},onDblClickCell:function(index,field,value){
-				var url = 'http://qr.liantu.com/api.php?text=' + 'http://www.apaipian.com/order/' + value.uniqueId;
+			if(field == 'uniqueId'){
+				var url = 'http://qr.liantu.com/api.php?text=' + getServerName() + '/phone/salesman/order/' + value;
 				$('#qrCode').attr('src',url);
 				$('#qrCode').removeClass('hide');
 				$('#qrCode-condition').removeClass('hide');
@@ -83,6 +84,7 @@ $().ready(function(){
 					$('#qrCode-condition').addClass('hide');
 					$('#qrCode').attr('src','');
 				});
+			}
 		}
 	});
 		
@@ -173,4 +175,11 @@ function searchFun(){
 function cleanFun() {
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {});
+}
+
+// 获取服务地址
+function getServerName(){
+	
+	return 'http://192.168.1.118:8080';
+	//return 'http://www.apaipian.com';
 }
