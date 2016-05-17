@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.resource.model.IndentResource;
-import com.panfeng.service.FileStatusService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.OnlineDocService;
 import com.panfeng.util.Constants;
@@ -19,22 +18,21 @@ import com.panfeng.util.VerifyFileUtils;
 @Service
 public class OnlineDocServiceImpl implements OnlineDocService {
 	@Autowired
-	IndentResourceService indentResourceService;
-	@Autowired
-	FileStatusService fileStatusService;
+	private IndentResourceService indentResourceService;
 	String pdf2html = Constants.PDF2HTML;
-
-	public static final String TRANSFORMATION = "transformation";
-	public static final String FINISH = "finish";
-	public static final String FAIL = "fail";
-
+	//add by laowang 2016.5.17 12:05 begin
+	//-->添加转换文件url
+	static String CONVERSION_URL=GlobalConstant.CONVERIONHSOT+ "/FileConversion/convert";
+	//add by laowang 2016.5.17 12:05 end
+	
 	public String convertFile(IndentResource indentResource) {
+		//modify by laowang 2016.5.17 12:10 begin
+		//-->修改操作redis方法
+		indentResourceService.saveResourceState(indentResource, OnlineDocService.TRANSFORMATION);
+		//modify by laowang 2016.5.17 12:10 end
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println(indentResource.getIrIndentId()+"~"+indentResource.getIrId());
-				fileStatusService.save(FileUtils.getRedisKey(indentResource),
-						indentResource.getIrId() + "", TRANSFORMATION);
 				String fileName = indentResource.getIrFormatName();
 				String extName = FileUtils.getExtName(fileName, ".");
 				boolean isDoc = VerifyFileUtils.verifyDocFile(extName);
@@ -43,16 +41,22 @@ public class OnlineDocServiceImpl implements OnlineDocService {
 					String name = fileName.substring(0, fileName.indexOf('.'));
 					File output = new File(Constants.FILE_PROFIX
 							+ Constants.PROJECT_DOC, name + ".html");
+					//构建模拟表单
 					MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder
 							.create();
 					multipartEntityBuilder.addBinaryBody("file", file);
-					HttpUtil.httpPostFileForm(GlobalConstant.CONVERIONHSOT
-							+ "/FileConversion/convert",
-							multipartEntityBuilder, output.getAbsolutePath());
+				//modify by laowang 2016.5.17 12:10 begin
+				//-->修改操作redis方法,增加文件转换请求状态
+					boolean res=HttpUtil.httpPostFileForm(CONVERSION_URL,multipartEntityBuilder, output.getAbsolutePath());
+					// 添加文件转换失败状态
+					if(!res){
+						indentResourceService.saveResourceState(indentResource, OnlineDocService.FAIL);
+						return ;
+					}
+					
 				}
-				System.out.println(indentResource.getIrIndentId()+"~"+indentResource.getIrId());
-				fileStatusService.save(FileUtils.getRedisKey(indentResource),
-						indentResource.getIrId() + "", FINISH);
+				indentResourceService.saveResourceState(indentResource, OnlineDocService.FINISH);
+				//modify by laowang 2016.5.17 12:15 end
 			}
 		}).start();
 
