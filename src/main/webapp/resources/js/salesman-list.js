@@ -54,6 +54,14 @@ $().ready(function(){
 					return '<span style=color:orange; >'+ getServerName() + '/salesman/order/' + row.uniqueId +'</span>' ;
 				}
 			},{
+				field : 'total' ,
+				title : '分销总单数',
+				align : 'center'
+			},{
+				field : 'sumPrice' ,
+				title : '分销总额',
+				align : 'center'
+			},{
 				field : 'updateDate' ,
 				title : '更新时间',
 				align : 'center'
@@ -61,6 +69,17 @@ $().ready(function(){
 				field : 'createDate' ,
 				title : '创建时间',
 				align : 'center'
+			},{
+				field : 'action' ,
+				title : '操作',
+				width : 120,
+				align : 'center',
+				formatter : function(value, row, index) {
+					var str = '&nbsp;';
+						str += $.formatString('<a href="javascript:void(0)" onclick="view(\'{0}\');" >查看</a> | ', row.uniqueId);
+						str += $.formatString('<a href="javascript:void(0)" onclick="downLoad(\'{0}\',\'{1}\');" >下载</a>', row.uniqueId,row.salesmanName);
+					return str;
+				}
 			}]],
 		pagination: true ,
 		pageSize : 20,
@@ -73,18 +92,6 @@ $().ready(function(){
 				datagrid.datagrid('reload');
 				$.message('操作成功!');
 			});
-		},onDblClickCell:function(index,field,value){
-			if(field == 'uniqueId'){
-				var url = 'http://qr.liantu.com/api.php?text=' + getServerName() + '/phone/salesman/order/' + value;
-				$('#qrCode').attr('src',url);
-				$('#qrCode').removeClass('hide');
-				$('#qrCode-condition').removeClass('hide');
-				
-				$('#p-cancel').on('click',function(){
-					$('#qrCode-condition').addClass('hide');
-					$('#qrCode').attr('src','');
-				});
-			}
 		}
 	});
 		
@@ -182,4 +189,25 @@ function getServerName(){
 	
 	return 'http://192.168.1.118:8080';
 	//return 'http://www.apaipian.com';
+}
+
+// 查看二维码
+function view(uniqueId){
+	var url = 'http://qr.liantu.com/api.php?text=' + getServerName() + '/phone/salesman/order/' + uniqueId;
+	$('#qrCode').attr('src',url);
+	$('#qrCode').removeClass('hide');
+	$('#qrCode-condition').removeClass('hide');
+	
+	$('#p-cancel').on('click',function(){
+		$('#qrCode-condition').addClass('hide');
+		$('#qrCode').attr('src','');
+	});
+}
+
+// 下载二维码
+function downLoad(uniqueId,salesmanName){
+	download(getContextPath() + '/portal/salesman/download/code', $.toJSON({
+		uniqueId : uniqueId,
+		salesmanName : salesmanName
+	}));
 }

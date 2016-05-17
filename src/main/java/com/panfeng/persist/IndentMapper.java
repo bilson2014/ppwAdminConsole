@@ -28,4 +28,8 @@ public interface IndentMapper {
 	public long order(final Indent indent);
 
 	public long checkStatus(@Param("indentType") final int indentType);
+	
+	public double sumPriceBySalesmanUniqueId(@Param("salesmanUniqueId") final String salesmanUniqueId);
+	
+	public long countBySalesmanUniqueId(@Param("salesmanUniqueId") final String salesmanUniqueId);
 }

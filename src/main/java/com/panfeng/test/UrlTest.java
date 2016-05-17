@@ -1,5 +1,6 @@
 package com.panfeng.test;
 
+import java.io.File;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,6 +13,7 @@ import java.util.Set;
 import org.junit.Test;
 
 import com.panfeng.util.DataUtil;
+import com.panfeng.util.HttpUtil;
 import com.panfeng.util.UrlResourceUtils;
 
 public class UrlTest {
@@ -78,4 +80,12 @@ public class UrlTest {
 	public void test8(){
 		System.err.println(2305843009211596781l & 16l);
 	}
+	
+	@Test
+	public void test9(){
+		String url="http://qr.liantu.com/api.php?text=http://www.apaipian.com/phone/salesman/order/7d7bdc6e12ba4b51acaffc1951722e67";
+		Object[] objarray=HttpUtil.httpGetFile(url, null);
+		File file=(File) objarray[1];
+	}
+	
 }

@@ -161,6 +161,9 @@
 		<if test="serviceId != null and serviceId != ''">
 			AND ind.SERVICEID = ${serviceId}
 		</if>
+		<if test="salesmanUniqueId != null and salesmanUniqueId != ''">
+			AND ind.SALESMANUNIQUEID = #{salesmanUniqueId}
+		</if>
 	</select>
 	
 	<select id="findIndentById" resultMap="IndentRM">
@@ -306,6 +309,22 @@
 			SELECT COUNT(1)
 				FROM INDENT t
 			WHERE t.INDENTTYPE = ${indentType}
+		]]>
+	</select>
+	
+	<select id="countBySalesmanUniqueId" resultType="long">
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM INDENT ind
+			WHERE ind.SALESMANUNIQUEID = #{salesmanUniqueId}
+		]]>
+	</select>
+	
+	<select id="sumPriceBySalesmanUniqueId" resultType="double">
+		<![CDATA[
+			SELECT SUM(ind.INDENTPRICE)
+				FROM INDENT ind
+			WHERE ind.SALESMANUNIQUEID = #{salesmanUniqueId}
 		]]>
 	</select>
 </mapper>

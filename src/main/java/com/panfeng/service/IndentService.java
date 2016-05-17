@@ -27,4 +27,18 @@ public interface IndentService {
 	public long order(final Indent indent);
 
 	public long checkStatus(final int status);
+	
+	/**
+	 * 根据分销人唯一编号计算订单总额
+	 * @param salesmanUniqueId 分销人唯一编号
+	 * @return 订单总额
+	 */
+	public double sumPriceBySalesmanUniqueId(final String salesmanUniqueId);
+	
+	/**
+	 * 根据分销人唯一编号计算订单总数
+	 * @param salesmanUniqueId 分销人唯一编号
+	 * @return 订单总数
+	 */
+	public long countBySalesmanUniqueId(final String salesmanUniqueId);
 }

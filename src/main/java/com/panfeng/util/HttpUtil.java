@@ -22,7 +22,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
@@ -120,6 +119,40 @@ public class HttpUtil {
 		out.flush();
 		in.close();
 		out.close();
+	}
+	
+	/**
+	 * 下载文件进行临时中转（内部存取转发到外网）
+	 * 
+	 * @param url
+	 * @param request
+	 * @return
+	 */
+	public static Object[] httpGetFile(final String url,
+			final HttpServletRequest request) {
+		CloseableHttpClient client = getClient(request);
+		HttpGet httpGet = new HttpGet(url);
+		CloseableHttpResponse response = null;
+		Object[] objArray = new Object[2];
+		try {
+			response = client.execute(httpGet, context);
+			String filename = null;
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+//				filename = response.getFirstHeader("Content-Disposition")
+//						.getValue();
+				HttpEntity httpEntity = response.getEntity();
+				objArray[0] = filename;
+				InputStream is = httpEntity.getContent();
+				String tempNamt = PathFormatUtils.parse("{time}{rand:6}");
+				File tempFile = new File( tempNamt);
+				OutputStream os = new FileOutputStream(tempFile);
+				saveTo(is, os);
+				objArray[1] = tempFile;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return objArray;
 	}
 
 }

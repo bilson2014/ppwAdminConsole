@@ -23,6 +23,10 @@ public class Salesman extends BaseObject {
 	private String updateDate = null; // 更新时间
 	
 	private String createDate = null; // 创建时间
+	
+	private long total = 0l;
+	
+	private double sumPrice = 0.0d;
 
 	public long getSalesmanId() {
 		return salesmanId;
@@ -80,4 +84,20 @@ public class Salesman extends BaseObject {
 		this.createDate = createDate;
 	}
 
+	public long getTotal() {
+		return total;
+	}
+
+	public void setTotal(long total) {
+		this.total = total;
+	}
+
+	public double getSumPrice() {
+		return sumPrice;
+	}
+
+	public void setSumPrice(double sumPrice) {
+		this.sumPrice = sumPrice;
+	}
+	
 }
