@@ -172,6 +172,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	public boolean cancelProject(IndentProject indentProject) {
 		indentProject.setState(IndentProject.PROJECT_CANCEL);
 		long l = indentProjectMapper.cancelProject(indentProject);
+		indentCommentService.createSystemMsg("取消了"+indentProject.getProjectName()+"项目", indentProject);
 		return (l > 0);
 	}
 

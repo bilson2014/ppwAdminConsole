@@ -116,7 +116,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 
 		boolean res = false;
 		ActivitiTask activitiTask=getCurrentTask(indentProject);
-		indentCommentService.createSystemMsg(activitiTask.getName() + "任务", indentProject);
+		indentCommentService.createSystemMsg("完成了\""+activitiTask.getName() + "\"任务", indentProject);
 		res = activitiEngineService.completeTask(processDefinitionKey,
 				String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
@@ -131,6 +131,8 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			// 更新项目状态
 			indentProject2.setState(IndentProject.PROJECT_FINISH);
 			indentProjectMapper.update(indentProject2);
+			
+			indentCommentService.createSystemMsg("已经完成"+indentProject.getProjectName()+"项目", indentProject);
 		}
 		return res;
 	}
@@ -217,9 +219,18 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		boolean res = activitiEngineService.jumpTask(processDefinitionKey,
 				String.valueOf(indentProject.getId()), activityId,
 				getIndentCurrentFlowId(indentProject));
+		
 		if (res) {
+			String taskName="";
+			List<ActivitiTask> list=getNodes(indentProject);
+			for (ActivitiTask activitiTask : list) {
+				if(activityId.equals(activitiTask.getTaskDefinitionKey())){
+					taskName=activitiTask.getName();
+					break;
+				}
+			}
 			indentCommentService.createSystemMsg(
-					" 跳转了任务节点 ," + indentProject.getProjectName(),
+					" 将任务节点跳转到 -->" + taskName+ "阶段",
 					indentProject);
 		}
 		return res;

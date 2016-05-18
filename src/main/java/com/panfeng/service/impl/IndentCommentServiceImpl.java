@@ -60,7 +60,7 @@ public class IndentCommentServiceImpl implements IndentCommentService {
 		indentComment.setIcUserType(GlobalConstant.ROLE_SYSTEM);
 		UserViewModel userViewModel = userTempService.getInfo(
 				indentProject.getUserType(), indentProject.getUserId());
-		indentComment.setIcContent(userViewModel.getUserName() + "  " + msg);
+		indentComment.setIcContent(userViewModel.getUserName() + "，" + msg);
 		indentComment.setIcIndentId(indentProject.getId());
 		indent_CommentMapper.save(indentComment);
 	}
