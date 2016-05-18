@@ -7,10 +7,12 @@ import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.StringEntity;
