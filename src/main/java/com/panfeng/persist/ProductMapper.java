@@ -84,4 +84,10 @@ public interface ProductMapper {
 	// -> 增加信息模板的更新方法
 	public void updateVideoDescription(final Product product);
 	// add by wliming, 2016/02/24 18:54 end
+
+	/**
+	 * 查询BD产品营销页面产品信息
+	 * @return 产品列表
+	 */
+	public List<Product> loadSalesProduct();
 }

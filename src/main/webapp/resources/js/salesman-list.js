@@ -48,27 +48,29 @@ $().ready(function(){
 				}
 			},{
 				field : 'salesmanURL' ,
-				title : '分销地址' ,
+				title : '分销产品地址' ,
 				align : 'center',
 				formatter : function(value,row,index){
-					return '<span style=color:orange; >'+ getServerName() + '/salesman/order/' + row.uniqueId +'</span>' ;
+					return '<span style=color:orange; >'+ getServerName() + '/phone/salesman/' + row.uniqueId +'</span>' ;
 				}
 			},{
-				field : 'total' ,
-				title : '分销总单数',
-				align : 'center'
+				field : 'orderAction' ,
+				title : '操作',
+				width : 120,
+				align : 'center',
+				formatter : function(value, row, index) {
+					var str = '&nbsp;';
+						str += $.formatString('<a href="javascript:void(0)" onclick="orderView(\'{0}\');" >查看</a> | ', row.uniqueId);
+						str += $.formatString('<a href="javascript:void(0)" onclick="orderdownLoad(\'{0}\',\'{1}\');" >下载</a>', row.uniqueId,row.salesmanName);
+					return str;
+				}
 			},{
-				field : 'sumPrice' ,
-				title : '分销总额',
-				align : 'center'
-			},{
-				field : 'updateDate' ,
-				title : '更新时间',
-				align : 'center'
-			},{
-				field : 'createDate' ,
-				title : '创建时间',
-				align : 'center'
+				field : 'salesmanOrderURL' ,
+				title : '分销下单地址' ,
+				align : 'center',
+				formatter : function(value,row,index){
+					return '<span style=color:black; >'+ getServerName() + '/phone/salesman/order/' + row.uniqueId +'</span>' ;
+				}
 			},{
 				field : 'action' ,
 				title : '操作',
@@ -80,6 +82,14 @@ $().ready(function(){
 						str += $.formatString('<a href="javascript:void(0)" onclick="downLoad(\'{0}\',\'{1}\');" >下载</a>', row.uniqueId,row.salesmanName);
 					return str;
 				}
+			},{
+				field : 'total' ,
+				title : '分销总单数',
+				align : 'center'
+			},{
+				field : 'sumPrice' ,
+				title : '分销总额',
+				align : 'center'
 			}]],
 		pagination: true ,
 		pageSize : 20,
@@ -187,12 +197,12 @@ function cleanFun() {
 // 获取服务地址
 function getServerName(){
 	
-	return 'http://192.168.1.118:8080';
+	return 'http://192.168.1.119:8080';
 	//return 'http://www.apaipian.com';
 	//return 'http://test.apaipian.com:8080';
 }
 
-// 查看二维码
+// 查看直接下单二维码
 function view(uniqueId){
 	var url = 'http://qr.liantu.com/api.php?text=' + getServerName() + '/phone/salesman/order/' + uniqueId;
 	$('#qrCode').attr('src',url);
@@ -205,9 +215,30 @@ function view(uniqueId){
 	});
 }
 
-// 下载二维码
+// 下载直接下单二维码
 function downLoad(uniqueId,salesmanName){
 	download(getContextPath() + '/portal/salesman/download/code', $.toJSON({
+		uniqueId : uniqueId,
+		salesmanName : salesmanName
+	}));
+}
+
+// 查看产品页二维码
+function orderView(uniqueId){
+	var url = 'http://qr.liantu.com/api.php?text=' + getServerName() + '/phone/salesman/' + uniqueId;
+	$('#qrCode').attr('src',url);
+	$('#qrCode').removeClass('hide');
+	$('#qrCode-condition').removeClass('hide');
+	
+	$('#p-cancel').on('click',function(){
+		$('#qrCode-condition').addClass('hide');
+		$('#qrCode').attr('src','');
+	});
+}
+
+// 下载产品页二维码
+function orderDownLoad(uniqueId,salesmanName){
+	download(getContextPath() + '/portal/salesman/download/order/code', $.toJSON({
 		uniqueId : uniqueId,
 		salesmanName : salesmanName
 	}));

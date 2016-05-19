@@ -122,7 +122,47 @@ public class SalesmanController extends BaseController {
 			response.reset();
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("image/png; charset=UTF-8");
-			String filename=URLEncoder.encode(sale.getSalesmanName() + "二维码.png", "UTF-8");
+			String filename=URLEncoder.encode(sale.getSalesmanName() + "下单二维码.png", "UTF-8");
+			response.setHeader("Content-Disposition", "attachment; filename=\""
+					+  filename+ "\"\r\n");
+			OutputStream outputStream = response.getOutputStream();
+			HttpUtil.saveTo(fileInputStream, outputStream);
+			if(fileInputStream!=null){
+				fileInputStream.close();
+			}
+			if(outputStream!=null){
+				outputStream.flush();
+				outputStream.close();
+			}
+			image.delete();
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	@RequestMapping("/salesman/download/order/code")
+	public void orderDownload(final HttpServletRequest request,final HttpServletResponse response){
+		
+		final String json = request.getParameter("json");
+		Salesman sale = new Salesman();
+		if(ValidateUtil.isValid(json)){
+			
+			sale = JsonUtil.toBean(json, Salesman.class);
+		}
+		
+		final StringBuffer url = new StringBuffer();
+		url.append("http://qr.liantu.com/api.php?text=");
+		url.append(GlobalConstant.FILE_PROFIX);
+		url.append("/phone/salesman/");
+		url.append(sale.getUniqueId());
+		
+		File image=(File) HttpUtil.httpGetFile(url.toString(), null)[1];
+		try{
+			FileInputStream fileInputStream=new FileInputStream(image);
+			response.reset();
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("image/png; charset=UTF-8");
+			String filename=URLEncoder.encode(sale.getSalesmanName() + "产品二维码.png", "UTF-8");
 			response.setHeader("Content-Disposition", "attachment; filename=\""
 					+  filename+ "\"\r\n");
 			OutputStream outputStream = response.getOutputStream();
