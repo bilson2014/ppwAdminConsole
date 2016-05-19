@@ -187,9 +187,9 @@ function cleanFun() {
 // 获取服务地址
 function getServerName(){
 	
-	//return 'http://192.168.1.118:8080';
+	return 'http://192.168.1.118:8080';
 	//return 'http://www.apaipian.com';
-	return 'http://test.apaipian.com:8080';
+	//return 'http://test.apaipian.com:8080';
 }
 
 // 查看二维码
