@@ -573,7 +573,7 @@
 	<select id="loadSalesProduct" resultType="Product">
 		SELECT pro.PRODUCTID AS productId,
 			   pro.VIDEOURL AS videoUrl,
-			   pro.VIDEODESCRIPTION AS videoDescription,
+			   pro.PDESCRIPTION AS pDescription,
 			   pro.PRODUCTNAME AS productName,
 			   pro.PICHDURL AS picHDUrl,
 			   pro.PICLDURL AS picLDUrl,
