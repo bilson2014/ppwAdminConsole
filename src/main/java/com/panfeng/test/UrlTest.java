@@ -44,6 +44,9 @@ public class UrlTest {
 	public void test4(){
 		final String url = "/opt/portal/product/video/product2-20150627145349282.mp4";
 		System.err.println(url.split("/opt")[1]);
+		
+		final String password = "root";
+		System.err.println(DataUtil.md5(password));
 	}
 	
 	@Test
