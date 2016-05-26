@@ -40,7 +40,7 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'managerRealName' ,
+						field : 'employeeRealName' ,
 						title : '视频管家' ,
 						align : 'center'
 					},{
@@ -133,7 +133,7 @@ var project = {
 		$('#search-userId').combobox({
 			url : getContextPath() + '/project/getAllVersionManager',
 			valueField : 'userId',
-			textField : 'managerRealName'
+			textField : 'employeeRealName'
 		});
 		
 		$('#search-projectId').combobox({
@@ -291,7 +291,7 @@ function openDialog(id,data){
 			$('#userId').combobox({
 				url : getContextPath() + '/project/getAllVersionManager',
 				valueField : 'userId',
-				textField : 'managerRealName'
+				textField : 'employeeRealName'
 			});
 			
 			if(data != null && data != undefined && data != ''){

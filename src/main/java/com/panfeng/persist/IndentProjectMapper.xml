@@ -310,7 +310,7 @@
 				i.IP_STATE AS state,
 				i.IP_CUSTOMERID	AS customerId,
 				i.ip_teamId AS teamId,
-				VM.MANAGERREALNAME AS managerRealName,
+				e.EMPLOYEEREALNAME AS employeeRealName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
@@ -320,8 +320,8 @@
 				i.IP_PROVIDER_PAYMENT AS providerPayment
 				
 			FROM INDENT_PROJECT i 
-			LEFT JOIN VERSIONMANAGER VM
-				ON VM.MANAGERID = i.IP_USER_ID
+			LEFT JOIN EMPLOYEE e
+				ON e.EMPLOYEEID = i.IP_USER_ID
 			LEFT JOIN USERS u 
 				ON i.ip_customerId=u.id 
 			LEFT JOIN TEAM t
@@ -411,10 +411,12 @@
 	
 	<select id="getAllVersionManager" resultType="IndentProject">
 		<![CDATA[
-			SELECT m.MANAGERID AS userId,
-				   m.MANAGERREALNAME AS managerRealName
-			FROM VERSIONMANAGER m 
+			SELECT e.EMPLOYEEID AS userId,
+				   e.EMPLOYEEREALNAME AS employeeRealName
+			FROM EMPLOYEE e 
 			WHERE 1 = 1
+				AND e.FLAG = 1
+				AND e.EMPLOYEELOGINNAME <> 'admin'
 		]]>
 	</select>
 	

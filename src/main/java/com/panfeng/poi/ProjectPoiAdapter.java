@@ -271,7 +271,7 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 				&& entity.getSource().equals("个人信息下单")) {
 			xssfRow.createCell(3).setCellValue(entity.getReferrerName());
 		}
-		xssfRow.createCell(4).setCellValue(entity.getManagerRealName());
+		xssfRow.createCell(4).setCellValue(entity.getEmployeeRealName());
 		if (entity.getTask() != null) {
 			xssfRow.createCell(5).setCellValue(entity.getTask().getName());
 		}
