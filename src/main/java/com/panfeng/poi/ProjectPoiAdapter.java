@@ -323,9 +323,24 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		xssfRow.createCell(18).setCellValue(entity.getUserPhone());
 		// 实付金额
 		xssfRow.createCell(19).setCellValue(entity.getCustomerPayment()+"元");
+		
+		switch(entity.getClientLevel()){
+			case 0:
+				xssfRow.createCell(20).setCellValue("A");
+				break;
+			case 1:
+				xssfRow.createCell(20).setCellValue("B");
+				break;
+			case 2:
+				xssfRow.createCell(20).setCellValue("C");
+				break;
+			default :
+				xssfRow.createCell(20).setCellValue("");
+				break;
+		}
+		
 		// 供应商名称
-		xssfRow.createCell(20).setCellValue(entity.getCustomerPayment()+"元");
-		//xssfRow.createCell(21).setCellValue(entity.getTeamName());
+		xssfRow.createCell(21).setCellValue(entity.getTeamName());
 		// 负责人（导演）
 		xssfRow.createCell(22).setCellValue(entity.getTeamContact());
 		// 联系方式

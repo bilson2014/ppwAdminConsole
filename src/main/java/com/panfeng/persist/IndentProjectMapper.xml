@@ -192,6 +192,7 @@
 				i.IP_CUSTOMERID AS customerId,
 				i.IP_TEAMID AS teamId,
 				u.USERNAME AS userName,
+				u.CLIENTLEVEL AS clientLevel,
 				t.TEAMNAME AS  teamName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
@@ -228,6 +229,7 @@
 				i.IP_CUSTOMERID AS customerId,
 				i.IP_TEAMID AS teamId,
 				u.USERNAME AS userName,
+				u.CLIENTLEVEL AS clientLevel,
 				t.TEAMNAME AS  teamName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
@@ -264,6 +266,7 @@
 				i.IP_CUSTOMERID AS customerId,
 				i.IP_TEAMID AS teamId,
 				u.USERNAME AS userName,
+				u.CLIENTLEVEL AS clientLevel,
 				t.TEAMNAME AS  teamName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
@@ -293,42 +296,42 @@
 	
 	<select id="listWithPagination" resultType="IndentProject">
 		<![CDATA[
-				SELECT 
-				i.IP_ID AS id,
-				i.IP_PROJECT_NAME AS projectName,
-				u.USERNAME AS userName,
-				i.IP_USER_CONTACT AS userContact,
-				i.IP_USER_PHONE AS userPhone,
-				t.TEAMNAME AS teamName,
-				i.IP_TEAM_CONTACT AS teamContact,
-				i.IP_TEAM_PHONE AS teamPhone,
-				i.IP_USER_TYPE AS userType,
-				i.IP_USER_ID AS userId,
-				i.IP_DESCRIPTION AS description,
-				i.IP_SERIAL AS serial,
-				i.IP_SOURCE AS source,
-				i.IP_STATE AS state,
-				i.IP_CUSTOMERID	AS customerId,
-				i.ip_teamId AS teamId,
-				e.EMPLOYEEREALNAME AS employeeRealName,
-				i.IP_PRICE_FIRST AS priceFirst,
-				i.IP_PRICE_LAST AS priceLast,
-				i.IP_PRICE_FINISH AS priceFinish,
-				i.IP_REFERRER_ID AS referrerId,
-				s.staffName AS referrerName,
-				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
-				i.IP_CUSTOMER_PAYMENT AS customerPayment,
-				i.IP_PROVIDER_PAYMENT AS providerPayment
+	SELECT  i.IP_ID AS id,
+					i.IP_PROJECT_NAME AS projectName,
+					u.USERNAME AS userName,
+					u.CLIENTLEVEL AS clientLevel,
+					i.IP_USER_CONTACT AS userContact,
+					i.IP_USER_PHONE AS userPhone,
+					t.TEAMNAME AS teamName,
+					i.IP_TEAM_CONTACT AS teamContact,
+					i.IP_TEAM_PHONE AS teamPhone,
+					i.IP_USER_TYPE AS userType,
+					i.IP_USER_ID AS userId,
+					i.IP_DESCRIPTION AS description,
+					i.IP_SERIAL AS serial,
+					i.IP_SOURCE AS source,
+					i.IP_STATE AS state,
+					i.IP_CUSTOMERID	AS customerId,
+					i.ip_teamId AS teamId,
+					e.EMPLOYEEREALNAME AS employeeRealName,
+					i.IP_PRICE_FIRST AS priceFirst,
+					i.IP_PRICE_LAST AS priceLast,
+					i.IP_PRICE_FINISH AS priceFinish,
+					i.IP_REFERRER_ID AS referrerId,
+					DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
+					i.IP_CUSTOMER_PAYMENT AS customerPayment,
+					i.IP_PROVIDER_PAYMENT AS providerPayment,
+					s.STAFFNAME AS referrerName
 				
 			FROM INDENT_PROJECT i 
 			LEFT JOIN EMPLOYEE e
 				ON e.EMPLOYEEID = i.IP_USER_ID
 			LEFT JOIN USERS u 
-				ON i.ip_customerId=u.id 
+				ON i.IP_CUSTOMERID=u.id 
 			LEFT JOIN TEAM t
-				ON i.ip_teamId=t.teamId
+				ON i.IP_TEAMID=t.teamId
 			LEFT JOIN STAFF s 
-				ON i.ip_referrer_id = s.staffId
+				ON i.IP_REFERRER_ID = s.staffId
 			WHERE 1 = 1
 		]]>
 		

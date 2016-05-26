@@ -113,7 +113,13 @@ public class ProjectController extends BaseController {
 
 		return new ModelAndView("project-list");
 	}
-
+	// 跳转项目会议报表 -- 会议报表与项目列表功能一样，只是少了客户信息以及供应商信息
+	@RequestMapping("/project-meeting")
+	public ModelAndView meetingView(final HttpServletRequest request){
+		
+		return new ModelAndView("project-meeting");
+	}
+	
 	@RequestMapping("/list")
 	public DataGrid<IndentProject> list(final IndentProjectView view,
 			final PageFilter pf) {

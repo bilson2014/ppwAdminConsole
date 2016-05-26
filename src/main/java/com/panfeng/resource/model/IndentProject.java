@@ -54,6 +54,8 @@ public class IndentProject extends BaseObject {
 
 	private List<Synergy> synergys = null; //协助人集合
 
+	private int clientLevel = 0; // 客户分级
+	
 	public Double getCustomerPayment() {
 		return customerPayment;
 	}
@@ -312,6 +314,14 @@ public class IndentProject extends BaseObject {
 
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
+	}
+
+	public int getClientLevel() {
+		return clientLevel;
+	}
+
+	public void setClientLevel(int clientLevel) {
+		this.clientLevel = clientLevel;
 	}
 
 }
