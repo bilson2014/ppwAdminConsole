@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.IndentFlowMapper;
 import com.panfeng.persist.IndentProjectMapper;
 import com.panfeng.poi.GenerateExcel;
@@ -47,7 +48,7 @@ public class IndentProjectTest {
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
 		IndentProject ip = new IndentProject();
-		ip.setUserType("role_manager");
+		ip.setUserType(GlobalConstant.ROLE_EMPLOYEE);
 		ip.setUserId(2);
 		List<IndentProject> list = indentProjectMapper.findProjectList(ip);
 		UserTempService userTempService=applicationContext.getBean(UserTempService.class);

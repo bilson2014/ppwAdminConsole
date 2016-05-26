@@ -24,7 +24,7 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		// 设置合并单元格
 		// CellRangeAddress(起始行号，终止行号， 起始列号，终止列号);
 		// CellRangeAddress(x-begin，x-end， y-begin，y-end);
-		sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 25));
+		sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 26));
 		sheet.addMergedRegion(new CellRangeAddress(2, 4, 0, 0));
 		sheet.addMergedRegion(new CellRangeAddress(2, 4, 1, 1));
 		sheet.addMergedRegion(new CellRangeAddress(2, 4, 2, 2));
@@ -42,17 +42,13 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 12, 12));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 13, 13));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 14, 14));
-
 		sheet.addMergedRegion(new CellRangeAddress(2, 4, 15, 15));
-
-		sheet.addMergedRegion(new CellRangeAddress(2, 2, 16, 25));
-
-		sheet.addMergedRegion(new CellRangeAddress(3, 3, 16, 19));
-
-		sheet.addMergedRegion(new CellRangeAddress(3, 3, 20, 23));
-
-		sheet.addMergedRegion(new CellRangeAddress(3, 4, 24, 24));
+		
+		sheet.addMergedRegion(new CellRangeAddress(2, 2, 16, 26));
+		sheet.addMergedRegion(new CellRangeAddress(3, 3, 16, 20));
+		sheet.addMergedRegion(new CellRangeAddress(3, 3, 21, 24));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 25, 25));
+		sheet.addMergedRegion(new CellRangeAddress(3, 4, 26, 26));
 
 		// 填充数据
 		// 第一行 -- 二行
@@ -170,19 +166,19 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 
 		// 四行 --》二十一列
 		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
-		xssfCell = xssfRow.createCell(20);
+		xssfCell = xssfRow.createCell(21);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("制作团队信息及导演");
 
 		// 四行 --》二十五列
 		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
-		xssfCell = xssfRow.createCell(24);
+		xssfCell = xssfRow.createCell(25);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("当月应回款");
 
 		// 四行 --》二十六列
 		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
-		xssfCell = xssfRow.createCell(25);
+		xssfCell = xssfRow.createCell(26);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("次月应回款");
 
@@ -213,20 +209,25 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(20);
 		xssfCell.setCellStyle(cellStyle);
+		xssfCell.setCellValue("客户评级");
+		
+		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
+		xssfCell = xssfRow.createCell(21);
+		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("供应商名称");
 		// 五行 --》二十二列
 		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
-		xssfCell = xssfRow.createCell(21);
+		xssfCell = xssfRow.createCell(22);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("负责人（导演）");
 		// 五行 --》二十三列
 		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
-		xssfCell = xssfRow.createCell(22);
+		xssfCell = xssfRow.createCell(23);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("联系方式");
 		// 五行 --》二十四列
 		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
-		xssfCell = xssfRow.createCell(23);
+		xssfCell = xssfRow.createCell(24);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("实付金额");
 
@@ -323,17 +324,18 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		// 实付金额
 		xssfRow.createCell(19).setCellValue(entity.getCustomerPayment()+"元");
 		// 供应商名称
-		xssfRow.createCell(20).setCellValue(entity.getTeamName());
+		xssfRow.createCell(20).setCellValue(entity.getCustomerPayment()+"元");
+		//xssfRow.createCell(21).setCellValue(entity.getTeamName());
 		// 负责人（导演）
-		xssfRow.createCell(21).setCellValue(entity.getTeamContact());
+		xssfRow.createCell(22).setCellValue(entity.getTeamContact());
 		// 联系方式
-		xssfRow.createCell(22).setCellValue(entity.getTeamPhone());
+		xssfRow.createCell(23).setCellValue(entity.getTeamPhone());
 		// 实付金额
-		xssfRow.createCell(23).setCellValue(entity.getProviderPayment()+"元");
+		xssfRow.createCell(24).setCellValue(entity.getProviderPayment()+"元");
 		// 当月应回款
-		xssfRow.createCell(24).setCellValue("");
-		// 次月应回款
 		xssfRow.createCell(25).setCellValue("");
+		// 次月应回款
+		xssfRow.createCell(26).setCellValue("");
 
 	}
 
