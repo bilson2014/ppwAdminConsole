@@ -315,6 +315,7 @@
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
 				i.IP_REFERRER_ID AS referrerId,
+				s.staffName AS referrerName,
 				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
 				i.IP_CUSTOMER_PAYMENT AS customerPayment,
 				i.IP_PROVIDER_PAYMENT AS providerPayment
@@ -326,6 +327,8 @@
 				ON i.ip_customerId=u.id 
 			LEFT JOIN TEAM t
 				ON i.ip_teamId=t.teamId
+			LEFT JOIN STAFF s 
+				ON i.ip_referrer_id = s.staffId
 			WHERE 1 = 1
 		]]>
 		

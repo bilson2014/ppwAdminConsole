@@ -69,5 +69,11 @@ public interface IndentProjectService {
 	 * @return
 	 */
 	public String getProjectSerialID();
+	/**
+	 * 删除项目协同人
+	 * @param synergyId
+	 * @return
+	 */
+	public long removeSynergy(long synergyId);
 	
 }

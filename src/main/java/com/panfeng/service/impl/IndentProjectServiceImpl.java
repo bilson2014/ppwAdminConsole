@@ -21,11 +21,13 @@ import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.FlowDate;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
+import com.panfeng.resource.model.Synergy;
 import com.panfeng.resource.model.UserViewModel;
 import com.panfeng.resource.view.IndentProjectView;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentProjectService;
+import com.panfeng.service.SynergyService;
 import com.panfeng.service.UserTempService;
 import com.panfeng.util.PathFormatUtils;
 import com.panfeng.util.ValidateUtil;
@@ -45,11 +47,25 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	IndentCommentService indentCommentService;
 	@Autowired
 	UserTempService userTempService;
+	// add synergy by laowang bengin 2016-5-25 12:00
+	@Autowired
+	SynergyService synergyService;
 
+	// add synergy by laowang end 2016-5-25 12:00
 	@Override
 	public boolean save(IndentProject indentProject) {
 		indentProject.setSerial(getProjectSerialID());
 		indentProjectMapper.save(indentProject);
+		// add synergy by laowang begin 2016-5-25 12:01
+		List<Synergy> list = indentProject.getSynergys();
+		boolean isValid = ValidateUtil.isValid(list);
+		if (isValid) {
+			for (Synergy synergy : list) {
+				synergy.setProjectId(indentProject.getId());
+				synergyService.save(synergy);
+			}
+		}
+		// add synergy by laowang end 2016-5-25 12:20
 		return indentActivitiService.startProcess(indentProject);
 	}
 
@@ -95,6 +111,10 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		List<IndentFlow> listDates = indentFlowMapper
 				.findFlowDateByIndentId(indentProject);
 		IndentFlow.indentProjectFillDate(indentProject, listDates);
+		// add Synergys by laowang begin 2016-5-25 16:00
+		indentProject.setSynergys(synergyService
+				.findSynergyByProjectId(indentProject.getId()));
+		// add Synergys by laowang end 2016-5-25 16:00
 		return indentProject;
 	}
 
@@ -110,6 +130,34 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			for (FlowDate flowDate : dates) {
 				flowDateMapper.update(flowDate);
 			}
+			// add synergy by laowng begin 2016-5-25 15:00
+			List<Synergy> list = indentProject.getSynergys();
+			boolean isValid = ValidateUtil.isValid(list);
+			if (isValid) {
+				// 查询数据库
+				// 比较数据--》存在的更新，不存在创建
+				List<Synergy> listDb = synergyService
+						.findSynergyByProjectId(indentProject.getId());
+				for (Synergy synergy : list) {
+					boolean dbExist=false;
+					if(synergy!=null){
+						//冒牌排序，检测该项是否存在于数据库
+						for (int i = 0; i < listDb.size(); i++) {
+							if(listDb.get(i).getSynergyId() == synergy.getSynergyId()){
+								dbExist=true;// 更新
+								break;
+							}
+						}
+						if(dbExist){
+							synergyService.update(synergy);
+						}else{
+							synergy.setProjectId(indentProject.getId());
+							synergyService.save(synergy);
+						}
+					}
+				}
+			}
+			// add synergy by laowng end 2016-5-25 15:00
 			indentCommentService.createSystemMsg(
 					"更新了 " + indentProject.getProjectName() + "项目",
 					indentProject);
@@ -172,7 +220,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	public boolean cancelProject(IndentProject indentProject) {
 		indentProject.setState(IndentProject.PROJECT_CANCEL);
 		long l = indentProjectMapper.cancelProject(indentProject);
-		indentCommentService.createSystemMsg("取消了"+indentProject.getProjectName()+"项目", indentProject);
+		indentCommentService.createSystemMsg(
+				"取消了" + indentProject.getProjectName() + "项目", indentProject);
 		return (l > 0);
 	}
 
@@ -311,6 +360,11 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	public long update(IndentProject indentProject) {
 		final long ret = indentProjectMapper.update(indentProject);
 		return ret;
+	}
+
+	@Override
+	public long removeSynergy(long synergyId) {
+		return synergyService.delete(synergyId);
 	}
 
 }

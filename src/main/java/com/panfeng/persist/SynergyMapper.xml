@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.SynergyMapper">
+	<insert id="save" parameterType="long">
+		<![CDATA[
+		INSERT INTO SYNERGY (
+		S_USER_ID, S_PROJECT_ID, S_RATIO,S_USER_NAME
+		) VALUES (
+		${userId}, ${projectId}, ${ratio},#{userName}
+		)
+		]]>
+	</insert>
+
+	<delete id="delete" parameterType="Long">
+		<![CDATA[
+		DELETE FROM SYNERGY WHERE s_id= ${synergyId}
+		]]>
+	</delete>
+
+	<update id="update" parameterType="Long">
+		<![CDATA[
+			UPDATE SYNERGY SET
+		]]>		
+		<if test="projectId != null and projectId != '' ">
+			S_PROJECT_ID= ${projectId} ,
+		</if>
+		<if test="userId != null and userId != '' ">
+			S_USER_ID=${userId},
+		</if>
+		<if test="userName != null and userName != '' ">
+			S_USER_NAME=#{userName},
+		</if>
+		<if test="ratio != null and ratio != '' ">
+			S_RATIO=#{ratio},
+		</if>
+		<![CDATA[
+		s_update_time=CURRENT_TIMESTAMP
+		WHERE 
+		s_id=${synergyId}
+		]]>		
+	</update>
+
+	<select id="findSynergyById" resultType="Synergy">
+		<![CDATA[
+			SELECT 
+				sy.s_create_time AS createTime,
+				sy.s_id AS synergyId,
+				sy.s_project_id AS projectId,
+				sy.s_ratio AS ratio,
+				sy.s_update_time AS updateTime,
+				sy.s_user_id AS userId,
+				sy.s_user_name AS userName 
+			FROM SYNERGY sy WHERE  sy.s_id = ${synergyId}
+		]]>
+	</select>
+	
+	<select id="findSynergyByProjectId" resultType="Synergy">
+		<![CDATA[
+			SELECT 
+				sy.s_create_time AS createTime,
+				sy.s_id AS synergyId,
+				sy.s_project_id AS projectId,
+				sy.s_ratio AS ratio,
+				sy.s_update_time AS updateTime,
+				sy.s_user_id AS userId,
+				sy.s_user_name AS userName 
+			FROM SYNERGY sy WHERE
+			 sy.s_project_id = ${projectId} 
+		]]>
+	</select>
+	
+	<select id="findSynergyByUserId" resultType="Synergy">
+		<![CDATA[
+			SELECT 
+				sy.s_create_time AS createTime,
+				sy.s_id AS synergyId,
+				sy.s_project_id AS projectId,
+				sy.s_ratio AS ratio,
+				sy.s_update_time AS updateTime,
+				sy.s_user_id AS userId,
+				sy.s_user_name AS userName 
+			FROM SYNERGY sy WHERE
+			 sy.s_project_id = ${userId} 
+		]]>
+	</select>
+</mapper>

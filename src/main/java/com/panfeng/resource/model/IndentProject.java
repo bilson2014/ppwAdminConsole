@@ -1,5 +1,6 @@
 package com.panfeng.resource.model;
 
+import java.util.List;
 import java.util.Map;
 
 import com.panfeng.domain.BaseObject;
@@ -13,7 +14,7 @@ public class IndentProject extends BaseObject {
 	public final static int PROJECT_FINISH = 2;
 
 	private long id = 0l; // 项目流程ID
-	private String projectName = ""; //  
+	private String projectName = ""; //
 	private String userName = ""; // 客户公司名称
 	private String userContact = ""; // 客户名称
 	private String userPhone = "";
@@ -27,37 +28,46 @@ public class IndentProject extends BaseObject {
 	private int state = 0;
 	private String userType = "";
 	private long userId = -1; // 视频管家ID
-	
-	//价格字段
-	private Double priceFirst = null;//预计起始价格
-	private Double priceLast = null;//预计结束价格
-	private Double priceFinish = null;//最终价格
 
-	
+	// 价格字段
+	private Double priceFirst = null;// 预计起始价格
+	private Double priceLast = null;// 预计结束价格
+	private Double priceFinish = null;// 最终价格
+
 	private String managerRealName = null; // 管家名字
-	
+
 	private Long customerId = null; // 客户ID
-	
+
 	private Long teamId = null; // 供应商ID
-	
+
 	private String updateTime = null;
-	
+
 	private String createTime = null;
-	
-	private Long referrerId = null; //友情推荐人Id
-	
-	private String referrerName = null;//友情推荐人Name
-	
-	private Double customerPayment = null;//用户实付金额
-	
-	private Double providerPayment = null;//供应商实付金额
-	
+
+	private Long referrerId = null; // 友情推荐人Id
+
+	private String referrerName = null;// 友情推荐人Name
+
+	private Double customerPayment = null;// 用户实付金额
+
+	private Double providerPayment = null;// 供应商实付金额
+
+	private List<Synergy> synergys = null; //协助人集合
+
 	public Double getCustomerPayment() {
 		return customerPayment;
 	}
 
 	public void setCustomerPayment(Double customerPayment) {
 		this.customerPayment = customerPayment;
+	}
+
+	public List<Synergy> getSynergys() {
+		return synergys;
+	}
+
+	public void setSynergys(List<Synergy> synergys) {
+		this.synergys = synergys;
 	}
 
 	public Double getProviderPayment() {
@@ -83,7 +93,7 @@ public class IndentProject extends BaseObject {
 	public void setReferrerName(String referrerName) {
 		this.referrerName = referrerName;
 	}
-	
+
 	public long getId() {
 		return id;
 	}
@@ -192,9 +202,6 @@ public class IndentProject extends BaseObject {
 		this.serial = serial;
 	}
 
-
-	
-	
 	// -----------------------------
 	// 冗余taskdate--------------------------------------
 
@@ -233,7 +240,7 @@ public class IndentProject extends BaseObject {
 	private Map<String, String> time = null;
 	private ActivitiTask task = null;
 	private String tag = "";
-	private UserViewModel userViewModel = null; 
+	private UserViewModel userViewModel = null;
 
 	public UserViewModel getUserViewModel() {
 		return userViewModel;

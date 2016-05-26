@@ -31,10 +31,10 @@ import com.panfeng.util.ValidateUtil;
 public class ProjectController extends BaseController {
 	@Autowired
 	private IndentProjectService indentProjectService = null;
-	
+
 	@RequestMapping("/save")
 	public Boolean save(@RequestBody final IndentProject indentProject) {
-		
+
 		return indentProjectService.save(indentProject);
 	}
 
@@ -75,7 +75,7 @@ public class ProjectController extends BaseController {
 
 	@RequestMapping("/getProjectTags")
 	public List<BizBean> getProjectTags() {
-		
+
 		return indentProjectService.getTags();
 	}
 
@@ -91,13 +91,14 @@ public class ProjectController extends BaseController {
 			response.reset();
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("application/octet-stream");
-			String dateString=	DateUtils.formatDate(new Date(), "yyyy-MM-dd");
-			String filename=URLEncoder.encode("管家报表"+dateString+".xlsx", "UTF-8");
+			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
+			String filename = URLEncoder.encode("管家报表" + dateString + ".xlsx",
+					"UTF-8");
 			response.setHeader("Content-Disposition", "attachment; filename=\""
-					+  filename+ "\"\r\n");
+					+ filename + "\"\r\n");
 			OutputStream outputStream = response.getOutputStream();
 			indentProjectService.getReport(indentProject, outputStream);
-			if(outputStream!=null){
+			if (outputStream != null) {
 				outputStream.flush();
 				outputStream.close();
 			}
@@ -105,56 +106,57 @@ public class ProjectController extends BaseController {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	// 跳转项目列表
 	@RequestMapping("/project-list")
-	public ModelAndView view(final HttpServletRequest request){
-		
+	public ModelAndView view(final HttpServletRequest request) {
+
 		return new ModelAndView("project-list");
 	}
-	
+
 	@RequestMapping("/list")
-	public DataGrid<IndentProject> list(final IndentProjectView view,final PageFilter pf){
-		
+	public DataGrid<IndentProject> list(final IndentProjectView view,
+			final PageFilter pf) {
+
 		final long page = pf.getPage();
 		final long rows = pf.getRows();
 		view.setBegin((page - 1) * rows);
 		view.setLimit(rows);
-		
+
 		DataGrid<IndentProject> dataGrid = new DataGrid<IndentProject>();
-		final List<IndentProject> list = indentProjectService.listWithPagination(view);
+		final List<IndentProject> list = indentProjectService
+				.listWithPagination(view);
 		dataGrid.setRows(list);
-		
+
 		final long total = indentProjectService.maxSize(view);
 		dataGrid.setTotal(total);
 		return dataGrid;
 	}
-	
+
 	@RequestMapping("/update")
-	public long update(@RequestBody final IndentProject project){
-		
+	public long update(@RequestBody final IndentProject project) {
+
 		final long ret = indentProjectService.update(project);
 		return ret;
 	}
-	
-	@RequestMapping(value = "/updateInfo",method = RequestMethod.POST )
-	public long updateInfo(final IndentProject project){
-		
+
+	@RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
+	public long updateInfo(final IndentProject project) {
+
 		final long ret = indentProjectService.update(project);
 		return ret;
 	}
-	
+
 	@RequestMapping("/saveInfo")
 	public Boolean saveInfo(final IndentProject indentProject) {
-		
+
 		return indentProjectService.save(indentProject);
 	}
-	
+
 	@RequestMapping("/delete")
-	public long delete(final long[] ids){
-		
-		if(ValidateUtil.isValid(ids)){
+	public long delete(final long[] ids) {
+
+		if (ValidateUtil.isValid(ids)) {
 			for (final long id : ids) {
 				final IndentProject project = new IndentProject();
 				project.setId(id);
@@ -164,52 +166,56 @@ public class ProjectController extends BaseController {
 		}
 		return 1l;
 	}
-	
+
 	// 获取所有的供应商
 	@RequestMapping("/getAllTeam")
-	public List<IndentProject> allTeam(){
-		
+	public List<IndentProject> allTeam() {
+
 		final List<IndentProject> list = indentProjectService.getAllTeam();
 		return list;
 	}
-	
+
 	@RequestMapping("/getAllUser")
-	public List<IndentProject> allUser(){
-		
+	public List<IndentProject> allUser() {
+
 		final List<IndentProject> list = indentProjectService.getAllUser();
 		return list;
 	}
-	
+
 	@RequestMapping("/getAllVersionManager")
-	public List<IndentProject> allManager(){
-		
-		final List<IndentProject> list = indentProjectService.getAllVersionManager();
+	public List<IndentProject> allManager() {
+
+		final List<IndentProject> list = indentProjectService
+				.getAllVersionManager();
 		return list;
 	}
-	
+
 	@RequestMapping("/getAllProject")
-	public List<IndentProject> allProject(){
-		
+	public List<IndentProject> allProject() {
+
 		final List<IndentProject> list = indentProjectService.getAllProject();
 		return list;
 	}
-	
+
 	@RequestMapping("/export")
-	public void export(final IndentProjectView view ,final HttpServletResponse response){
+	public void export(final IndentProjectView view,
+			final HttpServletResponse response) {
 		try {
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("application/octet-stream");
-			String dateString=	DateUtils.formatDate(new Date(), "yyyy-MM-dd");
-			String filename=URLEncoder.encode("项目列表"+dateString+".xlsx", "UTF-8");
+			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
+			String filename = URLEncoder.encode("项目列表" + dateString + ".xlsx",
+					"UTF-8");
 			response.setHeader("Content-Disposition", "attachment; filename=\""
-					+  filename+ "\"\r\n");
+					+ filename + "\"\r\n");
 			OutputStream outputStream = response.getOutputStream();
-			// 获取所有的项目 
+			// 获取所有的项目
 			view.setBegin(0);
 			view.setLimit(999999999l);
-			List<IndentProject> list = indentProjectService.listWithPagination(view);
+			List<IndentProject> list = indentProjectService
+					.listWithPagination(view);
 			indentProjectService.getReport(list, outputStream);
-			if(outputStream!=null){
+			if (outputStream != null) {
 				outputStream.flush();
 				outputStream.close();
 			}
@@ -217,12 +223,20 @@ public class ProjectController extends BaseController {
 			e.printStackTrace();
 		}
 	}
+
 	@RequestMapping("/get/SerialID")
-	public IndentProject getProjectSerialID(){
-		
+	public IndentProject getProjectSerialID() {
+
 		final IndentProject project = new IndentProject();
 		project.setSerial(indentProjectService.getProjectSerialID());
 		return project;
 	}
-	
+
+	@RequestMapping("/remove/synergy")
+	public void removeSynergy(@RequestBody final BizBean bizBean) {
+		if (bizBean != null && bizBean.getName() != null)
+			indentProjectService
+					.removeSynergy(Long.parseLong(bizBean.getName()));
+	}
+
 }
