@@ -6,12 +6,10 @@ import org.springframework.stereotype.Service;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.TeamMapper;
 import com.panfeng.persist.UserMapper;
-import com.panfeng.persist.VersionManagerMapper;
 import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.model.User;
 import com.panfeng.resource.model.UserViewModel;
-import com.panfeng.resource.model.VersionManager;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.UserTempService;
 
