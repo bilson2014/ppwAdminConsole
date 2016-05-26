@@ -59,8 +59,12 @@ public class SalesmanController extends BaseController {
 		for (final Salesman salesman : list) {
 			final String salesmanUniqueId = salesman.getUniqueId(); 
 			final long total = indentService.countBySalesmanUniqueId(salesmanUniqueId);
-			final double price = indentService.sumPriceBySalesmanUniqueId(salesmanUniqueId);
-			salesman.setSumPrice(price);
+			final Double price = indentService.sumPriceBySalesmanUniqueId(salesmanUniqueId);
+			if(price != null){
+				salesman.setSumPrice(price);
+			}else{
+				salesman.setSumPrice(0);
+			}
 			salesman.setTotal(total);
 		}
 		

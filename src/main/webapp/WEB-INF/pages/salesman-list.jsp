@@ -35,19 +35,19 @@
 	</div>
 
 	<div id="toolbar" style="display: none;">
-		<r:permission uri="/portal/salesmenId/save">
+		<r:permission uri="/portal/salesman/save">
 			<a onclick="addFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">添加</a>
 		</r:permission>
 		
-		<r:permission uri="/portal/salesmenId/update">
+		<r:permission uri="/portal/salesman/update">
 			<a onclick="editFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">修改</a>
 		</r:permission>
 		
-		<r:permission uri="/portal/salesmenId/delete">
+		<r:permission uri="/portal/salesman/delete">
 			<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
 		</r:permission>
 		
-		<r:mulparampermission uri2="/portal/salesmenId/save" uri="/portal/salesmenId/update">
+		<r:mulparampermission uri2="/portal/salesman/save" uri="/portal/salesman/update">
 			<a onclick="saveFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">保存</a>
 		</r:mulparampermission>
 		

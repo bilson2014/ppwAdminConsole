@@ -77,7 +77,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			list = indentProjectMapper.findProjectByUserName(indentProject);
 			break;
 		// 用户身份 -- 视频管家
-		case GlobalConstant.ROLE_MANAGER:
+		case GlobalConstant.ROLE_EMPLOYEE:
 			list = indentProjectMapper.findProjectList(indentProject);
 			break;
 		}

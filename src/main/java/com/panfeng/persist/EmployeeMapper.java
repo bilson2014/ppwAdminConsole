@@ -69,5 +69,11 @@ public interface EmployeeMapper {
 	 * 修改密码
 	 */
 	public long editPassword(final Employee employee);
+
+	/**
+	 * 检测数据唯一性
+	 * @param phoneNumber 手机号码
+	 */
+	public long checkPhoneNumber(@Param("phoneNumber") final String phoneNumber);
 	
 }

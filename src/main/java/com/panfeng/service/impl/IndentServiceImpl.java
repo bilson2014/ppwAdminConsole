@@ -93,14 +93,14 @@ public class IndentServiceImpl implements IndentService {
 	}
 
 	@Override
-	public double sumPriceBySalesmanUniqueId(String salesmanUniqueId) {
+	public Double sumPriceBySalesmanUniqueId(final String salesmanUniqueId) {
 		
-		final double price = mapper.sumPriceBySalesmanUniqueId(salesmanUniqueId);
+		final Double price = mapper.sumPriceBySalesmanUniqueId(salesmanUniqueId);
 		return price;
 	}
 
 	@Override
-	public long countBySalesmanUniqueId(String salesmanUniqueId) {
+	public long countBySalesmanUniqueId(final String salesmanUniqueId) {
 		
 		final long total = mapper.countBySalesmanUniqueId(salesmanUniqueId);
 		return total;
