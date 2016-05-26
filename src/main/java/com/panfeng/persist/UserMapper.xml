@@ -16,6 +16,7 @@
 				   u.QQ AS qq,
 				   u.REALNAME AS realName,
 				   u.USERCOMPANY AS userCompany,
+				   u.CLIENTLEVEL AS clientLevel,
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
 			FROM USERS u
@@ -35,6 +36,7 @@
 				   u.QQ AS qq,
 				   u.REALNAME as realName,
 				   u.USERCOMPANY AS userCompany,
+				   u.CLIENTLEVEL AS clientLevel,
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
 			FROM USERS u
@@ -72,6 +74,7 @@
 				   u.QQ AS qq,
 				   u.REALNAME as realName,
 				   u.USERCOMPANY AS userCompany,
+				   u.CLIENTLEVEL AS clientLevel,
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
 			FROM USERS u
@@ -91,7 +94,8 @@
 				SEX,
 				REALNAME,
 				QQ,
-				USERCOMPANY
+				USERCOMPANY,
+				CLIENTLEVEL
 			) VALUES(
 				#{userName},
 				#{telephone},
@@ -102,7 +106,8 @@
 				${sex},
 				#{realName},
 				#{qq},
-				#{userCompany}
+				#{userCompany},
+				${clientLevel}
 			)
 		]]>
 	</insert>
@@ -143,7 +148,8 @@
 				   SEX = ${sex},
 				   REALNAME = #{realName},
 				   QQ = #{qq},
-				   USERCOMPANY = #{userCompany}
+				   USERCOMPANY = #{userCompany},
+				   CLIENTLEVEL = ${clientLevel}
 			WHERE ID = ${id}
 		]]>
 	</update>
@@ -160,6 +166,7 @@
 				   u.QQ AS qq,
 				   u.REALNAME as realName,
 				   u.USERCOMPANY AS userCompany,
+				   u.CLIENTLEVEL AS clientLevel,
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
 			FROM USERS u

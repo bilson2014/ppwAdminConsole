@@ -41,6 +41,30 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'clientLevel',
+						title : '客户级别',
+						width : 150,
+						align : 'center' ,
+						formatter : function(value , record , index){
+							if(value == 0){
+								return '<span style=color:red; >A</span>' ;
+							} else if( value == 1){
+								return '<span style=color:blue; >B</span>' ; 
+							} else if( value == 2){
+								return '<span style=color:black; >C</span>' ;
+							}
+						},
+						editor:{
+							type:'combobox' , 
+							options:{
+								data:[{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'}] ,
+								valueField:'id' , 
+								textField:'val' ,
+								required:true , 
+								editable : false
+							}
+						}
+					},{
 						field : 'userCompany',
 						title : '客户公司',
 						width : 150,
@@ -57,7 +81,6 @@ $().ready(function(){
 						title : '性别' ,
 						align : 'center' ,
 						width : 60,
-						sortable : true ,
 						formatter : function(value , record , index){
 							if(value == 0){
 								return '<span style=color:blue; >男</span>' ;

@@ -52,6 +52,8 @@ public class IndentProject extends BaseObject {
 	
 	private Double providerPayment = null;//供应商实付金额
 	
+	private int clientLevel = 0; // 客户分级
+	
 	public Double getCustomerPayment() {
 		return customerPayment;
 	}
@@ -305,6 +307,14 @@ public class IndentProject extends BaseObject {
 
 	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
+	}
+
+	public int getClientLevel() {
+		return clientLevel;
+	}
+
+	public void setClientLevel(int clientLevel) {
+		this.clientLevel = clientLevel;
 	}
 
 }
