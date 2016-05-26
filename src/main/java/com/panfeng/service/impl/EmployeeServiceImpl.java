@@ -111,4 +111,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return ret;
 	}
 
+	public long checkPhoneNumber(String phoneNumber) {
+		
+		final long ret = mapper.checkPhoneNumber(phoneNumber);
+		return ret;
+	}
+
 }

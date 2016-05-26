@@ -11,6 +11,9 @@
 		<result property="employeeDescription" column="employeeDescription" />
 		<result property="createDate" column="createDate" />
 		<result property="updateDate" column="updateDate" />
+		<result property="email" column="email" />
+		<result property="phoneNumber" column="phoneNumber" />
+		<result property="flag" column="flag" />
 	</resultMap>
 
 	<resultMap type="Employee" id="EmployeeRoleMap" extends="EmployeeMap">
@@ -26,12 +29,14 @@
 
 	<select id="findEmployeeById" resultMap="EmployeeRoleMap">
 		<![CDATA[
-			SELECT e.EMPLOYEEID,
-				   e.EMPLOYEELOGINNAME,
-				   e.EMPLOYEEREALNAME,
-				   e.EMPLOYEEPASSWORD,
-				   e.EMPLOYEEDESCRIPTION,
-				   e.EMPLOYEEIMG,
+			SELECT e.EMPLOYEEID AS employeeId,
+				   e.EMPLOYEELOGINNAME AS employeeLoginName,
+				   e.EMPLOYEEREALNAME AS employeeRealName,
+				   e.EMPLOYEEPASSWORD AS employeePassword,
+				   e.EMPLOYEEDESCRIPTION AS employeeDescription,
+				   e.EMPLOYEEIMG AS employeeImg,
+				   e.EMAIL AS email,
+				   e.PHONENUMBER AS phoneNumber,
 				   DATE_FORMAT(e.UPDATEDATE,'%Y-%m-%d %T') AS uploadDate,
 				   r.ROLEID,
 				   r.ROLENAME,
@@ -48,11 +53,14 @@
 	
 	<select id="listWithPagination" resultMap="EmployeeRoleMap">
 		<![CDATA[
-			SELECT e.EMPLOYEEID,
-				   e.EMPLOYEELOGINNAME,
-				   e.EMPLOYEEREALNAME,
-				   e.EMPLOYEEDESCRIPTION,
-				   e.EMPLOYEEIMG,
+			SELECT e.EMPLOYEEID AS employeeId,
+				   e.EMPLOYEELOGINNAME AS employeeLoginName,
+				   e.EMPLOYEEREALNAME AS employeeRealName,
+				   e.EMPLOYEEPASSWORD AS employeePassword,
+				   e.EMPLOYEEDESCRIPTION AS employeeDescription,
+				   e.EMPLOYEEIMG AS employeeImg,
+				   e.EMAIL AS email,
+				   e.PHONENUMBER AS phoneNumber,
 				   DATE_FORMAT(e.UPDATEDATE,'%Y-%m-%d %T') AS updateDate,
 				   r.ROLEID,
 				   r.ROLENAME,
@@ -86,11 +94,14 @@
 
 	<select id="all" resultMap="EmployeeMap">
 		<![CDATA[
-			SELECT e.EMPLOYEEID,
-				   e.EMPLOYEELOGINNAME,
-				   e.EMPLOYEEREALNAME,
-				   e.EMPLOYEEDESCRIPTION,
-				   e.EMPLOYEEIMG,
+			SELECT e.EMPLOYEEID AS employeeId,
+				   e.EMPLOYEELOGINNAME AS employeeLoginName,
+				   e.EMPLOYEEREALNAME AS employeeRealName,
+				   e.EMPLOYEEPASSWORD AS employeePassword,
+				   e.EMPLOYEEDESCRIPTION AS employeeDescription,
+				   e.EMPLOYEEIMG AS employeeImg,
+				   e.EMAIL AS email,
+				   e.PHONENUMBER AS phoneNumber,
 				   DATE_FORMAT(e.UPDATEDATE,'%Y-%m-%d %T') AS updateDate,
 			FROM EMPLOYEE e
 		]]>
@@ -123,13 +134,16 @@
 			INSERT INTO EMPLOYEE(EMPLOYEELOGINNAME,
 				   EMPLOYEEREALNAME,
 				   EMPLOYEEPASSWORD,
-				   EMPLOYEEDESCRIPTION)
+				   EMPLOYEEDESCRIPTION,
+				   EMAIL,
+				   PHONENUMBER)
 			VALUES (
 				#{employeeLoginName},
 				#{employeeRealName},
 				#{employeePassword},
-				#{employeeDescription}
-			)
+				#{employeeDescription},
+				#{email},
+				#{phoneNumber})
 		]]>
 	</insert>
 	
@@ -162,6 +176,8 @@
 			</if>
 		<![CDATA[
 						EMPLOYEEDESCRIPTION = #{employeeDescription},
+						PHONENUMBER = #{phoneNumber},
+						EMAIL = #{email},
 						UPDATEDATE = CURRENT_TIMESTAMP
 			WHERE EMPLOYEEID = ${employeeId}
 		]]>
@@ -194,8 +210,17 @@
 	<update id="editPassword">
 		<![CDATA[
 			UPDATE EMPLOYEE
-				SET EMPLOYEEPASSWORD = #{employeePassword}
-			WHERE EMPLOYEEID = ${employeeId}
+				SET EMPLOYEEPASSWORD = #{employeePassword},
+					UPDATEDATE = CURRENT_TIMESTAMP
+			WHERE PHONENUMBER = ${phoneNumber}
 		]]>
 	</update>
+	
+	<select id="checkPhoneNumber" resultType="java.lang.Long">
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM EMPLOYEE
+			WHERE PHONENUMBER = #{phoneNumber}
+		]]>
+	</select>
 </mapper>

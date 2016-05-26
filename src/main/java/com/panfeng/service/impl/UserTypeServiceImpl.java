@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.TeamMapper;
 import com.panfeng.persist.UserMapper;
-import com.panfeng.persist.VersionManagerMapper;
+import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.model.User;
 import com.panfeng.resource.model.UserViewModel;
-import com.panfeng.resource.model.VersionManager;
+import com.panfeng.service.EmployeeService;
 import com.panfeng.service.UserTempService;
 
 @Service
@@ -20,22 +20,22 @@ public class UserTypeServiceImpl implements UserTempService {
 	@Autowired
 	private TeamMapper teamMapper;
 	@Autowired
-	private VersionManagerMapper versionManagerMapper;
-
+	EmployeeService employeeService;
 	// 创建对象
 	public UserViewModel buildObject(String userType, long userId) {
 		UserViewModel userViewModel = new UserViewModel();
 		switch (userType) {
-		case GlobalConstant.ROLE_MANAGER:
+		case GlobalConstant.ROLE_EMPLOYEE:
 			// 视频管家
-			VersionManager versionManager = versionManagerMapper
-					.findManagerById(userId);
+			Employee employee = employeeService
+					.findEmployerById(userId);
+			
 			userViewModel
-					.setUserName(versionManager.getManagerRealName() == null
-							|| versionManager.getManagerRealName().equals("") ? "视频管家"
-							: versionManager.getManagerRealName());
+					.setUserName(employee.getEmployeeRealName() == null
+							|| employee.getEmployeeRealName().equals("") ? "内部员工"
+							: employee.getEmployeeRealName());
 			userViewModel.setImgUrl("/resources/img/flow/guanhead.png");
-			userViewModel.setUserType("视频管家");
+			userViewModel.setUserType("内部员工");
 			userViewModel.setOrgName("");
 			break;
 		case GlobalConstant.ROLE_PROVIDER:

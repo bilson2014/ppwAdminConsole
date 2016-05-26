@@ -74,6 +74,14 @@
 	                <input name="employeePassword" type="password" class="easyui-textbox" prompt="Password" iconCls="icon-lock">
 	            </div>
 	            <div class="fitem">
+	                <label>手机号码:</label>
+	                <input name="phoneNumber" id="phoneNumber" class="easyui-validatebox textbox" validtype="mobile" required="true" />
+	            </div>
+	            <div class="fitem">
+	                <label>邮箱:</label>
+	                <input name="email" id="email" class="easyui-validatebox textbox" validType="email" required="true" />
+	            </div>
+	            <div class="fitem">
 	                <label>角色:</label>
 	                <select name="roleIds" id="roleIds" style="width: 160px;"></select>
 	            </div>

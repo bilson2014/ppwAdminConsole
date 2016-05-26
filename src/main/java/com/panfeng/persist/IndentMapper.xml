@@ -320,7 +320,7 @@
 		]]>
 	</select>
 	
-	<select id="sumPriceBySalesmanUniqueId" resultType="double">
+	<select id="sumPriceBySalesmanUniqueId" resultType="Double">
 		<![CDATA[
 			SELECT SUM(ind.INDENTPRICE)
 				FROM INDENT ind

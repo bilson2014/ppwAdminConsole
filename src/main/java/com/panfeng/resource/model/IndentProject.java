@@ -34,8 +34,8 @@ public class IndentProject extends BaseObject {
 	private Double priceLast = null;// 预计结束价格
 	private Double priceFinish = null;// 最终价格
 
-	private String managerRealName = null; // 管家名字
-
+	private String employeeRealName = null; // 管家名字
+	
 	private Long customerId = null; // 客户ID
 
 	private Long teamId = null; // 供应商ID
@@ -274,12 +274,12 @@ public class IndentProject extends BaseObject {
 		this.tag = tag;
 	}
 
-	public String getManagerRealName() {
-		return managerRealName;
+	public String getEmployeeRealName() {
+		return employeeRealName;
 	}
 
-	public void setManagerRealName(String managerRealName) {
-		this.managerRealName = managerRealName;
+	public void setEmployeeRealName(String employeeRealName) {
+		this.employeeRealName = employeeRealName;
 	}
 
 	public Long getCustomerId() {

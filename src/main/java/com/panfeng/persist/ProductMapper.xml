@@ -569,4 +569,27 @@
 				p.PRODUCTID = ${productId}
 		]]>
 	</update>
+	
+	<select id="loadSalesProduct" resultType="Product">
+		SELECT pro.PRODUCTID AS productId,
+			   pro.VIDEOURL AS videoUrl,
+			   pro.PDESCRIPTION AS pDescription,
+			   pro.PRODUCTNAME AS productName,
+			   pro.PICHDURL AS picHDUrl,
+			   pro.PICLDURL AS picLDUrl,
+			   pro.VISIBLE AS visible,
+			   i.ITEMNAME AS productTypeName,
+			   pro.VIDEOLENGTH AS videoLength,
+			   pro.HRET AS hret,
+			   pro.TAGS AS tags
+			FROM PRODUCT pro
+			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
+			INNER JOIN TEAM t ON t.TEAMID = pro.TEAMID
+			WHERE 1 = 1
+				AND t.flag = 4
+				AND t.loginName = 'bd'
+				AND pro.FLAG = 1 
+				AND pro.visible = 0
+	</select>
+	
 </mapper>

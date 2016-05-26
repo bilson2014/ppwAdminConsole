@@ -191,4 +191,17 @@ public class ProductServiceImpl implements ProductService{
 	}
 	// add by wliming, 2016/02/24 18:54 end
 
+	@Override
+	public List<Product> loadSalesProduct() {
+		
+		final List<Product> list = mapper.loadSalesProduct();
+		for (final Product product : list) {
+			com.panfeng.resource.model.Service service = scMapper.loadSingleService(product.getProductId());
+			product.setServiceId(service.getServiceId());
+			product.setServiceRealPrice(service.getServiceRealPrice());
+			product.setServicePrice(service.getServicePrice());
+		}
+		return list;
+	}
+
 }

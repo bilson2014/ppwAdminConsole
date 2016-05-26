@@ -191,8 +191,8 @@
 				i.IP_STATE AS state,
 				i.IP_CUSTOMERID AS customerId,
 				i.IP_TEAMID AS teamId,
-				u.userName AS userName,
-				t.teamName AS  teamName,
+				u.USERNAME AS userName,
+				t.TEAMNAME AS  teamName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
@@ -206,7 +206,7 @@
 			LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
 			LEFT JOIN STAFF s ON i.ip_referrer_id = s.staffId
-     		WHERE i.IP_USER_TYPE =#{userType}  AND i.IP_USER_ID=${userId} ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID DESC;
+     		WHERE  i.IP_USER_ID=${userId} ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID DESC;
 		]]>
 	</select>
 
@@ -227,8 +227,8 @@
 				i.IP_STATE AS state,
 				i.IP_CUSTOMERID AS customerId,
 				i.IP_TEAMID AS teamId,
-				u.userName AS userName,
-				t.teamName AS  teamName,
+				u.USERNAME AS userName,
+				t.TEAMNAME AS  teamName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
@@ -263,13 +263,13 @@
 				i.IP_STATE AS state,
 				i.IP_CUSTOMERID AS customerId,
 				i.IP_TEAMID AS teamId,
-				u.userName AS userName,
-				t.teamName AS  teamName,
+				u.USERNAME AS userName,
+				t.TEAMNAME AS  teamName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
-				s.staffName AS referrerName,
-				i.ip_referrer_id AS referrerId,
+				s.STAFFNAME AS referrerName,
+				i.IP_REFERRER_ID AS referrerId,
 				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
 				i.IP_CUSTOMER_PAYMENT AS customerPayment,
 				i.IP_PROVIDER_PAYMENT AS providerPayment
@@ -296,7 +296,7 @@
 				SELECT 
 				i.IP_ID AS id,
 				i.IP_PROJECT_NAME AS projectName,
-				u.USERCOMPANY AS userName,
+				u.USERNAME AS userName,
 				i.IP_USER_CONTACT AS userContact,
 				i.IP_USER_PHONE AS userPhone,
 				t.TEAMNAME AS teamName,
@@ -310,7 +310,7 @@
 				i.IP_STATE AS state,
 				i.IP_CUSTOMERID	AS customerId,
 				i.ip_teamId AS teamId,
-				VM.MANAGERREALNAME AS managerRealName,
+				e.EMPLOYEEREALNAME AS employeeRealName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
@@ -321,8 +321,8 @@
 				i.IP_PROVIDER_PAYMENT AS providerPayment
 				
 			FROM INDENT_PROJECT i 
-			LEFT JOIN VERSIONMANAGER VM
-				ON VM.MANAGERID = i.IP_USER_ID
+			LEFT JOIN EMPLOYEE e
+				ON e.EMPLOYEEID = i.IP_USER_ID
 			LEFT JOIN USERS u 
 				ON i.ip_customerId=u.id 
 			LEFT JOIN TEAM t
@@ -414,10 +414,12 @@
 	
 	<select id="getAllVersionManager" resultType="IndentProject">
 		<![CDATA[
-			SELECT m.MANAGERID AS userId,
-				   m.MANAGERREALNAME AS managerRealName
-			FROM VERSIONMANAGER m 
+			SELECT e.EMPLOYEEID AS userId,
+				   e.EMPLOYEEREALNAME AS employeeRealName
+			FROM EMPLOYEE e 
 			WHERE 1 = 1
+				AND e.FLAG = 1
+				AND e.EMPLOYEELOGINNAME <> 'admin'
 		]]>
 	</select>
 	

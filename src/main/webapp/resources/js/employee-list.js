@@ -25,16 +25,22 @@ $().ready(function(){
 					},{
 						field : 'employeeRealName',
 						title : '姓名',
-						width : 100,
+						width : 80,
 						align : 'center'
 					},{
-						field : 'updateDate' ,
-						title : '更新时间' ,
+						field : 'phoneNumber' ,
+						title : '手机号码',
+						width : 120,
+						align : 'center'
+					},{
+						field : 'email' ,
+						title : '邮箱',
 						width : 120,
 						align : 'center'
 					},{
 						field : 'employeeDescription' ,
 						title : '人员简介',
+						width : 200,
 						align : 'center'
 					},{
 						field : 'roleIds' ,

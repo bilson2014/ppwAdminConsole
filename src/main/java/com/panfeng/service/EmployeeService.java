@@ -26,4 +26,7 @@ public interface EmployeeService {
 	public long updateImagePath(final Employee e);
 
 	public long editPassword(final Employee employee);
+	
+	// 检测手机的唯一性
+	public long checkPhoneNumber(final String phoneNumber);
 }

@@ -28,6 +28,10 @@ public class Employee extends Customer {
 	private List<Long> roleIds = null; // 角色ID集合
 	
 	private String employeeImg = null;
+	
+	private String phoneNumber = null; // 电话号码
+	
+	private String email = null; // 邮箱
 
 	public long getEmployeeId() {
 		return employeeId;
@@ -99,6 +103,22 @@ public class Employee extends Customer {
 
 	public void setEmployeeImg(String employeeImg) {
 		this.employeeImg = employeeImg;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

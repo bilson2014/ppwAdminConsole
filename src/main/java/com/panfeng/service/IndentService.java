@@ -33,7 +33,7 @@ public interface IndentService {
 	 * @param salesmanUniqueId 分销人唯一编号
 	 * @return 订单总额
 	 */
-	public double sumPriceBySalesmanUniqueId(final String salesmanUniqueId);
+	public Double sumPriceBySalesmanUniqueId(final String salesmanUniqueId);
 	
 	/**
 	 * 根据分销人唯一编号计算订单总数

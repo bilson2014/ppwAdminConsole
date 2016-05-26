@@ -71,7 +71,7 @@ public class IndentProjectTest {
 			//填充管家
 			UserViewModel userViewModel=userTempService.getInfo(indentProject2.getUserType(), indentProject2.getUserId());
 			indentProject2.setUserViewModel(userViewModel);
-			indentProject2.setManagerRealName(userViewModel.getUserName());
+			indentProject2.setEmployeeRealName(userViewModel.getUserName());
 			projectPoiAdapter.getData().add(indentProject2);
 		}
 		try {

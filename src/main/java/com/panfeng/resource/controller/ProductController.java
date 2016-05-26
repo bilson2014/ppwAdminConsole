@@ -692,4 +692,15 @@ public class ProductController extends BaseController {
 		else
 			return 0l;
 	}
+	
+	/**
+	 * 获取分销产品
+	 * @return 分销列表
+	 */
+	@RequestMapping("/product/static/data/salesproduct")
+	public List<Product> salesProject(final HttpServletRequest request){
+		
+		final List<Product> list = proService.loadSalesProduct();
+		return list;
+	}
 }

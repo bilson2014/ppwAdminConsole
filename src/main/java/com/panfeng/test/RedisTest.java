@@ -1,23 +1,18 @@
 package com.panfeng.test;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.ServletContextAware;
-
-import com.google.gson.Gson;
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.persist.RightMapper;
-import com.panfeng.resource.model.Right;
-import com.panfeng.util.ValidateUtil;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+
+import com.google.gson.Gson;
+import com.panfeng.persist.RightMapper;
+import com.panfeng.resource.model.Right;
+import com.panfeng.util.ValidateUtil;
 
 public class RedisTest extends BaseTest{
 
@@ -26,8 +21,6 @@ public class RedisTest extends BaseTest{
 	
 	@Autowired
 	private final RightMapper mapper = null;
-	
-	private ServletContext sc = null;
 	
 	@Test
 	public void test(){
