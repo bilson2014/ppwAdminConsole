@@ -44,9 +44,18 @@ $().ready(function(){
 						title : '视频管家' ,
 						align : 'center'
 					},{
-						field : 'userName',
-						title : '客户公司',
-						align : 'center'
+						field : 'clientLevel',
+						title : '客户级别',
+						align : 'center',
+						formatter : function(value , record , index){
+							if(value == 0){
+								return '<span style=color:red; >A</span>' ;
+							} else if( value == 1){
+								return '<span style=color:blue; >B</span>' ; 
+							} else if( value == 2){
+								return '<span style=color:black; >C</span>' ;
+							}
+						}
 					},{
 						field : 'source',
 						title : '项目来源',

@@ -38,10 +38,12 @@ public final class GlobalConstant extends BaseObject {
 
 	public static final String PROJECT_USER_INIT_PASSWORD = "000000"; // 项目用户初始密码
 
-	public static final int SESSION_EXPIRE_TIME = 3600; // redis 存储session
-														// 过期时间(秒),默认30分钟
-
-	public static final String CONVERIONHSOT = "http://123.59.75.62:8080/";
+	public static final int SESSION_EXPIRE_TIME = 3600; // redis 存储session 过期时间(秒),默认30分钟
+	
+	public static final String CONVERIONHSOT="http://123.59.75.62:8080/";
+	
+	//public static final String CONVERIONHSOT="http://10.10.69.33:8080/";
+	
 	public static String FILE_PROFIX; // 文件前缀
 
 	public static String EMPLOYEE_IMAGE_PATH; // 内部人员图片路径
