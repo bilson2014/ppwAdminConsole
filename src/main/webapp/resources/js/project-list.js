@@ -89,13 +89,12 @@ $().ready(function(){
 						title : '项目来源人',
 						align : 'center'
 					},{
-						field : 'priceFirst',
-						title : '项目额度最小值',
-						align : 'center'
-					},{
-						field : 'priceLast',
-						title : '项目额度最大值',
-						align : 'center'
+						field : 'price',
+						title : '项目预算金额',
+						align : 'center',
+						formatter : function(value , row , index){
+							return '<span style=color:orange; >'+ row.priceFirst + ' 元 ~ ' + row.priceLast +' 元</span>' ;
+						}
 					},{
 						field : 'priceFinish',
 						title : '最终额度',
@@ -128,6 +127,16 @@ $().ready(function(){
 						title : '项目来源人ID' ,
 						align : 'center' ,
 						hidden: true
+					},{
+						field : 'priceFirst',
+						title : '项目额度最小值',
+						align : 'center',
+						hidden : true
+					},{
+						field : 'priceLast',
+						title : '项目额度最大值',
+						align : 'center',
+						hidden : true
 					},{
 						field : 'userType' ,
 						title : '创建类型' ,

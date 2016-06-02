@@ -37,6 +37,8 @@ $().ready(function(){
 								return '<span style=color:red; >取消</span>' ; 
 							} else if( value == 2){
 								return '<span style=color:black; >完成</span>' ;
+							} else if( value == 3){
+								return '<span style=color:black; >暂停</span>' ;
 							}
 						}
 					},{
@@ -65,13 +67,12 @@ $().ready(function(){
 						title : '项目来源人',
 						align : 'center'
 					},{
-						field : 'priceFirst',
-						title : '项目额度最小值',
-						align : 'center'
-					},{
-						field : 'priceLast',
-						title : '项目额度最大值',
-						align : 'center'
+						field : 'price',
+						title : '项目预算额度',
+						align : 'center',
+						formatter : function(value , row , index){
+							return '<span style=color:orange; >'+ row.priceFirst + ' 元 ~ ' + row.priceLast +' 元</span>' ;
+						}
 					},{
 						field : 'priceFinish',
 						title : '最终额度',
@@ -82,7 +83,7 @@ $().ready(function(){
 						align : 'center'
 					},{
 						field : 'providerPayment',
-						title : '供应商实付金额',
+						title : '支付供应商金额',
 						align : 'center'
 					},{
 						field : 'customerId' ,
