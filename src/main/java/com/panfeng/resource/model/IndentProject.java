@@ -12,6 +12,7 @@ public class IndentProject extends BaseObject {
 	public final static int PROJECT_NORMAL = 0;
 	public final static int PROJECT_CANCEL = 1;
 	public final static int PROJECT_FINISH = 2;
+	public final static int PROJECT_SUSPEND= 3;
 
 	private long id = 0l; // 项目流程ID
 	private String projectName = ""; //
@@ -24,7 +25,7 @@ public class IndentProject extends BaseObject {
 	private String description = "";
 	private String serial = "";
 	private String source = "";
-	// 0 正常 1为取消 2为已完成
+	// 0 正常 1为取消 2为已完成  3为暂停
 	private int state = 0;
 	private String userType = "";
 	private long userId = -1; // 视频管家ID

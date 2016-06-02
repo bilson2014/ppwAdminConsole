@@ -1,5 +1,6 @@
 package com.panfeng.poi;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.util.DateUtils;
 import com.panfeng.util.ValidateUtil;
@@ -43,7 +45,7 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 13, 13));
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 14, 14));
 		sheet.addMergedRegion(new CellRangeAddress(2, 4, 15, 15));
-		
+
 		sheet.addMergedRegion(new CellRangeAddress(2, 2, 16, 26));
 		sheet.addMergedRegion(new CellRangeAddress(3, 3, 16, 20));
 		sheet.addMergedRegion(new CellRangeAddress(3, 3, 21, 24));
@@ -210,7 +212,7 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		xssfCell = xssfRow.createCell(20);
 		xssfCell.setCellStyle(cellStyle);
 		xssfCell.setCellValue("客户评级");
-		
+
 		cellStyle = PoiUtils.getDefaultCenterCellStyle(workbook);
 		xssfCell = xssfRow.createCell(21);
 		xssfCell.setCellStyle(cellStyle);
@@ -277,42 +279,82 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 			xssfRow.createCell(5).setCellValue(entity.getTask().getName());
 		}
 		// 状态
-		xssfRow.createCell(6).setCellValue("");
+		String state = "";
+		XSSFCell xssfCell = xssfRow.createCell(6);
+		XSSFCellStyle xssfCellStyle = null;
+		switch (entity.getState()) {
+		case IndentProject.PROJECT_NORMAL:
+			state = "正常";
+			xssfCellStyle = PoiUtils.getCustomColorsCellStyle(workbook,
+					Color.green);
+			break;
+		case IndentProject.PROJECT_CANCEL:
+			state = "取消";
+			xssfCellStyle = PoiUtils.getCustomColorsCellStyle(workbook,
+					Color.red);
+			break;
+		case IndentProject.PROJECT_FINISH:
+			xssfCellStyle = PoiUtils.getCustomColorsCellStyle(workbook,
+					Color.black);
+			state = "完成";
+			break;
+		case IndentProject.PROJECT_SUSPEND:
+			xssfCellStyle = PoiUtils.getCustomColorsCellStyle(workbook,
+					Color.orange);
+			state = "暂停";
+			break;
+		}
+		if (xssfCell != null)
+			xssfCell.setCellStyle(xssfCellStyle);
+		xssfCell.setCellValue(state);
 		// 解决方法及下阶段时间点
 		xssfRow.createCell(7).setCellValue("");
 		// 立项时间
-		xssfRow.createCell(8).setCellValue(DateUtils.getDateByFormat2(entity.getCreateTime(), "yyyy-MM-dd"));
-		if(ValidateUtil.isValid(entity.getTime())){
-			String jfDate=entity.getTime().get("jf");
-			if(ValidateUtil.isValid(jfDate)){
-				// 交付时间
-				xssfRow.createCell(9).setCellValue(jfDate);
-				// 剩余时间
-				Date date1=DateUtils.getDateByFormat(jfDate, "yyyy-MM-dd");
-				Date date2=DateUtils.getDateByFormat(new Date(),"yyyy-MM-dd" );
-				int c=DateUtils.dateInterval(date1.getTime(),date2.getTime());
-				XSSFCellStyle xssfCellStyle=PoiUtils.getDefaultErrorCellStyle(workbook);
-				XSSFCell xssfCell=xssfRow.createCell(10);
-				xssfCell.setCellStyle(xssfCellStyle);
-				if(c<=0)
-					xssfCell.setCellValue("已过期");
-				else
-					xssfCell.setCellValue("剩余"+c+"天");
-				
-				date2=DateUtils.getDateByFormat(entity.getCreateTime(), "yyyy-MM-dd");
-				c=DateUtils.dateInterval(date1.getTime(),date2.getTime());
-				//包含结束天
-				c++;
-				// 周期（天）
-				xssfRow.createCell(12).setCellValue(c+"天");
+		xssfRow.createCell(8)
+				.setCellValue(
+						DateUtils.getDateByFormat2(entity.getCreateTime(),
+								"yyyy-MM-dd"));
+		if (ValidateUtil.isValid(entity.getTime())) {
+			ActivitiTask activitiTask=entity.getTask();
+			if( activitiTask != null && ! "已完成".equals(activitiTask.getName())){
+				String jfDate = entity.getTime().get("jf");
+				if (ValidateUtil.isValid(jfDate)) {
+					// 交付时间
+					xssfRow.createCell(9).setCellValue(jfDate);
+					// 剩余时间
+					Date date1 = DateUtils.getDateByFormat(jfDate, "yyyy-MM-dd");
+					Date date2 = DateUtils
+							.getDateByFormat(new Date(), "yyyy-MM-dd");
+					int c = DateUtils
+							.dateInterval(date1.getTime(), date2.getTime());
+					xssfCellStyle = PoiUtils
+							.getDefaultErrorCellStyle(workbook);
+					xssfCell = xssfRow.createCell(10);
+					xssfCell.setCellStyle(xssfCellStyle);
+					if (c <= 0)
+						xssfCell.setCellValue("已过期");
+					else
+						xssfCell.setCellValue("剩余" + c + "天");
+
+					date2 = DateUtils.getDateByFormat(entity.getCreateTime(),
+							"yyyy-MM-dd");
+					c = DateUtils.dateInterval(date1.getTime(), date2.getTime());
+					// 包含结束天
+					c++;
+					// 周期（天）
+					xssfRow.createCell(12).setCellValue(c + "天");
+				}
+			}else if("已完成".equals(activitiTask.getName())){
+				xssfRow.createCell(9).setCellValue(activitiTask.getCreateTime());
 			}
+			
 		}
 		// 延期交付时间
 		xssfRow.createCell(11).setCellValue("");
 		// 预算金额（元）
-		xssfRow.createCell(13).setCellValue(entity.getPriceFirst()+"元");
+		xssfRow.createCell(13).setCellValue(entity.getPriceFirst() + "元");
 		// 项目金额（元）
-		xssfRow.createCell(14).setCellValue(entity.getPriceFinish()+"元");
+		xssfRow.createCell(14).setCellValue(entity.getPriceFinish() + "元");
 		// 说明（特殊情况）
 		xssfRow.createCell(15).setCellValue("");
 		// 客户名称
@@ -322,23 +364,23 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		// 联系方式
 		xssfRow.createCell(18).setCellValue(entity.getUserPhone());
 		// 实付金额
-		xssfRow.createCell(19).setCellValue(entity.getCustomerPayment()+"元");
-		
-		switch(entity.getClientLevel()){
-			case 0:
-				xssfRow.createCell(20).setCellValue("A");
-				break;
-			case 1:
-				xssfRow.createCell(20).setCellValue("B");
-				break;
-			case 2:
-				xssfRow.createCell(20).setCellValue("C");
-				break;
-			default :
-				xssfRow.createCell(20).setCellValue("");
-				break;
+		xssfRow.createCell(19).setCellValue(entity.getCustomerPayment() + "元");
+
+		switch (entity.getClientLevel()) {
+		case 0:
+			xssfRow.createCell(20).setCellValue("A");
+			break;
+		case 1:
+			xssfRow.createCell(20).setCellValue("B");
+			break;
+		case 2:
+			xssfRow.createCell(20).setCellValue("C");
+			break;
+		default:
+			xssfRow.createCell(20).setCellValue("");
+			break;
 		}
-		
+
 		// 供应商名称
 		xssfRow.createCell(21).setCellValue(entity.getTeamName());
 		// 负责人（导演）
@@ -346,7 +388,7 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		// 联系方式
 		xssfRow.createCell(23).setCellValue(entity.getTeamPhone());
 		// 实付金额
-		xssfRow.createCell(24).setCellValue(entity.getProviderPayment()+"元");
+		xssfRow.createCell(24).setCellValue(entity.getProviderPayment() + "元");
 		// 当月应回款
 		xssfRow.createCell(25).setCellValue("");
 		// 次月应回款

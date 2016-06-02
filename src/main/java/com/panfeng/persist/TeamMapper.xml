@@ -371,7 +371,7 @@
 	</select>
 	
 	
-		<select id="findTeamByNameOrContact" resultType="Team">
+	<select id="findTeamByNameOrContact" resultType="Team">
 		<![CDATA[
 			SELECT 
 				   t.TEAMID AS teamId,

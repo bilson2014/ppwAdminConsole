@@ -61,7 +61,7 @@ public class ProjectController extends BaseController {
 		return indentProjectService.getProjectInfo(indentProject);
 	}
 
-	@RequestMapping("/get-redundantProject")
+	@RequestMapping("/get-redundantProject") 
 	public IndentProject getRedundantProject(
 			@RequestBody final IndentProject indentProject) {
 		return indentProjectService.getRedundantProject(indentProject);
@@ -238,11 +238,17 @@ public class ProjectController extends BaseController {
 		return project;
 	}
 
+	//------------------------------------------协同人处理部分------------------------------------------
+	
 	@RequestMapping("/remove/synergy")
 	public void removeSynergy(@RequestBody final BizBean bizBean) {
 		if (bizBean != null && bizBean.getName() != null)
 			indentProjectService
-					.removeSynergy(Long.parseLong(bizBean.getName()));
+			.removeSynergy(Long.parseLong(bizBean.getName()));
 	}
-
+	
+	@RequestMapping("/get/synergys")
+	public List<IndentProject> getSynergys(@RequestBody final IndentProject indentProject) {
+		 return indentProjectService.getSynergys(indentProject);
+	}
 }

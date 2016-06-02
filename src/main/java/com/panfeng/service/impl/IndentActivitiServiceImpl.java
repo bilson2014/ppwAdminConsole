@@ -126,13 +126,12 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
 		if (isFinish) {
-			IndentProject indentProject2 = indentProjectMapper
-					.findProjectInfo(indentProject);
 			// 更新项目状态
-			indentProject2.setState(IndentProject.PROJECT_FINISH);
-			indentProjectMapper.update(indentProject2);
-			
-			indentCommentService.createSystemMsg("已经完成"+indentProject.getProjectName()+"项目", indentProject);
+//			indentProject2.setState(IndentProject.PROJECT_FINISH);
+//			indentProjectMapper.update(indentProject2);
+//			
+//			indentCommentService.createSystemMsg("已经完成"+indentProject.getProjectName()+"项目", indentProject);
+			indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_FINISH);
 		}
 		return res;
 	}
@@ -184,6 +183,9 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			indentCommentService.createSystemMsg(
 					" 暂停了 " + indentProject.getProjectName() + "项目",
 					indentProject);
+			//add suspend state by laowang 2016.5.31 16:51 begin 
+				indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_SUSPEND);
+			//add suspend state by laowang 2016.5.31 16:51 end
 		}
 		return res;
 	}
@@ -197,6 +199,9 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			indentCommentService.createSystemMsg(
 					" 恢复了 " + indentProject.getProjectName() + "项目",
 					indentProject);
+		//add resume state by laowang 2016.5.31 16:51 begin 
+			indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_NORMAL);
+		//add resume state by laowang 2016.5.31 16:51 end
 		}
 		return res;
 	}

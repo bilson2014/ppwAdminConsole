@@ -139,18 +139,19 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				List<Synergy> listDb = synergyService
 						.findSynergyByProjectId(indentProject.getId());
 				for (Synergy synergy : list) {
-					boolean dbExist=false;
-					if(synergy!=null){
-						//冒牌排序，检测该项是否存在于数据库
+					boolean dbExist = false;
+					if (synergy != null) {
+						// 冒牌排序，检测该项是否存在于数据库
 						for (int i = 0; i < listDb.size(); i++) {
-							if(listDb.get(i).getSynergyId() == synergy.getSynergyId()){
-								dbExist=true;// 更新
+							if (listDb.get(i).getSynergyId() == synergy
+									.getSynergyId()) {
+								dbExist = true;// 更新
 								break;
 							}
 						}
-						if(dbExist){
+						if (dbExist) {
 							synergyService.update(synergy);
-						}else{
+						} else {
 							synergy.setProjectId(indentProject.getId());
 							synergyService.save(synergy);
 						}
@@ -281,6 +282,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 						"yyyy-MM-dd");
 				at.setCreateTime(simpleDateFormat.format(historicTaskInstance
 						.getEndTime()));
+
 			}
 			indentProject2.setTask(at);
 			// 填充管家
@@ -365,6 +367,20 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public long removeSynergy(long synergyId) {
 		return synergyService.delete(synergyId);
+	}
+
+	@Override
+	public List<IndentProject> getSynergys(IndentProject indentProject) {
+		List<Synergy> synergies = synergyService
+				.findSynergyByUserId(indentProject.getUserId());
+		List<Long> ids = new ArrayList<>();
+		for (Synergy ip : synergies) {
+			ids.add(ip.getProjectId());
+		}
+		if (ids.size() > 0) {
+			return indentProjectMapper.findProjectByIds(ids);
+		}
+		return new ArrayList<>();
 	}
 
 }

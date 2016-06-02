@@ -17,6 +17,13 @@ public interface EmployeeMapper {
 	public Employee findEmployeeById(@Param("employeeId") final long employeeId);
 	
 	/**
+	 * 根据输入的员工姓名，搜索员工
+	 * @param employeeRealName 员工真实姓名
+	 * @return 包含该真实名称的人集合
+	 */
+	public List<Employee> findEmployeeByRealName(@Param("employeeRealName") final String employeeRealName);
+	
+	/**
 	 * 根据条件分页显示员工信息
 	 * @param view 条件
 	 * @return 员工列表

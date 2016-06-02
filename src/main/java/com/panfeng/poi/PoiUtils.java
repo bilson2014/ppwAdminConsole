@@ -40,5 +40,15 @@ public class PoiUtils {
 		cellStyle.setFont(xssfFont);
 		return cellStyle;
 	}
+	
+	public static XSSFCellStyle getCustomColorsCellStyle(XSSFWorkbook workbook,Color color) {
+		XSSFCellStyle cellStyle = workbook.createCellStyle();
+		cellStyle.setAlignment(HorizontalAlignment.CENTER);
+		cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		XSSFFont xssfFont = workbook.createFont();
+		xssfFont.setColor(new XSSFColor(color));
+		cellStyle.setFont(xssfFont);
+		return cellStyle;
+	}
 
 }

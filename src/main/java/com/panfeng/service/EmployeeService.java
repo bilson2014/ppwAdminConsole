@@ -29,4 +29,6 @@ public interface EmployeeService {
 	
 	// 检测手机的唯一性
 	public long checkPhoneNumber(final String phoneNumber);
+	
+	public List<Employee> searchEmployee(final String employeeRealName);
 }

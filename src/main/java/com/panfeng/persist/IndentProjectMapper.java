@@ -21,6 +21,8 @@ public interface IndentProjectMapper {
 	
 	public List<IndentProject> findProjectByUserName(IndentProject indentProject);
 	
+	public List<IndentProject> findProjectByIds(@Param("list") List<Long> list);
+	
 	public long cancelProject(IndentProject indentProject);
 
 	public List<IndentProject> listWithPagination(final IndentProjectView view);
@@ -53,4 +55,7 @@ public interface IndentProjectMapper {
 	 * 获取本年有效项目个数
 	 */
 	public long getProjectCount();
+	
+	public long updateState(@Param("id") final long id, @Param("state") int state);
+	
 }
