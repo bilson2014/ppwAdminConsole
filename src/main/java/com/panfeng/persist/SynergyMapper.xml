@@ -43,44 +43,44 @@
 	<select id="findSynergyById" resultType="Synergy">
 		<![CDATA[
 			SELECT 
-				sy.s_create_time AS createTime,
-				sy.s_id AS synergyId,
-				sy.s_project_id AS projectId,
-				sy.s_ratio AS ratio,
-				sy.s_update_time AS updateTime,
-				sy.s_user_id AS userId,
-				sy.s_user_name AS userName 
-			FROM SYNERGY sy WHERE  sy.s_id = ${synergyId}
+				sy.S_CREATE_TIME AS createTime,
+				sy.S_ID AS synergyId,
+				sy.S_PROJECT_ID AS projectId,
+				sy.S_RATIO AS ratio,
+				sy.S_UPDATE_TIME AS updateTime,
+				sy.S_USER_ID AS userId,
+				sy.S_USER_NAME AS userName 
+			FROM SYNERGY sy WHERE  sy.S_ID = ${synergyId}
 		]]>
 	</select>
 	
 	<select id="findSynergyByProjectId" resultType="Synergy">
 		<![CDATA[
 			SELECT 
-				sy.s_create_time AS createTime,
-				sy.s_id AS synergyId,
-				sy.s_project_id AS projectId,
-				sy.s_ratio AS ratio,
-				sy.s_update_time AS updateTime,
-				sy.s_user_id AS userId,
-				sy.s_user_name AS userName 
+				sy.S_CREATE_TIME AS createTime,
+				sy.S_ID AS synergyId,
+				sy.S_PROJECT_ID AS projectId,
+				sy.S_RATIO AS ratio,
+				sy.S_UPDATE_TIME AS updateTime,
+				sy.S_USER_ID AS userId,
+				sy.S_USER_NAME AS userName 
 			FROM SYNERGY sy WHERE
-			 sy.s_project_id = ${projectId} 
+			 sy.S_PROJECT_ID = ${projectId} 
 		]]>
 	</select>
 	
 	<select id="findSynergyByUserId" resultType="Synergy">
 		<![CDATA[
 			SELECT 
-				sy.s_create_time AS createTime,
-				sy.s_id AS synergyId,
-				sy.s_project_id AS projectId,
-				sy.s_ratio AS ratio,
-				sy.s_update_time AS updateTime,
-				sy.s_user_id AS userId,
-				sy.s_user_name AS userName 
+				sy.S_CREATE_TIME AS createTime,
+				sy.S_ID AS synergyId,
+				sy.S_PROJECT_ID AS projectId,
+				sy.S_RATIO AS ratio,
+				sy.S_UPDATE_TIME AS updateTime,
+				sy.S_USER_ID AS userId,
+				sy.S_USER_NAME AS userName 
 			FROM SYNERGY sy WHERE
-			 sy.s_project_id = ${userId} 
+			 sy.S_USER_ID = ${userId} 
 		]]>
 	</select>
 </mapper>

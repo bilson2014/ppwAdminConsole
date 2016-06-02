@@ -39,54 +39,54 @@
 			${state},
 			${customerId},
 			]]>
-			<if test="teamId != null and teamId != '' ">
-				${teamId},
-			</if>
-			<if test="teamId == null or teamId == '' ">
-				0,
-			</if>
-			
-			<if test="priceFirst != null and priceFirst != '' ">
-				${priceFirst},
-			</if>
-			<if test="priceFirst == null or priceFirst == '' ">
-				0,
-			</if>
-			
-			<if test="priceLast != null and priceLast != '' ">
-				${priceLast},
-			</if>
-			<if test="priceLast == null or priceLast == '' ">
-				0,
-			</if>
-			
-			<if test="priceFinish != null and priceFinish != '' ">
-				${priceFinish},
-			</if>
-			<if test="priceFinish == null or priceFinish == '' ">
-				0,
-			</if>
-			
-			<if test="referrerId != null and referrerId != '' ">
-				${referrerId},
-			</if>
-			<if test="referrerId == null or referrerId == '' ">
-				0,
-			</if>
-			
-			<if test="customerPayment != null and customerPayment != '' ">
-				${customerPayment},
-			</if>
-			<if test="customerPayment == null or customerPayment == '' ">
-				0,
-			</if>
-			
-			<if test="providerPayment != null and providerPayment != '' ">
-				${providerPayment}
-			</if>
-			<if test="providerPayment == null or providerPayment == '' ">
-				0
-			</if>
+		<if test="teamId != null and teamId != '' ">
+			${teamId},
+		</if>
+		<if test="teamId == null or teamId == '' ">
+			0,
+		</if>
+
+		<if test="priceFirst != null and priceFirst != '' ">
+			${priceFirst},
+		</if>
+		<if test="priceFirst == null or priceFirst == '' ">
+			0,
+		</if>
+
+		<if test="priceLast != null and priceLast != '' ">
+			${priceLast},
+		</if>
+		<if test="priceLast == null or priceLast == '' ">
+			0,
+		</if>
+
+		<if test="priceFinish != null and priceFinish != '' ">
+			${priceFinish},
+		</if>
+		<if test="priceFinish == null or priceFinish == '' ">
+			0,
+		</if>
+
+		<if test="referrerId != null and referrerId != '' ">
+			${referrerId},
+		</if>
+		<if test="referrerId == null or referrerId == '' ">
+			0,
+		</if>
+
+		<if test="customerPayment != null and customerPayment != '' ">
+			${customerPayment},
+		</if>
+		<if test="customerPayment == null or customerPayment == '' ">
+			0,
+		</if>
+
+		<if test="providerPayment != null and providerPayment != '' ">
+			${providerPayment}
+		</if>
+		<if test="providerPayment == null or providerPayment == '' ">
+			0
+		</if>
 			<![CDATA[
 		);
 		]]>
@@ -110,64 +110,73 @@
 				i.IP_TEAMID=${teamId},
 				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 				]]>
-				
-				<if test="priceFirst != null and priceFirst != ''">
-					,i.IP_PRICE_FIRST=${priceFirst}
-				</if>
-				<if test="priceLast != null and priceLast != ''">
-					,i.IP_PRICE_LAST=${priceLast}
-				</if>
-				
-				<if test="priceFinish != null and priceFinish != ''">
-					,i.IP_PRICE_FINISH=${priceFinish}
-				</if>
-				
-				<if test="referrerId != null and referrerId != ''">
-					,i.IP_REFERRER_ID = ${referrerId}
-				</if>
-				
-				<if test="referrerId == 0">
-					,i.IP_REFERRER_ID = ${referrerId}
-				</if>
-				
-				<if test="customerPayment != null and customerPayment != ''">
-					,i.IP_CUSTOMER_PAYMENT = ${customerPayment}
-				</if>
-				
-				<if test="customerPayment == 0">
-					,i.IP_CUSTOMER_PAYMENT = 0
-				</if>
-				
-				<if test="providerPayment != null and providerPayment != ''">
-					,i.IP_PROVIDER_PAYMENT = ${providerPayment}
-				</if>
-				
-				<if test="providerPayment == 0">
-					,i.IP_PROVIDER_PAYMENT = 0
-				</if>
+
+		<if test="priceFirst != null and priceFirst != ''">
+			,i.IP_PRICE_FIRST=${priceFirst}
+		</if>
+		<if test="priceLast != null and priceLast != ''">
+			,i.IP_PRICE_LAST=${priceLast}
+		</if>
+
+		<if test="priceFinish != null and priceFinish != ''">
+			,i.IP_PRICE_FINISH=${priceFinish}
+		</if>
+
+		<if test="referrerId != null and referrerId != ''">
+			,i.IP_REFERRER_ID = ${referrerId}
+		</if>
+
+		<if test="referrerId == 0">
+			,i.IP_REFERRER_ID = ${referrerId}
+		</if>
+
+		<if test="customerPayment != null and customerPayment != ''">
+			,i.IP_CUSTOMER_PAYMENT = ${customerPayment}
+		</if>
+
+		<if test="customerPayment == 0">
+			,i.IP_CUSTOMER_PAYMENT = 0
+		</if>
+
+		<if test="providerPayment != null and providerPayment != ''">
+			,i.IP_PROVIDER_PAYMENT = ${providerPayment}
+		</if>
+
+		<if test="providerPayment == 0">
+			,i.IP_PROVIDER_PAYMENT = 0
+		</if>
 			
 		<![CDATA[
 			WHERE i.IP_ID = ${id};
 		]]>
 	</update>
-	
+
 	<update id="cancelProject" parameterType="long">
 		<![CDATA[
 			UPDATE INDENT_PROJECT i
 				SET i.IP_STATE=${state},
 					i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
-			WHERE i.IP_ID = ${id};
+			WHERE i.IP_ID = ${id}
 		]]>
 	</update>
-	
+
+	<update id="updateState" parameterType="long">
+		<![CDATA[
+			UPDATE INDENT_PROJECT i
+				SET i.IP_STATE=${state},
+					i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
+			WHERE i.IP_ID = ${id}
+		]]>
+	</update>
+
 	<delete id="delete">
 		<![CDATA[
 			DELETE FROM INDENT_PROJECT
 				WHERE ID = ${id}
 		]]>
 	</delete>
-	
-	<delete id="deleteById" >
+
+	<delete id="deleteById">
 		<![CDATA[
 			DELETE FROM INDENT_PROJECT
 				WHERE ID = ${projectId}
@@ -197,7 +206,7 @@
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
-				s.staffName AS referrerName,
+				e.employeeRealName AS referrerName,
 				i.ip_referrer_id AS referrerId,
 				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
 				i.IP_CUSTOMER_PAYMENT AS customerPayment,
@@ -206,8 +215,8 @@
 			FROM INDENT_PROJECT i 
 			LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
-			LEFT JOIN STAFF s ON i.ip_referrer_id = s.staffId
-     		WHERE  i.IP_USER_ID=${userId} ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID DESC;
+			LEFT JOIN EMPLOYEE e ON i.ip_referrer_id = e.employeeId
+     		WHERE  i.IP_USER_ID=36 ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID DESC
 		]]>
 	</select>
 
@@ -234,7 +243,7 @@
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
-				s.staffName AS referrerName,
+				e.employeeRealName AS referrerName,
 				i.ip_referrer_id AS referrerId,
 				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
 				i.IP_CUSTOMER_PAYMENT AS customerPayment,
@@ -243,11 +252,11 @@
 			FROM INDENT_PROJECT i 
 			LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
-			LEFT JOIN STAFF s ON i.ip_referrer_id = s.staffId
+			LEFT JOIN EMPLOYEE e ON i.ip_referrer_id = e.employeeId
      	WHERE i.IP_ID =${id}
 		]]>
 	</select>
-	
+
 	<select id="findProjectByUserName" resultType="IndentProject">
 		<![CDATA[
 			SELECT 
@@ -271,7 +280,7 @@
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
-				s.STAFFNAME AS referrerName,
+				e.employeeRealName AS referrerName,
 				i.IP_REFERRER_ID AS referrerId,
 				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
 				i.IP_CUSTOMER_PAYMENT AS customerPayment,
@@ -280,7 +289,7 @@
 			FROM INDENT_PROJECT i 
 			LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
-			LEFT JOIN STAFF s ON i.ip_referrer_id = s.staffId
+			LEFT JOIN EMPLOYEE e ON i.ip_referrer_id = e.employeeId
      		WHERE 1=1	
 		]]>
 		<if test="customerId != null and customerId != ''  ">
@@ -289,11 +298,12 @@
 		<if test="teamId != null and teamId != '' ">
 			AND i.IP_TEAMID = ${teamId}
 		</if>
-		<if test="(customerId == null or customerId == '' ) and (teamId == null or teamId == '' ) ">
+		<if
+			test="(customerId == null or customerId == '' ) and (teamId == null or teamId == '' ) ">
 			AND 1=2
 		</if>
 	</select>
-	
+
 	<select id="listWithPagination" resultType="IndentProject">
 		<![CDATA[
 	SELECT  i.IP_ID AS id,
@@ -321,7 +331,7 @@
 					DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
 					i.IP_CUSTOMER_PAYMENT AS customerPayment,
 					i.IP_PROVIDER_PAYMENT AS providerPayment,
-					s.STAFFNAME AS referrerName
+					e.employeeRealName AS referrerName
 				
 			FROM INDENT_PROJECT i 
 			LEFT JOIN EMPLOYEE e
@@ -330,68 +340,68 @@
 				ON i.IP_CUSTOMERID=u.id 
 			LEFT JOIN TEAM t
 				ON i.IP_TEAMID=t.teamId
-			LEFT JOIN STAFF s 
-				ON i.IP_REFERRER_ID = s.staffId
+			LEFT JOIN EMPLOYEE e 
+				ON i.ip_referrer_id = e.employeeId
 			WHERE 1 = 1
 		]]>
-		
+
 		<if test="projectId != null and projectId != ''">
 			AND i.IP_ID = ${projectId}
 		</if>
-		
+
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = ${state}
 		</if>
-		
+
 		<if test="state == 0">
 			AND i.IP_STATE = ${state}
 		</if>
-		
+
 		<if test="userId != null and userId != ''">
 			AND i.IP_USER_ID = ${userId}
 		</if>
-		
+
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
-		
+
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
 		</if>
 	</select>
-	
+
 	<select id="maxSize" resultType="java.lang.Long">
 		<![CDATA[
 			SELECT COUNT(1)
 			FROM INDENT_PROJECT i 
 			WHERE 1=1
 		]]>
-		
+
 		<if test="projectId != null and projectId != ''">
 			AND i.IP_ID = ${projectId}
 		</if>
-		
+
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = #{state}
 		</if>
-		
+
 		<if test="state == 0">
 			AND i.IP_STATE = ${state}
 		</if>
-		
+
 		<if test="userId != null and userId != ''">
 			AND i.IP_USER_ID = ${userId}
 		</if>
-		
+
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
-		
+
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
 		</if>
 	</select>
-	
+
 	<select id="getAllUser" resultType="IndentProject">
 		<![CDATA[
 			SELECT u.ID AS customerId,
@@ -401,7 +411,7 @@
 			FROM USERS u
 		]]>
 	</select>
-	
+
 	<select id="getAllTeam" resultType="IndentProject">
 		<![CDATA[
 			SELECT t.TEAMID AS teamId,
@@ -414,7 +424,7 @@
 				AND t.flag = 1
 		]]>
 	</select>
-	
+
 	<select id="getAllVersionManager" resultType="IndentProject">
 		<![CDATA[
 			SELECT e.EMPLOYEEID AS userId,
@@ -425,8 +435,8 @@
 				AND e.EMPLOYEELOGINNAME <> 'admin'
 		]]>
 	</select>
-	
-	
+
+
 	<select id="getAllProject" resultType="IndentProject">
 		<![CDATA[
 			SELECT 
@@ -436,7 +446,7 @@
 			WHERE 1 = 1
 		]]>
 	</select>
-	
+
 	<select id="getProjectCount" resultType="long">
 		<![CDATA[
 			SELECT COUNT(*) FROM INDENT_PROJECT i 
@@ -445,5 +455,13 @@
 			DATE_FORMAT(i.IP_CREATE_TIME,'%Y')=YEAR(CURDATE());
 		]]>
 	</select>
-	
+
+	<select id="findProjectByIds" resultType="IndentProject">
+		SELECT IP_ID  FROM INDENT_PROJECT WHERE IP_ID IN
+		<foreach item="item" index="index" collection="list" open="("
+			separator="," close=")">
+			${item}
+		</foreach>
+	</select>
+
 </mapper>

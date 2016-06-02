@@ -2,6 +2,7 @@ package com.panfeng.resource.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
+import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.EmployeeView;
@@ -229,4 +232,14 @@ public class EmployeeController extends BaseController{
 			}
 		}
 	}
+	
+	
+	@RequestMapping(value = "search/employee/list",method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
+	public List<Employee> searchEmployee(@RequestBody BizBean bizBean){
+		if(bizBean != null && bizBean.getName() != null && ! "".equals(bizBean.getName())){
+			return service.searchEmployee(bizBean.getName());
+		}
+		return new ArrayList<>();
+	}
+	
 }

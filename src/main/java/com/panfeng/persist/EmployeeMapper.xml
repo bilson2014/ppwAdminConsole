@@ -223,4 +223,21 @@
 			WHERE PHONENUMBER = #{phoneNumber}
 		]]>
 	</select>
+	
+	<select id="findEmployeeByRealName" resultType="Employee">
+		<![CDATA[
+			SELECT e.EMPLOYEEID AS employeeId,
+				   e.EMPLOYEELOGINNAME AS employeeLoginName,
+				   e.EMPLOYEEREALNAME AS employeeRealName,
+				   e.EMPLOYEEPASSWORD AS employeePassword,
+				   e.EMPLOYEEDESCRIPTION AS employeeDescription,
+				   e.EMPLOYEEIMG AS employeeImg,
+				   e.EMAIL AS email,
+				   e.PHONENUMBER AS phoneNumber,
+				   DATE_FORMAT(e.UPDATEDATE,'%Y-%m-%d %T') AS updateDate
+			FROM EMPLOYEE e WHERE e.EMPLOYEEREALNAME LIKE CONCAT('%',#{employeeRealName},'%') 
+		]]>
+	</select>
+	
+	
 </mapper>

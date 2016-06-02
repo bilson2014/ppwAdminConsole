@@ -117,4 +117,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return ret;
 	}
 
+	@Override
+	public List<Employee> searchEmployee(String employeeRealName) {
+	 return	mapper.findEmployeeByRealName(employeeRealName);
+	}
 }
