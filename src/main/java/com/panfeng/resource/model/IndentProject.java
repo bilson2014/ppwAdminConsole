@@ -26,7 +26,7 @@ public class IndentProject extends BaseObject {
 	private String serial = "";
 	private String source = "";
 	// 0 正常 1为取消 2为已完成  3为暂停
-	private int state = 0;
+	private Integer state = null;
 	private String userType = "";
 	private long userId = -1; // 视频管家ID
 
@@ -208,7 +208,7 @@ public class IndentProject extends BaseObject {
 	// -----------------------------
 	// 冗余taskdate--------------------------------------
 
-	public int getState() {
+	public Integer getState() {
 		return state;
 	}
 
@@ -236,7 +236,7 @@ public class IndentProject extends BaseObject {
 		this.priceFinish = priceFinish;
 	}
 
-	public void setState(int state) {
+	public void setState(Integer state) {
 		this.state = state;
 	}
 
