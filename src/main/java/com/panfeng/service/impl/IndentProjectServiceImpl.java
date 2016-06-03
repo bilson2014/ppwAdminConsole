@@ -371,15 +371,15 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public List<IndentProject> getSynergys(IndentProject indentProject) {
-		List<Synergy> synergies = synergyService
-				.findSynergyByUserId(indentProject.getUserId());
-		List<Long> ids = new ArrayList<>();
-		for (Synergy ip : synergies) {
-			ids.add(ip.getProjectId());
-		}
-		if (ids.size() > 0) {
-			return indentProjectMapper.findProjectByIds(ids);
-		}
+			List<Synergy> synergies = synergyService
+					.findSynergyByUserId(indentProject.getUserId());
+			List<Long> ids = new ArrayList<>();
+			for (Synergy ip : synergies) {
+				ids.add(ip.getProjectId());
+			}
+			if (ids.size() > 0) {
+				return indentProjectMapper.findProjectByIds(ids);
+			}
 		return new ArrayList<>();
 	}
 

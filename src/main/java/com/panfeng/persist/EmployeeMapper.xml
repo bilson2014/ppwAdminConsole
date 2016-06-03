@@ -236,6 +236,7 @@
 				   e.PHONENUMBER AS phoneNumber,
 				   DATE_FORMAT(e.UPDATEDATE,'%Y-%m-%d %T') AS updateDate
 			FROM EMPLOYEE e WHERE e.EMPLOYEEREALNAME LIKE CONCAT('%',#{employeeRealName},'%') 
+			AND e.FLAG =  1
 		]]>
 	</select>
 	
