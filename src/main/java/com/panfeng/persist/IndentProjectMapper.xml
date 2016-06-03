@@ -114,7 +114,8 @@
 				i.IP_TEAMID=${teamId},
 				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 				]]>
-		<if test=" state != null and state != ''">
+
+		<if test="state != null ">
 			,i.IP_STATE=${state}
 		</if>
 		<if test="priceFirst != null and priceFirst != ''">

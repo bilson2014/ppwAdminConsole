@@ -23,6 +23,7 @@ import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.IndentProjectView;
 import com.panfeng.resource.view.PageFilter;
+import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.util.ValidateUtil;
 
@@ -31,6 +32,9 @@ import com.panfeng.util.ValidateUtil;
 public class ProjectController extends BaseController {
 	@Autowired
 	private IndentProjectService indentProjectService = null;
+
+	@Autowired
+	private IndentActivitiService activitiService = null;
 
 	@RequestMapping("/save")
 	public Boolean save(@RequestBody final IndentProject indentProject) {
@@ -50,27 +54,23 @@ public class ProjectController extends BaseController {
 	}
 
 	@RequestMapping("/all-project")
-	public List<IndentProject> getUserAllProject(
-			@RequestBody final IndentProject indentProject) {
+	public List<IndentProject> getUserAllProject(@RequestBody final IndentProject indentProject) {
 		return indentProjectService.findProjectList(indentProject);
 	}
 
 	@RequestMapping("/get-projectInfo")
-	public IndentProject getProjectInfo(
-			@RequestBody final IndentProject indentProject) {
+	public IndentProject getProjectInfo(@RequestBody final IndentProject indentProject) {
 		return indentProjectService.getProjectInfo(indentProject);
 	}
 
-	@RequestMapping("/get-redundantProject") 
-	public IndentProject getRedundantProject(
-			@RequestBody final IndentProject indentProject) {
+	@RequestMapping("/get-redundantProject")
+	public IndentProject getRedundantProject(@RequestBody final IndentProject indentProject) {
 		final IndentProject project = indentProjectService.getRedundantProject(indentProject);
 		return project;
 	}
 
 	@RequestMapping("/update-indentProject")
-	public boolean updateIndentProject(
-			@RequestBody final IndentProject indentProject) {
+	public boolean updateIndentProject(@RequestBody final IndentProject indentProject) {
 		return indentProjectService.updateIndentProject(indentProject);
 	}
 
@@ -86,17 +86,14 @@ public class ProjectController extends BaseController {
 	}
 
 	@RequestMapping("/get/report")
-	public void getReport(@RequestBody final IndentProject indentProject,
-			final HttpServletResponse response) {
+	public void getReport(@RequestBody final IndentProject indentProject, final HttpServletResponse response) {
 		try {
 			response.reset();
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("application/octet-stream");
 			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
-			String filename = URLEncoder.encode("管家报表" + dateString + ".xlsx",
-					"UTF-8");
-			response.setHeader("Content-Disposition", "attachment; filename=\""
-					+ filename + "\"\r\n");
+			String filename = URLEncoder.encode("管家报表" + dateString + ".xlsx", "UTF-8");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
 			OutputStream outputStream = response.getOutputStream();
 			indentProjectService.getReport(indentProject, outputStream);
 			if (outputStream != null) {
@@ -114,16 +111,16 @@ public class ProjectController extends BaseController {
 
 		return new ModelAndView("project-list");
 	}
+
 	// 跳转项目会议报表 -- 会议报表与项目列表功能一样，只是少了客户信息以及供应商信息
 	@RequestMapping("/project-meeting")
-	public ModelAndView meetingView(final HttpServletRequest request){
-		
+	public ModelAndView meetingView(final HttpServletRequest request) {
+
 		return new ModelAndView("project-meeting");
 	}
-	
+
 	@RequestMapping("/list")
-	public DataGrid<IndentProject> list(final IndentProjectView view,
-			final PageFilter pf) {
+	public DataGrid<IndentProject> list(final IndentProjectView view, final PageFilter pf) {
 
 		final long page = pf.getPage();
 		final long rows = pf.getRows();
@@ -131,8 +128,7 @@ public class ProjectController extends BaseController {
 		view.setLimit(rows);
 
 		DataGrid<IndentProject> dataGrid = new DataGrid<IndentProject>();
-		final List<IndentProject> list = indentProjectService
-				.listWithPagination(view);
+		final List<IndentProject> list = indentProjectService.listWithPagination(view);
 		dataGrid.setRows(list);
 
 		final long total = indentProjectService.maxSize(view);
@@ -150,6 +146,20 @@ public class ProjectController extends BaseController {
 	@RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
 	public long updateInfo(final IndentProject project) {
 
+		if (project.getState() == 3) { // 暂停动作同时调用工作流引擎暂停
+			activitiService.suspendProcess(project);
+		}
+
+		// 如果之前项目状态为暂停，那么应该启动引擎
+		if (project.getState() == 0) {
+			final IndentProject originalProject = indentProjectService.getProjectInfo(project);
+			if (originalProject != null) {
+				if (originalProject.getState() == 3) { // 之前项目状态为3，那么恢复流程
+					activitiService.resumeProcess(project);
+				}
+			}
+		}
+		
 		final long ret = indentProjectService.update(project);
 		return ret;
 	}
@@ -204,22 +214,18 @@ public class ProjectController extends BaseController {
 	}
 
 	@RequestMapping("/export")
-	public void export(final IndentProjectView view,
-			final HttpServletResponse response) {
+	public void export(final IndentProjectView view, final HttpServletResponse response) {
 		try {
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("application/octet-stream");
 			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
-			String filename = URLEncoder.encode("项目列表" + dateString + ".xlsx",
-					"UTF-8");
-			response.setHeader("Content-Disposition", "attachment; filename=\""
-					+ filename + "\"\r\n");
+			String filename = URLEncoder.encode("项目列表" + dateString + ".xlsx", "UTF-8");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
 			OutputStream outputStream = response.getOutputStream();
 			// 获取所有的项目
 			view.setBegin(0);
 			view.setLimit(999999999l);
-			List<IndentProject> list = indentProjectService
-					.listWithPagination(view);
+			List<IndentProject> list = indentProjectService.listWithPagination(view);
 			indentProjectService.getReport(list, outputStream);
 			if (outputStream != null) {
 				outputStream.flush();
@@ -238,17 +244,16 @@ public class ProjectController extends BaseController {
 		return project;
 	}
 
-	//------------------------------------------协同人处理部分------------------------------------------
-	
+	// ------------------------------------------协同人处理部分------------------------------------------
+
 	@RequestMapping("/remove/synergy")
 	public void removeSynergy(@RequestBody final BizBean bizBean) {
 		if (bizBean != null && bizBean.getName() != null)
-			indentProjectService
-			.removeSynergy(Long.parseLong(bizBean.getName()));
+			indentProjectService.removeSynergy(Long.parseLong(bizBean.getName()));
 	}
-	
+
 	@RequestMapping("/get/synergys")
 	public List<IndentProject> getSynergys(@RequestBody final IndentProject indentProject) {
-		 return indentProjectService.getSynergys(indentProject);
+		return indentProjectService.getSynergys(indentProject);
 	}
 }
