@@ -64,7 +64,8 @@ public class ProjectController extends BaseController {
 	@RequestMapping("/get-redundantProject") 
 	public IndentProject getRedundantProject(
 			@RequestBody final IndentProject indentProject) {
-		return indentProjectService.getRedundantProject(indentProject);
+		final IndentProject project = indentProjectService.getRedundantProject(indentProject);
+		return project;
 	}
 
 	@RequestMapping("/update-indentProject")
