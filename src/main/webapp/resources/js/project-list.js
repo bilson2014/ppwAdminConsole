@@ -37,6 +37,8 @@ $().ready(function(){
 								return '<span style=color:red; >取消</span>' ; 
 							} else if( value == 2){
 								return '<span style=color:black; >完成</span>' ;
+							} else if( value == 3){
+								return '<span style=color:black; >暂停</span>' ;
 							}
 						}
 					},{

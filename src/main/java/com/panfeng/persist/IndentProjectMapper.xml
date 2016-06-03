@@ -117,7 +117,7 @@
 				]]>
 
 
-		<if test="state != null and state != ''">
+		<if test="state != null ">
 			,i.IP_STATE=${state}
 		</if>
 		<if test="priceFirst != null and priceFirst != ''">
