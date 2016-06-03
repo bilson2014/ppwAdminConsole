@@ -244,8 +244,13 @@
 		<![CDATA[
 			SELECT e.EMPLOYEEID AS employeeId,
 				   e.EMPLOYEEREALNAME AS employeeRealName
-			FROM EMPLOYEE e 
+			FROM EMPLOYEE e
+			LEFT JOIN EMPLOYEE_ROLE inl
+			on inl.employeeId = e.employeeId
+			LEFT JOIN ROLE r
+			on r.roleId = inl.roleId
 			WHERE e.FLAG = 1
+			AND r.roleName like '视频管家%'
 		]]>
 	</select>
 	
@@ -254,7 +259,12 @@
 			SELECT e.EMPLOYEEID AS employeeId,
 				   e.EMPLOYEEREALNAME AS employeeRealName 
 			FROM EMPLOYEE e 
+			LEFT JOIN EMPLOYEE_ROLE inl
+			on inl.employeeId = e.employeeId
+			LEFT JOIN ROLE r
+			on r.roleId = inl.roleId
 			WHERE e.FLAG = 1
+			AND r.roleName like '视频管家%'
 		]]>
 	</select>
 	
