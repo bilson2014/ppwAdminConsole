@@ -16,8 +16,8 @@
 			IP_DESCRIPTION,
 			IP_SERIAL,
 			IP_SOURCE,
-			IP_STATE,
 			IP_CUSTOMERID,
+			IP_STATE,
 			IP_TEAMID,
 			IP_PRICE_FIRST,
 			IP_PRICE_LAST,
@@ -39,6 +39,12 @@
 			${state},
 			${customerId},
 			]]>
+		<if test="state != null and state != '' ">
+			${teamId},
+		</if>
+		<if test="state == null or state == '' ">
+			0,
+		</if>
 		<if test="teamId != null and teamId != '' ">
 			${teamId},
 		</if>
@@ -105,12 +111,15 @@
 				i.IP_USER_ID=${userId},
 				i.IP_SERIAL=#{serial},
 				i.IP_SOURCE=#{source},
-				i.IP_STATE=${state},
 				i.IP_CUSTOMERID=${customerId},
 				i.IP_TEAMID=${teamId},
 				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 				]]>
 
+
+		<if test="state != null and state != ''">
+			,i.IP_STATE=${state}
+		</if>
 		<if test="priceFirst != null and priceFirst != ''">
 			,i.IP_PRICE_FIRST=${priceFirst}
 		</if>
