@@ -44,4 +44,6 @@ public interface EmployeeService {
 	 * @return map
 	 */
 	public Map<Long,Employee> getEmployeeMap();
+	
+	public List<Employee> findEmployeeByRealNameByReffer(final String employeeRealName);
 }

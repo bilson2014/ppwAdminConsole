@@ -136,4 +136,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		final Map<Long,Employee> map = mapper.getEmployeeMap();
 		return map;
 	}
+
+	@Override
+	public List<Employee> findEmployeeByRealNameByReffer(final String employeeRealName) {
+		
+		final List<Employee> list = mapper.findEmployeeByRealNameByReffer(employeeRealName);
+		return list;
+	}
 }

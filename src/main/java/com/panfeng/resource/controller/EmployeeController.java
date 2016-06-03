@@ -252,4 +252,14 @@ public class EmployeeController extends BaseController{
 		final List<Employee> list = service.getEmployeeList();
 		return list;
 	}
+	
+	@RequestMapping("/getEmployeeListByReffer")
+	public List<Employee> getEmployeeByNameByReffer(@RequestBody BizBean bizBean){
+		if(bizBean != null){
+			
+			final List<Employee> list = service.findEmployeeByRealNameByReffer(bizBean.getName());
+			return list;
+		}
+		return null;
+	}
 }

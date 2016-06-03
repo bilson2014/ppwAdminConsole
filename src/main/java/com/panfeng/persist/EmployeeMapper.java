@@ -98,4 +98,5 @@ public interface EmployeeMapper {
 	@MapKey(value = "employeeId")
 	public Map<Long, Employee> getEmployeeMap();
 	
+	public List<Employee> findEmployeeByRealNameByReffer(@Param("employeeRealName") final String employeeRealName);
 }

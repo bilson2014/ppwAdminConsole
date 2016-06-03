@@ -235,7 +235,30 @@
 				   e.EMAIL AS email,
 				   e.PHONENUMBER AS phoneNumber,
 				   DATE_FORMAT(e.UPDATEDATE,'%Y-%m-%d %T') AS updateDate
-			FROM EMPLOYEE e WHERE e.EMPLOYEEREALNAME LIKE CONCAT('%',#{employeeRealName},'%') 
+			FROM EMPLOYEE e 
+			LEFT JOIN EMPLOYEE_ROLE inl
+			on inl.employeeId = e.employeeId
+			LEFT JOIN ROLE r
+			on r.roleId = inl.roleId
+			WHERE e.EMPLOYEEREALNAME LIKE CONCAT('%',#{employeeRealName},'%') 
+			AND e.FLAG =  1
+			AND r.roleName like '视频管家%'
+		]]>
+	</select>
+	
+	<select id="findEmployeeByRealNameByReffer" resultType="Employee">
+		<![CDATA[
+			SELECT e.EMPLOYEEID AS employeeId,
+				   e.EMPLOYEELOGINNAME AS employeeLoginName,
+				   e.EMPLOYEEREALNAME AS employeeRealName,
+				   e.EMPLOYEEPASSWORD AS employeePassword,
+				   e.EMPLOYEEDESCRIPTION AS employeeDescription,
+				   e.EMPLOYEEIMG AS employeeImg,
+				   e.EMAIL AS email,
+				   e.PHONENUMBER AS phoneNumber,
+				   DATE_FORMAT(e.UPDATEDATE,'%Y-%m-%d %T') AS updateDate
+			FROM EMPLOYEE e 
+			WHERE e.EMPLOYEEREALNAME LIKE CONCAT('%',#{employeeRealName},'%') 
 			AND e.FLAG =  1
 		]]>
 	</select>
@@ -254,12 +277,7 @@
 			SELECT e.EMPLOYEEID AS employeeId,
 				   e.EMPLOYEEREALNAME AS employeeRealName 
 			FROM EMPLOYEE e 
-			LEFT JOIN EMPLOYEE_ROLE inl
-			on inl.employeeId = e.employeeId
-			LEFT JOIN ROLE r
-			on r.roleId = inl.roleId
 			WHERE e.FLAG = 1
-			AND r.roleName like '视频管家%'
 		]]>
 	</select>
 	
