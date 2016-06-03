@@ -30,6 +30,7 @@
 							<option value="" selected>--  请选择 --</option>
 							<option value="0" >正常</option>
             				<option value="1" >取消</option>
+            				<option value="3" >暂停</option>
             				<option value="2" >完成</option>
 						</select>
 					</td>
