@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -27,12 +24,6 @@ public class ActivitiTest2 {
 	private RuntimeService runtimeService;
 	@Autowired
 	private TaskService taskService;
-	@Autowired
-	private IdentityService identityService;
-	@Autowired
-	private HistoryService historyService;
-	@Autowired
-	private RepositoryService repositoryService;
 	String processDefinitionKey = "test2";// 流程定义的key,也就是bpmn中存在的ID
 
 	@Test

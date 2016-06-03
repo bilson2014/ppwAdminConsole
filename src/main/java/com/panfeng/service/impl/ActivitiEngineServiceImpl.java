@@ -3,7 +3,6 @@ package com.panfeng.service.impl;
 import java.util.List;
 
 import org.activiti.engine.HistoryService;
-import org.activiti.engine.IdentityService;
 import org.activiti.engine.ManagementService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -35,9 +34,6 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 
 	@Autowired
 	private TaskService taskService;
-
-	@Autowired
-	private IdentityService identityService;
 
 	@Autowired
 	private HistoryService historyService;

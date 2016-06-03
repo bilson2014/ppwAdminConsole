@@ -14,18 +14,12 @@ import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.service.IndentActivitiService;
-import com.panfeng.service.IndentCommentService;
-import com.panfeng.service.IndentResourceService;
 
 @RestController
 public class FlowController extends BaseController {
 
 	@Autowired
 	private IndentActivitiService indentActivitiService;
-	@Autowired
-	private IndentResourceService indentResourceService;
-	@Autowired
-	private IndentCommentService indentCommentService;
 
 	@RequestMapping("/add-view")
 	public ModelAndView view(final ModelMap model) {

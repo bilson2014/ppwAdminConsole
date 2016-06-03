@@ -1,6 +1,7 @@
 package com.panfeng.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.view.EmployeeView;
@@ -31,4 +32,16 @@ public interface EmployeeService {
 	public long checkPhoneNumber(final String phoneNumber);
 	
 	public List<Employee> searchEmployee(final String employeeRealName);
+
+	/**
+	 * 获取内部员工（除admin、测试账号外）
+	 * @return list
+	 */
+	public List<Employee> getEmployeeList();
+	
+	/**
+	 * 获取内部员工（除admin、测试账号外）
+	 * @return map
+	 */
+	public Map<Long,Employee> getEmployeeMap();
 }

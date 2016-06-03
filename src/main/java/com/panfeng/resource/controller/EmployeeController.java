@@ -242,4 +242,14 @@ public class EmployeeController extends BaseController{
 		return new ArrayList<>();
 	}
 	
+	/**
+	 * 获取内部员工（除admin、测试账号外）
+	 * @return
+	 */
+	@RequestMapping("/getEmployeeList")
+	public List<Employee> getEmployeeList(){
+		
+		final List<Employee> list = service.getEmployeeList();
+		return list;
+	}
 }

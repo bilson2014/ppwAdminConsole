@@ -2,6 +2,7 @@ package com.panfeng.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -120,5 +121,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public List<Employee> searchEmployee(String employeeRealName) {
 	 return	mapper.findEmployeeByRealName(employeeRealName);
+	}
+
+	@Override
+	public List<Employee> getEmployeeList() {
+		
+		final List<Employee> list = mapper.getEmployeeList();
+		return list;
+	}
+
+	@Override
+	public Map<Long, Employee> getEmployeeMap() {
+		
+		final Map<Long,Employee> map = mapper.getEmployeeMap();
+		return map;
 	}
 }

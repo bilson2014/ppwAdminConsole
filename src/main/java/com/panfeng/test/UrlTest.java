@@ -89,6 +89,7 @@ public class UrlTest {
 		String url="http://qr.liantu.com/api.php?text=http://www.apaipian.com/phone/salesman/order/7d7bdc6e12ba4b51acaffc1951722e67";
 		Object[] objarray=HttpUtil.httpGetFile(url, null);
 		File file=(File) objarray[1];
+		System.err.println(file);
 	}
 	
 }
