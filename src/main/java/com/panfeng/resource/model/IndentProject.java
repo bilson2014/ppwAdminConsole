@@ -23,6 +23,9 @@ public class IndentProject extends BaseObject {
 	private String teamContact = "";
 	private String teamPhone = "";
 	private String description = "";
+	
+
+
 	private String serial = "";
 	private String source = "";
 	// 0 正常 1为取消 2为已完成  3为暂停
@@ -83,6 +86,13 @@ public class IndentProject extends BaseObject {
 
 	public Long getReferrerId() {
 		return referrerId;
+	}
+	public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
 	}
 
 	public void setReferrerId(Long referrerId) {
@@ -208,9 +218,7 @@ public class IndentProject extends BaseObject {
 	// -----------------------------
 	// 冗余taskdate--------------------------------------
 
-	public Integer getState() {
-		return state;
-	}
+
 
 	public Double getPriceFirst() {
 		return priceFirst;
@@ -236,9 +244,7 @@ public class IndentProject extends BaseObject {
 		this.priceFinish = priceFinish;
 	}
 
-	public void setState(Integer state) {
-		this.state = state;
-	}
+	
 
 	private Map<String, String> time = null;
 	private ActivitiTask task = null;

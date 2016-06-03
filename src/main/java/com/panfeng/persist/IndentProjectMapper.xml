@@ -36,11 +36,10 @@
 			#{description},
 			#{serial},
 			#{source},
-			${state},
 			${customerId},
 			]]>
 		<if test="state != null and state != '' ">
-			${teamId},
+			${state},
 		</if>
 		<if test="state == null or state == '' ">
 			0,
@@ -115,7 +114,6 @@
 				i.IP_TEAMID=${teamId},
 				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 				]]>
-
 
 		<if test="state != null ">
 			,i.IP_STATE=${state}
