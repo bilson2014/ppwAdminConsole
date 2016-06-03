@@ -1,7 +1,9 @@
 package com.panfeng.persist;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 
 import com.panfeng.resource.model.Employee;
@@ -82,5 +84,18 @@ public interface EmployeeMapper {
 	 * @param phoneNumber 手机号码
 	 */
 	public long checkPhoneNumber(@Param("phoneNumber") final String phoneNumber);
+
+	/**
+	 * 获取内部员工（除admin、测试账号外）
+	 * @return list
+	 */
+	public List<Employee> getEmployeeList();
+
+	/**
+	 * 获取内部员工（除admin、测试账号外）
+	 * @return map
+	 */
+	@MapKey(value = "employeeId")
+	public Map<Long, Employee> getEmployeeMap();
 	
 }

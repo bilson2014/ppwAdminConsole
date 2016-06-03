@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,14 @@ import com.panfeng.poi.GenerateExcel;
 import com.panfeng.poi.ProjectPoiAdapter;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.BizBean;
+import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.FlowDate;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.Synergy;
 import com.panfeng.resource.model.UserViewModel;
 import com.panfeng.resource.view.IndentProjectView;
+import com.panfeng.service.EmployeeService;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentProjectService;
@@ -37,21 +40,34 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Autowired
 	IndentProjectMapper indentProjectMapper;
+	
 	@Autowired
 	IndentActivitiService indentActivitiService;
+	
 	@Autowired
 	IndentFlowMapper indentFlowMapper;
+	
 	@Autowired
 	FlowDateMapper flowDateMapper;
+	
 	@Autowired
 	IndentCommentService indentCommentService;
+	
 	@Autowired
 	UserTempService userTempService;
-	// add synergy by laowang bengin 2016-5-25 12:00
+	
+	// add synergy by laowang ,2016-5-25 12:00 bengin
+	// -> 
 	@Autowired
 	SynergyService synergyService;
-
-	// add synergy by laowang end 2016-5-25 12:00
+	// add synergy by laowang ,2016-5-25 12:00 end
+	
+	// add by Jack ,2016-06-03 17:18 bengin
+	// -> register EmployeeService to load employee informartion
+	@Autowired
+	final EmployeeService employeeService = null;
+	// add by Jack ,2016-06-03 17:18 end
+	
 	@Override
 	public boolean save(IndentProject indentProject) {
 		indentProject.setSerial(getProjectSerialID());
@@ -298,6 +314,18 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	public List<IndentProject> listWithPagination(final IndentProjectView view) {
 
 		List<IndentProject> list = indentProjectMapper.listWithPagination(view);
+		
+		Map<Long,Employee> eMap = employeeService.getEmployeeMap();
+		for (final IndentProject pro : list) {
+			final Employee user = eMap.get(pro.getUserId());
+			final Employee referer = eMap.get(pro.getReferrerId());
+			if(user != null)
+				pro.setEmployeeRealName(eMap.get(pro.getUserId()).getEmployeeRealName());
+			
+			if(referer != null)
+				pro.setReferrerName(eMap.get(pro.getReferrerId()).getEmployeeRealName());
+			
+		}
 		return list;
 	}
 
@@ -332,8 +360,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	public List<IndentProject> getAllVersionManager() {
 
-		final List<IndentProject> list = indentProjectMapper
-				.getAllVersionManager();
+		final List<IndentProject> list = indentProjectMapper.getAllVersionManager();
 		return list;
 	}
 

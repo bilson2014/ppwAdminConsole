@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.panfeng.persist.TeamMapper;
 import com.panfeng.resource.model.Team;
 import com.panfeng.service.TeamService;
 import com.panfeng.util.DataUtil;
@@ -19,9 +18,6 @@ public class TeamTest {
 	
 	@Autowired
 	private TeamService service = null;
-	
-	@Autowired
-	private TeamMapper mapper = null;
 	
 	@Test
 	public void testSave(){

@@ -300,9 +300,9 @@ function openDialog(id,data){
 			});
 			
 			$('#referrerId').combobox({
-				url : getContextPath() + '/portal/staff/static/list',
-				valueField : 'staffId',
-				textField : 'staffName'
+				url : getContextPath() + '/portal/getEmployeeList',
+				valueField : 'employeeId',
+				textField : 'employeeRealName'
 			});
 			
 			$('#source').combobox({

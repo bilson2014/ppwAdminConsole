@@ -32,6 +32,7 @@ public class PayServiceImpl implements PayService {
 	 */
 	// UN_WEB -->银联
 	// ALI_WEB -->支付
+	@SuppressWarnings("unused")
 	private void ewq(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		ServletOutputStream out = response.getOutputStream();

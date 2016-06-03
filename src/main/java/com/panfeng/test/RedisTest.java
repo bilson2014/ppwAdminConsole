@@ -6,21 +6,17 @@ import java.util.Map;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-
 import com.google.gson.Gson;
-import com.panfeng.persist.RightMapper;
 import com.panfeng.resource.model.Right;
 import com.panfeng.util.ValidateUtil;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 public class RedisTest extends BaseTest{
 
 	@Autowired
 	private final JedisPool pool = null;
-	
-	@Autowired
-	private final RightMapper mapper = null;
 	
 	@Test
 	public void test(){

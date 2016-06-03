@@ -239,5 +239,22 @@
 		]]>
 	</select>
 	
+	<select id="getEmployeeList" resultType="Employee">
+		<![CDATA[
+			SELECT e.EMPLOYEEID AS employeeId,
+				   e.EMPLOYEEREALNAME AS employeeRealName
+			FROM EMPLOYEE e 
+			WHERE e.FLAG = 1
+		]]>
+	</select>
+	
+	<select id="getEmployeeMap" resultType="Employee">
+		<![CDATA[
+			SELECT e.EMPLOYEEID AS employeeId,
+				   e.EMPLOYEEREALNAME AS employeeRealName 
+			FROM EMPLOYEE e 
+			WHERE e.FLAG = 1
+		]]>
+	</select>
 	
 </mapper>
