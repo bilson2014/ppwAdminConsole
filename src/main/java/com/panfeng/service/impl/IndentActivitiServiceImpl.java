@@ -127,10 +127,6 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				getIndentCurrentFlowId(indentProject));
 		if (isFinish) {
 			// 更新项目状态
-//			indentProject2.setState(IndentProject.PROJECT_FINISH);
-//			indentProjectMapper.update(indentProject2);
-//			
-//			indentCommentService.createSystemMsg("已经完成"+indentProject.getProjectName()+"项目", indentProject);
 			indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_FINISH);
 		}
 		return res;
@@ -179,14 +175,18 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		boolean res = activitiEngineService.suspendProcess(
 				processDefinitionKey, String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
-		if (res) {
-			indentCommentService.createSystemMsg(
-					" 暂停了 " + indentProject.getProjectName() + "项目",
-					indentProject);
-			//add suspend state by laowang 2016.5.31 16:51 begin 
-				indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_SUSPEND);
-			//add suspend state by laowang 2016.5.31 16:51 end
-		}
+//		if (res) {
+//			indentCommentService.createSystemMsg(
+//					" 暂停了 " + indentProject.getProjectName() + "项目",
+//					indentProject);
+//			//add suspend state by laowang 2016.5.31 16:51 begin 
+//				indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_SUSPEND);
+//			//add suspend state by laowang 2016.5.31 16:51 end
+//		}
+		indentCommentService.createSystemMsg(
+				" 暂停了 " + indentProject.getProjectName() + "项目",
+				indentProject);
+			indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_SUSPEND);
 		return res;
 	}
 
@@ -195,14 +195,18 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		boolean res = activitiEngineService.resumeProcess(processDefinitionKey,
 				String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
-		if (res) {
-			indentCommentService.createSystemMsg(
-					" 恢复了 " + indentProject.getProjectName() + "项目",
-					indentProject);
-		//add resume state by laowang 2016.5.31 16:51 begin 
-			indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_NORMAL);
-		//add resume state by laowang 2016.5.31 16:51 end
-		}
+//		if (res) {
+//			indentCommentService.createSystemMsg(
+//					" 恢复了 " + indentProject.getProjectName() + "项目",
+//					indentProject);
+//		//add resume state by laowang 2016.5.31 16:51 begin 
+//			indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_NORMAL);
+//		//add resume state by laowang 2016.5.31 16:51 end
+//		}
+		indentCommentService.createSystemMsg(
+				" 恢复了 " + indentProject.getProjectName() + "项目",
+				indentProject);
+		indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_NORMAL);
 		return res;
 	}
 
@@ -225,19 +229,32 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				String.valueOf(indentProject.getId()), activityId,
 				getIndentCurrentFlowId(indentProject));
 		
-		if (res) {
-			String taskName="";
-			List<ActivitiTask> list=getNodes(indentProject);
-			for (ActivitiTask activitiTask : list) {
-				if(activityId.equals(activitiTask.getTaskDefinitionKey())){
-					taskName=activitiTask.getName();
-					break;
-				}
+//		if (res) {
+//			String taskName="";
+//			List<ActivitiTask> list=getNodes(indentProject);
+//			for (ActivitiTask activitiTask : list) {
+//				if(activityId.equals(activitiTask.getTaskDefinitionKey())){
+//					taskName=activitiTask.getName();
+//					break;
+//				}
+//			}
+//			indentCommentService.createSystemMsg(
+//					" 将任务节点跳转到 -->" + taskName+ "阶段",
+//					indentProject);
+//		}
+		
+		String taskName="";
+		List<ActivitiTask> list=getNodes(indentProject);
+		for (ActivitiTask activitiTask : list) {
+			if(activityId.equals(activitiTask.getTaskDefinitionKey())){
+				taskName=activitiTask.getName();
+				break;
 			}
-			indentCommentService.createSystemMsg(
-					" 将任务节点跳转到 -->" + taskName+ "阶段",
-					indentProject);
 		}
+		indentCommentService.createSystemMsg(
+				" 将任务节点跳转到 -->" + taskName+ "阶段",
+				indentProject);
+		
 		return res;
 	}
 
