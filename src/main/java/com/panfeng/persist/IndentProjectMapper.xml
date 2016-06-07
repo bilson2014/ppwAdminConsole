@@ -154,7 +154,7 @@
 		</if>
 			
 		<![CDATA[
-			WHERE i.IP_ID = ${id};
+			WHERE i.IP_ID = ${id}
 		]]>
 	</update>
 
