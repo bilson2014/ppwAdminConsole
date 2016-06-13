@@ -1,5 +1,7 @@
 package com.panfeng.service.impl;
 
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,27 +23,36 @@ public class SynergyServiceImpl implements SynergyService {
 
 	@Override
 	public long save(Synergy synergy) {
+		synergy = dividePrice(synergy);
 		return synergyMapper.save(synergy);
 	}
 
 	@Override
 	public long update(Synergy synergy) {
+		synergy = dividePrice(synergy);
 		return synergyMapper.update(synergy);
 	}
 
 	@Override
 	public Synergy findSynergyById(long synergyId) {
-		return synergyMapper.findSynergyById(synergyId);
+		Synergy synergy = synergyMapper.findSynergyById(synergyId);
+		synergy = multiplyPrice(synergy);
+		return synergy;
 	}
 
 	@Override
 	public List<Synergy> findSynergyByProjectId(long synergyId) {
-		return synergyMapper.findSynergyByProjectId(synergyId);
+		List<Synergy> synergies = synergyMapper
+				.findSynergyByProjectId(synergyId);
+		synergies = setIndentProjectsPrice(synergies);
+		return synergies;
 	}
 
 	@Override
 	public List<Synergy> findSynergyByUserId(long userId) {
-		return synergyMapper.findSynergyByUserId(userId);
+		List<Synergy> synergies = synergyMapper.findSynergyByUserId(userId);
+		synergies = setIndentProjectsPrice(synergies);
+		return synergies;
 	}
 
 	@Override
@@ -65,4 +76,27 @@ public class SynergyServiceImpl implements SynergyService {
 		return map;
 	}
 
+	private static Synergy multiplyPrice(final Synergy synergy) {
+		double ratio = synergy.getRatio();
+		BigDecimal ratioBigDecimal = BigDecimal.valueOf(ratio);
+		ratioBigDecimal = ratioBigDecimal.multiply(BigDecimal.valueOf(100));
+		synergy.setRatio(ratioBigDecimal.doubleValue());
+		return synergy;
+	}
+
+	private static Synergy dividePrice(final Synergy synergy) {
+		double ratio = synergy.getRatio();
+		BigDecimal ratioBigDecimal = BigDecimal.valueOf(ratio);
+		ratioBigDecimal = ratioBigDecimal.divide(BigDecimal.valueOf(100));
+		synergy.setRatio(ratioBigDecimal.doubleValue());
+		return synergy;
+	}
+
+	private static List<Synergy> setIndentProjectsPrice(
+			final List<Synergy> synergies) {
+		for (Synergy synergie : synergies) {
+			synergie = multiplyPrice(synergie);
+		}
+		return synergies;
+	}
 }

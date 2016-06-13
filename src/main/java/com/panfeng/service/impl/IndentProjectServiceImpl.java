@@ -40,37 +40,39 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Autowired
 	IndentProjectMapper indentProjectMapper;
-	
+
 	@Autowired
 	IndentActivitiService indentActivitiService;
-	
+
 	@Autowired
 	IndentFlowMapper indentFlowMapper;
-	
+
 	@Autowired
 	FlowDateMapper flowDateMapper;
-	
+
 	@Autowired
 	IndentCommentService indentCommentService;
-	
+
 	@Autowired
 	UserTempService userTempService;
-	
+
 	// add synergy by laowang ,2016-5-25 12:00 bengin
-	// -> 
+	// ->
 	@Autowired
 	SynergyService synergyService;
 	// add synergy by laowang ,2016-5-25 12:00 end
-	
+
 	// add by Jack ,2016-06-03 17:18 bengin
 	// -> register EmployeeService to load employee informartion
 	@Autowired
 	final EmployeeService employeeService = null;
+
 	// add by Jack ,2016-06-03 17:18 end
-	
+
 	@Override
 	public boolean save(IndentProject indentProject) {
 		indentProject.setSerial(getProjectSerialID());
+		
 		indentProjectMapper.save(indentProject);
 		// add synergy by laowang begin 2016-5-25 12:01
 		List<Synergy> list = indentProject.getSynergys();
@@ -131,11 +133,13 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		indentProject.setSynergys(synergyService
 				.findSynergyByProjectId(indentProject.getId()));
 		// add Synergys by laowang end 2016-5-25 16:00
+		
 		return indentProject;
 	}
 
 	@Override
 	public boolean updateIndentProject(IndentProject indentProject) {
+		// 更新供应商和用户实际支付金额
 		// update project
 		long l = indentProjectMapper.update(indentProject);
 		if (l > 0) {
@@ -285,23 +289,20 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	public List<IndentProject> listWithPagination(final IndentProjectView view) {
 
 		List<IndentProject> list = indentProjectMapper.listWithPagination(view);
-		
-		// 关联视频管家及推荐人
-		Map<Long,Employee> eMap = employeeService.getEmployeeMap();
-		// 协同人Map
-		final Map<Long,List<Synergy>> map = synergyService.findSynergyMap();
+
+		Map<Long, Employee> eMap = employeeService.getEmployeeMap();
 		for (final IndentProject pro : list) {
 			final Employee user = eMap.get(pro.getUserId());
 			final Employee referer = eMap.get(pro.getReferrerId());
-			if(user != null)
-				pro.setEmployeeRealName(eMap.get(pro.getUserId()).getEmployeeRealName());
-			
-			if(referer != null)
-				pro.setReferrerName(eMap.get(pro.getReferrerId()).getEmployeeRealName());
-			
-			pro.setSynergys(map.get(pro.getId()));
+			if (user != null)
+				pro.setEmployeeRealName(eMap.get(pro.getUserId())
+						.getEmployeeRealName());
+
+			if (referer != null)
+				pro.setReferrerName(eMap.get(pro.getReferrerId())
+						.getEmployeeRealName());
+
 		}
-		
 		return list;
 	}
 
@@ -336,13 +337,15 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	public List<IndentProject> getAllVersionManager() {
 
-		final List<IndentProject> list = indentProjectMapper.getAllVersionManager();
+		final List<IndentProject> list = indentProjectMapper
+				.getAllVersionManager();
 		return list;
 	}
 
 	public List<IndentProject> getAllProject() {
 
-		final List<IndentProject> list = indentProjectMapper.getAllProject();
+		List<IndentProject> list = indentProjectMapper.getAllProject();
+		
 		return list;
 	}
 
@@ -374,16 +377,16 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public List<IndentProject> getSynergys(IndentProject indentProject) {
-			List<Synergy> synergies = synergyService
-					.findSynergyByUserId(indentProject.getUserId());
-			List<Long> ids = new ArrayList<>();
-			for (Synergy ip : synergies) {
-				ids.add(ip.getProjectId());
-			}
-			if (ids.size() > 0) {
-				return indentProjectMapper.findProjectByIds(ids);
-			}
+		List<Synergy> synergies = synergyService
+				.findSynergyByUserId(indentProject.getUserId());
+		List<Long> ids = new ArrayList<>();
+		for (Synergy ip : synergies) {
+			ids.add(ip.getProjectId());
+		}
+		if (ids.size() > 0) {
+			return indentProjectMapper.findProjectByIds(ids);
+		}
 		return new ArrayList<>();
 	}
-
+	
 }
