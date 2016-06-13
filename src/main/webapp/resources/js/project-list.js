@@ -95,7 +95,19 @@ $().ready(function(){
 						title : '项目预算金额',
 						align : 'center',
 						formatter : function(value , row , index){
-							return '<span style=color:orange; >'+ row.priceFirst + ' 元 ~ ' + row.priceLast +' 元</span>' ;
+							var pBegin = 0;
+							var pEnd = 0;
+							if(row.priceFirst != null && row.priceFirst != '' && row.priceFirst != undefined){
+								pBegin = row.priceFirst;
+							}
+							
+							if(row.priceLast != null && row.priceLast != '' && row.priceLast != undefined){
+								pEnd = row.priceLast;
+							}
+							if(pBegin == 0 && pEnd == 0){
+								return '<span style=color:orange; >0 元</span>' ;
+							}
+							return '<span style=color:orange; >'+ pBegin + ' 元 ~ ' + pEnd +' 元</span>' ;
 						}
 					},{
 						field : 'priceFinish',
@@ -109,6 +121,17 @@ $().ready(function(){
 						field : 'providerPayment',
 						title : '供应商实付金额',
 						align : 'center'
+					},{
+						field : 'synergys',
+						title : '协同人',
+						align : 'center',
+						formatter : function(value , row , index){
+							console.info(value);
+							if(value){
+								
+							}
+							return '<span style=color:orange; >'+ pBegin + ' 元 ~ ' + pEnd +' 元</span>' ;
+						}
 					},{
 						field : 'customerId' ,
 						title : '客户ID' ,

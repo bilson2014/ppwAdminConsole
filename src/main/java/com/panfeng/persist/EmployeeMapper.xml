@@ -56,7 +56,6 @@
 			SELECT e.EMPLOYEEID AS employeeId,
 				   e.EMPLOYEELOGINNAME AS employeeLoginName,
 				   e.EMPLOYEEREALNAME AS employeeRealName,
-				   e.EMPLOYEEPASSWORD AS employeePassword,
 				   e.EMPLOYEEDESCRIPTION AS employeeDescription,
 				   e.EMPLOYEEIMG AS employeeImg,
 				   e.EMAIL AS email,
@@ -70,7 +69,8 @@
 				   		ON e.EMPLOYEEID = er.EMPLOYEEID
 				   LEFT JOIN ROLE r
 				   		ON er.ROLEID = r.ROLEID
-			WHERE 1 = 1
+			WHERE 	1 = 1
+				AND e.FLAG = 1
 		]]>
 		<if test="employeeRealName != null and employeeRealName != ''">
 			AND e.EMPLOYEEREALNAME LIKE CONCAT(CONCAT('%',#{employeeRealName}),'%')

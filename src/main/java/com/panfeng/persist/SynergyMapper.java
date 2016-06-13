@@ -18,5 +18,11 @@ public interface SynergyMapper {
 	List<Synergy> findSynergyByProjectId(@Param("projectId") long projectId);
 	
 	List<Synergy> findSynergyByUserId(@Param("userId") long userId);
+
+	/**
+	 * 获取协同人Map
+	 * @return map
+	 */
+	public List<Synergy> findSynergyList();
 	
 }

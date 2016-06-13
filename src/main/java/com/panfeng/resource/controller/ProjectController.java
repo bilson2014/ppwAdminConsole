@@ -126,7 +126,7 @@ public class ProjectController extends BaseController {
 		final long rows = pf.getRows();
 		view.setBegin((page - 1) * rows);
 		view.setLimit(rows);
-
+		
 		DataGrid<IndentProject> dataGrid = new DataGrid<IndentProject>();
 		final List<IndentProject> list = indentProjectService.listWithPagination(view);
 		dataGrid.setRows(list);

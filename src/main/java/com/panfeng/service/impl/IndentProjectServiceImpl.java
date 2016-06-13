@@ -249,35 +249,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	}
 
 	public void getReport(List<IndentProject> list, OutputStream outputStream) {
-		// ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
-		// GenerateExcel ge = new GenerateExcel();
-		// for (IndentProject indentProject2 : list) {
-		// List<IndentFlow> listDates = indentFlowMapper
-		// .findFlowDateByIndentId(indentProject2);
-		// IndentFlow.indentProjectFillDate(indentProject2, listDates);
-		// ActivitiTask at = indentActivitiService
-		// .getCurrentTask(indentProject2);
-		// if (at.getId().equals("")) {
-		// List<HistoricTaskInstance> listHistoricTaskInstances =
-		// indentActivitiService
-		// .getHistoryProcessTask_O(indentProject2);
-		// HistoricTaskInstance historicTaskInstance = listHistoricTaskInstances
-		// .get(listHistoricTaskInstances.size() - 1);
-		// at.setId("");
-		// at.setName("已完成");
-		// SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-		// "yyyy-MM-dd");
-		// at.setCreateTime(simpleDateFormat.format(historicTaskInstance
-		// .getEndTime()));
-		// }
-		// indentProject2.setTask(at);
-		// // 填充管家
-		// UserViewModel userViewModel = userTempService.getInfo(
-		// indentProject2.getUserType(), indentProject2.getUserId());
-		// indentProject2.setUserViewModel(userViewModel);
-		// projectPoiAdapter.getData().add(indentProject2);
-		// }
-		// ge.generate(projectPoiAdapter, outputStream);
 
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
@@ -315,7 +286,10 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 		List<IndentProject> list = indentProjectMapper.listWithPagination(view);
 		
+		// 关联视频管家及推荐人
 		Map<Long,Employee> eMap = employeeService.getEmployeeMap();
+		// 协同人Map
+		final Map<Long,List<Synergy>> map = synergyService.findSynergyMap();
 		for (final IndentProject pro : list) {
 			final Employee user = eMap.get(pro.getUserId());
 			final Employee referer = eMap.get(pro.getReferrerId());
@@ -325,7 +299,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			if(referer != null)
 				pro.setReferrerName(eMap.get(pro.getReferrerId()).getEmployeeRealName());
 			
+			pro.setSynergys(map.get(pro.getId()));
 		}
+		
 		return list;
 	}
 

@@ -39,15 +39,16 @@
 			AND t.TEAMID = ${teamId}
 		</if>
 		<if test="flag != null and flag != ''">
-			AND t.FLAG = #{flag}
+			AND t.FLAG = ${flag}
 		</if>
 		<if test="priceRange != null and priceRange != ''">
 			AND t.PRICERANGE = #{priceRange}
 		</if>
 		
 		<if test="business != null and business != ''">
-			<foreach collection="business" item="bus" separator="OR" open="AND (" close=")">
-				t.BUSINESS LIKE CONCAT(CONCAT('%',#{bus}),'%')
+			AND t.BUSINESS IN 
+			<foreach collection="business" item="bus" separator="," open="(" close=")">
+				${bus}
 			</foreach>
 			
 		</if>

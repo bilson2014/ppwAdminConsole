@@ -72,8 +72,6 @@ $().ready(function(){
 								return '<span style=color:black; >沈阳</span>' ;
 							} else if(value == 9){
 								return '<span style=color:black; >哈尔滨</span>' ;
-							} else if(value == 10){
-								return '<span style=color:black; >杭州</span>' ;
 							} else if(value == 11){
 								return '<span style=color:black; >福州</span>' ;
 							} else if(value == 12){

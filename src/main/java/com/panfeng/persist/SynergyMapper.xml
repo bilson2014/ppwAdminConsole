@@ -83,4 +83,18 @@
 			 sy.S_USER_ID = ${userId} 
 		]]>
 	</select>
+	
+	<select id="findSynergyList" resultType="Synergy">
+		<![CDATA[
+			SELECT 
+				sy.S_ID AS synergyId,
+				sy.S_PROJECT_ID AS projectId,
+				e.employeeRealName AS userName, 
+				sy.S_RATIO AS ratio
+			FROM SYNERGY sy 
+			LEFT JOIN EMPLOYEE e
+				ON e.employeeId = sy.S_USER_ID
+			GROUP BY sy.`s_project_id`,sy.s_id
+		]]>
+	</select>
 </mapper>

@@ -25,7 +25,7 @@
 										  com.panfeng.listener" />
 
 	<context:annotation-config />
-
+	
 	<tx:annotation-driven />
 
 	<!-- log here -->
