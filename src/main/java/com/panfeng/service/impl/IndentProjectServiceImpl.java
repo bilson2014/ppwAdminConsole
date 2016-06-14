@@ -291,16 +291,24 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		List<IndentProject> list = indentProjectMapper.listWithPagination(view);
 
 		Map<Long, Employee> eMap = employeeService.getEmployeeMap();
+		
+		Map<Long,List<Synergy>> sMap = synergyService.findSynergyMap();
 		for (final IndentProject pro : list) {
 			final Employee user = eMap.get(pro.getUserId());
 			final Employee referer = eMap.get(pro.getReferrerId());
-			if (user != null)
+			final List<Synergy> sList = sMap.get(pro.getId());
+			if(user != null)
 				pro.setEmployeeRealName(eMap.get(pro.getUserId())
 						.getEmployeeRealName());
 
 			if (referer != null)
 				pro.setReferrerName(eMap.get(pro.getReferrerId())
 						.getEmployeeRealName());
+			
+			if(ValidateUtil.isValid(sList)){
+				pro.setSynergys(sList);
+			}
+			
 
 		}
 		return list;

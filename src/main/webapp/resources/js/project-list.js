@@ -126,11 +126,17 @@ $().ready(function(){
 						title : '协同人',
 						align : 'center',
 						formatter : function(value , row , index){
-							console.info(value);
-							if(value){
-								
+							var info = '';
+							if(value != null && value != '' && value != undefined){
+								// 有项目协同人
+								for(var i = 0 ;i < value.length;i ++){
+									info += value[i].userName + '(' + value[i].ratio * 100 + '%)';
+									if(i != value.length - 1){
+										info += ' ,';
+									}
+								}
 							}
-							return '<span style=color:orange; >'+ pBegin + ' 元 ~ ' + pEnd +' 元</span>' ;
+							return '<span style=color:orange; >'+ info +'</span>' ;
 						}
 					},{
 						field : 'customerId' ,

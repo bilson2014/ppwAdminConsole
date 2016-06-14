@@ -99,4 +99,6 @@ public interface EmployeeMapper {
 	public Map<Long, Employee> getEmployeeMap();
 	
 	public List<Employee> findEmployeeByRealNameByReffer(@Param("employeeRealName") final String employeeRealName);
+
+	public long editPasswordById(final Employee employee);
 }

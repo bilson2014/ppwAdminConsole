@@ -20,11 +20,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.IndentProject;
+import com.panfeng.resource.model.IndentResource;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.IndentProjectView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentProjectService;
+import com.panfeng.service.IndentResourceService;
 import com.panfeng.util.ValidateUtil;
 
 @RestController
@@ -35,6 +37,9 @@ public class ProjectController extends BaseController {
 
 	@Autowired
 	private IndentActivitiService activitiService = null;
+	
+	@Autowired
+	private IndentResourceService resourceService = null;
 
 	@RequestMapping("/save")
 	public Boolean save(@RequestBody final IndentProject indentProject) {
@@ -162,6 +167,18 @@ public class ProjectController extends BaseController {
 		
 		final long ret = indentProjectService.update(project);
 		return ret;
+	}
+	
+	/**
+	 * 获取资源文件列表
+	 * @param indentProject 项目实体（包含ID）
+	 * @return 资源列表文件
+	 */
+	@RequestMapping("/getIndentResourceList")
+	public List<IndentResource> resouceList(final IndentProject indentProject){
+		
+		final List<IndentResource> list = resourceService.findIndentList(indentProject);
+		return list;
 	}
 
 	@RequestMapping("/saveInfo")

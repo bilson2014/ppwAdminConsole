@@ -22,12 +22,12 @@
 				<tr>
 					<th>项目名称:</th>
 					<td>
-						<input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称"/>
+						<input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;" />
 					</td>
 					<th>项目状态:</th>
 					<td>
 						<select id="search-state" name="state" editable="false" class="easyui-combobox" style="width: 70px;">
-							<option value="" selected>--  请选择 --</option>
+							<option value="" selected>  </option>
 							<option value="0" >正常</option>
             				<option value="1" >取消</option>
             				<option value="3" >暂停</option>
@@ -36,15 +36,15 @@
 					</td>
 					<th>视频管家</th>
 					<td>
-						<input id="search-userId" name="userId" class="easyui-combobox" placeholder="请输入视频管家名称"/>
+						<input id="search-userId" name="userId" class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
 					</td>
 					<th>供应商</th>
 					<td>
-						<input id="search-teamId" name="teamId" class="easyui-combobox" placeholder="请输入供应商名称"/>
+						<input id="search-teamId" name="teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>
 					</td>
 					<th>项目来源</th>
 					<td>
-						<input id="search-source" name="source" class="easyui-combobox" placeholder="请选择项目来源" editable="false"/>
+						<input id="search-source" name="source" class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
 					</td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>

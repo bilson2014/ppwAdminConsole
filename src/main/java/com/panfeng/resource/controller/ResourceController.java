@@ -23,7 +23,7 @@ import com.panfeng.service.IndentResourceService;
 @RestController
 public class ResourceController extends BaseController {
 	@Autowired
-	IndentResourceService indentResourceService;
+	private IndentResourceService indentResourceService = null;
 
 	@RequestMapping(value = "/addResource")
 	public String addResource(@RequestParam final MultipartFile addfile,

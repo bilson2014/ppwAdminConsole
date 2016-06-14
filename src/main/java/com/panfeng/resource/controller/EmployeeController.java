@@ -67,7 +67,7 @@ public class EmployeeController extends BaseController{
 	}
 	
 	@RequestMapping("/editEmpwd")
-	public long editPassword(final HttpServletRequest request,final String oldPwd,final String pwd){
+	public boolean editPassword(final HttpServletRequest request,final String oldPwd,final String pwd){
 		
 		final SessionInfo info = (SessionInfo) infoService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
 		
@@ -83,7 +83,8 @@ public class EmployeeController extends BaseController{
 						if(ValidateUtil.isValid(pwd)){
 							final String nps = AESUtil.Decrypt(pwd, GlobalConstant.UNIQUE_KEY);
 							employee.setEmployeePassword(DataUtil.md5(nps));
-							service.editPassword(employee);
+							service.editPasswordById(employee);
+							return true;
 						}
 					}
 				} catch (Exception e) {
@@ -92,7 +93,7 @@ public class EmployeeController extends BaseController{
 			}
 		}
 		
-		return 0l;
+		return false;
 	}
 	
 	/**

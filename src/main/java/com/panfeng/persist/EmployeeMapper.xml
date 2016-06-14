@@ -216,6 +216,15 @@
 		]]>
 	</update>
 	
+	<update id="editPasswordById">
+		<![CDATA[
+			UPDATE EMPLOYEE
+				SET EMPLOYEEPASSWORD = #{employeePassword},
+					UPDATEDATE = CURRENT_TIMESTAMP
+			WHERE EMPLOYEEID = ${employeeId}
+		]]>
+	</update>
+	
 	<select id="checkPhoneNumber" resultType="java.lang.Long">
 		<![CDATA[
 			SELECT COUNT(1)
