@@ -1,7 +1,9 @@
 package com.panfeng.persist;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 
 import com.panfeng.resource.model.Synergy;
@@ -24,5 +26,8 @@ public interface SynergyMapper {
 	 * @return map
 	 */
 	public List<Synergy> findSynergyList();
+
+	@MapKey(value = "synergyId")
+	public Map<Long, Synergy> findSynergyMapByProjectId(@Param("projectId") final long projectId);
 	
 }

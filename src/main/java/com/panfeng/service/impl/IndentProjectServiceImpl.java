@@ -151,9 +151,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				flowDateMapper.update(flowDate);
 			}
 			// add synergy by laowng begin 2016-5-25 15:00
-			List<Synergy> list = indentProject.getSynergys();
-			boolean isValid = ValidateUtil.isValid(list);
-			if (isValid) {
+			//List<Synergy> list = indentProject.getSynergys();
+			//boolean isValid = ValidateUtil.isValid(list);
+			/*if (isValid) {
 				// 查询数据库
 				// 比较数据--》存在的更新，不存在创建
 				List<Synergy> listDb = synergyService
@@ -177,8 +177,24 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 						}
 					}
 				}
-			}
+			}*/
 			// add synergy by laowng end 2016-5-25 15:00
+			
+			// 获取项目的协同人
+			Map<Long,Synergy> map = synergyService.findSynergyMapByProjectId(indentProject.getId());
+			List<Synergy> sList = indentProject.getSynergys();
+			if(ValidateUtil.isValid(sList)){
+				for (final Synergy synergy : sList) {
+					Synergy originalSynergy = map.get(synergy.getSynergyId());
+					if(originalSynergy == null){
+						synergy.setProjectId(indentProject.getId());
+						synergyService.save(synergy);
+					}else {
+						synergyService.update(synergy);
+					}
+				}
+			}
+			
 			indentCommentService.createSystemMsg(
 					"更新了 " + indentProject.getProjectName() + "项目",
 					indentProject);

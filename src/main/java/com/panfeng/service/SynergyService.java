@@ -20,5 +20,7 @@ public interface SynergyService {
 	long delete(long synergyId);
 
 	public Map<Long,List<Synergy>> findSynergyMap();
+	
+	public Map<Long,Synergy> findSynergyMapByProjectId(final long projectId);
 
 }

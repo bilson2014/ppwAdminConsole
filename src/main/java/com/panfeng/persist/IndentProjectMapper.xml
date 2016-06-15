@@ -433,10 +433,8 @@
 			FROM EMPLOYEE e 
 			WHERE 1 = 1
 				AND e.FLAG = 1
-				AND e.EMPLOYEELOGINNAME <> 'admin'
 		]]>
 	</select>
-
 
 	<select id="getAllProject" resultType="IndentProject">
 		<![CDATA[

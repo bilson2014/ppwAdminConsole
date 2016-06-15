@@ -46,9 +46,8 @@
 		</if>
 		
 		<if test="business != null and business != ''">
-			AND t.BUSINESS IN 
-			<foreach collection="business" item="bus" separator="," open="(" close=")">
-				${bus}
+			<foreach collection="business" item="bus" separator="OR" open="AND (" close=")">
+				t.BUSINESS LIKE CONCAT(CONCAT('%',#{bus}),'%')
 			</foreach>
 			
 		</if>

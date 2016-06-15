@@ -70,6 +70,7 @@ public class SynergyServiceImpl implements SynergyService {
 			if(!ValidateUtil.isValid(tempList)){
 				tempList = new ArrayList<Synergy>();
 			}
+			multiplyPrice(synergy);
 			tempList.add(synergy);
 			map.put(synergy.getProjectId(), tempList);
 		}
@@ -98,5 +99,12 @@ public class SynergyServiceImpl implements SynergyService {
 			synergie = multiplyPrice(synergie);
 		}
 		return synergies;
+	}
+
+	@Override
+	public Map<Long, Synergy> findSynergyMapByProjectId(final long projectId) {
+		
+		final Map<Long, Synergy> map = synergyMapper.findSynergyMapByProjectId(projectId);
+		return map;
 	}
 }

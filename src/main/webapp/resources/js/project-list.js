@@ -130,7 +130,7 @@ $().ready(function(){
 							if(value != null && value != '' && value != undefined){
 								// 有项目协同人
 								for(var i = 0 ;i < value.length;i ++){
-									info += value[i].userName + '(' + value[i].ratio * 100 + '%)';
+									info += value[i].userName + '(' + value[i].ratio + '%)';
 									if(i != value.length - 1){
 										info += ' ,';
 									}

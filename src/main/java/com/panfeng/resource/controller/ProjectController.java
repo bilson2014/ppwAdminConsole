@@ -264,9 +264,12 @@ public class ProjectController extends BaseController {
 	// ------------------------------------------协同人处理部分------------------------------------------
 
 	@RequestMapping("/remove/synergy")
-	public void removeSynergy(@RequestBody final BizBean bizBean) {
-		if (bizBean != null && bizBean.getName() != null)
-			indentProjectService.removeSynergy(Long.parseLong(bizBean.getName()));
+	public boolean removeSynergy(@RequestBody final BizBean bizBean) {
+		long ret = 0l;
+		if (bizBean != null && bizBean.getName() != null){
+			ret = indentProjectService.removeSynergy(Long.parseLong(bizBean.getName()));
+		}
+		return ret > 0 ? true : false;
 	}
 
 	@RequestMapping("/get/synergys")

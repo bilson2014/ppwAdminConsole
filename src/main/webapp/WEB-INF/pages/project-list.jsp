@@ -213,5 +213,24 @@
 	    	
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
+	    
+	    <!-- image/video show content begin-->
+		<div id="picture-condition" class="picture-condition hide">
+			<div class="picture-modalDialog">
+				<div class="picture-condition-body">
+					<div class="operation-panel">
+						<ul>
+							<li>11</li>
+							<li>22</li>
+							<li>33</li>
+						</ul>
+						<div class="p-label">
+							<a href="#" class="button p-submit" id="p-cancel">取消</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- image/video show content end-->
 </body>
 </html>
