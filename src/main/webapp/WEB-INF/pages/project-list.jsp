@@ -79,6 +79,8 @@
 			<a onclick="saveFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">保存</a>
 		</r:mulparampermission>
 		
+		<a onclick="loadResourceFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">文件列表</a>
+		
 		<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 	</div>
 	
@@ -218,14 +220,20 @@
 		<div id="picture-condition" class="picture-condition hide">
 			<div class="picture-modalDialog">
 				<div class="picture-condition-body">
-					<div class="operation-panel">
-						<ul>
-							<li>11</li>
-							<li>22</li>
-							<li>33</li>
-						</ul>
+					<div class="operation-panel" >
+						<table>
+							<tr>
+								<th class="th-name">文件名称</th>
+								<th class="th-type">阶段</th>
+								<th class="th-time">上传时间</th>
+								<th class="th-operation">操作</th>
+							</tr>
+							<tbody id="resource-list">
+								
+							</tbody>
+						</table>
 						<div class="p-label">
-							<a href="#" class="button p-submit" id="p-cancel">取消</a>
+							<a href="javascript:void(0);" class="button p-submit" id="p-cancel">取消</a>
 						</div>
 					</div>
 				</div>
