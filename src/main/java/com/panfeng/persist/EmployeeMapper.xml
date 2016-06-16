@@ -235,7 +235,8 @@
 	
 	<select id="findEmployeeByRealName" resultType="Employee">
 		<![CDATA[
-			SELECT e.EMPLOYEEID AS employeeId,
+			SELECT DISTINCT
+				   e.EMPLOYEEID AS employeeId,
 				   e.EMPLOYEELOGINNAME AS employeeLoginName,
 				   e.EMPLOYEEREALNAME AS employeeRealName,
 				   e.EMPLOYEEPASSWORD AS employeePassword,
