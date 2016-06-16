@@ -147,35 +147,24 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			for (FlowDate flowDate : dates) {
 				flowDateMapper.update(flowDate);
 			}
-			// add synergy by laowng begin 2016-5-25 15:00
-			List<Synergy> list = indentProject.getSynergys();
-			boolean isValid = ValidateUtil.isValid(list);
-			if (isValid) {
-				// 查询数据库
-				// 比较数据--》存在的更新，不存在创建
-				List<Synergy> listDb = synergyService.findSynergyByProjectId(indentProject.getId());
-				for (Synergy synergy : list) {
-					boolean dbExist = false;
-					if (synergy != null) {
-						// 冒牌排序，检测该项是否存在于数据库
-						for (int i = 0; i < listDb.size(); i++) {
-							if (listDb.get(i).getSynergyId().equals(synergy.getSynergyId())) {
-
-								dbExist = true;// 更新
-								break;
-							}
-						}
-						if (dbExist) {
-							synergyService.update(synergy);
-						} else {
-							synergy.setProjectId(indentProject.getId());
-							synergyService.save(synergy);
-						}
+			// 获取项目的协同人 666
+			Map<Long,Synergy> map = synergyService.findSynergyMapByProjectId(indentProject.getId());
+			List<Synergy> sList = indentProject.getSynergys();
+			if(ValidateUtil.isValid(sList)){
+				for (final Synergy synergy : sList) {
+					Synergy originalSynergy = map.get(synergy.getSynergyId());
+					if(originalSynergy == null){
+						synergy.setProjectId(indentProject.getId());
+						synergyService.save(synergy);
+					}else {
+						synergyService.update(synergy);
 					}
 				}
 			}
-			// add synergy by laowng end 2016-5-25 15:00
-			indentCommentService.createSystemMsg("更新了 " + indentProject.getProjectName() + "项目", indentProject);
+			
+			indentCommentService.createSystemMsg(
+					"更新了 " + indentProject.getProjectName() + "项目",
+					indentProject);
 			return true;
 		}
 		return false;
@@ -243,35 +232,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	}
 
 	public void getReport(List<IndentProject> list, OutputStream outputStream) {
-		// ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
-		// GenerateExcel ge = new GenerateExcel();
-		// for (IndentProject indentProject2 : list) {
-		// List<IndentFlow> listDates = indentFlowMapper
-		// .findFlowDateByIndentId(indentProject2);
-		// IndentFlow.indentProjectFillDate(indentProject2, listDates);
-		// ActivitiTask at = indentActivitiService
-		// .getCurrentTask(indentProject2);
-		// if (at.getId().equals("")) {
-		// List<HistoricTaskInstance> listHistoricTaskInstances =
-		// indentActivitiService
-		// .getHistoryProcessTask_O(indentProject2);
-		// HistoricTaskInstance historicTaskInstance = listHistoricTaskInstances
-		// .get(listHistoricTaskInstances.size() - 1);
-		// at.setId("");
-		// at.setName("已完成");
-		// SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-		// "yyyy-MM-dd");
-		// at.setCreateTime(simpleDateFormat.format(historicTaskInstance
-		// .getEndTime()));
-		// }
-		// indentProject2.setTask(at);
-		// // 填充管家
-		// UserViewModel userViewModel = userTempService.getInfo(
-		// indentProject2.getUserType(), indentProject2.getUserId());
-		// indentProject2.setUserViewModel(userViewModel);
-		// projectPoiAdapter.getData().add(indentProject2);
-		// }
-		// ge.generate(projectPoiAdapter, outputStream);
 
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
@@ -306,15 +266,23 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		List<IndentProject> list = indentProjectMapper.listWithPagination(view);
 
 		Map<Long, Employee> eMap = employeeService.getEmployeeMap();
+		
+		Map<Long,List<Synergy>> sMap = synergyService.findSynergyMap();
 		for (final IndentProject pro : list) {
 			final Employee user = eMap.get(pro.getUserId());
 			final Employee referer = eMap.get(pro.getReferrerId());
-			if (user != null)
-				pro.setEmployeeRealName(eMap.get(pro.getUserId()).getEmployeeRealName());
+			final List<Synergy> sList = sMap.get(pro.getId());
+			if(user != null)
+				pro.setEmployeeRealName(eMap.get(pro.getUserId())
+						.getEmployeeRealName());
 
 			if (referer != null)
-				pro.setReferrerName(eMap.get(pro.getReferrerId()).getEmployeeRealName());
-
+				pro.setReferrerName(eMap.get(pro.getReferrerId())
+						.getEmployeeRealName());
+			
+			if(ValidateUtil.isValid(sList)){
+				pro.setSynergys(sList);
+			}
 		}
 		return list;
 	}

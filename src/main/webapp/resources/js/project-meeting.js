@@ -86,6 +86,23 @@ $().ready(function(){
 						title : '支付供应商金额',
 						align : 'center'
 					},{
+						field : 'synergys',
+						title : '协同人',
+						align : 'center',
+						formatter : function(value , row , index){
+							var info = '';
+							if(value != null && value != '' && value != undefined){
+								// 有项目协同人
+								for(var i = 0 ;i < value.length;i ++){
+									info += value[i].userName + '(' + value[i].ratio + '%)';
+									if(i != value.length - 1){
+										info += ' ,';
+									}
+								}
+							}
+							return '<span style=color:orange; >'+ info +'</span>' ;
+						}
+					},{
 						field : 'customerId' ,
 						title : '客户ID' ,
 						align : 'center' ,

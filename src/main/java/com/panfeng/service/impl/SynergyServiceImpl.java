@@ -1,7 +1,11 @@
 package com.panfeng.service.impl;
 
+
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.panfeng.persist.SynergyMapper;
 import com.panfeng.resource.model.Synergy;
 import com.panfeng.service.SynergyService;
+import com.panfeng.util.ValidateUtil;
 
 @Service
 public class SynergyServiceImpl implements SynergyService {
@@ -55,6 +60,23 @@ public class SynergyServiceImpl implements SynergyService {
 		return synergyMapper.delete(synergyId);
 	}
 
+	@Override
+	public Map<Long, List<Synergy>> findSynergyMap() {
+		
+		final List<Synergy> list = synergyMapper.findSynergyList();
+		final Map<Long,List<Synergy>> map = new HashMap<Long,List<Synergy>>();
+		for (Synergy synergy : list) {
+			List<Synergy> tempList = map.get(synergy.getProjectId());
+			if(!ValidateUtil.isValid(tempList)){
+				tempList = new ArrayList<Synergy>();
+			}
+			multiplyPrice(synergy);
+			tempList.add(synergy);
+			map.put(synergy.getProjectId(), tempList);
+		}
+		return map;
+	}
+
 	private static Synergy multiplyPrice(final Synergy synergy) {
 		double ratio = synergy.getRatio();
 		BigDecimal ratioBigDecimal = BigDecimal.valueOf(ratio);
@@ -77,5 +99,12 @@ public class SynergyServiceImpl implements SynergyService {
 			synergie = multiplyPrice(synergie);
 		}
 		return synergies;
+	}
+
+	@Override
+	public Map<Long, Synergy> findSynergyMapByProjectId(final long projectId) {
+		
+		final Map<Long, Synergy> map = synergyMapper.findSynergyMapByProjectId(projectId);
+		return map;
 	}
 }

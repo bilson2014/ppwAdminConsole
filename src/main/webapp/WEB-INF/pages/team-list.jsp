@@ -100,7 +100,7 @@
 			<a  id="cancel-btn" onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 		</div>
 		
-		<div id="dlg" class="easyui-dialog" style="width:560px; height: 600px;padding:10px 20px"
+		<div id="dlg" class="easyui-dialog" style="width:520px; height:480px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons" title="人员信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input name="teamId" type="hidden">
@@ -123,7 +123,6 @@
 	            				<option value="7" >石家庄</option>
 	            				<option value="8" >沈阳</option>
 	            				<option value="9" >哈尔滨</option>
-	            				<option value="10" >杭州</option>
 	            				<option value="11" >福州</option>
 	            				<option value="12" >济南</option>
 	            				<option value="13" >昆明</option>
@@ -173,7 +172,7 @@
 	            		<th>微信号</th>
 	            		<td><input name="webchat" class="easyui-textbox" required="true"/></td>
 	            		<th>QQ</th>
-	            		<td><input name="qq" class="easyui-validatebox textbox" validtype="qq" required="true"/></td>
+	            		<td><input name="qq" class="easyui-validatebox textbox" validtype="qq" /></td>
 	            	</tr>
 	            	
 	            	<tr>

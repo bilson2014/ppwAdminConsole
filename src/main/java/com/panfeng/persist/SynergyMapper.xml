@@ -93,4 +93,36 @@
 			sy.S_USER_ID = ${userId} 
 		]]>
 	</select>
+	
+	<select id="findSynergyList" resultType="Synergy">
+		<![CDATA[
+			SELECT 
+				sy.S_ID AS synergyId,
+				sy.S_PROJECT_ID AS projectId,
+				e.employeeRealName AS userName, 
+				sy.S_RATIO AS ratio
+			FROM SYNERGY sy 
+			LEFT JOIN EMPLOYEE e
+				ON e.employeeId = sy.S_USER_ID
+			GROUP BY sy.`s_project_id`,sy.s_id
+		]]>
+	</select>
+	
+	<select id="findSynergyMapByProjectId" resultType="Synergy">
+		<![CDATA[
+			SELECT 
+				sy.S_CREATE_TIME AS createTime,
+				sy.S_ID AS synergyId,
+				sy.S_PROJECT_ID AS projectId,
+				sy.S_RATIO AS ratio,
+				sy.S_UPDATE_TIME AS updateTime,
+				sy.S_USER_ID AS userId,
+				sy.S_USER_NAME AS userName 
+			FROM SYNERGY sy
+			LEFT JOIN
+			INDENT_PROJECT ip ON sy.s_project_id = ip.ip_id
+			WHERE   ip.ip_state <> 1 AND ip.ip_state <> 2 AND
+			sy.S_PROJECT_ID = ${projectId}
+		]]>
+	</select>
 </mapper>

@@ -75,11 +75,14 @@ public class RoleServiceImpl implements RoleService {
 		List<Tree> tree = new ArrayList<Tree>();
 		
 		for (final Role role : list) {
-			Tree t = new Tree();
-			t.setId(role.getRoleId() + "");
-			t.setText(role.getRoleName());
-			
-			tree.add(t);
+			final String roleName = role.getRoleName();
+			if(!"超级管理员".equals(roleName) && !"客户".equals(roleName) && !"供应商".equals(roleName)){
+				Tree t = new Tree();
+				t.setId(role.getRoleId() + "");
+				t.setText(role.getRoleName());
+				
+				tree.add(t);
+			}
 		}
 		return tree;
 	}

@@ -39,7 +39,7 @@
 			AND t.TEAMID = ${teamId}
 		</if>
 		<if test="flag != null and flag != ''">
-			AND t.FLAG = #{flag}
+			AND t.FLAG = ${flag}
 		</if>
 		<if test="priceRange != null and priceRange != ''">
 			AND t.PRICERANGE = #{priceRange}

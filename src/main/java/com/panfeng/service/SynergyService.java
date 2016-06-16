@@ -1,6 +1,7 @@
 package com.panfeng.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.panfeng.resource.model.Synergy;
 
@@ -17,5 +18,9 @@ public interface SynergyService {
 	List<Synergy> findSynergyByUserId(long userId);
 	
 	long delete(long synergyId);
+
+	public Map<Long,List<Synergy>> findSynergyMap();
+	
+	public Map<Long,Synergy> findSynergyMapByProjectId(final long projectId);
 
 }

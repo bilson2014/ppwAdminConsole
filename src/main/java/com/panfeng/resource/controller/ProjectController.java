@@ -20,11 +20,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.IndentProject;
+import com.panfeng.resource.model.IndentResource;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.IndentProjectView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentProjectService;
+import com.panfeng.service.IndentResourceService;
 import com.panfeng.util.ValidateUtil;
 
 @RestController
@@ -35,6 +37,9 @@ public class ProjectController extends BaseController {
 
 	@Autowired
 	private IndentActivitiService activitiService = null;
+	
+	@Autowired
+	private IndentResourceService resourceService = null;
 
 	@RequestMapping("/save")
 	public Boolean save(@RequestBody final IndentProject indentProject) {
@@ -126,7 +131,7 @@ public class ProjectController extends BaseController {
 		final long rows = pf.getRows();
 		view.setBegin((page - 1) * rows);
 		view.setLimit(rows);
-
+		
 		DataGrid<IndentProject> dataGrid = new DataGrid<IndentProject>();
 		final List<IndentProject> list = indentProjectService.listWithPagination(view);
 		dataGrid.setRows(list);
@@ -162,6 +167,18 @@ public class ProjectController extends BaseController {
 		
 		final long ret = indentProjectService.update(project);
 		return ret;
+	}
+	
+	/**
+	 * 获取资源文件列表
+	 * @param indentProject 项目实体（包含ID）
+	 * @return 资源列表文件
+	 */
+	@RequestMapping("/getIndentResourceList")
+	public List<IndentResource> resouceList(final IndentProject indentProject){
+		
+		final List<IndentResource> list = resourceService.findIndentList(indentProject);
+		return list;
 	}
 
 	@RequestMapping("/saveInfo")
@@ -247,9 +264,12 @@ public class ProjectController extends BaseController {
 	// ------------------------------------------协同人处理部分------------------------------------------
 
 	@RequestMapping("/remove/synergy")
-	public void removeSynergy(@RequestBody final BizBean bizBean) {
-		if (bizBean != null && bizBean.getName() != null)
-			indentProjectService.removeSynergy(Long.parseLong(bizBean.getName()));
+	public boolean removeSynergy(@RequestBody final BizBean bizBean) {
+		long ret = 0l;
+		if (bizBean != null && bizBean.getName() != null){
+			ret = indentProjectService.removeSynergy(Long.parseLong(bizBean.getName()));
+		}
+		return ret > 0 ? true : false;
 	}
 
 	@RequestMapping("/get/synergys")

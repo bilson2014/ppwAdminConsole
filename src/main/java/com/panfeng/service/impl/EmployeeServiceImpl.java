@@ -111,6 +111,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 		final long ret = mapper.editPassword(employee);
 		return ret;
 	}
+	
+	public long editPasswordById(final Employee employee) {
+		
+		final long ret = mapper.editPasswordById(employee);
+		return ret;
+	}
 
 	public long checkPhoneNumber(String phoneNumber) {
 		

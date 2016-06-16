@@ -46,4 +46,6 @@ public interface EmployeeService {
 	public Map<Long,Employee> getEmployeeMap();
 	
 	public List<Employee> findEmployeeByRealNameByReffer(final String employeeRealName);
+
+	public long editPasswordById(final Employee employee);
 }
