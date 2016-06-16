@@ -72,7 +72,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public boolean save(IndentProject indentProject) {
 		indentProject.setSerial(getProjectSerialID());
-		
+
 		indentProjectMapper.save(indentProject);
 		// add synergy by laowang begin 2016-5-25 12:01
 		List<Synergy> list = indentProject.getSynergys();
@@ -126,14 +126,12 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public IndentProject getRedundantProject(IndentProject indentProject) {
 		indentProject = indentProjectMapper.findProjectInfo(indentProject);
-		List<IndentFlow> listDates = indentFlowMapper
-				.findFlowDateByIndentId(indentProject);
+		List<IndentFlow> listDates = indentFlowMapper.findFlowDateByIndentId(indentProject);
 		IndentFlow.indentProjectFillDate(indentProject, listDates);
 		// add Synergys by laowang begin 2016-5-25 16:00
-		indentProject.setSynergys(synergyService
-				.findSynergyByProjectId(indentProject.getId()));
+		indentProject.setSynergys(synergyService.findSynergyByProjectId(indentProject.getId()));
 		// add Synergys by laowang end 2016-5-25 16:00
-		
+
 		return indentProject;
 	}
 
@@ -143,8 +141,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		// update project
 		long l = indentProjectMapper.update(indentProject);
 		if (l > 0) {
-			List<IndentFlow> listDates = indentFlowMapper
-					.findFlowDateByIndentId(indentProject);
+			List<IndentFlow> listDates = indentFlowMapper.findFlowDateByIndentId(indentProject);
 			List<FlowDate> dates = IndentFlow.getFlowDates(listDates);
 			IndentFlow.updateFlowDates(indentProject, dates);
 			for (FlowDate flowDate : dates) {
@@ -156,15 +153,14 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			if (isValid) {
 				// 查询数据库
 				// 比较数据--》存在的更新，不存在创建
-				List<Synergy> listDb = synergyService
-						.findSynergyByProjectId(indentProject.getId());
+				List<Synergy> listDb = synergyService.findSynergyByProjectId(indentProject.getId());
 				for (Synergy synergy : list) {
 					boolean dbExist = false;
 					if (synergy != null) {
 						// 冒牌排序，检测该项是否存在于数据库
 						for (int i = 0; i < listDb.size(); i++) {
-							if (listDb.get(i).getSynergyId() == synergy
-									.getSynergyId()) {
+							if (listDb.get(i).getSynergyId().equals(synergy.getSynergyId())) {
+
 								dbExist = true;// 更新
 								break;
 							}
@@ -179,9 +175,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				}
 			}
 			// add synergy by laowng end 2016-5-25 15:00
-			indentCommentService.createSystemMsg(
-					"更新了 " + indentProject.getProjectName() + "项目",
-					indentProject);
+			indentCommentService.createSystemMsg("更新了 " + indentProject.getProjectName() + "项目", indentProject);
 			return true;
 		}
 		return false;
@@ -190,8 +184,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public ActivitiTask getTaskInfo(IndentProject indentProject) {
 		String taskName = indentProject.getTask().getName();
-		List<ActivitiTask> activitiTasks = indentActivitiService
-				.getHistoryProcessTask(indentProject);
+		List<ActivitiTask> activitiTasks = indentActivitiService.getHistoryProcessTask(indentProject);
 
 		ActivitiTask at = null;
 		for (ActivitiTask activitiTask : activitiTasks) {
@@ -202,11 +195,10 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		}
 		if (at != null) {
 			// 填充预计时间
-			IndentFlow indentFlow = indentFlowMapper.findFlowDateByFlowKey(
-					indentProject.getId(), at.getTaskDefinitionKey());
-			at.setScheduledTime(new FlowDate(indentFlow.getFdId(), indentFlow
-					.getFdFlowId(), indentFlow.getFdStartTime(), indentFlow
-					.getFdTaskId()));
+			IndentFlow indentFlow = indentFlowMapper.findFlowDateByFlowKey(indentProject.getId(),
+					at.getTaskDefinitionKey());
+			at.setScheduledTime(new FlowDate(indentFlow.getFdId(), indentFlow.getFdFlowId(),
+					indentFlow.getFdStartTime(), indentFlow.getFdTaskId()));
 		} else {
 			at = new ActivitiTask();
 		}
@@ -241,14 +233,12 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	public boolean cancelProject(IndentProject indentProject) {
 		indentProject.setState(IndentProject.PROJECT_CANCEL);
 		long l = indentProjectMapper.cancelProject(indentProject);
-		indentCommentService.createSystemMsg(
-				"取消了" + indentProject.getProjectName() + "项目", indentProject);
+		indentCommentService.createSystemMsg("取消了" + indentProject.getProjectName() + "项目", indentProject);
 		return (l > 0);
 	}
 
 	public void getReport(IndentProject indentProject, OutputStream outputStream) {
-		List<IndentProject> list = indentProjectMapper
-				.findProjectList(indentProject);
+		List<IndentProject> list = indentProjectMapper.findProjectList(indentProject);
 		getReport(list, outputStream);
 	}
 
@@ -286,11 +276,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
 		for (IndentProject indentProject2 : list) {
-			List<IndentFlow> listDates = indentFlowMapper
-					.findFlowDateByIndentId(indentProject2);
+			List<IndentFlow> listDates = indentFlowMapper.findFlowDateByIndentId(indentProject2);
 			IndentFlow.indentProjectFillDate(indentProject2, listDates);
-			ActivitiTask at = indentActivitiService
-					.getCurrentTask(indentProject2);
+			ActivitiTask at = indentActivitiService.getCurrentTask(indentProject2);
 			if (at.getId().equals("")) {
 				List<HistoricTaskInstance> listHistoricTaskInstances = indentActivitiService
 						.getHistoryProcessTask_O(indentProject2);
@@ -298,16 +286,14 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 						.get(listHistoricTaskInstances.size() - 1);
 				at.setId("");
 				at.setName("已完成");
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-						"yyyy-MM-dd");
-				at.setCreateTime(simpleDateFormat.format(historicTaskInstance
-						.getEndTime()));
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				at.setCreateTime(simpleDateFormat.format(historicTaskInstance.getEndTime()));
 
 			}
 			indentProject2.setTask(at);
 			// 填充管家
-			UserViewModel userViewModel = userTempService.getInfo(
-					indentProject2.getUserType(), indentProject2.getUserId());
+			UserViewModel userViewModel = userTempService.getInfo(indentProject2.getUserType(),
+					indentProject2.getUserId());
 			indentProject2.setUserViewModel(userViewModel);
 			indentProject2.setEmployeeRealName(userViewModel.getUserName());
 			projectPoiAdapter.getData().add(indentProject2);
@@ -324,12 +310,10 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			final Employee user = eMap.get(pro.getUserId());
 			final Employee referer = eMap.get(pro.getReferrerId());
 			if (user != null)
-				pro.setEmployeeRealName(eMap.get(pro.getUserId())
-						.getEmployeeRealName());
+				pro.setEmployeeRealName(eMap.get(pro.getUserId()).getEmployeeRealName());
 
 			if (referer != null)
-				pro.setReferrerName(eMap.get(pro.getReferrerId())
-						.getEmployeeRealName());
+				pro.setReferrerName(eMap.get(pro.getReferrerId()).getEmployeeRealName());
 
 		}
 		return list;
@@ -366,15 +350,14 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	public List<IndentProject> getAllVersionManager() {
 
-		final List<IndentProject> list = indentProjectMapper
-				.getAllVersionManager();
+		final List<IndentProject> list = indentProjectMapper.getAllVersionManager();
 		return list;
 	}
 
 	public List<IndentProject> getAllProject() {
 
 		List<IndentProject> list = indentProjectMapper.getAllProject();
-		
+
 		return list;
 	}
 
@@ -406,8 +389,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public List<IndentProject> getSynergys(IndentProject indentProject) {
-		List<Synergy> synergies = synergyService
-				.findSynergyByUserId(indentProject.getUserId());
+		List<Synergy> synergies = synergyService.findSynergyByUserId(indentProject.getUserId());
 		List<Long> ids = new ArrayList<>();
 		for (Synergy ip : synergies) {
 			ids.add(ip.getProjectId());
@@ -417,5 +399,5 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		}
 		return new ArrayList<>();
 	}
-	
+
 }
