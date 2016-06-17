@@ -60,7 +60,8 @@ public class ProjectController extends BaseController {
 
 	@RequestMapping("/all-project")
 	public List<IndentProject> getUserAllProject(@RequestBody final IndentProject indentProject) {
-		return indentProjectService.findProjectList(indentProject);
+		final List<IndentProject> list = indentProjectService.findProjectList(indentProject);
+		return list;
 	}
 
 	@RequestMapping("/get-projectInfo")

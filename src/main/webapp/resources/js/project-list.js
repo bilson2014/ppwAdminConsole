@@ -422,3 +422,48 @@ function exportFun(){
 		}
 	});
 }
+
+// 文件列表
+function loadResourceFuc(){
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length == 1){
+		$('#picture-condition').removeClass('hide');
+		$('#p-cancel').unbind('click');
+		$('#p-cancel').bind('click',resourceCancelFuc);
+		var data = rows[0];
+		var projectId = data.id;
+		loadData(function(rList){
+			$('#resource-list').empty();
+			var tBody = '';
+			if(rList != null && rList.length > 0){
+				// 有文件列表
+				$.each(rList,function(i,n){
+					if(i % 2 == 0){
+						tBody += '<tr class="tr-even">';
+					}else {
+						tBody += '<tr class="tr-single">';
+					}
+					tBody += '<td>' + n.irOriginalName + '</td>';
+					tBody += '<td>' + n.irtype + '</td>';
+					tBody += '<td>'+ n.irCreateDate +'</td>';
+					tBody += '<td>';
+					tBody += '<a href="'+ getContextPath() + '/getFile/' + n.irId +'">下载</a>';
+					tBody += '</td>';
+					tBody += '</tr>';
+				});
+			}
+			
+			$('#resource-list').append(tBody);
+		}, getContextPath() + '/getResourceList', $.toJSON({
+			id : projectId
+		}))
+	} else {
+		$.message('只能选择一条记录进行查看!');
+	}
+}
+
+// 取消文件列表
+function resourceCancelFuc(){
+	$('#picture-condition').addClass('hide');
+	// TODO 清除列表内容
+}
