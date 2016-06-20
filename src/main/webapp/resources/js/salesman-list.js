@@ -197,7 +197,7 @@ function cleanFun() {
 // 获取服务地址
 function getServerName(){
 	
-	//return 'http://192.168.1.119:8080';
+	//return 'http://192.168.0.143:8080';
 	return 'http://www.apaipian.com';
 	//return 'http://test.apaipian.com:8080';
 }

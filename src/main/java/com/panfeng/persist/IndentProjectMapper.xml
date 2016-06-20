@@ -369,6 +369,11 @@
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
 		</if>
+		
+		<![CDATA[
+			ORDER BY i.IP_ID DESC
+			LIMIT ${begin} , ${limit}
+		]]>
 	</select>
 
 	<select id="maxSize" resultType="java.lang.Long">

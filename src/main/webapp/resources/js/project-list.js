@@ -433,10 +433,16 @@ function loadResourceFuc(){
 		var data = rows[0];
 		var projectId = data.id;
 		loadData(function(rList){
-			$('#resource-list').empty();
+			$('#resource-table').empty();
 			var tBody = '';
 			if(rList != null && rList.length > 0){
 				// 有文件列表
+				tBody += '<tr>';
+				tBody += '<th class="th-name">文件名称</th>';
+				tBody += '<th class="th-type">阶段</th>';
+				tBody += '<th class="th-time">上传时间</th>';
+				tBody += '<th class="th-operation">操作</th>';
+				tBody += '</tr>';
 				$.each(rList,function(i,n){
 					if(i % 2 == 0){
 						tBody += '<tr class="tr-even">';
@@ -451,9 +457,13 @@ function loadResourceFuc(){
 					tBody += '</td>';
 					tBody += '</tr>';
 				});
+			}else {
+				tBody += '<tr>';
+				tBody += '<td colspan="4">此项目还没有上传文件</td>';
+				tBody += '</tr>';
 			}
 			
-			$('#resource-list').append(tBody);
+			$('#resource-table').append(tBody);
 		}, getContextPath() + '/getResourceList', $.toJSON({
 			id : projectId
 		}))
@@ -465,5 +475,6 @@ function loadResourceFuc(){
 // 取消文件列表
 function resourceCancelFuc(){
 	$('#picture-condition').addClass('hide');
-	// TODO 清除列表内容
+	// 清除列表内容
+	$('#resource-table').empty();
 }

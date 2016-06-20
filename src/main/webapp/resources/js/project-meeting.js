@@ -372,7 +372,64 @@ function exportFun(){
 			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
 		},
 		success : function(result) {
-			
+			$.growlUI('报表输出完成', '已经为您输出了报表,请查收!');
 		}
 	});
+	
+}
+
+//文件列表
+function loadResourceFuc(){
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length == 1){
+		$('#picture-condition').removeClass('hide');
+		$('#p-cancel').unbind('click');
+		$('#p-cancel').bind('click',resourceCancelFuc);
+		var data = rows[0];
+		var projectId = data.id;
+		loadData(function(rList){
+			$('#resource-table').empty();
+			var tBody = '';
+			if(rList != null && rList.length > 0){
+				// 有文件列表
+				tBody += '<tr>';
+				tBody += '<th class="th-name">文件名称</th>';
+				tBody += '<th class="th-type">阶段</th>';
+				tBody += '<th class="th-time">上传时间</th>';
+				tBody += '<th class="th-operation">操作</th>';
+				tBody += '</tr>';
+				$.each(rList,function(i,n){
+					if(i % 2 == 0){
+						tBody += '<tr class="tr-even">';
+					}else {
+						tBody += '<tr class="tr-single">';
+					}
+					tBody += '<td>' + n.irOriginalName + '</td>';
+					tBody += '<td>' + n.irtype + '</td>';
+					tBody += '<td>'+ n.irCreateDate +'</td>';
+					tBody += '<td>';
+					tBody += '<a href="'+ getContextPath() + '/getFile/' + n.irId +'">下载</a>';
+					tBody += '</td>';
+					tBody += '</tr>';
+				});
+			}else {
+				tBody += '<tr>';
+				tBody += '<td colspan="4">此项目还没有上传文件</td>';
+				tBody += '</tr>';
+			}
+			
+			$('#resource-table').append(tBody);
+		}, getContextPath() + '/getResourceList', $.toJSON({
+			id : projectId
+		}))
+	} else {
+		$.message('只能选择一条记录进行查看!');
+	}
+}
+
+// 取消文件列表
+function resourceCancelFuc(){
+	$('#picture-condition').addClass('hide');
+	// 清除列表内容
+	$('#resource-table').empty();
 }
