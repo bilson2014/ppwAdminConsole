@@ -572,6 +572,8 @@ function exportFun(){
 	$('#searchForm').form('submit',{
 		url : getContextPath() + '/project/export',
 		onSubmit : function(param) {
+			//modify by wanglc,2016-6-24 15:48:49 begin
+			//form提交时,手动获取值,并封装,保证导出文件前,如果没传值会报错
 			var projectId = $('#search-projectId').combobox('getValue');
 			var userId = $('#search-userId').combobox('getValue');
 			var teamId = $('#search-teamId').combobox('getValue');
@@ -597,6 +599,7 @@ function exportFun(){
 			 param.teamId = teamId;
 			 param.source = source;
 			 param.state = state;
+			//modify by wanglc,2016-6-24 2016-6-24 16:21:25 end
 			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
 		},
 		success : function(result) {
