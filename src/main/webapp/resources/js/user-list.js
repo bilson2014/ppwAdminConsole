@@ -51,13 +51,15 @@ $().ready(function(){
 							} else if( value == 1){
 								return '<span style=color:blue; >B</span>' ; 
 							} else if( value == 2){
-								return '<span style=color:black; >C</span>' ;
+								return '<span style=color:green; >C</span>' ;
+							} else if( value == 3){
+								return '<span style=color:black; >S</span>' ;
 							}
 						},
 						editor:{
 							type:'combobox' , 
 							options:{
-								data:[{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'}] ,
+								data:[{id:3 , val:'S'},{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'}] ,
 								valueField:'id' , 
 								textField:'val' ,
 								required:true , 

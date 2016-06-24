@@ -31,8 +31,12 @@
 					</td>
 					<th>项目状态:</th>
 					<td>
-						<select id="search-state" name="state" editable="false" class="easyui-combobox" style="width: 70px;">
-							<option value="-1" selected></option>
+					<%--modify by wanglc,2016-06-23 10:00 begin
+					去掉name属性,表单提交时,不提交该内容,手动获取 --%>
+					<%-- <select id="search-state" name="state" editable="false" class="easyui-combobox" style="width: 70px;"> --%>
+						<select id="search-state" editable="false" class="easyui-combobox" style="width: 70px;">
+					<%--modify by wanglc,2016-06-23 10:00 end --%>
+							<option value="" selected></option>
 							<option value="0" >正常</option>
             				<option value="1" >取消</option>
             				<option value="3" >暂停</option>

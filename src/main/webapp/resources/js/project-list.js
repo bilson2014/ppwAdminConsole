@@ -59,7 +59,9 @@ $().ready(function(){
 							} else if( value == 1){
 								return '<span style=color:blue; >B</span>' ; 
 							} else if( value == 2){
-								return '<span style=color:black; >C</span>' ;
+								return '<span style=color:green; >C</span>' ;
+							} else if( value == 3){
+								return '<span style=color:black; >S</span>' ;
 							}
 						}
 					},{
@@ -139,6 +141,10 @@ $().ready(function(){
 							return '<span style=color:orange; >'+ info +'</span>' ;
 						}
 					},{
+						field : 'description',
+						title : '项目描述',
+						align : 'center'
+					},{
 						field : 'customerId' ,
 						title : '客户ID' ,
 						align : 'center' ,
@@ -192,12 +198,13 @@ var project = {
 			valueField : 'teamId',
 			textField : 'teamName'
 		});
+		
 		$('#search-userId').combobox({
 			// modify by wanglc,2016-6-24 14:47:59 begin
 			// -> 更换接口 
 			//url : getContextPath() + 'project/getAllVersionManager',
 			//valueField : 'userId',
-			url : getContextPath() + '/portal/findEmployeeToSynergy',
+			url : getContextPath() + '/portal/employee/findSynergy',
 			valueField : 'employeeId',
 			// modify by wanglc,2016-6-24 14:48:03 end
 			textField : 'employeeRealName'
@@ -318,7 +325,6 @@ function confirmSynergy(){
 			return -1;
 		}
 		for(var j = 0;j < synergyName.length; j++){
-			
 			//验证是否重名
 			if(synergyName[i].value==synergyName[j].value&&synergyName[i]!=synergyName[j]){
 				$("#synergy-errorInfo").children().text("协同人重复");
@@ -328,12 +334,11 @@ function confirmSynergy(){
 		}
 	}
 	//验证比例大于100
-	if(parseFloat(total)-100>0){
+	if(parseFloat(total) > 99){
 		$("#synergy-errorInfo").children().text("协同人比例不能高于100%");
 		$("#synergy-errorInfo").children().removeClass("hide");
 		return -1;
 	}
-	
 }
 //add by wanglc,2016-6-24 14:48:17 end
 
@@ -368,13 +373,8 @@ function addSynergy(){
 	 $.parser.parse($(newSynergy));
 	 var box = "synergy-content:eq("+time+")";
 	 $("."+box).combobox({
-		 	// modify by wanglc,2016-6-24 14:48:37 begin
-			// -> 更换接口 
-			//url : getContextPath() + 'project/getAllVersionManager',
-			//valueField : 'userId',
-			url : getContextPath() + '/portal/findEmployeeToSynergy',
+			url : getContextPath() + '/portal/employee/findSynergy',
 			valueField : 'employeeId',
-			// modify by wanglc,2016-6-24 14:48:42 end
 			textField : 'employeeRealName'
 	});
 	 //删除协同人
@@ -465,7 +465,7 @@ function openDialog(id,data){
 				// -> 更换接口 
 				//url : getContextPath() + 'project/getAllVersionManager',
 				//valueField : 'userId',
-				url : getContextPath() + '/portal/findEmployeeToSynergy',
+				url : getContextPath() + '/portal/employee/findSynergy',
 				valueField : 'employeeId',
 				// modify by wanglc,2016-6-24 14:49:06 end
 				textField : 'employeeRealName'
@@ -535,7 +535,7 @@ function addSynergyModel(name,ratio,userid,synergyid){
 	 $.parser.parse($(newSynergy));
 	 var box = "synergy-content:eq("+time+")";
 	 $("."+box).combobox({
-			url : getContextPath() + '/portal/findEmployeeToSynergy',
+			url : getContextPath() + '/portal/employee/findSynergy',
 			valueField : 'employeeId',
 			textField : 'employeeRealName',
 			onLoadSuccess: function () { //数据加载完毕事件
@@ -547,7 +547,18 @@ function addSynergyModel(name,ratio,userid,synergyid){
 //add by wanglc,2016-6-24 14:49:36 end
 // 查询
 function searchFun(){
-	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
+	//modify by wanglc,2016-6-24 15:48:49 begin
+	//name属性被注掉了,是为了报表导出手动提交数据,因为报表参数为空会报错,所以,这里也要改为
+	//手动获取数据
+	//datagrid.datagrid('load', $.serializeObject($('#searchForm')));
+	datagrid.datagrid('load', {
+		projectId: $('#search-projectId').combobox('getValue'),
+		userId : $('#search-userId').combobox('getValue'),
+		teamId : $('#search-teamId').combobox('getValue'),
+		source : $('#search-source').combobox('getValue'),
+		state : $('#search-state').combobox('getValue')
+	});
+	//modify by wanglc,2016-6-24 15:48:49 end
 }
 
 // 清除
@@ -565,6 +576,7 @@ function exportFun(){
 			var userId = $('#search-userId').combobox('getValue');
 			var teamId = $('#search-teamId').combobox('getValue');
 			var source = $('#search-source').combobox('getValue');
+			var state = $('#search-state').combobox('getValue');
 			if(projectId==''||projectId==null||projectId==undefined){
 				projectId=-1;
 			}
@@ -577,14 +589,17 @@ function exportFun(){
 			if(source==''||source==null||source==undefined){
 				source=-1;
 			}
+			if(state==''||state==null||state==undefined){
+				state=-1;
+			}
 			 param.projectId = projectId;
 			 param.userId = userId;
 			 param.teamId = teamId;
 			 param.source = source;
+			 param.state = state;
 			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
 		},
 		success : function(result) {
-			alert(11)
 		}
 	});
 }

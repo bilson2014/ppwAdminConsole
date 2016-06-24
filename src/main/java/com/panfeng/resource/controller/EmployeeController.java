@@ -268,7 +268,7 @@ public class EmployeeController extends BaseController{
 	 * 目前业务规则:协同人身份为视频管家和视频管家指导
 	 * @return employeeList
 	 */
-	@RequestMapping("/findEmployeeToSynergy")
+	@RequestMapping("/employee/findSynergy")
 	public List<Employee> findEmployeeToSynergy(){
 		final List<Employee> list = service.findEmployeeToSynergy();
 		return list;
