@@ -154,6 +154,8 @@ public class ProjectController extends BaseController {
 	@RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
 	public long updateInfo(final IndentProject project,
 			String user_name,String ratio,String synergyid) {
+		// add by wanglc,2016-06-23 10:00 begin
+		// -> 增加了3个参数,user_name,synergyid和ratio,用于后台修改
 		List<Synergy> list = new ArrayList<Synergy>();
 		String[] users = user_name.split(",");
 		String[] ratios = ratio.split(",");
@@ -166,6 +168,7 @@ public class ProjectController extends BaseController {
 			list.add(s);
 		}
 		project.setSynergys(list);
+		// add by wanglc,2016-06-23 10:30 end
 		if (project.getState() == 3) { // 暂停动作同时调用工作流引擎暂停
 			activitiService.suspendProcess(project);
 		}

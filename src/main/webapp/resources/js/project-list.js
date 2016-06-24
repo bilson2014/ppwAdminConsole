@@ -197,7 +197,7 @@ var project = {
 			// -> 更换接口 
 			//url : getContextPath() + 'project/getAllVersionManager',
 			//valueField : 'userId',
-			url : getContextPath() + 'portal/findEmployeeToSynergy',
+			url : getContextPath() + '/portal/findEmployeeToSynergy',
 			valueField : 'employeeId',
 			// modify by wanglc,2016-6-24 14:48:03 end
 			textField : 'employeeRealName'
@@ -372,7 +372,7 @@ function addSynergy(){
 			// -> 更换接口 
 			//url : getContextPath() + 'project/getAllVersionManager',
 			//valueField : 'userId',
-			url : getContextPath() + 'portal/findEmployeeToSynergy',
+			url : getContextPath() + '/portal/findEmployeeToSynergy',
 			valueField : 'employeeId',
 			// modify by wanglc,2016-6-24 14:48:42 end
 			textField : 'employeeRealName'
@@ -465,7 +465,7 @@ function openDialog(id,data){
 				// -> 更换接口 
 				//url : getContextPath() + 'project/getAllVersionManager',
 				//valueField : 'userId',
-				url : getContextPath() + 'portal/findEmployeeToSynergy',
+				url : getContextPath() + '/portal/findEmployeeToSynergy',
 				valueField : 'employeeId',
 				// modify by wanglc,2016-6-24 14:49:06 end
 				textField : 'employeeRealName'
@@ -535,7 +535,7 @@ function addSynergyModel(name,ratio,userid,synergyid){
 	 $.parser.parse($(newSynergy));
 	 var box = "synergy-content:eq("+time+")";
 	 $("."+box).combobox({
-			url : getContextPath() + 'portal/findEmployeeToSynergy',
+			url : getContextPath() + '/portal/findEmployeeToSynergy',
 			valueField : 'employeeId',
 			textField : 'employeeRealName',
 			onLoadSuccess: function () { //数据加载完毕事件
