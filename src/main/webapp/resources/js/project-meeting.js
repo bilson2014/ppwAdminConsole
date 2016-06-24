@@ -8,7 +8,7 @@ $().ready(function(){
 		url : getContextPath() + '/project/list',
 		idField : 'id' ,
 		title : '项目管理列表' , 
-		//fitColumns : true ,
+		fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -19,12 +19,10 @@ $().ready(function(){
 					{
 						field : 'serial',
 						title : '项目序列号',
-						width : 90,
 						align : 'center'
 					},{
 						field : 'projectName',
 						title : '项目名称',
-						width : 200,
 						align : 'center'
 					},{
 						field : 'state',
@@ -55,7 +53,9 @@ $().ready(function(){
 							} else if( value == 1){
 								return '<span style=color:blue; >B</span>' ; 
 							} else if( value == 2){
-								return '<span style=color:black; >C</span>' ;
+								return '<span style=color:green; >C</span>' ;
+							} else if( value == 3){
+								return '<span style=color:black; >S</span>' ;
 							}
 						}
 					},{
@@ -102,6 +102,11 @@ $().ready(function(){
 							}
 							return '<span style=color:orange; >'+ info +'</span>' ;
 						}
+					},{
+						field : 'description',
+						title : '项目描述',
+						align : 'center',
+						width: 100
 					},{
 						field : 'customerId' ,
 						title : '客户ID' ,

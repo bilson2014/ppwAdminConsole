@@ -59,7 +59,9 @@ $().ready(function(){
 							} else if( value == 1){
 								return '<span style=color:blue; >B</span>' ; 
 							} else if( value == 2){
-								return '<span style=color:black; >C</span>' ;
+								return '<span style=color:green; >C</span>' ;
+							} else if( value == 3){
+								return '<span style=color:black; >S</span>' ;
 							}
 						}
 					},{
@@ -139,6 +141,10 @@ $().ready(function(){
 							return '<span style=color:orange; >'+ info +'</span>' ;
 						}
 					},{
+						field : 'description',
+						title : '项目描述',
+						align : 'center'
+					},{
 						field : 'customerId' ,
 						title : '客户ID' ,
 						align : 'center' ,
@@ -192,6 +198,7 @@ var project = {
 			valueField : 'teamId',
 			textField : 'teamName'
 		});
+		
 		$('#search-userId').combobox({
 			url : getContextPath() + 'portal/findEmployeeToSynergy',
 			valueField : 'employeeId',
@@ -297,6 +304,8 @@ function save(){
 		}
 	});
 }
+// add by wanglc ，2016-06-24 14:28 begin
+// -> 协同人提交前验证信息
 /**
  * wanglc 协同人提交前验证信息 2016年6月23日 23:00:16
  */
