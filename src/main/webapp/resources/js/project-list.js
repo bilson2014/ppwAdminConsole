@@ -303,6 +303,7 @@ function save(){
 		},
 		success : function(result) {
 			$('#dlg').dialog('close');
+			datagrid.datagrid('clearSelections');
 			datagrid.datagrid('reload');
 			progressClose();
 			$.message('操作成功!');
@@ -335,7 +336,7 @@ function confirmSynergy(){
 		}
 	}
 	//验证比例大于100
-	if(parseFloat(total) < 99){
+	if(parseFloat(total) > 100){
 		$("#synergy-errorInfo").children().text("协同人比例不能高于100%");
 		$("#synergy-errorInfo").children().removeClass("hide");
 		return -1;
@@ -546,7 +547,7 @@ function addSynergyModel(name,ratio,userid,synergyid){
 			// -> 更换接口 
 			//url : getContextPath() + 'project/getAllVersionManager',
 			//valueField : 'userId',
-			url : getContextPath() + 'portal/findEmployeeToSynergy',
+			url : getContextPath() + '/portal/employee/findSynergy',
 			valueField : 'employeeId',
 			textField : 'employeeRealName',
 			onLoadSuccess: function () { //数据加载完毕事件
