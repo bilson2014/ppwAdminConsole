@@ -79,6 +79,10 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		boolean isValid = ValidateUtil.isValid(list);
 		if (isValid) {
 			for (Synergy synergy : list) {
+				if(null==synergy.getUserName()){//后台添加的数据,没有视频管家名字
+					String realName = employeeService.findEmployerById(synergy.getUserId()).getEmployeeRealName();
+					synergy.setUserName(realName);
+				}
 				synergy.setProjectId(indentProject.getId());
 				synergyService.save(synergy);
 			}
@@ -346,6 +350,19 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public long update(IndentProject indentProject) {
+		Map<Long,Synergy> map = synergyService.findSynergyMapByProjectId(indentProject.getId());
+		List<Synergy> sList = indentProject.getSynergys();
+		if(ValidateUtil.isValid(sList)){
+			for (final Synergy synergy : sList) {
+				Synergy originalSynergy = map.get(synergy.getSynergyId());
+				if(originalSynergy == null){
+					synergy.setProjectId(indentProject.getId());
+					synergyService.save(synergy);
+				}else {
+					synergyService.update(synergy);
+				}
+			}
+		}
 		final long ret = indentProjectMapper.update(indentProject);
 		return ret;
 	}
