@@ -23,4 +23,9 @@ public interface SalesmanMapper {
 
 	public Salesman findSalesmanById(@Param("salesmanId") final long salesmanId);
 
+	/**
+	 * 根据唯一身份表示获取分销人
+	 * @param uniqueId 分销人唯一身份标示
+	 */
+	public Salesman findSalesmanByUniqueId(@Param("uniqueId") final String uniqueId);
 }
