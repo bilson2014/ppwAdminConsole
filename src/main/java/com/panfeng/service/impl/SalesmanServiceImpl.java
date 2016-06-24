@@ -68,4 +68,10 @@ public class SalesmanServiceImpl implements SalesmanService {
 		return salesman;
 	}
 
+	public Salesman findSalesmanByUniqueId(final String uniqueId) {
+		
+		final Salesman salesman = mapper.findSalesmanByUniqueId(uniqueId);
+		return salesman;
+	}
+
 }

@@ -61,7 +61,7 @@ $().ready(function(){
 				formatter : function(value, row, index) {
 					var str = '&nbsp;';
 						str += $.formatString('<a href="javascript:void(0)" onclick="orderView(\'{0}\');" >查看</a> | ', row.uniqueId);
-						str += $.formatString('<a href="javascript:void(0)" onclick="orderdownLoad(\'{0}\',\'{1}\');" >下载</a>', row.uniqueId,row.salesmanName);
+						str += $.formatString('<a href="javascript:void(0)" onclick="orderDownLoad(\'{0}\',\'{1}\');" >下载</a>', row.uniqueId,row.salesmanName);
 					return str;
 				}
 			},{
@@ -197,8 +197,8 @@ function cleanFun() {
 // 获取服务地址
 function getServerName(){
 	
-	//return 'http://192.168.0.143:8080';
-	return 'http://www.apaipian.com';
+	return 'http://192.168.0.143:8080';
+	//return 'http://www.apaipian.com';
 	//return 'http://test.apaipian.com:8080';
 }
 
