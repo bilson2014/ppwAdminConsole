@@ -193,13 +193,13 @@ var project = {
 			textField : 'teamName'
 		});
 		$('#search-userId').combobox({
-			// modify by wanglc,2016-06-24 begin
+			// modify by wanglc,2016-6-24 14:47:59 begin
 			// -> 更换接口 
 			//url : getContextPath() + 'project/getAllVersionManager',
 			//valueField : 'userId',
 			url : getContextPath() + 'portal/findEmployeeToSynergy',
 			valueField : 'employeeId',
-			// modify by wanglc,2016-06-24 end
+			// modify by wanglc,2016-6-24 14:48:03 end
 			textField : 'employeeRealName'
 		});
 		
@@ -302,7 +302,7 @@ function save(){
 		}
 	});
 }
-//add by wanglc,2016-06-24 begin
+//add by wanglc,2016-6-24 14:48:11 begin
 // -> 协同人提交前验证信息
 function confirmSynergy(){
 	var synergyName = document.getElementsByName("user_name");
@@ -335,7 +335,9 @@ function confirmSynergy(){
 	}
 	
 }
-//add by wanglc,2016-06-24 begin
+//add by wanglc,2016-6-24 14:48:17 end
+
+//add by wanglc,2016-6-24 14:48:20 begin
 // ->  协同人模板
 function createSynergyView(name,ratio,userid,synergyid){
 	var $body='<tr class="synergy">'+
@@ -349,8 +351,9 @@ function createSynergyView(name,ratio,userid,synergyid){
 		$body+='</tr> ';
 	return $body;
 }
-//add by wanglc,2016-06-24 end
-//add by wanglc,2016-06-24 begin
+//add by wanglc,2016-6-24 14:48:25 end
+
+//add by wanglc,2016-6-24 14:48:28 begin
 //->  添加协同人按钮
 function addSynergy(){
 	var time = $(".synergy").length;
@@ -365,21 +368,21 @@ function addSynergy(){
 	 $.parser.parse($(newSynergy));
 	 var box = "synergy-content:eq("+time+")";
 	 $("."+box).combobox({
-		 	// modify by wanglc,2016-06-24 begin
+		 	// modify by wanglc,2016-6-24 14:48:37 begin
 			// -> 更换接口 
 			//url : getContextPath() + 'project/getAllVersionManager',
 			//valueField : 'userId',
 			url : getContextPath() + 'portal/findEmployeeToSynergy',
 			valueField : 'employeeId',
-			// modify by wanglc,2016-06-24 end
+			// modify by wanglc,2016-6-24 14:48:42 end
 			textField : 'employeeRealName'
 	});
 	 //删除协同人
 	 delSynergy();
 }
-//add by wanglc,2016-06-24 end
+//add by wanglc,2016-6-24 14:48:47 end
 
-//add by wanglc,2016-06-24 begin
+//add by wanglc,2016-6-24 14:48:50 begin
 // -> 删除协同人
 function delSynergy(){
 	//需要先解除绑定
@@ -399,7 +402,7 @@ function delSynergy(){
 		
 	});
 }
-//add by wanglc,2016-06-24 end
+//add by wanglc,2016-6-24 14:48:56 end
 
 // 打开dialog
 function openDialog(id,data){
@@ -458,25 +461,25 @@ function openDialog(id,data){
 			});
 			
 			$('#userId').combobox({
-				// modify by wanglc,2016-06-24 begin
+				// modify by wanglc,2016-6-24 14:49:02 begin
 				// -> 更换接口 
 				//url : getContextPath() + 'project/getAllVersionManager',
 				//valueField : 'userId',
 				url : getContextPath() + 'portal/findEmployeeToSynergy',
 				valueField : 'employeeId',
-				// modify by wanglc,2016-06-24 end
+				// modify by wanglc,2016-6-24 14:49:06 end
 				textField : 'employeeRealName'
 			});
 			
 			if(data != null && data != undefined && data != ''){
-				/* add by wanglc,2016-06-23 打开弹窗加载协同人模板 begin*/
+				/* add by wanglc,2016-6-24 14:49:10 打开弹窗加载协同人模板 begin*/
 				var synergys = data.synergys;
 				if(synergys != null && synergys != undefined && synergys.length>0){
 					$.each(synergys,function(i,item){
 						addSynergyModel(item.userName,item.ratio,item.userId,item.synergyId);
 					});
 				}
-				/* add by wanglc,2016-06-23 打开弹窗加载协同人模板 end*/
+				/* add by wanglc,2016-6-24 14:49:14 打开弹窗加载协同人模板 end*/
 				var userId = data.userId;
 				if(userId != null && userId != undefined && userId != ''){
 					$('#userId').combobox('setValue',userId);
@@ -517,7 +520,7 @@ function openDialog(id,data){
 		},
 	}).dialog('open').dialog('center');
 }
-//add by wanglc,2016-06-24 begin
+//add by wanglc,2016-6-24 14:49:20 begin
 // -> 打开弹窗,加载协同人模板
 function addSynergyModel(name,ratio,userid,synergyid){
 	var html = createSynergyView(name == undefined ? "" : name,
@@ -532,13 +535,8 @@ function addSynergyModel(name,ratio,userid,synergyid){
 	 $.parser.parse($(newSynergy));
 	 var box = "synergy-content:eq("+time+")";
 	 $("."+box).combobox({
-		// modify by wanglc,2016-06-24 begin
-			// -> 更换接口 
-			//url : getContextPath() + 'project/getAllVersionManager',
-			//valueField : 'userId',
 			url : getContextPath() + 'portal/findEmployeeToSynergy',
 			valueField : 'employeeId',
-			// modify by wanglc,2016-06-24 end
 			textField : 'employeeRealName',
 			onLoadSuccess: function () { //数据加载完毕事件
 				$("."+box).combobox('select', userid);
@@ -546,7 +544,7 @@ function addSynergyModel(name,ratio,userid,synergyid){
 	 });
 	 delSynergy();
 }
-//add by wanglc,2016-06-24 end
+//add by wanglc,2016-6-24 14:49:36 end
 // 查询
 function searchFun(){
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
