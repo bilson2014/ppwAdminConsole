@@ -17,18 +17,22 @@
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
-		<form id="searchForm">
+		<form id="searchForm" method="post">
 			<input type="hidden" name="payment" value="malfunction"/>
 			<table>
 				<tr>
 					<th>项目名称:</th>
 					<td>
-						<input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;" />
+					<%--modify by wanglc,2016-06-23 10:00 begin
+					去掉name属性,表单提交时,不提交该内容,手动获取 --%>
+					<%-- <input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;" /> --%>
+						<input id="search-projectId"  class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;" />
+					<%--modify by wanglc,2016-06-23 10:00 end --%>
 					</td>
 					<th>项目状态:</th>
 					<td>
 						<select id="search-state" name="state" editable="false" class="easyui-combobox" style="width: 70px;">
-							<option value="" selected> </option>
+							<option value="-1" selected></option>
 							<option value="0" >正常</option>
             				<option value="1" >取消</option>
             				<option value="3" >暂停</option>
@@ -37,15 +41,27 @@
 					</td>
 					<th>视频管家</th>
 					<td>
-						<input id="search-userId" name="userId" class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
+					<%--modify by wanglc,2016-06-23 10:00 begin
+					去掉name属性,表单提交时,不提交该内容,手动获取 --%>
+					<%-- <input id="search-userId" name="userId"  class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/> --%>
+						<input id="search-userId"   class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
+					<%--modify by wanglc,2016-06-23 10:00 end --%>
 					</td>
 					<th>供应商</th>
 					<td>
-						<input id="search-teamId" name="teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>
+					<%--modify by wanglc,2016-06-23 10:00 begin
+					去掉name属性,表单提交时,不提交该内容,手动获取 --%>
+					<%-- <input name="teamId" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/> --%>
+						<input id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>
+					<%--modify by wanglc,2016-06-23 10:00 end --%>
 					</td>
 					<th>项目来源</th>
 					<td>
-						<input id="search-source" name="source" class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
+					<%--modify by wanglc,2016-06-23 10:00 begin
+					去掉name属性,表单提交时,不提交该内容,手动获取 --%>
+					<%-- <input name="source" id="search-source"  class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/> --%>
+						<input id="search-source"  class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
+					<%--modify by wanglc,2016-06-23 10:00 end --%>
 					</td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
@@ -91,7 +107,7 @@
 	        	<input id="projectId" name="id" type="hidden">
 	        	<input id="userType" name="userType" type="hidden">
 	        	
-	        	<table style="width: 98%;">
+	        	<table id="table_info" style="width: 98%;">
 	        		<tr>
 	        			<th>项目编号</th>
 	        			<td>
@@ -197,13 +213,30 @@
 	        				<input class="easyui-textbox text-area" id="description" name="description" multiline="true" style="height: 100px;width: 92%;" prompt="在此填写对项目的描述" />
 	        			</td>
 	        		</tr>
-	        		
 	        		<tr id="referrer-tr" class="hide">
 						<th>推荐人</th>
 						<td colspan="2">
 							<input id="referrerId" name="referrerId" class="easyui-combobox" style="width: 180px;"/>
 						</td>
 					</tr>
+					<%--add by wanglc,2016-06-23 23:00 添加协同人 begin--%>
+	        		<tr id="synergy-content">
+	        			<th>协同人
+	        				<a onclick="addSynergy()" id="add-synergy" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'"></a>
+	        			</th>
+	        			<td colspan="3" id="synergy-errorInfo">
+	        				<span class="ratio-error hide" style="color:red"></span>
+	        			</td>
+	        		</tr>
+	        		<!-- <tr>
+	        			<th></th>
+	        			<td colspan="3">
+	        				<input name="user_name" class="easyui-combobox" editable="false" required="true"/>
+	        				<input name="ratio" class="easyui-textbox" required="true" style="width: 30%;"/>%
+	        				<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'"></a>
+	        			</td>
+	        		</tr> -->
+	        		<%--add by wanglc,2016-06-23 23:00 end--%>
 	        	</table>
 	        </form>
 	    </div>

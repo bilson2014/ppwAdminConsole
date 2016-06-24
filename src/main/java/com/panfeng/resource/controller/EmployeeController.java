@@ -263,4 +263,14 @@ public class EmployeeController extends BaseController{
 		}
 		return null;
 	}
+	/**
+	 * 获取项目协同人
+	 * 目前业务规则:协同人身份为视频管家和视频管家指导
+	 * @return employeeList
+	 */
+	@RequestMapping("/findEmployeeToSynergy")
+	public List<Employee> findEmployeeToSynergy(){
+		final List<Employee> list = service.findEmployeeToSynergy();
+		return list;
+	}
 }
