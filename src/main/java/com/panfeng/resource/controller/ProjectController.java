@@ -257,7 +257,7 @@ public class ProjectController extends BaseController {
 		return list;
 	}
 
-	@RequestMapping(value="/export",method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
+	@RequestMapping(value="/export",method = RequestMethod.POST)
 	public void export(final IndentProjectView view, final HttpServletResponse response) {
 		try {
 			response.setCharacterEncoding("utf-8");
@@ -269,14 +269,6 @@ public class ProjectController extends BaseController {
 			// 获取所有的项目
 			view.setBegin(0);
 			view.setLimit(999999999l);
-			// add by wanglc,2016-06-23 10:00 begin
-			// -> 增加表单验证,无选择时传值-1,在这里检测-1→null
-			if(view.getProjectId()==-1){view.setProjectId(null);}
-			if(view.getState()==-1){view.setState(null);}
-			if(view.getUserId()==-1){view.setUserId(null);}
-			if(view.getTeamId()==-1){view.setTeamId(null);}
-			if(view.getSource().equals("-1")){view.setSource(null);}
-			// add by wanglc,2016-06-23 10:30 end
 			List<IndentProject> list = indentProjectService.listWithPagination(view);
 			indentProjectService.getReport(list, outputStream);
 			if (outputStream != null) {
