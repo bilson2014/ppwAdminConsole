@@ -48,4 +48,11 @@ public interface EmployeeService {
 	public List<Employee> findEmployeeByRealNameByReffer(final String employeeRealName);
 
 	public long editPasswordById(final Employee employee);
+	
+	/**
+	 * 获取项目协同人
+	 * 目前业务规则:协同人身份为视频管家和视频管家指导
+	 * @return employeeList
+	 */
+	public List<Employee> findEmployeeToSynergy();
 }

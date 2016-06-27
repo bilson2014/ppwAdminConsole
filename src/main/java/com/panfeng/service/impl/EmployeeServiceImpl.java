@@ -149,4 +149,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		final List<Employee> list = mapper.findEmployeeByRealNameByReffer(employeeRealName);
 		return list;
 	}
+
+	@Override
+	public List<Employee> findEmployeeToSynergy() {
+		
+		final List<Employee> list = mapper.findEmployeeToSynergy();
+		return list;
+	}
 }

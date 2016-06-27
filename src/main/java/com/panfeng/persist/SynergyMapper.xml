@@ -100,7 +100,8 @@
 				sy.S_ID AS synergyId,
 				sy.S_PROJECT_ID AS projectId,
 				e.employeeRealName AS userName, 
-				sy.S_RATIO AS ratio
+				sy.S_RATIO AS ratio,
+				sy.S_USER_ID AS userId
 			FROM SYNERGY sy 
 			LEFT JOIN EMPLOYEE e
 				ON e.employeeId = sy.S_USER_ID

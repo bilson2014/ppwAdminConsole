@@ -54,7 +54,7 @@
 		<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 	</div>
 	
-	<!-- image/video show content begin-->
+	<!-- qrCode show content begin-->
 		<div id="qrCode-condition" class="picture-condition hide">
 			<div class="picture-modalDialog">
 				<div class="picture-condition-body">
@@ -67,6 +67,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- image/video show content end-->
+	<!-- qrCode list show content end-->
 </body>
 </html>

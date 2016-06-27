@@ -44,4 +44,6 @@ public interface ServiceService {
 	 * @param serviceId 服务ID
 	 */
 	public Service loadServiceById(final long serviceId);
+	
+	public Service getServiceById(final long serviceId);
 }

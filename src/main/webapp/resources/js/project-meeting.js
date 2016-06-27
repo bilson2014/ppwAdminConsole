@@ -8,7 +8,7 @@ $().ready(function(){
 		url : getContextPath() + '/project/list',
 		idField : 'id' ,
 		title : '项目管理列表' , 
-		//fitColumns : true ,
+		fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -19,12 +19,10 @@ $().ready(function(){
 					{
 						field : 'serial',
 						title : '项目序列号',
-						width : 90,
 						align : 'center'
 					},{
 						field : 'projectName',
 						title : '项目名称',
-						width : 200,
 						align : 'center'
 					},{
 						field : 'state',
@@ -55,7 +53,9 @@ $().ready(function(){
 							} else if( value == 1){
 								return '<span style=color:blue; >B</span>' ; 
 							} else if( value == 2){
-								return '<span style=color:black; >C</span>' ;
+								return '<span style=color:green; >C</span>' ;
+							} else if( value == 3){
+								return '<span style=color:black; >S</span>' ;
 							}
 						}
 					},{
@@ -103,6 +103,11 @@ $().ready(function(){
 							return '<span style=color:orange; >'+ info +'</span>' ;
 						}
 					},{
+						field : 'description',
+						title : '项目描述',
+						align : 'center',
+						width: 100
+					},{
 						field : 'customerId' ,
 						title : '客户ID' ,
 						align : 'center' ,
@@ -140,15 +145,10 @@ $().ready(function(){
 
 var project = {
 	initData : function(){
-		$('#search-teamId').combobox({
-			url : getContextPath() + '/project/getAllTeam',
-			valueField : 'teamId',
-			textField : 'teamName'
-		});
 		
 		$('#search-userId').combobox({
-			url : getContextPath() + '/project/getAllVersionManager',
-			valueField : 'userId',
+			url : getContextPath() + '/portal/employee/findSynergy',
+			valueField : 'employeeId',
 			textField : 'employeeRealName'
 		});
 		
@@ -354,7 +354,17 @@ function openDialog(id,data){
 
 // 查询
 function searchFun(){
-	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
+	//modify by wanglc,2016-6-24 15:48:49 begin
+	//name属性被注掉了,是为了报表导出手动提交数据,因为报表参数为空会报错,所以,这里也要改为
+	//手动获取数据
+	//datagrid.datagrid('load', $.serializeObject($('#searchForm')));
+	datagrid.datagrid('load', {
+		projectId: $('#search-projectId').combobox('getValue'),
+		userId : $('#search-userId').combobox('getValue'),
+		source : $('#search-source').combobox('getValue'),
+		state : $('#search-state').combobox('getValue')
+	});
+	//modify by wanglc,2016-6-24 15:48:49 end
 }
 
 // 清除
@@ -365,14 +375,93 @@ function cleanFun() {
 
 // 报表导出
 function exportFun(){
-	
 	$('#searchForm').form('submit',{
 		url : getContextPath() + '/project/export',
-		onSubmit : function() {
+		onSubmit : function(param) {
+			//modify by wanglc,2016-6-24 15:48:49 begin
+			//form提交时,手动获取值,并封装,保证导出文件前,如果没传值会报错
+			var projectId = $('#search-projectId').combobox('getValue');
+			var userId = $('#search-userId').combobox('getValue');
+			var source = $('#search-source').combobox('getValue');
+			var state = $('#search-state').combobox('getValue');
+			if(projectId == '' || projectId == null || projectId == undefined){
+				projectId=-1;
+			}
+			if(userId==''||userId==null||userId==undefined){
+				userId=-1;
+			}
+			if(source==''||source==null||source==undefined){
+				source=-1;
+			}
+			if(state==''||state==null||state==undefined){
+				state=-1;
+			}
+			 param.projectId = projectId;
+			 param.userId = userId;
+			 param.teamId = -1;
+			 param.source = source;
+			 param.state = state;
+			//modify by wanglc,2016-6-24 2016-6-24 16:21:25 end
 			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
 		},
 		success : function(result) {
 			
 		}
 	});
+}
+
+//文件列表
+function loadResourceFuc(){
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length == 1){
+		$('#picture-condition').removeClass('hide');
+		$('#p-cancel').unbind('click');
+		$('#p-cancel').bind('click',resourceCancelFuc);
+		var data = rows[0];
+		var projectId = data.id;
+		loadData(function(rList){
+			$('#resource-table').empty();
+			var tBody = '';
+			if(rList != null && rList.length > 0){
+				// 有文件列表
+				tBody += '<tr>';
+				tBody += '<th class="th-name">文件名称</th>';
+				tBody += '<th class="th-type">阶段</th>';
+				tBody += '<th class="th-time">上传时间</th>';
+				tBody += '<th class="th-operation">操作</th>';
+				tBody += '</tr>';
+				$.each(rList,function(i,n){
+					if(i % 2 == 0){
+						tBody += '<tr class="tr-even">';
+					}else {
+						tBody += '<tr class="tr-single">';
+					}
+					tBody += '<td>' + n.irOriginalName + '</td>';
+					tBody += '<td>' + n.irtype + '</td>';
+					tBody += '<td>'+ n.irCreateDate +'</td>';
+					tBody += '<td>';
+					tBody += '<a href="'+ getContextPath() + '/getFile/' + n.irId +'">下载</a>';
+					tBody += '</td>';
+					tBody += '</tr>';
+				});
+			}else {
+				tBody += '<tr>';
+				tBody += '<td colspan="4">此项目还没有上传文件</td>';
+				tBody += '</tr>';
+			}
+			
+			$('#resource-table').append(tBody);
+		}, getContextPath() + '/getResourceList', $.toJSON({
+			id : projectId
+		}))
+	} else {
+		$.message('只能选择一条记录进行查看!');
+	}
+}
+
+// 取消文件列表
+function resourceCancelFuc(){
+	$('#picture-condition').addClass('hide');
+	// 清除列表内容
+	$('#resource-table').empty();
 }

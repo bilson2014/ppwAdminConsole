@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -182,5 +183,24 @@ public class SalesmanController extends BaseController {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 验证分销人UniqueId是否为合法
+	 * @return true or false
+	 */
+	@RequestMapping(value = "/salesman/valid",method = RequestMethod.POST)
+	public Boolean isSalesmanValid(@RequestBody final Salesman man){
+		
+		if(man != null){
+			final String uniqueId = man.getUniqueId();
+			if(ValidateUtil.isValid(uniqueId)){
+				final Salesman salesman = service.findSalesmanByUniqueId(uniqueId);
+				if(salesman != null)
+					return true;
+			}
+		}
+		
+		return false;
 	}
 }

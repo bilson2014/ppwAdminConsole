@@ -13,6 +13,8 @@ public class IndentProjectView extends Pagination {
 	private Long teamId = null; // 供应商ID
 	
 	private String source = null; // 项目来源
+	
+	private String payment = "no_user"; // 付款金额，此字段作为冗余字段，没有作用
 
 	public Long getProjectId() {
 		return projectId;
@@ -54,4 +56,13 @@ public class IndentProjectView extends Pagination {
 		this.source = source;
 	}
 
+	public String getPayment() {
+		return payment;
+	}
+
+	public void setPayment(String payment) {
+		this.payment = payment;
+	}
+
+	
 }

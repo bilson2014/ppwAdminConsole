@@ -59,7 +59,9 @@ $().ready(function(){
 							} else if( value == 1){
 								return '<span style=color:blue; >B</span>' ; 
 							} else if( value == 2){
-								return '<span style=color:black; >C</span>' ;
+								return '<span style=color:green; >C</span>' ;
+							} else if( value == 3){
+								return '<span style=color:black; >S</span>' ;
 							}
 						}
 					},{
@@ -139,6 +141,10 @@ $().ready(function(){
 							return '<span style=color:orange; >'+ info +'</span>' ;
 						}
 					},{
+						field : 'description',
+						title : '项目描述',
+						align : 'center'
+					},{
 						field : 'customerId' ,
 						title : '客户ID' ,
 						align : 'center' ,
@@ -184,6 +190,7 @@ $().ready(function(){
 	project.initData();
 });
 
+
 var project = {
 	initData : function(){
 		$('#search-teamId').combobox({
@@ -193,8 +200,13 @@ var project = {
 		});
 		
 		$('#search-userId').combobox({
-			url : getContextPath() + '/project/getAllVersionManager',
-			valueField : 'userId',
+			// modify by wanglc,2016-6-24 14:47:59 begin
+			// -> 更换接口 
+			//url : getContextPath() + 'project/getAllVersionManager',
+			//valueField : 'userId',
+			url : getContextPath() + '/portal/employee/findSynergy',
+			valueField : 'employeeId',
+			// modify by wanglc,2016-6-24 14:48:03 end
 			textField : 'employeeRealName'
 		});
 		
@@ -216,6 +228,7 @@ var project = {
 
 //增加
 function addFuc(){
+	$(".synergy").remove();
 	$('#fm').form('clear');
 	openDialog('dlg',null);
 	formUrl = getContextPath() + '/project/saveInfo';
@@ -225,6 +238,7 @@ function addFuc(){
 
 // 修改
 function editFuc(){
+	$(".synergy").remove();
 	var rows = datagrid.datagrid('getSelections');
 	if(rows.length == 1){
 		$('#fm').form('clear');
@@ -269,16 +283,18 @@ function cancelFuc(){
 	datagrid.datagrid('rejectChanges');
 	editing = undefined;
 }
-
 // 确认事件
 function save(){
-	
+	//验证
+	 if(confirmSynergy()==-1){
+         return false;
+     }
 	progressLoad();
 	$('#fm').form('submit',{
 		url : formUrl,
-		onSubmit : function() {
-			var flag = $(this).form('validate');
+		onSubmit : function(param) {
 			
+			var flag = $(this).form('validate');
 			if(!flag){
 				progressClose();
 				$.message('请将信息填写完整!');
@@ -287,19 +303,114 @@ function save(){
 		},
 		success : function(result) {
 			$('#dlg').dialog('close');
+			datagrid.datagrid('clearSelections');
 			datagrid.datagrid('reload');
 			progressClose();
 			$.message('操作成功!');
 		}
 	});
 }
+//add by wanglc,2016-6-24 14:48:11 begin
+// -> 协同人提交前验证信息
+function confirmSynergy(){
+	var synergyName = document.getElementsByName("user_name");
+	var synergyRatio = document.getElementsByName("ratio");
+	var total = 0;
+	for(var i = 0; i < synergyRatio.length; i++){
+		total=parseFloat(total)+parseFloat(synergyRatio[i].value);
+		//验证是否选了自己
+		var usrId = $('#userId').combobox('getValue');
+		if(synergyName[i].value==usrId){
+			$("#synergy-errorInfo").children().text("本人不能作为协同人");
+			$("#synergy-errorInfo").children().removeClass("hide");
+			return -1;
+		}
+		for(var j = 0;j < synergyName.length; j++){
+			//验证是否重名
+			if(synergyName[i].value==synergyName[j].value&&synergyName[i]!=synergyName[j]){
+				$("#synergy-errorInfo").children().text("协同人重复");
+				$("#synergy-errorInfo").children().removeClass("hide");
+				return -1;
+			}
+		}
+	}
+	//验证比例大于100
+	if(parseFloat(total) > 100){
+		$("#synergy-errorInfo").children().text("协同人比例不能高于100%");
+		$("#synergy-errorInfo").children().removeClass("hide");
+		return -1;
+	}
+}
+//add by wanglc,2016-6-24 14:48:17 end
+
+//add by wanglc,2016-6-24 14:48:20 begin
+// ->  协同人模板
+function createSynergyView(name,ratio,userid,synergyid){
+	var $body='<tr class="synergy">'+
+	'	<th></th>'+
+	'	<td colspan="3">'+
+	'		<input class="hide-synergyid" type="hidden" name="synergyid" value="'+(synergyid==""?-1:synergyid)+'"/>'+
+	'		<input name="user_name" class="synergy-content easyui-combobox" editable="false" required="true"/>'+
+	'		<input name="ratio" value="'+ratio+'" class="easyui-textbox" required="true" style="width: 30%;"/>%'+
+	'		<a href="javascript:void(0);" class="easyui-linkbutton synergy-del" data-options="plain:true,iconCls:\'icon-remove\'"></a>'+
+	'	</td>';
+		$body+='</tr> ';
+	return $body;
+}
+//add by wanglc,2016-6-24 14:48:25 end
+
+//add by wanglc,2016-6-24 14:48:28 begin
+//->  添加协同人按钮
+function addSynergy(){
+	var time = $(".synergy").length;
+	if(time=='3'){
+		alert("最多添加三个协同人");
+		return false;//最多添加三个协同人
+	}
+	 //添加模板
+	var html = createSynergyView("","","","");
+	var newSynergy = $(html).appendTo("#table_info");
+	 //渲染easyUI
+	 $.parser.parse($(newSynergy));
+	 var box = "synergy-content:eq("+time+")";
+	 $("."+box).combobox({
+			url : getContextPath() + '/portal/employee/findSynergy',
+			valueField : 'employeeId',
+			textField : 'employeeRealName'
+	});
+	 //删除协同人
+	 delSynergy();
+}
+//add by wanglc,2016-6-24 14:48:47 end
+
+//add by wanglc,2016-6-24 14:48:50 begin
+// -> 删除协同人
+function delSynergy(){
+	//需要先解除绑定
+	$(".synergy-del").unbind('click').on("click",function(){
+		var _this = $(this);
+		var synergyId =  _this.parent().children(".hide-synergyid").val();
+		if(synergyId != null && synergyId != undefined && synergyId != ''&&synergyId != -1){//代表数据库存在,需要删除
+			loadData(function(){
+				 _this.parent().parent().remove();
+				 datagrid.datagrid('reload');
+			}, getContextPath() + '/project/remove/synergy', $.toJSON({
+				name:synergyId
+			}));
+		}else{//代表不在持久层,直接移除
+			$(this).parent().parent().remove();
+		}
+		
+	});
+}
+//add by wanglc,2016-6-24 14:48:56 end
 
 // 打开dialog
 function openDialog(id,data){
 	$('#' + id).dialog({
 		modal : true,
 		onOpen : function(event, ui) {
-			
+			$("#synergy-errorInfo").children().addClass("hide");
 			if(data == null){
 				// 新增，则生成项目序号
 				loadData(function(pro){
@@ -351,12 +462,25 @@ function openDialog(id,data){
 			});
 			
 			$('#userId').combobox({
-				url : getContextPath() + '/project/getAllVersionManager',
-				valueField : 'userId',
+				// modify by wanglc,2016-6-24 14:49:02 begin
+				// -> 更换接口 
+				//url : getContextPath() + 'project/getAllVersionManager',
+				//valueField : 'userId',
+				url : getContextPath() + '/portal/employee/findSynergy',
+				valueField : 'employeeId',
+				// modify by wanglc,2016-6-24 14:49:06 end
 				textField : 'employeeRealName'
 			});
 			
 			if(data != null && data != undefined && data != ''){
+				/* add by wanglc,2016-6-24 14:49:10 打开弹窗加载协同人模板 begin*/
+				var synergys = data.synergys;
+				if(synergys != null && synergys != undefined && synergys.length>0){
+					$.each(synergys,function(i,item){
+						addSynergyModel(item.userName,item.ratio,item.userId,item.synergyId);
+					});
+				}
+				/* add by wanglc,2016-6-24 14:49:14 打开弹窗加载协同人模板 end*/
 				var userId = data.userId;
 				if(userId != null && userId != undefined && userId != ''){
 					$('#userId').combobox('setValue',userId);
@@ -397,10 +521,49 @@ function openDialog(id,data){
 		},
 	}).dialog('open').dialog('center');
 }
-
+//add by wanglc,2016-6-24 14:49:20 begin
+// -> 打开弹窗,加载协同人模板
+function addSynergyModel(name,ratio,userid,synergyid){
+	var html = createSynergyView(name == undefined ? "" : name,
+			ratio == undefined ? "" : ratio,userid == undefined ? "" : userid,
+			synergyid == undefined ? "-1" : synergyid);
+	
+	var time = $(".synergy").length;
+	 //添加模板
+	var newSynergy = $(html).appendTo("#table_info");
+	
+	 //渲染easyUI
+	 $.parser.parse($(newSynergy));
+	 var box = "synergy-content:eq("+time+")";
+	 $("."+box).combobox({
+		// modify by wanglc,2016-06-24 begin
+			// -> 更换接口 
+			//url : getContextPath() + 'project/getAllVersionManager',
+			//valueField : 'userId',
+			url : getContextPath() + '/portal/employee/findSynergy',
+			valueField : 'employeeId',
+			textField : 'employeeRealName',
+			onLoadSuccess: function () { //数据加载完毕事件
+				$("."+box).combobox('select', userid);
+            }
+	 });
+	 delSynergy();
+}
+//add by wanglc,2016-6-24 14:49:36 end
 // 查询
 function searchFun(){
-	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
+	//modify by wanglc,2016-6-24 15:48:49 begin
+	//name属性被注掉了,是为了报表导出手动提交数据,因为报表参数为空会报错,所以,这里也要改为
+	//手动获取数据
+	//datagrid.datagrid('load', $.serializeObject($('#searchForm')));
+	datagrid.datagrid('load', {
+		projectId: $('#search-projectId').combobox('getValue'),
+		userId : $('#search-userId').combobox('getValue'),
+		teamId : $('#search-teamId').combobox('getValue'),
+		source : $('#search-source').combobox('getValue'),
+		state : $('#search-state').combobox('getValue')
+	});
+	//modify by wanglc,2016-6-24 15:48:49 end
 }
 
 // 清除
@@ -411,10 +574,37 @@ function cleanFun() {
 
 // 报表导出
 function exportFun(){
-	
 	$('#searchForm').form('submit',{
 		url : getContextPath() + '/project/export',
-		onSubmit : function() {
+		onSubmit : function(param) {
+			//modify by wanglc,2016-6-24 15:48:49 begin
+			//form提交时,手动获取值,并封装,保证导出文件前,如果没传值会报错
+			var projectId = $('#search-projectId').combobox('getValue');
+			var userId = $('#search-userId').combobox('getValue');
+			var teamId = $('#search-teamId').combobox('getValue');
+			var source = $('#search-source').combobox('getValue');
+			var state = $('#search-state').combobox('getValue');
+			if(projectId==''||projectId==null||projectId==undefined){
+				projectId=-1;
+			}
+			if(userId==''||userId==null||userId==undefined){
+				userId=-1;
+			}
+			if(teamId==''||teamId==null||teamId==undefined){
+				teamId=-1;
+			}
+			if(source==''||source==null||source==undefined){
+				source=-1;
+			}
+			if(state==''||state==null||state==undefined){
+				state=-1;
+			}
+			 param.projectId = projectId;
+			 param.userId = userId;
+			 param.teamId = teamId;
+			 param.source = source;
+			 param.state = state;
+			//modify by wanglc,2016-6-24 2016-6-24 16:21:25 end
 			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
 		},
 		success : function(result) {
@@ -433,10 +623,16 @@ function loadResourceFuc(){
 		var data = rows[0];
 		var projectId = data.id;
 		loadData(function(rList){
-			$('#resource-list').empty();
+			$('#resource-table').empty();
 			var tBody = '';
 			if(rList != null && rList.length > 0){
 				// 有文件列表
+				tBody += '<tr>';
+				tBody += '<th class="th-name">文件名称</th>';
+				tBody += '<th class="th-type">阶段</th>';
+				tBody += '<th class="th-time">上传时间</th>';
+				tBody += '<th class="th-operation">操作</th>';
+				tBody += '</tr>';
 				$.each(rList,function(i,n){
 					if(i % 2 == 0){
 						tBody += '<tr class="tr-even">';
@@ -451,9 +647,13 @@ function loadResourceFuc(){
 					tBody += '</td>';
 					tBody += '</tr>';
 				});
+			}else {
+				tBody += '<tr>';
+				tBody += '<td colspan="4">此项目还没有上传文件</td>';
+				tBody += '</tr>';
 			}
 			
-			$('#resource-list').append(tBody);
+			$('#resource-table').append(tBody);
 		}, getContextPath() + '/getResourceList', $.toJSON({
 			id : projectId
 		}))
@@ -465,5 +665,6 @@ function loadResourceFuc(){
 // 取消文件列表
 function resourceCancelFuc(){
 	$('#picture-condition').addClass('hide');
-	// TODO 清除列表内容
+	// 清除列表内容
+	$('#resource-table').empty();
 }

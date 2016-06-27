@@ -11,6 +11,7 @@ import com.panfeng.resource.view.ServiceView;
 import com.panfeng.service.ServiceService;
 
 @org.springframework.stereotype.Service
+
 public class ServiceServiceImpl implements ServiceService{
 
 	@Autowired
@@ -95,6 +96,12 @@ public class ServiceServiceImpl implements ServiceService{
 	public Service loadServiceById(final long serviceId){
 		
 		final Service service = mapper.loadServiceById(serviceId);
+		return service;
+	}
+
+	public Service getServiceById(final long serviceId) {
+		
+		final Service service = mapper.getServiceById(serviceId);
 		return service;
 	}
 

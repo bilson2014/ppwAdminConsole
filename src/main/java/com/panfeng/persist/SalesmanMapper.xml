@@ -100,4 +100,15 @@
 		]]>
 	</delete>
 	
+	<select id="findSalesmanByUniqueId" resultType="Salesman">
+		<![CDATA[
+			SELECT sale.SALESMANID AS salesmanId,
+				   sale.SALESMANNAME AS salesmanName,
+				   sale.UNIQUEID AS uniqueId
+			FROM SALESMAN sale 
+			WHERE 1 = 1
+					AND sale.UNIQUEID = #{uniqueId}
+		]]>
+	</select>
+	
 </mapper>

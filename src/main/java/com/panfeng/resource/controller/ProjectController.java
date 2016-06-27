@@ -3,6 +3,7 @@ package com.panfeng.resource.controller;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
+import com.panfeng.resource.model.Synergy;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.IndentProjectView;
 import com.panfeng.resource.view.PageFilter;
@@ -132,6 +134,19 @@ public class ProjectController extends BaseController {
 		final long rows = pf.getRows();
 		view.setBegin((page - 1) * rows);
 		view.setLimit(rows);
+		final Long productId = view.getProjectId();
+		if("-1".equals(productId)){
+			view.setProjectId(null);
+		}
+		if("-1".equals(view.getSource())){
+			view.setSource(null);
+		}
+		if("-1".equals(view.getUserId())){
+			view.setUserId(null);
+		}
+		if("-1".equals(view.getState())){
+			view.setState(null);
+		}
 		
 		DataGrid<IndentProject> dataGrid = new DataGrid<IndentProject>();
 		final List<IndentProject> list = indentProjectService.listWithPagination(view);
@@ -150,8 +165,23 @@ public class ProjectController extends BaseController {
 	}
 
 	@RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
-	public long updateInfo(final IndentProject project) {
-
+	public long updateInfo(final IndentProject project,
+			String user_name,String ratio,String synergyid) {
+		// add by wanglc,2016-06-23 10:00 begin
+		// -> 增加了3个参数,user_name,synergyid和ratio,用于后台修改
+		List<Synergy> list = new ArrayList<Synergy>();
+		String[] users = user_name.split(",");
+		String[] ratios = ratio.split(",");
+		String[] synergyids = synergyid.split(",");
+		for(int i=0;i<users.length;i++){
+			Synergy s = new Synergy();
+			s.setRatio(Double.parseDouble(ratios[i]));
+			s.setUserId(Long.parseLong(users[i]));
+			s.setSynergyId(Long.parseLong(synergyids[i]));
+			list.add(s);
+		}
+		project.setSynergys(list);
+		// add by wanglc,2016-06-23 10:30 end
 		if (project.getState() == 3) { // 暂停动作同时调用工作流引擎暂停
 			activitiService.suspendProcess(project);
 		}
@@ -183,11 +213,20 @@ public class ProjectController extends BaseController {
 	}
 
 	@RequestMapping("/saveInfo")
-	public Boolean saveInfo(final IndentProject indentProject) {
-
+	public Boolean saveInfo(final IndentProject indentProject,
+			String user_name,String ratio) {
+		List<Synergy> list = new ArrayList<Synergy>();
+		String[] users = user_name.split(",");
+		String[] ratios = ratio.split(",");
+		for(int i=0;i<users.length;i++){
+			Synergy s = new Synergy();
+			s.setRatio(Double.parseDouble(ratios[i]));
+			s.setUserId(Long.parseLong(users[i]));
+			list.add(s);
+		}
+		indentProject.setSynergys(list);
 		return indentProjectService.save(indentProject);
 	}
-
 	@RequestMapping("/delete")
 	public long delete(final long[] ids) {
 
@@ -243,6 +282,14 @@ public class ProjectController extends BaseController {
 			// 获取所有的项目
 			view.setBegin(0);
 			view.setLimit(999999999l);
+			// add by wanglc,2016-06-23 10:00 begin
+			// -> 增加表单验证,无选择时传值-1,在这里检测-1→null
+			if(view.getProjectId()==-1){view.setProjectId(null);}
+			if(view.getState()==-1){view.setState(null);}
+			if(view.getUserId()==-1){view.setUserId(null);}
+			if(view.getTeamId()==-1){view.setTeamId(null);}
+			if(view.getSource().equals("-1")){view.setSource(null);}
+			// add by wanglc,2016-06-23 10:30 end
 			List<IndentProject> list = indentProjectService.listWithPagination(view);
 			indentProjectService.getReport(list, outputStream);
 			if (outputStream != null) {

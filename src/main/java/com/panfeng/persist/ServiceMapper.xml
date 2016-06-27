@@ -227,4 +227,19 @@
 			WHERE s.SERVICEID = ${serviceId}
 		]]>
 	</select>
+	
+	<select id="getServiceById" resultType="Service">
+		<![CDATA[
+			SELECT s.SERVICEID AS serviceId,
+				   s.SERVICENAME AS serviceName,
+				   s.SERVICEDESCRIPTION AS serviceDescription,
+				   s.SERVICEPRICE AS servicePrice,
+				   s.SERVICEREALPRICE AS serviceRealPrice,
+				   s.SERVICEDISCOUNT AS serviceDiscount,
+				   s.SERVICEOD AS serviceOd,
+				   s.MCOMS AS mcoms
+			FROM SERVICE s 
+			WHERE s.SERVICEID = ${serviceId}
+		]]>
+	</select>
 </mapper>

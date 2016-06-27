@@ -46,4 +46,6 @@ public interface ServiceMapper {
 	 * @return
 	 */
 	public Service loadServiceById(@Param("serviceId") final long serviceId);
+	
+	public Service getServiceById(@Param("serviceId") final long serviceId);
 }

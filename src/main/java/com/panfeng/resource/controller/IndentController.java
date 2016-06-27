@@ -16,11 +16,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.panfeng.domain.Result;
 import com.panfeng.resource.model.Indent;
+import com.panfeng.resource.model.Product;
+import com.panfeng.resource.model.Service;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.IndentView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.IndentService;
+import com.panfeng.service.ProductService;
+import com.panfeng.service.ServiceService;
 
 /**
  * 订单相关
@@ -35,6 +40,12 @@ public class IndentController extends BaseController {
 	
 	@Autowired
 	private final IndentService service = null;
+	
+	@Autowired
+	private final ProductService productService = null;
+	
+	@Autowired
+	private final ServiceService serService = null;
 	
 	@RequestMapping("/indent-list")
 	public ModelAndView view(final ModelMap model){
@@ -89,20 +100,41 @@ public class IndentController extends BaseController {
 	// 下单
 	@RequestMapping(value = "/indent/order",method = RequestMethod.POST,
 			produces = "application/json; charset=UTF-8")
-	public Long order(@RequestBody final Indent indent) {
+	public Result order(@RequestBody final Indent indent) {
 		
+		final Result result = new Result();
 		try {
 			indent.setIndentName(URLDecoder.decode(indent.getIndentName(), "UTF-8"));
 			if(indent.getIndent_recomment() != null && !"".equals(indent.getIndent_recomment())){
 				indent.setIndent_recomment(URLDecoder.decode(indent.getIndent_recomment(), "UTF-8"));
 			}
+			
+			final long teamId = indent.getTeamId();
+			final long productId = indent.getProductId();
+			final long serviceId = indent.getServiceId();
+			
+			// 如果按产品下单，那么下单之后的订单信息需要与数据库进行对比
+			if(teamId != -1 && productId != -1 && serviceId != -1){
+				// 产品下单
+				final Product product = productService.findProductById(productId);
+				indent.setProduct_name(product.getProductName());
+				final Service ser = serService.getServiceById(serviceId);
+				indent.setSecond(ser.getMcoms());
+				indent.setIndentPrice(ser.getServiceRealPrice());
+			}
+			
 			final long ret = service.order(indent);
-			return ret;
+			if(ret > 0){
+				result.setRet(true);
+				result.setMessage(indent.getProduct_name());
+			}
+			return result;
 		} catch (UnsupportedEncodingException e) {
 			logger.error("Client Order Decoder Failure ...");
 			e.printStackTrace();
 		}
-		return null;
+		result.setRet(false);
+		return result;
 	}
 	
 	/**
