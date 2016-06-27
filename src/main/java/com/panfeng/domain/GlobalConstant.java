@@ -49,16 +49,18 @@ public final class GlobalConstant extends BaseObject {
 	public static String EMPLOYEE_IMAGE_PATH; // 内部人员图片路径
 
 	public static String STAFF_IMAGE_PATH; // 人员图片路径
-
-	public static String PAY_APPID;// 支付平台支付id
-
-	public static String PAY_APPSECRET;
-
-	public static String PAY_TESTSECRET;
 	
-	public static String PAY_MASTERSECRET;
-
+	//pay
+	public static String PAY_SIGN_KEY;
+	
+	public static String PAY_SERVER;
+	
+	public static String PAY_RETURN_SERVER;
+	
+	
 	private static GlobalConstant GLOBALCONSTANT = new GlobalConstant();
+	
+	
 
 	static {
 		if (!ValidateUtil.isValid(FILE_PROFIX)) {
@@ -74,10 +76,9 @@ public final class GlobalConstant extends BaseObject {
 						.getProperty("upload.server.staff.image");
 				
 				//pay begin
-				PAY_APPID=propertis.getProperty("pay.appid");
-				PAY_APPSECRET=propertis.getProperty("pay.appsecret");
-				PAY_TESTSECRET=propertis.getProperty("pay.testsecret");
-				PAY_MASTERSECRET=propertis.getProperty("pay.mastersecret");
+				PAY_SIGN_KEY = propertis.getProperty("pay.sign.key");
+				PAY_SERVER = propertis.getProperty("pay.server");
+				PAY_RETURN_SERVER = propertis.getProperty("pay.return.server");
 				//pay end
 				
 			} catch (Exception e) {
