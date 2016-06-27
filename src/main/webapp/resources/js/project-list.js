@@ -303,6 +303,7 @@ function save(){
 		},
 		success : function(result) {
 			$('#dlg').dialog('close');
+			datagrid.datagrid('clearSelections');
 			datagrid.datagrid('reload');
 			progressClose();
 			$.message('操作成功!');
@@ -334,7 +335,7 @@ function confirmSynergy(){
 		}
 	}
 	//验证比例大于100
-	if(parseFloat(total) > 99){
+	if(parseFloat(total) > 100){
 		$("#synergy-errorInfo").children().text("协同人比例不能高于100%");
 		$("#synergy-errorInfo").children().removeClass("hide");
 		return -1;
@@ -535,6 +536,10 @@ function addSynergyModel(name,ratio,userid,synergyid){
 	 $.parser.parse($(newSynergy));
 	 var box = "synergy-content:eq("+time+")";
 	 $("."+box).combobox({
+		// modify by wanglc,2016-06-24 begin
+			// -> 更换接口 
+			//url : getContextPath() + 'project/getAllVersionManager',
+			//valueField : 'userId',
 			url : getContextPath() + '/portal/employee/findSynergy',
 			valueField : 'employeeId',
 			textField : 'employeeRealName',
@@ -564,6 +569,7 @@ function exportFun(){
 			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
 		},
 		success : function(result) {
+			
 		}
 	});
 }

@@ -9,10 +9,6 @@
 
 	<mvc:view-controller path="/index" view-name="/portal" />
 	
-	<mvc:view-controller path="/flow" view-name="/flow" />
-	
-	<mvc:view-controller path="/addFlow" view-name="/add-flow" />
-	
 	<mvc:resources location="/resources/" mapping="/resources/**" />
 
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"

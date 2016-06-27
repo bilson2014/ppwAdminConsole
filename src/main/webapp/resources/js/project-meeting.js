@@ -145,15 +145,10 @@ $().ready(function(){
 
 var project = {
 	initData : function(){
-		$('#search-teamId').combobox({
-			url : getContextPath() + '/project/getAllTeam',
-			valueField : 'teamId',
-			textField : 'teamName'
-		});
 		
 		$('#search-userId').combobox({
-			url : getContextPath() + '/project/getAllVersionManager',
-			valueField : 'userId',
+			url : getContextPath() + '/portal/employee/findSynergy',
+			valueField : 'employeeId',
 			textField : 'employeeRealName'
 		});
 		
@@ -359,7 +354,17 @@ function openDialog(id,data){
 
 // 查询
 function searchFun(){
-	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
+	//modify by wanglc,2016-6-24 15:48:49 begin
+	//name属性被注掉了,是为了报表导出手动提交数据,因为报表参数为空会报错,所以,这里也要改为
+	//手动获取数据
+	//datagrid.datagrid('load', $.serializeObject($('#searchForm')));
+	datagrid.datagrid('load', {
+		projectId: $('#search-projectId').combobox('getValue'),
+		userId : $('#search-userId').combobox('getValue'),
+		source : $('#search-source').combobox('getValue'),
+		state : $('#search-state').combobox('getValue')
+	});
+	//modify by wanglc,2016-6-24 15:48:49 end
 }
 
 // 清除
@@ -370,17 +375,39 @@ function cleanFun() {
 
 // 报表导出
 function exportFun(){
-	
 	$('#searchForm').form('submit',{
 		url : getContextPath() + '/project/export',
-		onSubmit : function() {
+		onSubmit : function(param) {
+			//modify by wanglc,2016-6-24 15:48:49 begin
+			//form提交时,手动获取值,并封装,保证导出文件前,如果没传值会报错
+			var projectId = $('#search-projectId').combobox('getValue');
+			var userId = $('#search-userId').combobox('getValue');
+			var source = $('#search-source').combobox('getValue');
+			var state = $('#search-state').combobox('getValue');
+			if(projectId == '' || projectId == null || projectId == undefined){
+				projectId=-1;
+			}
+			if(userId==''||userId==null||userId==undefined){
+				userId=-1;
+			}
+			if(source==''||source==null||source==undefined){
+				source=-1;
+			}
+			if(state==''||state==null||state==undefined){
+				state=-1;
+			}
+			 param.projectId = projectId;
+			 param.userId = userId;
+			 param.teamId = -1;
+			 param.source = source;
+			 param.state = state;
+			//modify by wanglc,2016-6-24 2016-6-24 16:21:25 end
 			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
 		},
 		success : function(result) {
-			$.growlUI('报表输出完成', '已经为您输出了报表,请查收!');
+			
 		}
 	});
-	
 }
 
 //文件列表

@@ -394,6 +394,7 @@ function saveFuc(){ // 注册 保存按钮
 		},
 		success : function(result) {
 			$('#dlg').dialog('close');
+			datagrid.datagrid('clearSelections');
 			datagrid.datagrid('reload');
 			progressClose();
 			$.message('操作成功!');

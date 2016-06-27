@@ -134,6 +134,19 @@ public class ProjectController extends BaseController {
 		final long rows = pf.getRows();
 		view.setBegin((page - 1) * rows);
 		view.setLimit(rows);
+		final Long productId = view.getProjectId();
+		if("-1".equals(productId)){
+			view.setProjectId(null);
+		}
+		if("-1".equals(view.getSource())){
+			view.setSource(null);
+		}
+		if("-1".equals(view.getUserId())){
+			view.setUserId(null);
+		}
+		if("-1".equals(view.getState())){
+			view.setState(null);
+		}
 		
 		DataGrid<IndentProject> dataGrid = new DataGrid<IndentProject>();
 		final List<IndentProject> list = indentProjectService.listWithPagination(view);
