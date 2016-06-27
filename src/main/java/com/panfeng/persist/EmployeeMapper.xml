@@ -305,4 +305,21 @@
 			AND r.roleName like '视频管家%'
 		]]>
 	</select>
+	
+	<select id="getEmployeesWithVersionManager" resultType="Employee">
+		<![CDATA[
+			SELECT DISTINCT
+				   e.EMPLOYEEID AS employeeId,
+				   e.EMPLOYEEREALNAME AS employeeRealName
+			FROM EMPLOYEE e 
+			LEFT JOIN EMPLOYEE_ROLE inl
+			on inl.employeeId = e.employeeId
+			LEFT JOIN ROLE r
+			on r.roleId = inl.roleId
+			WHERE e.PHONENUMBER = #{phoneNumber} 
+			AND e.FLAG =  1
+			AND r.roleName like '视频管家%'
+		]]>
+	</select>
+	
 </mapper>
