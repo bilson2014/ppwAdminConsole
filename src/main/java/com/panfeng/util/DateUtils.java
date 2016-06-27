@@ -146,6 +146,16 @@ public class DateUtils {
 	    } 
 	}
 	
+	public static String getDateByFormatStr(Date date, String format) { 
+	    SimpleDateFormat sdf = new SimpleDateFormat(format); 
+	    try{ 
+	    	String str=sdf.format(date);
+	    	return str;
+	    }catch (Exception e){ 
+	        return null; 
+	    } 
+	}
+	
 	public static void main(String[] args) {
 		Date date1=getDateByFormat("2016-05-11","yyyy-MM-dd");
 		System.out.println(dateInterval(date1.getTime(),getDateByFormat("2016-06-23","yyyy-MM-dd").getTime()));
