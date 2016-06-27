@@ -156,4 +156,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		final List<Employee> list = mapper.findEmployeeToSynergy();
 		return list;
 	}
+
+	@Override
+	public List<Employee> getEmployeesWithVersionManager(final String phoneNumber) {
+		
+		final List<Employee> list = mapper.getEmployeesWithVersionManager(phoneNumber);
+		return list;
+	}
 }
