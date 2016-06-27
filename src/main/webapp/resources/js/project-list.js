@@ -608,6 +608,7 @@ function exportFun(){
 			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
 		},
 		success : function(result) {
+			
 		}
 	});
 }

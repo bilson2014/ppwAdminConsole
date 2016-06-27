@@ -371,7 +371,7 @@
 		</if>
 		
 		<![CDATA[
-			ORDER BY i.IP_ID DESC
+			ORDER BY i.IP_UPDATE_TIME DESC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>

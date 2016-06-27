@@ -140,6 +140,7 @@ function save(){
 		success : function(result) {
 			$('#dlg').dialog('close');
 			datagrid.datagrid('reload');
+			datagrid.datagrid('clearSelections');
 			progressClose();
 			$.message('操作成功!');
 		}
