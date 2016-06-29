@@ -2,8 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panfeng.persist.IndentMapper">
 	
-	<cache />
-	
 	<resultMap type="Indent" id="IndentRM">
 		<id property="indentId" column="indentId"/>
 		<result property="indentName" column="indentName"/>
