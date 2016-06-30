@@ -16,7 +16,7 @@
 	<script src="${projectMeetingJs }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
-	<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
+	<div data-options="region:'north',border:false" style="height: 66px; overflow: hidden;background-color: #fff">
 		<form id="searchForm"  method="post">
 			<input type="hidden" name="payment" value="malfunction"/>
 			<table>
@@ -27,7 +27,7 @@
 					</td>
 					<th>项目状态:</th>
 					<td>
-						<select id="search-state"  name="state" editable="false" class="easyui-combobox" style="width: 70px;">
+						<select id="search-state"  name="state" editable="false" class="easyui-combobox" style="width: 100px;">
 							<option value="" selected></option>
 							<option value="0" >正常</option>
             				<option value="1" >取消</option>
@@ -39,6 +39,8 @@
 					<td>
 						<input id="search-userId" name="userId" class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
 					</td>
+				</tr>
+				<tr>
 					<th>是否作为协同人</th>
 					<td>
 						<select disabled="disabled" id="isSynergy" name="isSynergy" editable="false" class="easyui-combobox" style="width: 100px;">
@@ -50,6 +52,7 @@
 					<td>
 						<input id="search-source" name="source" class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
 					</td>
+					<th></th>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
