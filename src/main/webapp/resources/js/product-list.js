@@ -306,10 +306,12 @@ var product = {
 	initData : function(){
 		$('#search-teamName').combobox({
 			url : getContextPath() + '/portal/product/init',
-			valueField : 'teamId',
+			//valueField : 'teamId',
+			//modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 begin 
+			valueField : 'teamName',
+			//modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 end
 			textField : 'teamName'
 		});
-		
 	}
 }
 

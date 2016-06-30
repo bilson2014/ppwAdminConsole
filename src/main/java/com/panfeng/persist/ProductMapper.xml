@@ -34,6 +34,11 @@
 		<if test="teamId !=null and teamId != ''">
 			AND pro.TEAMID = ${teamId}
 		</if>
+		<!-- modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 begin  -->
+		<if test="teamName !=null and teamName != ''">
+			AND t.TEAMNAME  LIKE CONCAT(CONCAT('%',#{teamName}),'%')
+		</if>
+		<!-- modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 begin  -->
 		<if test="productType != null and productType != ''">
 			AND pro.PRODUCTTYPE = ${productType}
 		</if>
