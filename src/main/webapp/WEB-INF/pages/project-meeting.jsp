@@ -17,18 +17,18 @@
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
-		<form id="searchForm">
+		<form id="searchForm"  method="post">
 			<input type="hidden" name="payment" value="malfunction"/>
 			<table>
 				<tr>
 					<th>项目名称:</th>
 					<td>
-						<input id="search-projectId" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;"/>
+						<input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;"/>
 					</td>
 					<th>项目状态:</th>
 					<td>
-						<select id="search-state" editable="false" class="easyui-combobox" style="width: 70px;">
-							<option value="-1" selected></option>
+						<select id="search-state"  name="state" editable="false" class="easyui-combobox" style="width: 70px;">
+							<option value="" selected></option>
 							<option value="0" >正常</option>
             				<option value="1" >取消</option>
             				<option value="3" >暂停</option>
@@ -37,11 +37,18 @@
 					</td>
 					<th>视频管家</th>
 					<td>
-						<input id="search-userId" class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
+						<input id="search-userId" name="userId" class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
+					</td>
+					<th>是否作为协同人</th>
+					<td>
+						<select disabled="disabled" id="isSynergy" name="isSynergy" editable="false" class="easyui-combobox" style="width: 100px;">
+							<option value="0" >否</option>
+            				<option value="1" >是</option>
+						</select>
 					</td>
 					<th>项目来源</th>
 					<td>
-						<input id="search-source" class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
+						<input id="search-source" name="source" class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
 					</td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
