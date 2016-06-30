@@ -57,5 +57,16 @@ public interface IndentProjectMapper {
 	public long getProjectCount();
 	
 	public long updateState(@Param("id") final long id, @Param("state") int state);
+
+	/**
+	 * add by wanglc 2016-6-28 19:56:47
+	 * 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 
+	 */
+	public List<IndentProject> listWithPaginationAddSynergy(IndentProjectView view);
+
+	/**add by wanglc 2016-6-29 10:45:22 
+	 * 查询含有协同人的数据量
+	 */
+	public long maxSizeAddSynergy(IndentProjectView view);
 	
 }

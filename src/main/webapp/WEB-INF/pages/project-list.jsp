@@ -16,7 +16,7 @@
 	<script src="${projectListJs }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
-	<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
+	<div data-options="region:'north',border:false" style="height: 66px; overflow: hidden;background-color: #fff">
 		<form id="searchForm" method="post">
 			<input type="hidden" name="payment" value="malfunction"/>
 			<table>
@@ -27,7 +27,7 @@
 					</td>
 					<th>项目状态:</th>
 					<td>
-					<select id="search-state" name="state" editable="false" class="easyui-combobox" style="width: 70px;">
+					<select id="search-state" name="state" editable="false" class="easyui-combobox" style="width: 100px;">
 							<option value="" selected></option>
 							<option value="0" >正常</option>
             				<option value="1" >取消</option>
@@ -39,6 +39,26 @@
 					<td>
 					<input id="search-userId" name="userId"  class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
 					</td>
+					<!-- modify by wanglc 2016-6-28 17:46:35 增加协同人搜索的维度 begin-->
+					<%-- <th>供应商</th>
+					<td>
+					<input name="teamId" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>
+					</td>
+					<th>项目来源</th>
+					<td>
+					<input name="source" id="search-source"  class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
+					</td> 
+					 <td>
+						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
+						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
+						<r:permission uri="/project/export">
+							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="exportFun();">报表导出</a>
+						</r:permission>
+					</td>  --%>
+					<!-- modify by wanglc 2016-6-28 17:46:35 增加协同人搜索的维度  end-->
+				</tr>
+				<!-- add by wanglc 2016-6-28 17:48:32 增加协同人搜索的维度 begin-->
+				<tr>
 					<th>供应商</th>
 					<td>
 					<input name="teamId" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>
@@ -46,6 +66,13 @@
 					<th>项目来源</th>
 					<td>
 					<input name="source" id="search-source"  class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
+					</td>
+					<th>是否作为协同人</th>
+					<td>
+						<select disabled="disabled" id="isSynergy" name="isSynergy" editable="false" class="easyui-combobox" style="width: 100px;">
+							<option value="0" >否</option>
+            				<option value="1" >是</option>
+						</select>
 					</td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
@@ -55,6 +82,7 @@
 						</r:permission>
 					</td>
 				</tr>
+				<!-- add by wanglc 2016-6-28 17:48:32 增加协同人搜索的维度end-->
 			</table>
 		</form>
 	</div>

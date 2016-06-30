@@ -207,7 +207,13 @@ var project = {
 			url : getContextPath() + '/portal/employee/findSynergy',
 			valueField : 'employeeId',
 			// modify by wanglc,2016-6-24 14:48:03 end
-			textField : 'employeeRealName'
+			textField : 'employeeRealName',
+			// add by wanglc,2016-6-29 10:31:01 begin
+			//视频管家选中后 开始是否作为协同人
+			onSelect : function(record){
+				$("#isSynergy").combobox('enable');
+			}
+			// add by wanglc,2016-6-29 10:31:01 end
 		});
 		
 		$('#search-projectId').combobox({
@@ -221,10 +227,8 @@ var project = {
 			valueField : 'name',
 			textField : 'name'
 		});
-		
 	}
 }
-
 
 //增加
 function addFuc(){
@@ -558,6 +562,10 @@ function searchFun(){
 // 清除
 function cleanFun() {
 	$('#searchForm').form('clear');
+	//add by wanglc,2016-6-29 10:34:06 begin
+	//重新禁用是否是协同人选项
+	$("#isSynergy").combobox('disable');
+	//add by wanglc,2016-6-29 10:34:06 end
 	datagrid.datagrid('load', {});
 }
 

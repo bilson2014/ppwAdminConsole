@@ -15,7 +15,17 @@ public class IndentProjectView extends Pagination {
 	private String source = null; // 项目来源
 	
 	private String payment = "no_user"; // 付款金额，此字段作为冗余字段，没有作用
+	
+	//add by wanglc 2016-6-28 18:49:18 视频管家是否是协同人begin
+	private Integer isSynergy = 0;
+	public Integer getIsSynergy() {
+		return isSynergy;
+	}
 
+	public void setIsSynergy(Integer isSynergy) {
+		this.isSynergy = isSynergy;
+	}
+	//add by wanglc 2016-6-28 18:49:18 视频管家是否是协同人end
 	public Long getProjectId() {
 		return projectId;
 	}
