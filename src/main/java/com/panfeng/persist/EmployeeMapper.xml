@@ -114,6 +114,7 @@
 				   e.EMPLOYEEREALNAME,
 				   e.EMPLOYEEPASSWORD,
 				   e.EMPLOYEEDESCRIPTION,
+				   e.EMPLOYEEIMG,
 				   DATE_FORMAT(e.UPDATEDATE,'%Y-%m-%d %T') AS updateDate,
 				   r.ROLEID,
 				   r.ROLENAME,

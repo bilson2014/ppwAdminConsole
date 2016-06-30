@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.panfeng.domain.GlobalConstant;
 import com.panfeng.resource.model.Salesman;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
@@ -58,7 +57,7 @@ public class SalesmanController extends BaseController {
 		
 		// 装载订单总数及总金额
 		for (final Salesman salesman : list) {
-			final String salesmanUniqueId = salesman.getUniqueId(); 
+			final String salesmanUniqueId = salesman.getUniqueId();
 			final long total = indentService.countBySalesmanUniqueId(salesmanUniqueId);
 			final Double price = indentService.sumPriceBySalesmanUniqueId(salesmanUniqueId);
 			if(price != null){
@@ -117,10 +116,10 @@ public class SalesmanController extends BaseController {
 		
 		final StringBuffer url = new StringBuffer();
 		url.append("http://qr.liantu.com/api.php?text=");
-		url.append(GlobalConstant.FILE_PROFIX);
-		url.append("/phone/salesman/order/");
+		//url.append(GlobalConstant.FILE_PROFIX);
+		url.append("http://www.apaipian.com/phone/salesman/order/");
 		url.append(sale.getUniqueId());
-		
+		System.err.println("分销地址为: " + url.toString());
 		File image=(File) HttpUtil.httpGetFile(url.toString(), null)[1];
 		try{
 			FileInputStream fileInputStream=new FileInputStream(image);
@@ -157,7 +156,7 @@ public class SalesmanController extends BaseController {
 		
 		final StringBuffer url = new StringBuffer();
 		url.append("http://qr.liantu.com/api.php?text=");
-		url.append(GlobalConstant.FILE_PROFIX);
+		url.append("http://www.apaipian.com");
 		url.append("/phone/salesman/");
 		url.append(sale.getUniqueId());
 		

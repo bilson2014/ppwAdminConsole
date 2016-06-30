@@ -211,6 +211,7 @@ public class VersionManagerController extends BaseController{
 		info.setSuperAdmin(false);
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(e.getEmployeeId());
+		info.setPhoto(e.getEmployeeImg());
 		
 /*		final Role role = roleService.findRoleById(9l); // 获取用户角色
 		final List<Role> roles = new ArrayList<Role>();
