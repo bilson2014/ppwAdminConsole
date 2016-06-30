@@ -27,7 +27,10 @@
 				<table>
 					<tr>
 						<th>团队名称：</th>
-						<td><input id="search-teamName" name="teamId" placeholder="请输入供应商名称"/></td>
+						<!-- <td><input id="search-teamName" name="teamId" placeholder="请输入供应商名称"/></td> -->
+						<%--modify by wanglc 2016-6-30 11:23:49 团队查询按照teamName like查询 begin--%>
+						<td><input id="search-teamName" name="teamName" placeholder="请输入供应商名称"/></td>
+						<%--modify by wanglc 2016-6-30 11:23:49 团队查询按照teamName like查询 end--%>
 						<th>审核状态：</th>
 						<td>
 							<select id="search-flag" name="flag">
