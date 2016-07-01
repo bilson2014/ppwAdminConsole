@@ -56,6 +56,7 @@ public class PayWebHookServiceImpl implements PayWebHookService {
 					dealLog.setDealStatus(DealLog.DEAL_STATUS_SUCCEED);
 					dealLog.setUnOrderId(payWebHook.getMessage_detail().get("queryId"));
 					dealLog.setPayTime(DateUtils.getDateByFormatStr(new Date(), "yyyy-MM-dd HH:mm:ss"));
+					dealLog.setPayChannel("银联");
 					long l = dealLogService.update(dealLog);
 					if (l > 0) {
 						return SUCCESS;

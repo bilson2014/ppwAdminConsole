@@ -25,9 +25,9 @@ public final class GlobalConstant extends BaseObject {
 	public static final String ROLE_CUSTOMER = "role_customer"; // 用户身份 -- 客户
 
 	public static final String ROLE_PROVIDER = "role_provider"; // 用户身份 -- 供应商
-	
+
 	// public static final String ROLE_MANAGER = "role_manager"; // 用户身份 -- 视频管家
-	
+
 	public static final String ROLE_SYSTEM = "role_system";// 系统输出
 
 	public static final String CURRENT_INFO = "current_info"; // 当前登陆者信息
@@ -38,49 +38,68 @@ public final class GlobalConstant extends BaseObject {
 
 	public static final String PROJECT_USER_INIT_PASSWORD = "000000"; // 项目用户初始密码
 
-	public static final int SESSION_EXPIRE_TIME = 3600; // redis 存储session 过期时间(秒),默认30分钟
-	
-	public static final String CONVERIONHSOT="http://123.59.75.62:8080/";
-	
-	//public static final String CONVERIONHSOT="http://10.10.69.33:8080/";
-	
+	public static final int SESSION_EXPIRE_TIME = 3600; // redis 存储session
+														// 过期时间(秒),默认30分钟
+
+	public static final String CONVERIONHSOT = "http://123.59.75.62:8080/";
+
+	public static String COOKIES_SCOPE = null;
+
+	// public static final String CONVERIONHSOT="http://10.10.69.33:8080/";
+
 	public static String FILE_PROFIX; // 文件前缀
 
 	public static String EMPLOYEE_IMAGE_PATH; // 内部人员图片路径
 
 	public static String STAFF_IMAGE_PATH; // 人员图片路径
-	
-	//pay
+
+	// pay
 	public static String PAY_SIGN_KEY;
-	
+
 	public static String PAY_SERVER;
-	
+
 	public static String PAY_RETURN_SERVER;
-	
-	
+
+	// ssl
+	public static String KEY_STORE_TRUST_PATH; // truststore的路径
+
+	public static String KEY_STORE_TYPE; // truststore的类型
+
+	public static String KEY_STORE_TRUST_PASSWORD; // truststore的密码
+
+	public static String KEY_STORE_CLIENT_PATH;
+
+	public static String KEY_STORE_TYPE_P12;
+
+	public static String KEY_STORE_PASSWORD;
+
 	private static GlobalConstant GLOBALCONSTANT = new GlobalConstant();
-	
-	
 
 	static {
 		if (!ValidateUtil.isValid(FILE_PROFIX)) {
-			final InputStream is = GLOBALCONSTANT.getClass().getClassLoader()
-					.getResourceAsStream("jdbc.properties");
+			final InputStream is = GLOBALCONSTANT.getClass().getClassLoader().getResourceAsStream("jdbc.properties");
 			try {
 				Properties propertis = new Properties();
 				propertis.load(is);
 				FILE_PROFIX = propertis.getProperty("file.prefix");
-				EMPLOYEE_IMAGE_PATH = propertis
-						.getProperty("upload.server.employee.image");
-				STAFF_IMAGE_PATH = propertis
-						.getProperty("upload.server.staff.image");
-				
-				//pay begin
+				EMPLOYEE_IMAGE_PATH = propertis.getProperty("upload.server.employee.image");
+				STAFF_IMAGE_PATH = propertis.getProperty("upload.server.staff.image");
+
+				// pay begin
 				PAY_SIGN_KEY = propertis.getProperty("pay.sign.key");
 				PAY_SERVER = propertis.getProperty("pay.server");
 				PAY_RETURN_SERVER = propertis.getProperty("pay.return.server");
-				//pay end
-				
+				// pay end
+				// ssl
+				KEY_STORE_TRUST_PATH = propertis.getProperty("key.store.trust.path");
+				KEY_STORE_TYPE = propertis.getProperty("key.store.type");
+				KEY_STORE_TRUST_PASSWORD = propertis.getProperty("key.store.trust.password");
+				KEY_STORE_CLIENT_PATH = propertis.getProperty("key.store.client.path");
+				KEY_STORE_TYPE_P12 = propertis.getProperty("key.store.type.p12");
+				KEY_STORE_PASSWORD = propertis.getProperty("key.store.password");
+				//cookie
+				COOKIES_SCOPE = propertis.getProperty("cookies.scope");
+
 			} catch (Exception e) {
 
 			} finally {

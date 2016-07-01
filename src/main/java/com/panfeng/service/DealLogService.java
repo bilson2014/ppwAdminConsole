@@ -90,6 +90,11 @@ public interface DealLogService {
 	/**
 	 * 关闭支付订单
 	 * @return
+	 * @throws Exception 
 	 */
-	BaseMsg offOrder(String token);
+	BaseMsg offOrder(String token) throws Exception;
+	
+	BaseMsg orderNumber(long projectId);
+	
+	BaseMsg notPayNumber(String userType,long userId);
 }

@@ -19,9 +19,13 @@ public interface DealLogMapper {
 	DealLog findDealByBillNo(@Param("billNo") String billNo);
 
 	List<DealLog> findDealByProjectId(@Param("projectId") long projectId);
-	
-	List<DealLog> findDealByUserId(@Param("projectId") long projectId,@Param("userId") long userId);
+
+	List<DealLog> findDealByUserId(@Param("projectId") long projectId, @Param("userId") long userId);
 
 	List<DealLog> findAll();
+
+	long orderNumber(@Param("projectId") long projectId);
+	
+	long notPayNumber(@Param("userType") String userType,@Param("userId") long userId);
 
 }
