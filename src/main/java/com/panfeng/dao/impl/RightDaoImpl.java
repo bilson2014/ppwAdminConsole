@@ -5,15 +5,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
-
 import com.panfeng.dao.RightDao;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.resource.model.Right;
 import com.panfeng.util.RedisUtils;
 import com.panfeng.util.ValidateUtil;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Transaction;
 
 @Repository(value = "rightDao")
 public class RightDaoImpl implements RightDao {
