@@ -44,7 +44,7 @@ public class DealLog extends BaseObject {
 	public final static int DEALLOG_SOURCE_ONLINE = 0;// 在线支付
 	public final static int DEALLOG_SOURCE_OFFLINE = 1;// 离线支付
 
-	public final static int LOG_TYPE_INCOME = 1;// 收入
+	public final static int LOG_TYPE_INCOME = 0;// 收入
 	public final static int LOG_TYPE_EXPENDITURE = 1;// 支出
 
 	@Override
