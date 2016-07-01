@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,11 @@ import com.panfeng.service.DealLogService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.util.AESUtil;
 import com.panfeng.util.DateUtils;
-import com.panfeng.util.HttpUtil;
+import com.panfeng.util.HttpsUtils;
 import com.panfeng.util.JsonUtil;
+import com.panfeng.util.PathFormatUtils;
 import com.panfeng.util.ValidateUtil;
+import com.sun.star.lang.NullPointerException;
 
 @Service
 public class DealLogImpl implements DealLogService {
@@ -31,7 +32,7 @@ public class DealLogImpl implements DealLogService {
 	static int PAY_URL_TIMEOUT = 30 * 60 * 1000; // ms
 	static int PAY_ORDER_TIMEOUT = 48 * 60 * 60 * 1000; // ms
 	static String PAY_INCOME_URL = GlobalConstant.PAY_SERVER + "pay/income";
-	static String UN_WEB_RETURNURL =   "http://test.apaipian.com/payment/success";
+	static String UN_WEB_RETURNURL = GlobalConstant.PAY_RETURN_SERVER + "payment/success";
 	@Autowired
 	IndentProjectService indentProjectService;
 
@@ -60,12 +61,14 @@ public class DealLogImpl implements DealLogService {
 		// step 2 查询完整数据
 		DealLog dealLog = dealLogMapper.findDealById(Long.parseLong(data[0]));
 		if (!verifyOrder(dealLog)) {
+			dealLog.setDealStatus(DealLog.DEAL_STATUS_OFF);
+			dealLogMapper.update(dealLog);
 			return new BaseMsg(BaseMsg.ERROR, "订单失效，请联系视频管家。", null);
 		}
 		dealLog.setPayChannel("UN_WEB");
 		dealLog.setTitle(dealLog.getProjectName());
 		dealLog.setReturnUrl(UN_WEB_RETURNURL);
-		// step 2 end
+		// step 2 end 
 
 		// step 3 签名数据
 		// Sign sign = new
@@ -74,7 +77,7 @@ public class DealLogImpl implements DealLogService {
 		// step 3 end
 
 		// step 4 发起支付请求
-		String str = HttpUtil.httpPost(PAY_INCOME_URL, dealLog, null);
+		String str = HttpsUtils.httpsPost(PAY_INCOME_URL, dealLog, null, false);
 		if (ValidateUtil.isValid(str)) {
 			return JsonUtil.toBean(str, BaseMsg.class);
 		} else {
@@ -115,6 +118,7 @@ public class DealLogImpl implements DealLogService {
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
+								setOrderTimeOut(dealLog); // 设置超时时间
 							} else {
 								// 订单已经过期
 								dealLog.setDealStatus(DealLog.DEAL_STATUS_OFF);
@@ -122,7 +126,6 @@ public class DealLogImpl implements DealLogService {
 							}
 						}
 						// 否则为其他状态，不添加token
-
 						// 剔除Id属性
 						dealLog.setDealId(-1L);
 					}
@@ -157,9 +160,9 @@ public class DealLogImpl implements DealLogService {
 	@Override
 	public BaseMsg sendPay(final DealLog dealLog) throws Exception {
 		// 设置基本属性
-		dealLog.setDealLogSource(DealLog.DEAL_STATUS_ONGOING);
+		dealLog.setDealLogSource(DealLog.DEALLOG_SOURCE_ONLINE);
 		dealLog.setDealStatus(DealLog.DEAL_STATUS_ONGOING);
-		dealLog.setLogType(DealLog.DEALLOG_SOURCE_ONLINE);
+		dealLog.setLogType(DealLog.LOG_TYPE_INCOME);
 		// 补充title
 		dealLog.setTitle(dealLog.getProjectName());
 		// 填充客户
@@ -229,6 +232,11 @@ public class DealLogImpl implements DealLogService {
 			return false;
 	}
 
+	/**
+	 * 设置订单超时时间
+	 * 
+	 * @param dealLog
+	 */
 	static void setOrderTimeOut(DealLog dealLog) {
 		Date date = DateUtils.getDateByFormat(dealLog.getCreateTime(), "yyyy-MM-dd HH:mm:ss");
 		long createTime = date.getTime();
@@ -237,6 +245,9 @@ public class DealLogImpl implements DealLogService {
 		dealLog.setOrderTimeOut(formattime);
 	}
 
+	/**
+	 * 加载去支付页面信息，
+	 */
 	@Override
 	public DealLog getOrderInfo(String token) throws Exception {
 		String[] data = decodeToken(token);
@@ -257,6 +268,7 @@ public class DealLogImpl implements DealLogService {
 				dealLogMapper.update(DBdealLog); // 更改状态 订单完结
 			}
 		}
+		DBdealLog.setDealId(-1L); // 解绑ID
 		return DBdealLog;
 	}
 
@@ -273,24 +285,28 @@ public class DealLogImpl implements DealLogService {
 	@Override
 	public BaseMsg shareUrl(String token) throws Exception {
 		if (token == null) {
-			return new BaseMsg(BaseMsg.ERROR, "订单对象不能为空", null);
+			return new BaseMsg(BaseMsg.ERROR, "token不能为空", null);
 		}
 		// 返回token，其他在前台拼接
 		String[] data = decodeToken(token);
-		DealLog dealLog = dealLogMapper.findDealById(Long.parseLong(data[0]));
-		if (dealLog != null) {
-			if (verifyOrder(dealLog)) {
-				// 订单在有效期内生成Token
-				String newToken = getToken(dealLog);
-				if (ValidateUtil.isValid(newToken))
-					return new BaseMsg(BaseMsg.NORMAL, "正常", newToken);
-				else
-					return new BaseMsg(BaseMsg.ERROR, "token，生成失败", token);
+		if (!verifyTime(data[1])) {
+			DealLog dealLog = dealLogMapper.findDealById(Long.parseLong(data[0]));
+			if (dealLog != null) {
+				if (verifyOrder(dealLog)) {
+					// 订单在有效期内生成Token
+					String newToken = getToken(dealLog);
+					if (ValidateUtil.isValid(newToken))
+						return new BaseMsg(BaseMsg.NORMAL, "正常", newToken);
+					else
+						return new BaseMsg(BaseMsg.ERROR, "token，生成失败", token);
+				} else {
+					return new BaseMsg(BaseMsg.ERROR, "token，订单已经失效", token);
+				}
 			} else {
-				return new BaseMsg(BaseMsg.ERROR, "token，订单已经失效", token);
+				return new BaseMsg(BaseMsg.ERROR, "token无效", token);
 			}
 		} else {
-			return new BaseMsg(BaseMsg.ERROR, "token，错误", token);
+			return new BaseMsg(BaseMsg.ERROR, "token无效", null);
 		}
 	}
 
@@ -303,6 +319,7 @@ public class DealLogImpl implements DealLogService {
 		dealLog.setDealLogSource(DealLog.DEALLOG_SOURCE_OFFLINE);
 		dealLog.setDealStatus(DealLog.DEAL_STATUS_SUCCEED);
 		dealLog.setLogType(DealLog.LOG_TYPE_INCOME);
+		
 		// 填充客户
 		long proId = dealLog.getProjectId();
 		IndentProject indentProject = new IndentProject();
@@ -342,19 +359,45 @@ public class DealLogImpl implements DealLogService {
 			}
 			dealLog.setProjectName(ip.getProjectName());
 			dealLog.setUserName(ip.getUserName());
-			dealLog.setBillNo(generateRandomUUIDPure());
+
+			dealLog.setBillNo(generateBillNo(ip.getSerial()));
 			return dealLog;
 		}
 		return new DealLog();
 	}
-	
-	public BaseMsg offOrder(String token){
-		return null;
-	}
-	
-	
 
-	public static String generateRandomUUIDPure() {
-		return UUID.randomUUID().toString().replaceAll("-", "");
+	public BaseMsg offOrder(String token) throws Exception {
+		if(token == null)
+			throw new NullPointerException("token,不能为空");
+		String[] data = decodeToken(token);
+		if (!verifyTime(data[1])) {
+			DealLog dealLog = dealLogMapper.findDealById(Long.parseLong(data[0]));
+			if (dealLog != null) {
+				dealLog.setDealStatus(DealLog.DEAL_STATUS_OFF);
+				dealLogMapper.update(dealLog);
+				return new BaseMsg(BaseMsg.NORMAL, "关闭成功", null);
+			} else {
+				return new BaseMsg(BaseMsg.ERROR, "token无效", token);
+			}
+		} else {
+			return new BaseMsg(BaseMsg.ERROR, "token无效", null);
+		}
+	}
+
+	public static String generateBillNo(String serial) {
+		String res = serial + PathFormatUtils.parse("{rand:4}{hh}{ii}{ss}");
+		return res;
+	}
+
+	@Override
+	public BaseMsg orderNumber(long projectId) {
+		long count = dealLogMapper.orderNumber(projectId);
+		return new BaseMsg(BaseMsg.NORMAL, "正常", count);
+	}
+
+	@Override
+	public BaseMsg notPayNumber(String userType, long userId) {
+		long count = dealLogMapper.notPayNumber(userType, userId);
+		return new BaseMsg(BaseMsg.NORMAL, "正常", count);
 	}
 }

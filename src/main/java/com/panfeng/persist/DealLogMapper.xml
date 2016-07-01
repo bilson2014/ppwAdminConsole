@@ -22,7 +22,7 @@
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
 				dl.DL_PAYTIME AS　payTime
-				FROM DEAL_LOG dl
+				FROM DEAL_LOG dl ORDER BY dl.DL_ID desc
 		]]>
 	</select>
 
@@ -46,7 +46,7 @@
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
 				dl.DL_PAYTIME AS　payTime
-				FROM DEAL_LOG dl WHERE DL_ID = ${dealId}
+				FROM DEAL_LOG dl WHERE DL_ID = ${dealId} ORDER BY dl.DL_ID desc
 		]]>
 	</select>
 
@@ -70,8 +70,8 @@
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
 				dl.DL_PAYTIME AS　payTime
-				FROM DEAL_LOG dl WHERE dl.DL_BILLNO = #{billNo}
-		]]>
+				FROM DEAL_LOG dl WHERE dl.DL_BILLNO = #{billNo} ORDER BY dl.DL_ID desc
+		]]> 
 	</select>
 	
 	<select id="findDealByProjectId" resultType="DealLog">
@@ -94,7 +94,7 @@
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
 				dl.DL_PAYTIME AS　payTime
-			 FROM DEAL_LOG dl WHERE dl.DL_PROJECT_ID = #{projectId}
+			 FROM DEAL_LOG dl WHERE dl.DL_PROJECT_ID = #{projectId} ORDER BY dl.DL_ID desc
 		
 		]]>
 	</select>
@@ -119,8 +119,25 @@
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
 				dl.DL_PAYTIME AS　payTime
-			 FROM DEAL_LOG dl WHERE dl.DL_USER_ID = #{userId} AND dl.DL_PROJECT_ID =#{projectId}
+			 FROM DEAL_LOG dl WHERE dl.DL_USER_ID = #{userId} AND dl.DL_PROJECT_ID =#{projectId} ORDER BY dl.DL_ID desc
 		
+		]]>
+	</select>
+	
+	<select id="orderNumber" resultType="long">
+		<![CDATA[
+			SELECT  COUNT(dl.DL_ID) 
+			FROM DEAL_LOG dl 
+			WHERE dl.DL_PROJECT_ID = #{projectId}
+		]]>
+	</select>
+	
+	<select id="notPayNumber" resultType="long">
+		<![CDATA[
+			SELECT  COUNT(dl.DL_ID) FROM DEAL_LOG dl 
+			WHERE dl.DL_USER_TYPR = #{userType}
+			AND dl.DL_USER_ID =${userId}
+			AND dl.DL_DEAL_STATUS = 0
 		]]>
 	</select>
 	
@@ -139,6 +156,11 @@
 				DL_USER_NAME,
 				DL_PAY_PRICE,
 				DL_DESCRIPTION
+				]]>
+				<if test="payTime != null and payTime != '' ">
+					,DL_PAYTIME
+				</if>
+		<![CDATA[
 			)
 			VALUES(
 				#{billNo},
@@ -157,6 +179,9 @@
 				</if>
 				<if test="description == null ">
 					""
+				</if>
+				<if test="payTime != null and payTime != '' ">
+					,DATE_FORMAT(#{payTime},'%Y-%m-%d %T')
 				</if>
 			<![CDATA[
 			)

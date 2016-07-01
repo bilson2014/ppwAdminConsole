@@ -64,8 +64,8 @@ public class PayController extends BaseController {
 	}
 
 	@RequestMapping("/get/billno")
-	public DealLog getBillNo(@RequestBody Map<String,Long> map) {
-		
+	public DealLog getBillNo(@RequestBody Map<String, Long> map) {
+
 		return dealLogService.getDefaultDeal(map.get("projectId"));
 	}
 
@@ -143,6 +143,38 @@ public class PayController extends BaseController {
 	@RequestMapping("/offline/save")
 	public BaseMsg offlineSave(@RequestBody DealLog dealLog) {
 		BaseMsg baseMsg = dealLogService.offlineSave(dealLog);
+		return baseMsg;
+	}
+
+	@RequestMapping("/offorder")
+	public BaseMsg offOrder(@RequestBody Map<String, String> token) {
+		if (token == null) {
+			return new BaseMsg(BaseMsg.ERROR, "token，不能为空", "");
+		}
+		try {
+			BaseMsg baseMsg = dealLogService.offOrder(token.get("token"));
+			return baseMsg;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new BaseMsg(BaseMsg.ERROR, "token，解析失败", "");
+		}
+	}
+
+	@RequestMapping("/hasOrderHistory")
+	public BaseMsg hasOrderHistory(@RequestBody Map<String, Long> projectId) {
+		if (projectId.size() < 1) {
+			return new BaseMsg(BaseMsg.ERROR, "项目ID不能为空", "");
+		}
+		BaseMsg baseMsg = dealLogService.orderNumber(projectId.get("projectId"));
+		return baseMsg;
+	}
+
+	@RequestMapping("/hasNotPayOrder")
+	public BaseMsg hasNotPayOrder(@RequestBody Map<String, String> userInfo) {
+		if (userInfo.size() < 2) {
+			return new BaseMsg(BaseMsg.ERROR, "用户信息不完整", "");
+		}
+		BaseMsg baseMsg = dealLogService.notPayNumber(userInfo.get("userType"), Long.parseLong(userInfo.get("userId")));
 		return baseMsg;
 	}
 }

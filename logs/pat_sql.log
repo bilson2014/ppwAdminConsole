@@ -1,306 +1,318 @@
-2016-05-26 19:47:28,322 INFO                    
+2016-06-28 14:05:03,139 INFO                    
 select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
- {executed in 7 msec}
-2016-05-26 19:47:28,411 INFO                    
+ {executed in 8 msec}
+2016-06-28 14:05:03,253 INFO                    
 select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
 desc 
- {executed in 17 msec}
-2016-05-26 19:47:28,455 INFO                    
-select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '810001' order by NAME_ asc 
- {executed in 11 msec}
-2016-05-26 19:47:28,484 INFO                    
+ {executed in 19 msec}
+2016-06-28 14:05:03,306 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1265001' order by NAME_ asc 
+ {executed in 10 msec}
+2016-06-28 14:05:03,330 INFO                    
 select * from ACT_GE_PROPERTY where NAME_ = 'next.dbid' 
- {executed in 6 msec}
-2016-05-26 19:47:28,497 INFO                    
-update ACT_GE_PROPERTY SET REV_ = 327, VALUE_ = '815001' where NAME_ = 'next.dbid' and REV_ 
-= 326 
- {executed in 10 msec}
-2016-05-26 19:47:29,158 INFO                    
-select * from ACT_RE_PROCDEF where KEY_ = 'IndentFlow' and (TENANT_ID_ = '' or TENANT_ID_ is 
-null) and VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = 'IndentFlow' and 
-(TENANT_ID_ = '' or TENANT_ID_ is null)) 
  {executed in 7 msec}
-2016-05-26 19:47:29,168 INFO                    
-select J.* from ACT_RU_JOB J inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_ = P.ID_ where J.HANDLER_TYPE_ 
-= 'timer-start-event' and P.KEY_ = 'IndentFlow' and (P.TENANT_ID_ = '' or P.TENANT_ID_ is null) 
- {executed in 6 msec}
-2016-05-26 19:47:29,218 INFO                    
-select * from ACT_RU_EVENT_SUBSCR where (EVENT_TYPE_ = 'message') and ( (CONFIGURATION_ = 'IndentFlow:270:810004') 
-or (PROC_DEF_ID_ = 'IndentFlow:270:810004') ) and (TENANT_ID_ = '' or TENANT_ID_ is null) 
- {executed in 7 msec}
-2016-05-26 19:47:29,225 INFO                    
-select * from ACT_RU_EVENT_SUBSCR where (EVENT_TYPE_ = 'signal') and ( (CONFIGURATION_ = 'IndentFlow:270:810004') 
-or (PROC_DEF_ID_ = 'IndentFlow:270:810004') ) and (TENANT_ID_ = '' or TENANT_ID_ is null) 
- {executed in 6 msec}
-2016-05-26 19:47:29,241 INFO                    
-insert into ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, 
-DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, 
-TENANT_ID_) values ('IndentFlow:271:812504', 1, 'http://www.activiti.org/test', 'IndentFlow', 
-'IndentFlow', 271, '812501', 'D:\zuixinban\Pat4\target\classes\IndentFlow.bpmn', 'D:\zuixinban\Pat4\target\classes\IndentFlow.IndentFlow.png', 
-NULL, 0, 1, 1, '') 
- {executed in 10 msec}
-2016-05-26 19:47:29,253 INFO                    
-insert into ACT_RE_DEPLOYMENT(ID_, NAME_, CATEGORY_, TENANT_ID_, DEPLOY_TIME_) values('812501', 
-'SpringAutoDeployment', NULL, '', '05/26/2016 19:47:28.393') 
- {executed in 10 msec}
-2016-05-26 19:47:29,277 INFO                    
-INSERT INTO ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_, GENERATED_) VALUES ('812502', 
-1, 'D:\zuixinban\Pat4\target\classes\IndentFlow.bpmn', '<Binary InputStream of length 5311>', 
-'812501', 0) , ('812503', 1, 'D:\zuixinban\Pat4\target\classes\IndentFlow.IndentFlow.png', 
-'<Binary InputStream of length 4319>', '812501', 1) 
- {executed in 21 msec}
-2016-05-26 19:47:30,545 INFO                    
-SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
-r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
-WHERE r.URL <> '' ORDER BY r.SEQ ASC 
- {executed in 14 msec}
-2016-05-26 19:47:30,797 INFO                    
-SELECT i.IP_ID AS id, i.IP_PROJECT_NAME AS projectName, i.IP_USER_CONTACT AS userContact, i.IP_USER_PHONE 
-AS userPhone, i.IP_TEAM_CONTACT AS teamContact, i.IP_TEAM_PHONE AS teamPhone, i.IP_USER_TYPE 
-AS userType, i.IP_USER_ID AS userId, i.IP_DESCRIPTION AS description, i.IP_SERIAL AS serial, 
-i.IP_SOURCE AS source, i.IP_STATE AS state, i.IP_CUSTOMERID AS customerId, i.IP_TEAMID AS teamId, 
-u.USERNAME AS userName, t.TEAMNAME AS teamName, i.IP_PRICE_FIRST AS priceFirst, i.IP_PRICE_LAST 
-AS priceLast, i.IP_PRICE_FINISH AS priceFinish, s.staffName AS referrerName, i.ip_referrer_id 
-AS referrerId, DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime, i.IP_CUSTOMER_PAYMENT 
-AS customerPayment, i.IP_PROVIDER_PAYMENT AS providerPayment FROM INDENT_PROJECT i LEFT JOIN 
-USERS u on i.ip_customerId=u.id LEFT JOIN TEAM t ON i.ip_teamId = t.teamId LEFT JOIN STAFF 
-s ON i.ip_referrer_id = s.staffId WHERE i.IP_USER_ID=2 ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID 
-DESC; 
- {executed in 8 msec}
-2016-05-26 19:51:52,407 INFO                    
-select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
- {executed in 6 msec}
-2016-05-26 19:51:52,467 INFO                    
-select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
-desc 
- {executed in 12 msec}
-2016-05-26 19:51:52,502 INFO                    
-select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '812501' order by NAME_ asc 
- {executed in 7 msec}
-2016-05-26 19:51:53,444 INFO                    
-SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
-r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
-WHERE r.URL <> '' ORDER BY r.SEQ ASC 
- {executed in 13 msec}
-2016-05-26 19:51:53,666 INFO                    
-SELECT i.IP_ID AS id, i.IP_PROJECT_NAME AS projectName, i.IP_USER_CONTACT AS userContact, i.IP_USER_PHONE 
-AS userPhone, i.IP_TEAM_CONTACT AS teamContact, i.IP_TEAM_PHONE AS teamPhone, i.IP_USER_TYPE 
-AS userType, i.IP_USER_ID AS userId, i.IP_DESCRIPTION AS description, i.IP_SERIAL AS serial, 
-i.IP_SOURCE AS source, i.IP_STATE AS state, i.IP_CUSTOMERID AS customerId, i.IP_TEAMID AS teamId, 
-u.USERNAME AS userName, t.TEAMNAME AS teamName, i.IP_PRICE_FIRST AS priceFirst, i.IP_PRICE_LAST 
-AS priceLast, i.IP_PRICE_FINISH AS priceFinish, s.staffName AS referrerName, i.ip_referrer_id 
-AS referrerId, DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime, i.IP_CUSTOMER_PAYMENT 
-AS customerPayment, i.IP_PROVIDER_PAYMENT AS providerPayment FROM INDENT_PROJECT i LEFT JOIN 
-USERS u on i.ip_customerId=u.id LEFT JOIN TEAM t ON i.ip_teamId = t.teamId LEFT JOIN STAFF 
-s ON i.ip_referrer_id = s.staffId WHERE i.IP_USER_ID=2 ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID 
-DESC; 
- {executed in 11 msec}
-2016-05-26 19:52:05,135 INFO                    
-select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
- {executed in 6 msec}
-2016-05-26 19:52:05,194 INFO                    
-select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
-desc 
- {executed in 13 msec}
-2016-05-26 19:52:05,230 INFO                    
-select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '812501' order by NAME_ asc 
- {executed in 10 msec}
-2016-05-26 19:52:06,147 INFO                    
-SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
-r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
-WHERE r.URL <> '' ORDER BY r.SEQ ASC 
- {executed in 12 msec}
-2016-05-26 19:52:06,351 INFO                    
-SELECT i.IP_ID AS id, i.IP_PROJECT_NAME AS projectName, i.IP_USER_CONTACT AS userContact, i.IP_USER_PHONE 
-AS userPhone, i.IP_TEAM_CONTACT AS teamContact, i.IP_TEAM_PHONE AS teamPhone, i.IP_USER_TYPE 
-AS userType, i.IP_USER_ID AS userId, i.IP_DESCRIPTION AS description, i.IP_SERIAL AS serial, 
-i.IP_SOURCE AS source, i.IP_STATE AS state, i.IP_CUSTOMERID AS customerId, i.IP_TEAMID AS teamId, 
-u.USERNAME AS userName, t.TEAMNAME AS teamName, i.IP_PRICE_FIRST AS priceFirst, i.IP_PRICE_LAST 
-AS priceLast, i.IP_PRICE_FINISH AS priceFinish, s.staffName AS referrerName, i.ip_referrer_id 
-AS referrerId, DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime, i.IP_CUSTOMER_PAYMENT 
-AS customerPayment, i.IP_PROVIDER_PAYMENT AS providerPayment FROM INDENT_PROJECT i LEFT JOIN 
-USERS u on i.ip_customerId=u.id LEFT JOIN TEAM t ON i.ip_teamId = t.teamId LEFT JOIN STAFF 
-s ON i.ip_referrer_id = s.staffId WHERE i.IP_USER_ID=2 ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID 
-DESC; 
- {executed in 6 msec}
-2016-05-26 19:53:44,506 INFO                    
-select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
- {executed in 5 msec}
-2016-05-26 19:53:44,563 INFO                    
-select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
-desc 
- {executed in 11 msec}
-2016-05-26 19:53:44,600 INFO                    
-select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '812501' order by NAME_ asc 
- {executed in 8 msec}
-2016-05-26 19:53:45,601 INFO                    
-SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
-r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
-WHERE r.URL <> '' ORDER BY r.SEQ ASC 
- {executed in 12 msec}
-2016-05-26 19:53:45,810 INFO                    
-SELECT i.IP_ID AS id, i.IP_PROJECT_NAME AS projectName, i.IP_USER_CONTACT AS userContact, i.IP_USER_PHONE 
-AS userPhone, i.IP_TEAM_CONTACT AS teamContact, i.IP_TEAM_PHONE AS teamPhone, i.IP_USER_TYPE 
-AS userType, i.IP_USER_ID AS userId, i.IP_DESCRIPTION AS description, i.IP_SERIAL AS serial, 
-i.IP_SOURCE AS source, i.IP_STATE AS state, i.IP_CUSTOMERID AS customerId, i.IP_TEAMID AS teamId, 
-u.USERNAME AS userName, t.TEAMNAME AS teamName, i.IP_PRICE_FIRST AS priceFirst, i.IP_PRICE_LAST 
-AS priceLast, i.IP_PRICE_FINISH AS priceFinish, s.staffName AS referrerName, i.ip_referrer_id 
-AS referrerId, DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime, i.IP_CUSTOMER_PAYMENT 
-AS customerPayment, i.IP_PROVIDER_PAYMENT AS providerPayment FROM INDENT_PROJECT i LEFT JOIN 
-USERS u on i.ip_customerId=u.id LEFT JOIN TEAM t ON i.ip_teamId = t.teamId LEFT JOIN STAFF 
-s ON i.ip_referrer_id = s.staffId WHERE i.IP_USER_ID=2 ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID 
-DESC; 
- {executed in 6 msec}
-2016-05-26 19:55:15,399 INFO                    
-select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
- {executed in 5 msec}
-2016-05-26 19:55:15,458 INFO                    
-select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
-desc 
- {executed in 13 msec}
-2016-05-26 19:55:15,494 INFO                    
-select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '812501' order by NAME_ asc 
- {executed in 7 msec}
-2016-05-26 19:55:16,361 INFO                    
-SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
-r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
-WHERE r.URL <> '' ORDER BY r.SEQ ASC 
- {executed in 11 msec}
-2016-05-26 19:55:16,562 INFO                    
-SELECT i.IP_ID AS id, i.IP_PROJECT_NAME AS projectName, i.IP_USER_CONTACT AS userContact, i.IP_USER_PHONE 
-AS userPhone, i.IP_TEAM_CONTACT AS teamContact, i.IP_TEAM_PHONE AS teamPhone, i.IP_USER_TYPE 
-AS userType, i.IP_USER_ID AS userId, i.IP_DESCRIPTION AS description, i.IP_SERIAL AS serial, 
-i.IP_SOURCE AS source, i.IP_STATE AS state, i.IP_CUSTOMERID AS customerId, i.IP_TEAMID AS teamId, 
-u.USERNAME AS userName, t.TEAMNAME AS teamName, i.IP_PRICE_FIRST AS priceFirst, i.IP_PRICE_LAST 
-AS priceLast, i.IP_PRICE_FINISH AS priceFinish, s.staffName AS referrerName, i.ip_referrer_id 
-AS referrerId, DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime, i.IP_CUSTOMER_PAYMENT 
-AS customerPayment, i.IP_PROVIDER_PAYMENT AS providerPayment FROM INDENT_PROJECT i LEFT JOIN 
-USERS u on i.ip_customerId=u.id LEFT JOIN TEAM t ON i.ip_teamId = t.teamId LEFT JOIN STAFF 
-s ON i.ip_referrer_id = s.staffId WHERE i.IP_USER_ID=2 ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID 
-DESC; 
- {executed in 6 msec}
-2016-05-26 19:57:14,725 INFO                    
-select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
- {executed in 5 msec}
-2016-05-26 19:57:14,780 INFO                    
-select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
-desc 
- {executed in 12 msec}
-2016-05-26 19:57:14,822 INFO                    
-select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '815001' order by NAME_ asc 
- {executed in 8 msec}
-2016-05-26 19:57:14,841 INFO                    
-select * from ACT_GE_PROPERTY where NAME_ = 'next.dbid' 
- {executed in 6 msec}
-2016-05-26 19:57:14,852 INFO                    
-update ACT_GE_PROPERTY SET REV_ = 329, VALUE_ = '820001' where NAME_ = 'next.dbid' and REV_ 
-= 328 
- {executed in 9 msec}
-2016-05-26 19:57:15,404 INFO                    
-select * from ACT_RE_PROCDEF where KEY_ = 'IndentFlow' and (TENANT_ID_ = '' or TENANT_ID_ is 
-null) and VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = 'IndentFlow' and 
-(TENANT_ID_ = '' or TENANT_ID_ is null)) 
- {executed in 6 msec}
-2016-05-26 19:57:15,416 INFO                    
-select J.* from ACT_RU_JOB J inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_ = P.ID_ where J.HANDLER_TYPE_ 
-= 'timer-start-event' and P.KEY_ = 'IndentFlow' and (P.TENANT_ID_ = '' or P.TENANT_ID_ is null) 
- {executed in 6 msec}
-2016-05-26 19:57:15,456 INFO                    
-select * from ACT_RU_EVENT_SUBSCR where (EVENT_TYPE_ = 'message') and ( (CONFIGURATION_ = 'IndentFlow:272:815004') 
-or (PROC_DEF_ID_ = 'IndentFlow:272:815004') ) and (TENANT_ID_ = '' or TENANT_ID_ is null) 
- {executed in 6 msec}
-2016-05-26 19:57:15,463 INFO                    
-select * from ACT_RU_EVENT_SUBSCR where (EVENT_TYPE_ = 'signal') and ( (CONFIGURATION_ = 'IndentFlow:272:815004') 
-or (PROC_DEF_ID_ = 'IndentFlow:272:815004') ) and (TENANT_ID_ = '' or TENANT_ID_ is null) 
- {executed in 5 msec}
-2016-05-26 19:57:15,478 INFO                    
-insert into ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, 
-DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, 
-TENANT_ID_) values ('IndentFlow:273:817504', 1, 'http://www.activiti.org/test', 'IndentFlow', 
-'IndentFlow', 273, '817501', 'D:\zuixinban\Pat4\target\classes\IndentFlow.bpmn', 'D:\zuixinban\Pat4\target\classes\IndentFlow.IndentFlow.png', 
-NULL, 0, 1, 1, '') 
- {executed in 10 msec}
-2016-05-26 19:57:15,489 INFO                    
-insert into ACT_RE_DEPLOYMENT(ID_, NAME_, CATEGORY_, TENANT_ID_, DEPLOY_TIME_) values('817501', 
-'SpringAutoDeployment', NULL, '', '05/26/2016 19:57:14.767') 
- {executed in 9 msec}
-2016-05-26 19:57:15,508 INFO                    
-INSERT INTO ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_, GENERATED_) VALUES ('817502', 
-1, 'D:\zuixinban\Pat4\target\classes\IndentFlow.bpmn', '<Binary InputStream of length 5311>', 
-'817501', 0) , ('817503', 1, 'D:\zuixinban\Pat4\target\classes\IndentFlow.IndentFlow.png', 
-'<Binary InputStream of length 4319>', '817501', 1) 
+2016-06-28 14:05:03,348 INFO                    
+update ACT_GE_PROPERTY SET REV_ = 509, VALUE_ = '1270001' where NAME_ = 'next.dbid' and REV_ 
+= 508 
  {executed in 16 msec}
-2016-05-26 19:57:16,384 INFO                    
+2016-06-28 14:05:04,099 INFO                    
+select * from ACT_RE_PROCDEF where KEY_ = 'IndentFlow' and (TENANT_ID_ = '' or TENANT_ID_ is 
+null) and VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = 'IndentFlow' and 
+(TENANT_ID_ = '' or TENANT_ID_ is null)) 
+ {executed in 10 msec}
+2016-06-28 14:05:04,114 INFO                    
+select J.* from ACT_RU_JOB J inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_ = P.ID_ where J.HANDLER_TYPE_ 
+= 'timer-start-event' and P.KEY_ = 'IndentFlow' and (P.TENANT_ID_ = '' or P.TENANT_ID_ is null) 
+ {executed in 9 msec}
+2016-06-28 14:05:04,170 INFO                    
+select * from ACT_RU_EVENT_SUBSCR where (EVENT_TYPE_ = 'message') and ( (CONFIGURATION_ = 'IndentFlow:438:1265004') 
+or (PROC_DEF_ID_ = 'IndentFlow:438:1265004') ) and (TENANT_ID_ = '' or TENANT_ID_ is null) 
+ {executed in 9 msec}
+2016-06-28 14:05:04,179 INFO                    
+select * from ACT_RU_EVENT_SUBSCR where (EVENT_TYPE_ = 'signal') and ( (CONFIGURATION_ = 'IndentFlow:438:1265004') 
+or (PROC_DEF_ID_ = 'IndentFlow:438:1265004') ) and (TENANT_ID_ = '' or TENANT_ID_ is null) 
+ {executed in 8 msec}
+2016-06-28 14:05:04,200 INFO                    
+insert into ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, 
+DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, 
+TENANT_ID_) values ('IndentFlow:439:1267504', 1, 'http://www.activiti.org/test', 'IndentFlow', 
+'IndentFlow', 439, '1267501', 'E:\zuixinban\Pat4\target\classes\IndentFlow.bpmn', 'E:\zuixinban\Pat4\target\classes\IndentFlow.IndentFlow.png', 
+NULL, 0, 1, 1, '') 
+ {executed in 14 msec}
+2016-06-28 14:05:04,217 INFO                    
+insert into ACT_RE_DEPLOYMENT(ID_, NAME_, CATEGORY_, TENANT_ID_, DEPLOY_TIME_) values('1267501', 
+'SpringAutoDeployment', NULL, '', '06/28/2016 14:05:03.232') 
+ {executed in 14 msec}
+2016-06-28 14:05:04,245 INFO                    
+INSERT INTO ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_, GENERATED_) VALUES ('1267502', 
+1, 'E:\zuixinban\Pat4\target\classes\IndentFlow.bpmn', '<Binary InputStream of length 5311>', 
+'1267501', 0) , ('1267503', 1, 'E:\zuixinban\Pat4\target\classes\IndentFlow.IndentFlow.png', 
+'<Binary InputStream of length 4319>', '1267501', 1) 
+ {executed in 24 msec}
+2016-06-28 14:05:05,287 INFO                    
 SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
 r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
 WHERE r.URL <> '' ORDER BY r.SEQ ASC 
- {executed in 11 msec}
-2016-05-26 19:57:16,583 INFO                    
-SELECT i.IP_ID AS id, i.IP_PROJECT_NAME AS projectName, i.IP_USER_CONTACT AS userContact, i.IP_USER_PHONE 
-AS userPhone, i.IP_TEAM_CONTACT AS teamContact, i.IP_TEAM_PHONE AS teamPhone, i.IP_USER_TYPE 
-AS userType, i.IP_USER_ID AS userId, i.IP_DESCRIPTION AS description, i.IP_SERIAL AS serial, 
-i.IP_SOURCE AS source, i.IP_STATE AS state, i.IP_CUSTOMERID AS customerId, i.IP_TEAMID AS teamId, 
-u.USERNAME AS userName, t.TEAMNAME AS teamName, i.IP_PRICE_FIRST AS priceFirst, i.IP_PRICE_LAST 
-AS priceLast, i.IP_PRICE_FINISH AS priceFinish, s.staffName AS referrerName, i.ip_referrer_id 
-AS referrerId, DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime, i.IP_CUSTOMER_PAYMENT 
-AS customerPayment, i.IP_PROVIDER_PAYMENT AS providerPayment FROM INDENT_PROJECT i LEFT JOIN 
-USERS u on i.ip_customerId=u.id LEFT JOIN TEAM t ON i.ip_teamId = t.teamId LEFT JOIN STAFF 
-s ON i.ip_referrer_id = s.staffId WHERE i.IP_USER_ID=2 ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID 
-DESC; 
- {executed in 8 msec}
-2016-05-26 19:58:55,503 INFO                    
+ {executed in 20 msec}
+2016-06-28 14:05:37,679 INFO                    
 select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
- {executed in 6 msec}
-2016-05-26 19:58:55,559 INFO                    
+ {executed in 9 msec}
+2016-06-28 14:05:37,753 INFO                    
 select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
 desc 
+ {executed in 18 msec}
+2016-06-28 14:05:37,807 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1267501' order by NAME_ asc 
  {executed in 12 msec}
-2016-05-26 19:58:55,596 INFO                    
-select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '817501' order by NAME_ asc 
- {executed in 8 msec}
-2016-05-26 19:58:56,560 INFO                    
+2016-06-28 14:05:38,616 INFO                    
 SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
 r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
 WHERE r.URL <> '' ORDER BY r.SEQ ASC 
- {executed in 12 msec}
-2016-05-26 19:58:56,804 INFO                    
-SELECT i.IP_ID AS id, i.IP_PROJECT_NAME AS projectName, i.IP_USER_CONTACT AS userContact, i.IP_USER_PHONE 
-AS userPhone, i.IP_TEAM_CONTACT AS teamContact, i.IP_TEAM_PHONE AS teamPhone, i.IP_USER_TYPE 
-AS userType, i.IP_USER_ID AS userId, i.IP_DESCRIPTION AS description, i.IP_SERIAL AS serial, 
-i.IP_SOURCE AS source, i.IP_STATE AS state, i.IP_CUSTOMERID AS customerId, i.IP_TEAMID AS teamId, 
-u.USERNAME AS userName, t.TEAMNAME AS teamName, i.IP_PRICE_FIRST AS priceFirst, i.IP_PRICE_LAST 
-AS priceLast, i.IP_PRICE_FINISH AS priceFinish, s.staffName AS referrerName, i.ip_referrer_id 
-AS referrerId, DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime, i.IP_CUSTOMER_PAYMENT 
-AS customerPayment, i.IP_PROVIDER_PAYMENT AS providerPayment FROM INDENT_PROJECT i LEFT JOIN 
-USERS u on i.ip_customerId=u.id LEFT JOIN TEAM t ON i.ip_teamId = t.teamId LEFT JOIN STAFF 
-s ON i.ip_referrer_id = s.staffId WHERE i.IP_USER_ID=2 ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID 
-DESC; 
- {executed in 6 msec}
-2016-05-26 20:00:44,965 INFO                    
+ {executed in 19 msec}
+2016-06-28 14:06:11,256 INFO                    
 select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
- {executed in 6 msec}
-2016-05-26 20:00:45,023 INFO                    
+ {executed in 8 msec}
+2016-06-28 14:06:11,330 INFO                    
 select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
 desc 
- {executed in 12 msec}
-2016-05-26 20:00:45,058 INFO                    
-select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '817501' order by NAME_ asc 
- {executed in 8 msec}
-2016-05-26 20:00:45,946 INFO                    
+ {executed in 19 msec}
+2016-06-28 14:06:11,381 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1267501' order by NAME_ asc 
+ {executed in 10 msec}
+2016-06-28 14:06:12,193 INFO                    
 SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
 r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
 WHERE r.URL <> '' ORDER BY r.SEQ ASC 
- {executed in 12 msec}
-2016-05-26 20:00:46,175 INFO                    
-SELECT i.IP_ID AS id, i.IP_PROJECT_NAME AS projectName, i.IP_USER_CONTACT AS userContact, i.IP_USER_PHONE 
-AS userPhone, i.IP_TEAM_CONTACT AS teamContact, i.IP_TEAM_PHONE AS teamPhone, i.IP_USER_TYPE 
-AS userType, i.IP_USER_ID AS userId, i.IP_DESCRIPTION AS description, i.IP_SERIAL AS serial, 
-i.IP_SOURCE AS source, i.IP_STATE AS state, i.IP_CUSTOMERID AS customerId, i.IP_TEAMID AS teamId, 
-u.USERNAME AS userName, t.TEAMNAME AS teamName, i.IP_PRICE_FIRST AS priceFirst, i.IP_PRICE_LAST 
-AS priceLast, i.IP_PRICE_FINISH AS priceFinish, s.staffName AS referrerName, i.ip_referrer_id 
-AS referrerId, DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime, i.IP_CUSTOMER_PAYMENT 
-AS customerPayment, i.IP_PROVIDER_PAYMENT AS providerPayment FROM INDENT_PROJECT i LEFT JOIN 
-USERS u on i.ip_customerId=u.id LEFT JOIN TEAM t ON i.ip_teamId = t.teamId LEFT JOIN STAFF 
-s ON i.ip_referrer_id = s.staffId WHERE i.IP_USER_ID=2 ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID 
-DESC; 
+ {executed in 17 msec}
+2016-06-28 15:07:11,363 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
+ {executed in 16 msec}
+2016-06-28 15:07:11,450 INFO                    
+select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
+desc 
+ {executed in 15 msec}
+2016-06-28 15:07:11,497 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1270001' order by NAME_ asc 
+ {executed in 15 msec}
+2016-06-28 15:07:11,529 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'next.dbid' 
+ {executed in 16 msec}
+2016-06-28 15:07:11,544 INFO                    
+update ACT_GE_PROPERTY SET REV_ = 511, VALUE_ = '1275001' where NAME_ = 'next.dbid' and REV_ 
+= 510 
+ {executed in 15 msec}
+2016-06-28 15:07:12,075 INFO                    
+select * from ACT_RE_PROCDEF where KEY_ = 'IndentFlow' and (TENANT_ID_ = '' or TENANT_ID_ is 
+null) and VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = 'IndentFlow' and 
+(TENANT_ID_ = '' or TENANT_ID_ is null)) 
+ {executed in 15 msec}
+2016-06-28 15:07:12,091 INFO                    
+select J.* from ACT_RU_JOB J inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_ = P.ID_ where J.HANDLER_TYPE_ 
+= 'timer-start-event' and P.KEY_ = 'IndentFlow' and (P.TENANT_ID_ = '' or P.TENANT_ID_ is null) 
+ {executed in 16 msec}
+2016-06-28 15:07:12,138 INFO                    
+select * from ACT_RU_EVENT_SUBSCR where (EVENT_TYPE_ = 'message') and ( (CONFIGURATION_ = 'IndentFlow:440:1270004') 
+or (PROC_DEF_ID_ = 'IndentFlow:440:1270004') ) and (TENANT_ID_ = '' or TENANT_ID_ is null) 
+ {executed in 16 msec}
+2016-06-28 15:07:12,138 INFO                    
+select * from ACT_RU_EVENT_SUBSCR where (EVENT_TYPE_ = 'signal') and ( (CONFIGURATION_ = 'IndentFlow:440:1270004') 
+or (PROC_DEF_ID_ = 'IndentFlow:440:1270004') ) and (TENANT_ID_ = '' or TENANT_ID_ is null) 
+ {executed in 0 msec}
+2016-06-28 15:07:12,154 INFO                    
+insert into ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, 
+DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, 
+TENANT_ID_) values ('IndentFlow:441:1272504', 1, 'http://www.activiti.org/test', 'IndentFlow', 
+'IndentFlow', 441, '1272501', 'E:\zuixinban\Pat4\target\classes\IndentFlow.bpmn', 'E:\zuixinban\Pat4\target\classes\IndentFlow.IndentFlow.png', 
+NULL, 0, 1, 1, '') 
+ {executed in 16 msec}
+2016-06-28 15:07:12,185 INFO                    
+insert into ACT_RE_DEPLOYMENT(ID_, NAME_, CATEGORY_, TENANT_ID_, DEPLOY_TIME_) values('1272501', 
+'SpringAutoDeployment', NULL, '', '06/28/2016 15:07:11.419') 
+ {executed in 16 msec}
+2016-06-28 15:07:12,216 INFO                    
+INSERT INTO ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_, GENERATED_) VALUES ('1272502', 
+1, 'E:\zuixinban\Pat4\target\classes\IndentFlow.bpmn', '<Binary InputStream of length 5311>', 
+'1272501', 0) , ('1272503', 1, 'E:\zuixinban\Pat4\target\classes\IndentFlow.IndentFlow.png', 
+'<Binary InputStream of length 4319>', '1272501', 1) 
+ {executed in 31 msec}
+2016-06-28 15:07:13,107 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 15 msec}
+2016-06-28 15:09:59,066 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
+ {executed in 15 msec}
+2016-06-28 15:09:59,142 INFO                    
+select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
+desc 
+ {executed in 15 msec}
+2016-06-28 15:09:59,189 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1272501' order by NAME_ asc 
+ {executed in 15 msec}
+2016-06-28 15:10:00,064 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 15 msec}
+2016-06-28 15:10:32,938 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
+ {executed in 0 msec}
+2016-06-28 15:10:33,020 INFO                    
+select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
+desc 
+ {executed in 31 msec}
+2016-06-28 15:10:33,067 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1272501' order by NAME_ asc 
+ {executed in 15 msec}
+2016-06-28 15:10:33,932 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 20 msec}
+2016-06-28 15:19:08,674 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
+ {executed in 8 msec}
+2016-06-28 15:19:08,749 INFO                    
+select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
+desc 
+ {executed in 20 msec}
+2016-06-28 15:19:08,804 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1272501' order by NAME_ asc 
+ {executed in 10 msec}
+2016-06-28 15:19:09,763 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 18 msec}
+2016-06-28 15:32:23,282 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
  {executed in 7 msec}
+2016-06-28 15:32:23,357 INFO                    
+select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
+desc 
+ {executed in 20 msec}
+2016-06-28 15:32:23,420 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1272501' order by NAME_ asc 
+ {executed in 17 msec}
+2016-06-28 15:32:24,570 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 26 msec}
+2016-06-28 15:32:58,451 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
+ {executed in 7 msec}
+2016-06-28 15:32:58,533 INFO                    
+select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
+desc 
+ {executed in 26 msec}
+2016-06-28 15:32:58,588 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1272501' order by NAME_ asc 
+ {executed in 10 msec}
+2016-06-28 15:32:59,524 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 17 msec}
+2016-06-28 15:33:41,855 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
+ {executed in 7 msec}
+2016-06-28 15:33:41,932 INFO                    
+select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
+desc 
+ {executed in 21 msec}
+2016-06-28 15:33:41,983 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1272501' order by NAME_ asc 
+ {executed in 9 msec}
+2016-06-28 15:33:42,958 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 17 msec}
+2016-06-28 15:34:06,064 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
+ {executed in 11 msec}
+2016-06-28 15:34:06,137 INFO                    
+select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
+desc 
+ {executed in 19 msec}
+2016-06-28 15:34:06,194 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1272501' order by NAME_ asc 
+ {executed in 10 msec}
+2016-06-28 15:34:07,193 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 16 msec}
+2016-06-28 16:15:36,168 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
+ {executed in 8 msec}
+2016-06-28 16:15:36,239 INFO                    
+select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
+desc 
+ {executed in 18 msec}
+2016-06-28 16:15:36,294 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1275001' order by NAME_ asc 
+ {executed in 10 msec}
+2016-06-28 16:15:36,320 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'next.dbid' 
+ {executed in 7 msec}
+2016-06-28 16:15:36,339 INFO                    
+update ACT_GE_PROPERTY SET REV_ = 513, VALUE_ = '1280001' where NAME_ = 'next.dbid' and REV_ 
+= 512 
+ {executed in 18 msec}
+2016-06-28 16:15:36,915 INFO                    
+select * from ACT_RE_PROCDEF where KEY_ = 'IndentFlow' and (TENANT_ID_ = '' or TENANT_ID_ is 
+null) and VERSION_ = (select max(VERSION_) from ACT_RE_PROCDEF where KEY_ = 'IndentFlow' and 
+(TENANT_ID_ = '' or TENANT_ID_ is null)) 
+ {executed in 10 msec}
+2016-06-28 16:15:36,927 INFO                    
+select J.* from ACT_RU_JOB J inner join ACT_RE_PROCDEF P on J.PROC_DEF_ID_ = P.ID_ where J.HANDLER_TYPE_ 
+= 'timer-start-event' and P.KEY_ = 'IndentFlow' and (P.TENANT_ID_ = '' or P.TENANT_ID_ is null) 
+ {executed in 7 msec}
+2016-06-28 16:15:36,975 INFO                    
+select * from ACT_RU_EVENT_SUBSCR where (EVENT_TYPE_ = 'message') and ( (CONFIGURATION_ = 'IndentFlow:442:1275004') 
+or (PROC_DEF_ID_ = 'IndentFlow:442:1275004') ) and (TENANT_ID_ = '' or TENANT_ID_ is null) 
+ {executed in 15 msec}
+2016-06-28 16:15:36,984 INFO                    
+select * from ACT_RU_EVENT_SUBSCR where (EVENT_TYPE_ = 'signal') and ( (CONFIGURATION_ = 'IndentFlow:442:1275004') 
+or (PROC_DEF_ID_ = 'IndentFlow:442:1275004') ) and (TENANT_ID_ = '' or TENANT_ID_ is null) 
+ {executed in 7 msec}
+2016-06-28 16:15:37,024 INFO                    
+insert into ACT_RE_PROCDEF(ID_, REV_, CATEGORY_, NAME_, KEY_, VERSION_, DEPLOYMENT_ID_, RESOURCE_NAME_, 
+DGRM_RESOURCE_NAME_, DESCRIPTION_, HAS_START_FORM_KEY_, HAS_GRAPHICAL_NOTATION_ , SUSPENSION_STATE_, 
+TENANT_ID_) values ('IndentFlow:443:1277504', 1, 'http://www.activiti.org/test', 'IndentFlow', 
+'IndentFlow', 443, '1277501', 'E:\zuixinban\Pat4\target\classes\IndentFlow.bpmn', 'E:\zuixinban\Pat4\target\classes\IndentFlow.IndentFlow.png', 
+NULL, 0, 1, 1, '') 
+ {executed in 36 msec}
+2016-06-28 16:15:37,040 INFO                    
+insert into ACT_RE_DEPLOYMENT(ID_, NAME_, CATEGORY_, TENANT_ID_, DEPLOY_TIME_) values('1277501', 
+'SpringAutoDeployment', NULL, '', '06/28/2016 16:15:36.220') 
+ {executed in 14 msec}
+2016-06-28 16:15:37,079 INFO                    
+INSERT INTO ACT_GE_BYTEARRAY(ID_, REV_, NAME_, BYTES_, DEPLOYMENT_ID_, GENERATED_) VALUES ('1277502', 
+1, 'E:\zuixinban\Pat4\target\classes\IndentFlow.bpmn', '<Binary InputStream of length 5311>', 
+'1277501', 0) , ('1277503', 1, 'E:\zuixinban\Pat4\target\classes\IndentFlow.IndentFlow.png', 
+'<Binary InputStream of length 4319>', '1277501', 1) 
+ {executed in 27 msec}
+2016-06-28 16:15:38,023 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 17 msec}
+2016-06-28 16:19:03,176 INFO                    
+select * from ACT_GE_PROPERTY where NAME_ = 'schema.version' 
+ {executed in 7 msec}
+2016-06-28 16:19:03,255 INFO                    
+select * from ACT_RE_DEPLOYMENT D where NAME_='SpringAutoDeployment' order by D.DEPLOY_TIME_ 
+desc 
+ {executed in 25 msec}
+2016-06-28 16:19:03,312 INFO                    
+select * from ACT_GE_BYTEARRAY where DEPLOYMENT_ID_ = '1277501' order by NAME_ asc 
+ {executed in 11 msec}
+2016-06-28 16:19:04,279 INFO                    
+SELECT r.RIGHTID, r.RIGHTNAME, r.URL, r.RIGHTDESCRIPTION, r.ICON, r.PID, r.SEQ, r.status, r.RESOURCETYPE, 
+r.POS, r.CODE, r.ISCOMMON, DATE_FORMAT(r.UPDATEDATE,'%Y-%m-%d') AS updateDate FROM RIGHTS r 
+WHERE r.URL <> '' ORDER BY r.SEQ ASC 
+ {executed in 22 msec}

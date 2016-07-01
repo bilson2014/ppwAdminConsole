@@ -32,8 +32,7 @@ public class HttpUtil {
 	public static CookieStore cookieStore = null;
 	public static RequestConfig requestConfig = null;
 
-	private static CloseableHttpClient getClient(
-			final HttpServletRequest request) {
+	private static CloseableHttpClient getClient(final HttpServletRequest request) {
 
 		context = null;
 		cookieStore = null;
@@ -45,21 +44,18 @@ public class HttpUtil {
 		// addCookie("JSESSIONID", request.getSession().getId(),
 		// GlobalConstant.COOKIES_SCOPE, "/");
 		// 配置超时时间（连接服务端超时1秒，请求数据返回超时2秒）
-		requestConfig = RequestConfig.custom().setConnectTimeout(120000)
-				.setSocketTimeout(60000).setConnectionRequestTimeout(60000)
-				.build();
+		requestConfig = RequestConfig.custom().setConnectTimeout(120000).setSocketTimeout(60000)
+				.setConnectionRequestTimeout(60000).build();
 		// 设置默认跳转以及存储cookie
 		CloseableHttpClient client = HttpClientBuilder.create()
 				.setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
-				.setRedirectStrategy(new DefaultRedirectStrategy())
-				.setDefaultRequestConfig(requestConfig)
+				.setRedirectStrategy(new DefaultRedirectStrategy()).setDefaultRequestConfig(requestConfig)
 				.setDefaultCookieStore(cookieStore).build();
 
 		return client;
 	}
 
-	public static String httpPost(final String url, final Object obj,
-			final HttpServletRequest request) {
+	public static String httpPost(final String url, final Object obj, final HttpServletRequest request) {
 		CloseableHttpClient client = getClient(request);
 		HttpPost httpPost = new HttpPost(url);
 		Gson gson = new Gson();
@@ -83,9 +79,9 @@ public class HttpUtil {
 		}
 		return result;
 	}
-	//modify by laowang 2016.5.17 12:15 begin
-	public static boolean httpPostFileForm(final String url,
-			final MultipartEntityBuilder multipartEntityBuilder,
+
+	// modify by laowang 2016.5.17 12:15 begin
+	public static boolean httpPostFileForm(final String url, final MultipartEntityBuilder multipartEntityBuilder,
 			String outputPath) {
 		CloseableHttpClient client = getClient(null);
 		HttpPost httpPost = new HttpPost(url);
@@ -94,12 +90,11 @@ public class HttpUtil {
 		try {
 			httpPost.setEntity(multipartEntityBuilder.build());
 			response = client.execute(httpPost, context);
-			//add 检测http返回状态判断转换是否完成
-			//*****等待添加转服服务器返回转换状态识别
+			// add 检测http返回状态判断转换是否完成
+			// *****等待添加转服服务器返回转换状态识别
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				InputStream inputStream = response.getEntity().getContent();
-				OutputStream outputStream = new FileOutputStream(new File(
-						outputPath));
+				OutputStream outputStream = new FileOutputStream(new File(outputPath));
 				saveTo(inputStream, outputStream);
 				return true;
 			} else {
@@ -110,10 +105,9 @@ public class HttpUtil {
 			return false;
 		}
 	}
-	//modify by laowang 2016.5.17 12:15 end
+	// modify by laowang 2016.5.17 12:15 end
 
-	public static void saveTo(InputStream in, OutputStream out)
-			throws Exception {
+	public static void saveTo(InputStream in, OutputStream out) throws Exception {
 		byte[] data = new byte[1024];
 		int index = 0;
 		while ((index = in.read(data)) != -1) {
@@ -123,7 +117,7 @@ public class HttpUtil {
 		in.close();
 		out.close();
 	}
-	
+
 	/**
 	 * 下载文件进行临时中转（内部存取转发到外网）
 	 * 
@@ -131,8 +125,7 @@ public class HttpUtil {
 	 * @param request
 	 * @return
 	 */
-	public static Object[] httpGetFile(final String url,
-			final HttpServletRequest request) {
+	public static Object[] httpGetFile(final String url, final HttpServletRequest request) {
 		CloseableHttpClient client = getClient(request);
 		HttpGet httpGet = new HttpGet(url);
 		CloseableHttpResponse response = null;
@@ -141,13 +134,13 @@ public class HttpUtil {
 			response = client.execute(httpGet, context);
 			String filename = null;
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-//				filename = response.getFirstHeader("Content-Disposition")
-//						.getValue();
+				// filename = response.getFirstHeader("Content-Disposition")
+				// .getValue();
 				HttpEntity httpEntity = response.getEntity();
 				objArray[0] = filename;
 				InputStream is = httpEntity.getContent();
 				String tempNamt = PathFormatUtils.parse("{time}{rand:6}");
-				File tempFile = new File( tempNamt);
+				File tempFile = new File(tempNamt);
 				OutputStream os = new FileOutputStream(tempFile);
 				saveTo(is, os);
 				objArray[1] = tempFile;
