@@ -7,6 +7,7 @@
 	<select id="all" resultType="User">
 		<![CDATA[
 			SELECT u.ID AS id,
+				   u.ID AS userId,
 				   u.USERNAME AS userName,
 				   u.PASSWORD AS password,
 				   u.TELEPHONE AS telephone,

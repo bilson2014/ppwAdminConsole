@@ -33,6 +33,7 @@ public class PayController extends BaseController {
 
 	@Autowired
 	PayWebHookService payWebHookService;
+	
 	@Autowired
 	DealLogService dealLogService;
 

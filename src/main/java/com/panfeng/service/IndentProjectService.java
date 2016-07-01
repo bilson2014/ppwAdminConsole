@@ -77,6 +77,12 @@ public interface IndentProjectService {
 	public long removeSynergy(long synergyId);
 	
 	public List<IndentProject> getSynergys(IndentProject indentProject);
+	
+	/**
+	 * 获取所有项目
+	 * @return list
+	 */
+	public List<IndentProject> all();
 
 	//add by wanglc 2016-6-29 10:41:24 begin
 	//查询含有协同人的数据数量

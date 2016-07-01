@@ -404,4 +404,11 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		return total;
 	}
 	//add by wanglc 2016-6-29 10:42:57 end
+
+	@Override
+	public List<IndentProject> all() {
+		
+		final List<IndentProject> list = indentProjectMapper.all();
+		return list;
+	}
 }

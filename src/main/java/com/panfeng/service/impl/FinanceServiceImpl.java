@@ -51,7 +51,8 @@ public class FinanceServiceImpl implements FinanceService {
 	public long deleteByArray(final long[] ids) {
 		
 		if(ValidateUtil.isValid(ids)){
-			return mapper.deleteByArray(ids);
+			final long ret = mapper.deleteByArray(ids);
+			return ret;
 		}
 		return 0l;
 	}

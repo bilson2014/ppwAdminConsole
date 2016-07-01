@@ -361,6 +361,16 @@ public class UserController extends BaseController {
 	}
 	
 	/**
+	 * 获取全部客户
+	 * @return list
+	 */
+	@RequestMapping("/user/all")
+	public List<User> all(){
+		List<User> list = userService.all();
+		return list;
+	}
+	
+	/**
 	 * 初始化 sessionInfo 信息
 	 * @param user
 	 * @param request
@@ -395,4 +405,5 @@ public class UserController extends BaseController {
 		map.put(GlobalConstant.SESSION_INFO, info);
 		return sessionService.addSession(request, map);
 	}
+	
 }

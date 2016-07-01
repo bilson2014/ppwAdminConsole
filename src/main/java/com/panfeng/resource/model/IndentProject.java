@@ -15,6 +15,7 @@ public class IndentProject extends BaseObject {
 	public final static int PROJECT_SUSPEND= 3;
 
 	private long id = 0l; // 项目流程ID
+	private long projectId = 0l; // 项目ID，冗余字段，以id属性为准
 	private String projectName = ""; //
 	private String userName = ""; // 客户公司名称
 	private String userContact = ""; // 客户名称
@@ -331,4 +332,12 @@ public class IndentProject extends BaseObject {
 		this.clientLevel = clientLevel;
 	}
 
+	public long getProjectId() {
+		return projectId;
+	}
+
+	public void setProjectId(long projectId) {
+		this.projectId = projectId;
+	}
+	
 }
