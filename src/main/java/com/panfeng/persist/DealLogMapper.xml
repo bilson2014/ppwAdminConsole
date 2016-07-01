@@ -21,7 +21,7 @@
 				dl.DL_USER_TYPR AS userType,
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
-				dl.DL_PAYTIME AS　payTime
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime 
 				FROM DEAL_LOG dl ORDER BY dl.DL_ID desc
 		]]>
 	</select>
@@ -45,7 +45,7 @@
 				dl.DL_USER_TYPR AS userType,
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
-				dl.DL_PAYTIME AS　payTime
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime 
 				FROM DEAL_LOG dl WHERE DL_ID = ${dealId} ORDER BY dl.DL_ID desc
 		]]>
 	</select>
@@ -69,7 +69,7 @@
 				dl.DL_USER_TYPR AS userType,
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
-				dl.DL_PAYTIME AS　payTime
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime 
 				FROM DEAL_LOG dl WHERE dl.DL_BILLNO = #{billNo} ORDER BY dl.DL_ID desc
 		]]> 
 	</select>
@@ -93,9 +93,8 @@
 				dl.DL_USER_TYPR AS userType,
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
-				dl.DL_PAYTIME AS　payTime
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime 
 			 FROM DEAL_LOG dl WHERE dl.DL_PROJECT_ID = #{projectId} ORDER BY dl.DL_ID desc
-		
 		]]>
 	</select>
 	
@@ -118,7 +117,7 @@
 				dl.DL_USER_TYPR AS userType,
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
-				dl.DL_PAYTIME AS　payTime
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime 
 			 FROM DEAL_LOG dl WHERE dl.DL_USER_ID = #{userId} AND dl.DL_PROJECT_ID =#{projectId} ORDER BY dl.DL_ID desc
 		
 		]]>

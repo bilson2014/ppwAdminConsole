@@ -35,7 +35,7 @@ import com.panfeng.domain.GlobalConstant;
 public class HttpsUtils {
 	// 静态httpclient对象，保证不需要每次重新创建https
 	public static CloseableHttpClient httpclient;
-	static int TIME_OUT = 5000;
+	static int TIME_OUT = 50000;
 
 	// 获得池化得HttpClient
 	static {
@@ -92,7 +92,7 @@ public class HttpsUtils {
 		}
 		// 设置请求的配置
 		RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(TIME_OUT).setConnectTimeout(TIME_OUT)
-				.setConnectionRequestTimeout(5000).build();
+				.setConnectionRequestTimeout(TIME_OUT).build();
 		httpPost.setConfig(requestConfig);
 		Gson gson = new Gson();
 		String param = gson.toJson(obj);
@@ -122,7 +122,7 @@ public class HttpsUtils {
 		}
 		// 设置请求的配置
 		RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(TIME_OUT).setConnectTimeout(TIME_OUT)
-				.setConnectionRequestTimeout(5000).build();
+				.setConnectionRequestTimeout(TIME_OUT).build();
 		httpget.setConfig(requestConfig);
 		try {
 
