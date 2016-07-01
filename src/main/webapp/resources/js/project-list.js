@@ -207,7 +207,13 @@ var project = {
 			url : getContextPath() + '/portal/employee/findSynergy',
 			valueField : 'employeeId',
 			// modify by wanglc,2016-6-24 14:48:03 end
-			textField : 'employeeRealName'
+			textField : 'employeeRealName',
+			// add by wanglc,2016-6-29 10:31:01 begin
+			//视频管家选中后 开始是否作为协同人
+			onSelect : function(record){
+				$("#isSynergy").combobox('enable');
+			}
+			// add by wanglc,2016-6-29 10:31:01 end
 		});
 		
 		$('#search-projectId').combobox({
@@ -221,10 +227,8 @@ var project = {
 			valueField : 'name',
 			textField : 'name'
 		});
-		
 	}
 }
-
 
 //增加
 function addFuc(){
@@ -552,23 +556,16 @@ function addSynergyModel(name,ratio,userid,synergyid){
 //add by wanglc,2016-6-24 14:49:36 end
 // 查询
 function searchFun(){
-	//modify by wanglc,2016-6-24 15:48:49 begin
-	//name属性被注掉了,是为了报表导出手动提交数据,因为报表参数为空会报错,所以,这里也要改为
-	//手动获取数据
-	//datagrid.datagrid('load', $.serializeObject($('#searchForm')));
-	datagrid.datagrid('load', {
-		projectId: $('#search-projectId').combobox('getValue'),
-		userId : $('#search-userId').combobox('getValue'),
-		teamId : $('#search-teamId').combobox('getValue'),
-		source : $('#search-source').combobox('getValue'),
-		state : $('#search-state').combobox('getValue')
-	});
-	//modify by wanglc,2016-6-24 15:48:49 end
+	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
 
 // 清除
 function cleanFun() {
 	$('#searchForm').form('clear');
+	//add by wanglc,2016-6-29 10:34:06 begin
+	//重新禁用是否是协同人选项
+	$("#isSynergy").combobox('disable');
+	//add by wanglc,2016-6-29 10:34:06 end
 	datagrid.datagrid('load', {});
 }
 
@@ -576,35 +573,7 @@ function cleanFun() {
 function exportFun(){
 	$('#searchForm').form('submit',{
 		url : getContextPath() + '/project/export',
-		onSubmit : function(param) {
-			//modify by wanglc,2016-6-24 15:48:49 begin
-			//form提交时,手动获取值,并封装,保证导出文件前,如果没传值会报错
-			var projectId = $('#search-projectId').combobox('getValue');
-			var userId = $('#search-userId').combobox('getValue');
-			var teamId = $('#search-teamId').combobox('getValue');
-			var source = $('#search-source').combobox('getValue');
-			var state = $('#search-state').combobox('getValue');
-			if(projectId==''||projectId==null||projectId==undefined){
-				projectId=-1;
-			}
-			if(userId==''||userId==null||userId==undefined){
-				userId=-1;
-			}
-			if(teamId==''||teamId==null||teamId==undefined){
-				teamId=-1;
-			}
-			if(source==''||source==null||source==undefined){
-				source=-1;
-			}
-			if(state==''||state==null||state==undefined){
-				state=-1;
-			}
-			 param.projectId = projectId;
-			 param.userId = userId;
-			 param.teamId = teamId;
-			 param.source = source;
-			 param.state = state;
-			//modify by wanglc,2016-6-24 2016-6-24 16:21:25 end
+		onSubmit : function() {
 			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
 		},
 		success : function(result) {

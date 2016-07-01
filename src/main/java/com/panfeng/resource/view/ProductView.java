@@ -33,7 +33,17 @@ public class ProductView extends Pagination{
 	private long lengthBegin = 0l; // 起始时长
 	
 	private long lengthEnd = 0l; // 结束时长
-	
+	//modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 begin 
+	private String teamName = null;//搜索根据团队名称模糊查询
+	//modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 end
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
 	public String getOrder() {
 		return order;
 	}

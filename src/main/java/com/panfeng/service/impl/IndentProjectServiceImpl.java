@@ -267,10 +267,18 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	public List<IndentProject> listWithPagination(final IndentProjectView view) {
 
-		List<IndentProject> list = indentProjectMapper.listWithPagination(view);
-
-		Map<Long, Employee> eMap = employeeService.getEmployeeMap();
+		//List<IndentProject> list = indentProjectMapper.listWithPagination(view);
 		
+		//modify by wanglc 2016-6-28 19:54:21 
+		//添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 begin
+		List<IndentProject> list = new ArrayList<IndentProject>();
+		if(null == view.getIsSynergy() || view.getIsSynergy() == 0){
+			list = indentProjectMapper.listWithPagination(view);
+		}else{
+			list = indentProjectMapper.listWithPaginationAddSynergy(view);
+		}
+		//modify by wanglc 2016-6-28 19:54:21 end
+		Map<Long, Employee> eMap = employeeService.getEmployeeMap();
 		Map<Long,List<Synergy>> sMap = synergyService.findSynergyMap();
 		for (final IndentProject pro : list) {
 			final Employee user = eMap.get(pro.getUserId());
@@ -385,4 +393,15 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		return new ArrayList<>();
 	}
 
+	//add by wanglc 2016-6-29 10:42:43 begin
+	//项目管理:查询含有协同人的数据量
+	/**
+	 * 项目管理:查询含有协同人的数据量
+	 */
+	@Override
+	public long maxSizeAddSynergy(IndentProjectView view) {
+		long total = indentProjectMapper.maxSizeAddSynergy(view);
+		return total;
+	}
+	//add by wanglc 2016-6-29 10:42:57 end
 }

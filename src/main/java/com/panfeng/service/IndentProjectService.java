@@ -77,5 +77,12 @@ public interface IndentProjectService {
 	public long removeSynergy(long synergyId);
 	
 	public List<IndentProject> getSynergys(IndentProject indentProject);
-	
+
+	//add by wanglc 2016-6-29 10:41:24 begin
+	//查询含有协同人的数据数量
+	/**
+	 * 查询含有协同人的数据量
+	 */
+	public long maxSizeAddSynergy(IndentProjectView view);
+	//add by wanglc 2016-6-29 10:41:24 end
 }

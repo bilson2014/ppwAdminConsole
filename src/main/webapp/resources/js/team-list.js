@@ -283,7 +283,10 @@ var team = {
 	dataInit : function(){ // 初始化控件数据
 		$('#search-teamName').combobox({
 			url : getContextPath() + '/portal/product/init',
-			valueField : 'teamId',
+			//valueField : 'teamId',
+			//modify by wanglc 团队查询按照teamName like查询 begin
+			valueField : 'teamName',
+			//modify by wanglc end
 			textField : 'teamName'
 		});
 	},

@@ -134,25 +134,21 @@ public class ProjectController extends BaseController {
 		final long rows = pf.getRows();
 		view.setBegin((page - 1) * rows);
 		view.setLimit(rows);
-		final Long productId = view.getProjectId();
-		if("-1".equals(productId)){
-			view.setProjectId(null);
-		}
-		if("-1".equals(view.getSource())){
-			view.setSource(null);
-		}
-		if("-1".equals(view.getUserId())){
-			view.setUserId(null);
-		}
-		if("-1".equals(view.getState())){
-			view.setState(null);
-		}
 		
 		DataGrid<IndentProject> dataGrid = new DataGrid<IndentProject>();
 		final List<IndentProject> list = indentProjectService.listWithPagination(view);
 		dataGrid.setRows(list);
-
-		final long total = indentProjectService.maxSize(view);
+		
+		//final long total = indentProjectService.maxSize(view);
+		//modify by wanglc 2016-6-29 10:38:30
+		////添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 begin,此时需要修改数据数量
+		long total = 0;
+		if(null == view.getIsSynergy() || view.getIsSynergy() == 0){
+			total = indentProjectService.maxSize(view);
+		}else{
+			total = indentProjectService.maxSizeAddSynergy(view);
+		}
+		
 		dataGrid.setTotal(total);
 		return dataGrid;
 	}
@@ -270,7 +266,7 @@ public class ProjectController extends BaseController {
 		return list;
 	}
 
-	@RequestMapping("/export")
+	@RequestMapping(value="/export",method = RequestMethod.POST)
 	public void export(final IndentProjectView view, final HttpServletResponse response) {
 		try {
 			response.setCharacterEncoding("utf-8");
@@ -282,14 +278,6 @@ public class ProjectController extends BaseController {
 			// 获取所有的项目
 			view.setBegin(0);
 			view.setLimit(999999999l);
-			// add by wanglc,2016-06-23 10:00 begin
-			// -> 增加表单验证,无选择时传值-1,在这里检测-1→null
-			if(view.getProjectId()==-1){view.setProjectId(null);}
-			if(view.getState()==-1){view.setState(null);}
-			if(view.getUserId()==-1){view.setUserId(null);}
-			if(view.getTeamId()==-1){view.setTeamId(null);}
-			if(view.getSource().equals("-1")){view.setSource(null);}
-			// add by wanglc,2016-06-23 10:30 end
 			List<IndentProject> list = indentProjectService.listWithPagination(view);
 			indentProjectService.getReport(list, outputStream);
 			if (outputStream != null) {

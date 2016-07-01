@@ -44,7 +44,11 @@
 		<if test="priceRange != null and priceRange != ''">
 			AND t.PRICERANGE = #{priceRange}
 		</if>
-		
+		<!--add by wanglc 2016-6-30 11:28:08 团队查询按照teamName like查询 begin  -->
+		<if test="teamName != null and teamName != ''">
+			AND t.TEAMNAME  LIKE CONCAT('%',#{teamName},'%')  
+		</if>
+		<!--add by wanglc  2016-6-30 11:28:14 end  -->
 		<if test="business != null and business != ''">
 			<foreach collection="business" item="bus" separator="OR" open="AND (" close=")">
 				t.BUSINESS LIKE CONCAT(CONCAT('%',#{bus}),'%')

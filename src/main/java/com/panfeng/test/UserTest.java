@@ -16,7 +16,6 @@ public class UserTest {
 
 	@Autowired
 	private UserMapper mapper = null;
-	
 	@Test
 	public void testSaveUser(){
 		final User user = new User();
@@ -27,4 +26,5 @@ public class UserTest {
 		System.err.println(ret);
 		System.err.println(user.getId());
 	}
+	
 }

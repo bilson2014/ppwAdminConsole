@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +37,8 @@ import com.panfeng.util.ValidateUtil;
 @RequestMapping("/portal")
 public class VersionManagerController extends BaseController{
 
+	private static Logger logger = LoggerFactory.getLogger("error");
+	
 	@Autowired
 	private final EmployeeService service = null;
 	
@@ -175,9 +179,21 @@ public class VersionManagerController extends BaseController{
 	public boolean editPassword(final HttpServletRequest request,@RequestBody final Employee e){
 		
 		if(e != null){
-			final long ret = service.editPassword(e);
-			if(ret > 0)
-				return true;
+			if(ValidateUtil.isValid(e.getPhoneNumber())){
+				// 在视频管家范围内查找该手机号码的人员
+				final List<Employee> list = service.getEmployeesWithVersionManager(e.getPhoneNumber());
+				if(ValidateUtil.isValid(list)){
+					if(list.size() == 1){
+						final Employee originalEmployee = list.get(0);
+						originalEmployee.setEmployeePassword(e.getEmployeePassword());
+						final long ret = service.editPasswordById(originalEmployee);
+						if(ret > 0)
+							return true;
+					}else {
+						logger.error("VersionManagerController method:editPassword() error,becase phoneNumber is not unique ...");
+					}
+				}
+			}
 		}
 		return false;
 	}
@@ -195,6 +211,7 @@ public class VersionManagerController extends BaseController{
 		info.setSuperAdmin(false);
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(e.getEmployeeId());
+		info.setPhoto(e.getEmployeeImg());
 		
 /*		final Role role = roleService.findRoleById(9l); // 获取用户角色
 		final List<Role> roles = new ArrayList<Role>();

@@ -55,4 +55,11 @@ public interface EmployeeService {
 	 * @return employeeList
 	 */
 	public List<Employee> findEmployeeToSynergy();
+
+	/**
+	 * 视频管家范围内，根据电话号码获取人员名单
+	 * @param phoneNumber
+	 * @return 人员列表
+	 */
+	public List<Employee> getEmployeesWithVersionManager(final String phoneNumber);
 }

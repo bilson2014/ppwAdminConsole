@@ -40,7 +40,10 @@
 			<table>
 				<tr>
 					<th>所属团队:</th>
-					<td><input id="search-teamName" name="teamId" placeholder="请输入团队名称"/></td>
+					<!-- <td><input id="search-teamName" name="teamId" placeholder="请输入团队名称"/></td> -->
+					<%--modify by wanglc 2016-6-30 12:53:52 团队搜索模糊查询 begin --%>
+					<td><input id="search-teamName" name="teamName" placeholder="请输入团队名称"/></td>
+					<%--modify by wanglc 2016-6-30 12:53:57 团队搜索模糊查询 end --%>
 					<th>项目名称:</th>
 					<td><input id="search-productName" name="productName" class="easyui-textbox" placeholder="请填写作品名称" /></td>
 					<th>审核状态：</th>
