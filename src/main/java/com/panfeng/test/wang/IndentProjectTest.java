@@ -76,7 +76,7 @@ public class IndentProjectTest {
 			projectPoiAdapter.getData().add(indentProject2);
 		}
 		try {
-			OutputStream outputStream=new FileOutputStream(new File("I:\\wangliming\\2016-05-12 周四\\资源\\test.xlsx"));
+			OutputStream outputStream=new FileOutputStream(new File("F:\\test.xlsx"));
 			ge.generate(projectPoiAdapter,outputStream);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
