@@ -319,7 +319,6 @@ public class DealLogImpl implements DealLogService {
 		dealLog.setDealLogSource(DealLog.DEALLOG_SOURCE_OFFLINE);
 		dealLog.setDealStatus(DealLog.DEAL_STATUS_SUCCEED);
 		dealLog.setLogType(DealLog.LOG_TYPE_INCOME);
-		
 		// 填充客户
 		long proId = dealLog.getProjectId();
 		IndentProject indentProject = new IndentProject();
@@ -328,6 +327,8 @@ public class DealLogImpl implements DealLogService {
 
 		dealLog.setUserType(GlobalConstant.ROLE_CUSTOMER);
 		dealLog.setUserId(indentProject.getCustomerId());
+		dealLog.setBillNo(generateBillNo(indentProject.getSerial()));
+		dealLog.setPayChannel("线下转账");
 
 		long res = dealLogMapper.save(dealLog);
 		if (res > 0)
