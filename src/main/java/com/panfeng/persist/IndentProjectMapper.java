@@ -68,5 +68,11 @@ public interface IndentProjectMapper {
 	 * 查询含有协同人的数据量
 	 */
 	public long maxSizeAddSynergy(IndentProjectView view);
+
+	/**
+	 * 获取所有项目
+	 * @return list
+	 */
+	public List<IndentProject> all();
 	
 }

@@ -9,7 +9,7 @@ public class DealLog extends BaseObject {
 	private static final long serialVersionUID = 8541137142577987948L;
 
 	private Long dealId = null; // id
-	private String billNo = null; // 订单编号
+	private String billNo = null; // 订单编号(业务编号)
 	private String payChannel = null; // 支付通道
 	private String createTime = null;
 	private String updateTime = null;
