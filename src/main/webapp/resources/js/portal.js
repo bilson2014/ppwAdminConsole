@@ -72,7 +72,7 @@ function checkIndentStatus(){
 				$('.l-btn').click(); // 先清除所有的 alert 弹框
 				// 在menu出添加 徽章
 				var li_list = $('#menu').find('.tree-node');
-				console.log(li_list);
+				
 				$.each(li_list,function(i,n){
 					if(n.text == '订单管理'){
 						$(this).find('.badge').remove();

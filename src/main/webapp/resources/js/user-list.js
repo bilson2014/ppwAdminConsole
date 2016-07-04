@@ -54,6 +54,8 @@ $().ready(function(){
 								return '<span style=color:green; >C</span>' ;
 							} else if( value == 3){
 								return '<span style=color:black; >S</span>' ;
+							} else {
+								return '<span style=color:orange; >未分级</span>' ;
 							}
 						},
 						editor:{
@@ -62,7 +64,7 @@ $().ready(function(){
 								data:[{id:3 , val:'S'},{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'}] ,
 								valueField:'id' , 
 								textField:'val' ,
-								required:true , 
+								required:false , 
 								editable : false
 							}
 						}
@@ -155,6 +157,18 @@ $().ready(function(){
 							options : {
 								required : false ,
 								missingMessage : '请选择出生日期!'
+							}
+						}
+					},{
+						field : 'note',
+						title : '备注信息',
+						width : 120,
+						align : 'center' ,
+						editor : {
+							type : 'validatebox' ,
+							options : {
+								required : false , 
+								missingMessage : '请填写备注信息!'
 							}
 						}
 					},{
@@ -264,5 +278,5 @@ function searchFun(){
 //清除
 function cleanFun() {
 	$('#searchForm').form('clear');
-	datagrid.datagrid('load', {});
+	datagrid.datagrid('load', {clientLevel:-1});
 }

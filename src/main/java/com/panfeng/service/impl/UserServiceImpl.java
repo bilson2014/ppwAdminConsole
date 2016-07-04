@@ -158,4 +158,10 @@ public class UserServiceImpl implements UserService{
 		return ret;
 	}
 
+	@Override
+	public long findUnlevelUsers() {
+		final long count = mapper.findUnlevelUsers();
+		return count;
+	}
+
 }

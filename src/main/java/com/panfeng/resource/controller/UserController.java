@@ -128,6 +128,18 @@ public class UserController extends BaseController {
 	}
 	
 	/**
+	 * 获取新注册的用户数量
+	 * 用来提示客服
+	 * @return
+	 */
+	@RequestMapping("/user/getUnLevelUserNotice")
+	public long findUnlevelUsers(){
+		
+		final long count = userService.findUnlevelUsers();
+		return count;
+	}
+	
+	/**
 	 * 前台登录验证操作
 	 * @param user
 	 * @return
