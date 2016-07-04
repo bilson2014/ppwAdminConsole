@@ -139,16 +139,7 @@ public class ProjectController extends BaseController {
 		final List<IndentProject> list = indentProjectService.listWithPagination(view);
 		dataGrid.setRows(list);
 		
-		//final long total = indentProjectService.maxSize(view);
-		//modify by wanglc 2016-6-29 10:38:30
-		////添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 begin,此时需要修改数据数量
-		long total = 0;
-		if(null == view.getIsSynergy() || view.getIsSynergy() == 0){
-			total = indentProjectService.maxSize(view);
-		}else{
-			total = indentProjectService.maxSizeAddSynergy(view);
-		}
-		
+		final long total = indentProjectService.maxSize(view);
 		dataGrid.setTotal(total);
 		return dataGrid;
 	}

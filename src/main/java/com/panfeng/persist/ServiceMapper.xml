@@ -63,6 +63,11 @@
 		<if test="productId != null and productId != ''">
 			AND s.PRODUCTID = ${productId}
 		</if>
+		<!-- add by wanglc 2016-7-4 15:23:31 添加模糊查询 begin -->
+		<if test="productName != null and productName != ''">
+			AND p.PRODUCTNAME LIKE CONCAT(CONCAT('%',#{productName}),'%')
+		</if>
+		<!-- add by wanglc 2016-7-4 15:23:31 添加模糊查询 end-->
 		<![CDATA[
 			ORDER BY s.SERVICEOD,SERVICEID
 			LIMIT ${begin} , ${limit}
@@ -73,11 +78,18 @@
 		<![CDATA[
 			SELECT COUNT(1) 
 				FROM SERVICE s
+				LEFT JOIN PRODUCT p
+				ON s.PRODUCTID = p.PRODUCTID
 			WHERE 1 = 1
 		]]>
 		<if test="productId != null and productId != ''">
 			AND s.PRODUCTID = ${productId}
 		</if>
+		<!-- add by wanglc 2016-7-4 15:24:04 添加模糊查询 begin -->
+		<if test="productName != null and productName != ''">
+			AND p.PRODUCTNAME LIKE CONCAT(CONCAT('%',#{productName}),'%')
+		</if>
+		<!-- add by wanglc 2016-7-4 15:24:08 添加模糊查询 end-->
 	</select>
 	
 	<select id="findServiceById" resultMap="ServiceRM">

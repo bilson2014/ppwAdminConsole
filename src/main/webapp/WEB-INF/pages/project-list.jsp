@@ -23,7 +23,10 @@
 				<tr>
 					<th>项目名称:</th>
 					<td>
-					<input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;" /> 
+					<%--modify by wanglc 2016-7-4 16:02:04 项目名称改为模糊查询 begin --%>
+					<%--<input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;" /> --%>
+					<input id="search-projectId" name="projectName" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;" />
+					<%--modify by wanglc 2016-7-4 16:02:04 项目名称改为模糊查询 end --%> 
 					</td>
 					<th>项目状态:</th>
 					<td>
@@ -61,7 +64,10 @@
 				<tr>
 					<th>供应商</th>
 					<td>
-					<input name="teamId" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>
+					<%--modify by wanglc 2016-7-4 16:04:26供应商修改为模糊查询 begin --%>
+					<%--<input name="teamId" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>--%>
+					<input name="teamName" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>
+					<%--modify by wanglc 2016-7-4 16:04:26供应商修改为模糊查询 begin --%>
 					</td>
 					<th>项目来源</th>
 					<td>

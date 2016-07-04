@@ -71,7 +71,11 @@
 		<if test="teamId != null and teamId != ''">
 			AND t.TEAMID = ${teamId}
 		</if>
-		
+		<!--add by wanglc 2016-7-4 15:56:31 团队查询按照teamName like查询 begin  -->
+		<if test="teamName != null and teamName != ''">
+			AND t.TEAMNAME  LIKE CONCAT('%',#{teamName},'%')  
+		</if>
+		<!--add by wanglc  2016-7-4 15:56:39 end  -->
 		<if test="flag != null and flag != ''">
 			AND t.FLAG = #{flag}
 		</if>

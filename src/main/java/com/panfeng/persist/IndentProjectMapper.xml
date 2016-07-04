@@ -349,7 +349,11 @@
 		<if test="projectId != null and projectId != ''">
 			AND i.IP_ID = ${projectId}
 		</if>
-
+		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
+		<if test="projectName != null and projectName != ''">
+			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
+		</if>
+		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = ${state}
 		</if>
@@ -362,6 +366,12 @@
 			AND i.IP_USER_ID = ${userId}
 		</if>
 
+		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
+		<if test="teamName != null and teamName != ''">
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
+		</if>
+		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
+		
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
@@ -379,13 +389,23 @@
 	<select id="maxSize" resultType="java.lang.Long">
 		<![CDATA[
 			SELECT COUNT(1)
-			FROM INDENT_PROJECT i 
+			FROM INDENT_PROJECT i
+			LEFT JOIN SYNERGY s
+				ON s.s_project_id=i.ip_id 
+			LEFT JOIN TEAM t
+				ON i.IP_TEAMID=t.teamId
 			WHERE 1=1
 		]]>
 
 		<if test="projectId != null and projectId != ''">
 			AND i.IP_ID = ${projectId}
 		</if>
+		
+		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
+		<if test="projectName != null and projectName != ''">
+			AND IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
+		</if>
+		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
 
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = #{state}
@@ -395,16 +415,26 @@
 			AND i.IP_STATE = ${state}
 		</if>
 
-		<if test="userId != null and userId != ''">
+		<if test=" isSynergy != 1 and userId != null and userId != ''">
 			AND i.IP_USER_ID = ${userId}
 		</if>
 
+		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
+		<if test="teamName != null and teamName != ''">
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
+		</if>
+		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
+		
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
 
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
+		</if>
+		
+		<if test="isSynergy == 1">
+			AND (s.S_USER_ID = ${userId} OR i.IP_USER_ID = ${userId})
 		</if>
 	</select>
 
@@ -546,6 +576,12 @@
 			AND i.IP_ID = ${projectId}
 		</if>
 
+		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
+		<if test="projectName != null and projectName != ''">
+			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
+		</if>
+		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
+		
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = ${state}
 		</if>
@@ -553,6 +589,12 @@
 		<if test="state == 0">
 			AND i.IP_STATE = ${state}
 		</if>
+
+		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
+		<if test="teamName != null and teamName != ''">
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
+		</if>
+		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
 		
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
@@ -603,6 +645,11 @@
 		<if test="projectId != null and projectId != ''">
 			AND i.IP_ID = ${projectId}
 		</if>
+		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
+		<if test="projectName != null and projectName != ''">
+			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
+		</if>
+		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
 
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = ${state}
@@ -614,6 +661,11 @@
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
+		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
+		<if test="teamName != null and teamName != ''">
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
+		</if>
+		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
 
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
@@ -623,42 +675,4 @@
 		]]>
 		
 	</select>
-
-	 <select id="maxSizeAddSynergy" resultType="java.lang.Long">
-		<![CDATA[
-			SELECT  COUNT(1)
-			FROM INDENT_PROJECT i 
-			LEFT JOIN SYNERGY s
-				ON s.s_project_id=i.ip_id
-			WHERE 1 = 1
-			AND s.S_USER_ID = ${userId}
-			OR i.IP_USER_ID = ${userId}
-		]]>
-
-		<if test="projectId != null and projectId != ''">
-			AND i.IP_ID = ${projectId}
-		</if>
-
-		<if test="state != null and state != ''">
-			AND i.IP_STATE = #{state}
-		</if>
-
-		<if test="state == 0">
-			AND i.IP_STATE = ${state}
-		</if>
-
-		<if test="teamId != null and teamId != ''">
-			AND i.ip_teamId = ${teamId}
-		</if>
-
-		<if test="source != null and source != ''">
-			AND i.IP_SOURCE = #{source}
-		</if>
-		<![CDATA[
-			LIMIT ${begin} , ${limit}
-		]]>
-	</select> 
-<!-- add by wanglc 2016-6-28 19:56:47
-	 * 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面  end
-	  -->
 </mapper>

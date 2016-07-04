@@ -21,7 +21,10 @@
 			<table>
 				<tr>
 					<th>所属项目:</th>
-					<td><input id="search-name" name="productId" placeholder="请输入项目名"/></td>
+					<%--modify by wanglc 2016-7-4 15:11:31 项目修改为模糊查询 begin--%>
+					<%-- <td><input id="search-name" name="productId" placeholder="请输入项目名"/></td>--%>
+					<td><input id="search-name" name="productName" placeholder="请输入项目名"/></td>
+					<%--modify by wanglc 2016-7-4 15:11:31 项目修改为模糊查询end--%>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 					</td>

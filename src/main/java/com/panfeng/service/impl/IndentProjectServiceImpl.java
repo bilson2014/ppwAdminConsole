@@ -392,16 +392,4 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		}
 		return new ArrayList<>();
 	}
-
-	//add by wanglc 2016-6-29 10:42:43 begin
-	//项目管理:查询含有协同人的数据量
-	/**
-	 * 项目管理:查询含有协同人的数据量
-	 */
-	@Override
-	public long maxSizeAddSynergy(IndentProjectView view) {
-		long total = indentProjectMapper.maxSizeAddSynergy(view);
-		return total;
-	}
-	//add by wanglc 2016-6-29 10:42:57 end
 }

@@ -3,7 +3,6 @@ var count = 120; // 2分钟执行一次
 var index_tabs;
 
 $().ready(function(){
-	
 	// 根据权限查询菜单
 	$("#menu").tree({
 		url : getContextPath() + "/portal/right/menu",
@@ -59,6 +58,7 @@ $().ready(function(){
 	
 	// 每2分钟检测 订单状态，如果有 新订单 则弹出提示
 	/*checkIndentStatus();*/
+	checkUsrClientLevel();
 	
 });
 

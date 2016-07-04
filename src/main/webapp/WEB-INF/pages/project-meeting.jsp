@@ -23,7 +23,10 @@
 				<tr>
 					<th>项目名称:</th>
 					<td>
-						<input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;"/>
+					<%--modify by wanglc 2016-7-4 16:57:17 修改为项目名称模糊查询begin --%>
+						<%-- <input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;"/>--%>
+						<input id="search-projectId" name="projectName" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;"/>
+					<%--modify by wanglc 2016-7-4 16:57:17 修改为项目名称模糊查询begin --%>
 					</td>
 					<th>项目状态:</th>
 					<td>

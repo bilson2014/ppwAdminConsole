@@ -2,7 +2,6 @@ var editing ; //判断用户是否处于编辑状态
 var flag  ;	  //判断新增和修改方法
 var datagrid;
 $().ready(function(){
-	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/project/list',
@@ -195,7 +194,10 @@ var project = {
 	initData : function(){
 		$('#search-teamId').combobox({
 			url : getContextPath() + '/project/getAllTeam',
-			valueField : 'teamId',
+			//modify by wanglc 2016-7-4 16:06:41 修改为模糊查询 begin
+			valueField : 'teamName',
+			//valueField : 'teamId',
+			//modify by wanglc 2016-7-4 16:06:41 修改为模糊查询 begin
 			textField : 'teamName'
 		});
 		
@@ -218,7 +220,10 @@ var project = {
 		
 		$('#search-projectId').combobox({
 			url : getContextPath() + '/project/getAllProject',
-			valueField : 'id',
+			//modify by wanglc 2016-7-4 16:08:08 修改为模糊查询begin
+			//valueField : 'id',
+			valueField : 'projectName',
+			//modify by wanglc 2016-7-4 16:08:08 修改为模糊查询begin
 			textField : 'projectName'
 		});
 		
