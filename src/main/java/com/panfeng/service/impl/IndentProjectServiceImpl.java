@@ -392,4 +392,11 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		}
 		return new ArrayList<>();
 	}
+
+	@Override
+	public List<IndentProject> all() {
+		
+		final List<IndentProject> list = indentProjectMapper.all();
+		return list;
+	}
 }

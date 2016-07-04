@@ -11,6 +11,8 @@ public class User extends Customer{
 	
 	private long id = 0l;
 	
+	private long userId = 0l; // 冗余字段，以id属性为准
+	
 	private String userName = null; // 昵称
 	
 	private String realName = null; // 真实姓名
@@ -47,7 +49,9 @@ public class User extends Customer{
 	
 	private String userCompany = null; // 客户公司
 	
-	private int clientLevel = 0; // 客户级别
+	private Integer clientLevel = null; // 客户级别
+	
+	private String note = null; // 备注信息
 	
 	public long getId() {
 		return id;
@@ -201,12 +205,28 @@ public class User extends Customer{
 		this.userCompany = userCompany;
 	}
 
-	public int getClientLevel() {
+	public Integer getClientLevel() {
 		return clientLevel;
 	}
 
-	public void setClientLevel(int clientLevel) {
+	public void setClientLevel(Integer clientLevel) {
 		this.clientLevel = clientLevel;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 }

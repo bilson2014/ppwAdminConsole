@@ -77,5 +77,11 @@ public interface IndentProjectService {
 	public long removeSynergy(long synergyId);
 	
 	public List<IndentProject> getSynergys(IndentProject indentProject);
+	
+	/**
+	 * 获取所有项目
+	 * @return list
+	 */
+	public List<IndentProject> all();
 
 }

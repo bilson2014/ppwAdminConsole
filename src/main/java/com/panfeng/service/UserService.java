@@ -90,4 +90,10 @@ public interface UserService {
 	public List<User> findUserByName(final User user);
 	
 	public long simpleSave(final User user);
+	
+	/**
+	 * 获取新注册的用户数量，用来提示客服还有多少新注册用户未完成分级
+	 * @return
+	 */
+	public long findUnlevelUsers();
 }

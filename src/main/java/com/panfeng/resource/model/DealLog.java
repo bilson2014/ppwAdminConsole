@@ -9,11 +9,11 @@ public class DealLog extends BaseObject {
 	private static final long serialVersionUID = 8541137142577987948L;
 
 	private Long dealId = null; // id
-	private String billNo = null; // 订单编号
+	private String billNo = null; // 订单编号(业务编号)
 	private String payChannel = null; // 支付通道
 	private String createTime = null;
 	private String updateTime = null;
-	private Integer dealStatus = null; // 订单状态，0：进行中 1：支付成功 2：支付关闭  3：支付失败
+	private Integer dealStatus = null; // 订单状态，0：进行中 1：支付成功 2：支付关闭 3：支付失败
 	private String userType = null;// 用户角色
 	private Long userId = null;
 	private Long projectId = null; // 项目ID
@@ -25,15 +25,14 @@ public class DealLog extends BaseObject {
 	private String description = null;// 描述
 	private String unOrderId = null; // 银联支付成功流水号
 	private String payTime = null;
-	
 
 	// 冗余字段
 	private String title = null; // 支付页标题
 	private String returnUrl = null;// 支付后返回url
 	private Map<String, Object> optional = null;
 	private Sign sign = null;
-	private String orderTimeOut = null;
-	private String proceedsSide = "北京拍片乐科技有限公司";//　现在是定死的
+	private String orderTimeOut = null; // 订单超时
+	private String proceedsSide = "北京拍片乐科技有限公司";// 现在是定死的
 	private Boolean urlEffective = null;
 	private String token = null;
 
@@ -45,9 +44,8 @@ public class DealLog extends BaseObject {
 	public final static int DEALLOG_SOURCE_ONLINE = 0;// 在线支付
 	public final static int DEALLOG_SOURCE_OFFLINE = 1;// 离线支付
 
-	public final static int LOG_TYPE_INCOME = 1;// 收入
+	public final static int LOG_TYPE_INCOME = 0;// 收入
 	public final static int LOG_TYPE_EXPENDITURE = 1;// 支出
-	
 
 	@Override
 	public String toString() {
@@ -93,21 +91,18 @@ public class DealLog extends BaseObject {
 		return stringBuffer.toString();
 	}
 
-
 	public String getPayTime() {
 		return payTime;
 	}
-
 
 	public void setPayTime(String payTime) {
 		this.payTime = payTime;
 	}
 
-
 	public Long getDealId() {
 		return dealId;
 	}
-	
+
 	public String getToken() {
 		return token;
 	}

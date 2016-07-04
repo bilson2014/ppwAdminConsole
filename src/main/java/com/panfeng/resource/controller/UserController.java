@@ -128,6 +128,18 @@ public class UserController extends BaseController {
 	}
 	
 	/**
+	 * 获取新注册的用户数量
+	 * 用来提示客服
+	 * @return
+	 */
+	@RequestMapping("/user/getUnLevelUserNotice")
+	public long findUnlevelUsers(){
+		
+		final long count = userService.findUnlevelUsers();
+		return count;
+	}
+	
+	/**
 	 * 前台登录验证操作
 	 * @param user
 	 * @return
@@ -361,6 +373,16 @@ public class UserController extends BaseController {
 	}
 	
 	/**
+	 * 获取全部客户
+	 * @return list
+	 */
+	@RequestMapping("/user/all")
+	public List<User> all(){
+		List<User> list = userService.all();
+		return list;
+	}
+	
+	/**
 	 * 初始化 sessionInfo 信息
 	 * @param user
 	 * @param request
@@ -395,4 +417,5 @@ public class UserController extends BaseController {
 		map.put(GlobalConstant.SESSION_INFO, info);
 		return sessionService.addSession(request, map);
 	}
+	
 }

@@ -11,7 +11,7 @@
 				dl.DL_DEAL_STATUS AS dealStatus,
 				dl.DL_DESCRIPTION AS description,
 				dl.DL_ID AS dealId,
-				dl.DL_LOG_TYPE AS description,
+				dl.DL_LOG_TYPE AS logType,
 				dl.DL_PAY_CHANNEL AS payChannel,
 				dl.DL_PAY_PRICE AS payPrice,
 				dl.DL_PROJECT_ID AS projectId,
@@ -21,8 +21,8 @@
 				dl.DL_USER_TYPR AS userType,
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
-				dl.DL_PAYTIME AS　payTime
-				FROM DEAL_LOG dl
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime 
+				FROM DEAL_LOG dl ORDER BY dl.DL_ID desc
 		]]>
 	</select>
 
@@ -35,7 +35,7 @@
 				dl.DL_DEAL_STATUS AS dealStatus,
 				dl.DL_DESCRIPTION AS description,
 				dl.DL_ID AS dealId,
-				dl.DL_LOG_TYPE AS description,
+				dl.DL_LOG_TYPE AS logType,
 				dl.DL_PAY_CHANNEL AS payChannel,
 				dl.DL_PAY_PRICE AS payPrice,
 				dl.DL_PROJECT_ID AS projectId,
@@ -45,8 +45,8 @@
 				dl.DL_USER_TYPR AS userType,
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
-				dl.DL_PAYTIME AS　payTime
-				FROM DEAL_LOG dl WHERE DL_ID = ${dealId}
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime 
+				FROM DEAL_LOG dl WHERE DL_ID = ${dealId} ORDER BY dl.DL_ID desc
 		]]>
 	</select>
 
@@ -59,7 +59,7 @@
 				dl.DL_DEAL_STATUS AS dealStatus,
 				dl.DL_DESCRIPTION AS description,
 				dl.DL_ID AS dealId,
-				dl.DL_LOG_TYPE AS description,
+				dl.DL_LOG_TYPE AS logType,
 				dl.DL_PAY_CHANNEL AS payChannel,
 				dl.DL_PAY_PRICE AS payPrice,
 				dl.DL_PROJECT_ID AS projectId,
@@ -69,9 +69,9 @@
 				dl.DL_USER_TYPR AS userType,
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
-				dl.DL_PAYTIME AS　payTime
-				FROM DEAL_LOG dl WHERE dl.DL_BILLNO = #{billNo}
-		]]>
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime 
+				FROM DEAL_LOG dl WHERE dl.DL_BILLNO = #{billNo} ORDER BY dl.DL_ID desc
+		]]> 
 	</select>
 	
 	<select id="findDealByProjectId" resultType="DealLog">
@@ -83,7 +83,7 @@
 				dl.DL_DEAL_STATUS AS dealStatus,
 				dl.DL_DESCRIPTION AS description,
 				dl.DL_ID AS dealId,
-				dl.DL_LOG_TYPE AS description,
+				dl.DL_LOG_TYPE AS logType,
 				dl.DL_PAY_CHANNEL AS payChannel,
 				dl.DL_PAY_PRICE AS payPrice,
 				dl.DL_PROJECT_ID AS projectId,
@@ -93,9 +93,8 @@
 				dl.DL_USER_TYPR AS userType,
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
-				dl.DL_PAYTIME AS　payTime
-			 FROM DEAL_LOG dl WHERE dl.DL_PROJECT_ID = #{projectId}
-		
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime 
+			 FROM DEAL_LOG dl WHERE dl.DL_PROJECT_ID = #{projectId} ORDER BY dl.DL_ID desc
 		]]>
 	</select>
 	
@@ -108,7 +107,7 @@
 				dl.DL_DEAL_STATUS AS dealStatus,
 				dl.DL_DESCRIPTION AS description,
 				dl.DL_ID AS dealId,
-				dl.DL_LOG_TYPE AS description,
+				dl.DL_LOG_TYPE AS logType,
 				dl.DL_PAY_CHANNEL AS payChannel,
 				dl.DL_PAY_PRICE AS payPrice,
 				dl.DL_PROJECT_ID AS projectId,
@@ -118,9 +117,26 @@
 				dl.DL_USER_TYPR AS userType,
 				dl.DL_USER_NAME AS userName,
 				dl.DL_UN_ORDERID  AS unOrderId,
-				dl.DL_PAYTIME AS　payTime
-			 FROM DEAL_LOG dl WHERE dl.DL_USER_ID = #{userId} AND dl.DL_PROJECT_ID =#{projectId}
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime 
+			 FROM DEAL_LOG dl WHERE dl.DL_USER_ID = #{userId} AND dl.DL_PROJECT_ID =#{projectId} ORDER BY dl.DL_ID desc
 		
+		]]>
+	</select>
+	
+	<select id="orderNumber" resultType="long">
+		<![CDATA[
+			SELECT  COUNT(dl.DL_ID) 
+			FROM DEAL_LOG dl 
+			WHERE dl.DL_PROJECT_ID = #{projectId}
+		]]>
+	</select>
+	
+	<select id="notPayNumber" resultType="long">
+		<![CDATA[
+			SELECT  COUNT(dl.DL_ID) FROM DEAL_LOG dl 
+			WHERE dl.DL_USER_TYPR = #{userType}
+			AND dl.DL_USER_ID =${userId}
+			AND dl.DL_DEAL_STATUS = 0
 		]]>
 	</select>
 	
@@ -139,6 +155,17 @@
 				DL_USER_NAME,
 				DL_PAY_PRICE,
 				DL_DESCRIPTION
+				]]>
+			<if test="payTime != null and payTime != '' ">
+				,DL_PAYTIME
+			</if>
+			<if test="unOrderId != null and unOrderId != '' ">
+				,DL_UN_ORDERID
+			</if>
+			<if test="payChannel != null and payChannel != '' ">
+				,DL_PAY_CHANNEL
+			</if>
+		<![CDATA[
 			)
 			VALUES(
 				#{billNo},
@@ -150,13 +177,22 @@
 				#{projectName},
 				${projectId},
 				#{userName},
-				${payPrice},
+				${payPrice}
 				]]>
 				<if test="description != null and description != '' ">
-					#{description}
+					,#{description}
 				</if>
 				<if test="description == null ">
-					""
+					,""
+				</if>
+				<if test="payTime != null and payTime != '' ">
+					,DATE_FORMAT(#{payTime},'%Y-%m-%d %T')
+				</if>
+				<if test="unOrderId != null and unOrderId != '' ">
+					,#{unOrderId}
+				</if>
+				<if test="payChannel != null and payChannel != '' ">
+					,#{payChannel}
 				</if>
 			<![CDATA[
 			)

@@ -12,7 +12,7 @@ $().ready(function(){
 		url : getContextPath() + '/portal/product/list',
 		idField : 'productId' ,
 		title : '项目管理列表' ,
-		fitColumns : true ,
+		//fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,

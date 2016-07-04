@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.FinanceMapper">
+
+	<select id="listWithPagination" resultType="DealLog">
+		<![CDATA[
+			SELECT 
+				dl.DL_BILLNO AS billNo,
+				DATE_FORMAT(dl.DL_CREATETIME,'%Y-%m-%d %T') AS createTime,
+				dl.DL_DEAL_LOG_SOURCE AS dealLogSource,
+				dl.DL_DEAL_STATUS AS dealStatus,
+				dl.DL_DESCRIPTION AS description,
+				dl.DL_ID AS dealId,
+				dl.DL_LOG_TYPE AS logType,
+				dl.DL_PAY_CHANNEL AS payChannel,
+				dl.DL_PAY_PRICE AS payPrice,
+				dl.DL_PROJECT_ID AS projectId,
+				dl.DL_PROJECT_NAME AS projectName,
+				DATE_FORMAT(dl.DL_UPDATETIME,'%Y-%m-%d %T') AS updateTime,
+				dl.DL_USER_ID AS userId,
+				dl.DL_USER_TYPR AS userType,
+				dl.DL_USER_NAME AS userName,
+				dl.DL_UN_ORDERID  AS unOrderId,
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime
+			FROM DEAL_LOG dl
+			WHERE 1 = 1
+			AND dl.DL_DEAL_STATUS = 1
+		]]>
+		<if test="logType != null">
+			AND dl.DL_LOG_TYPE = ${logType}
+		</if>
+		
+		<if test="dealLogSource != null">
+			AND dl.DL_DEAL_LOG_SOURCE = ${dealLogSource}
+		</if>
+	</select>
+	
+	<select id="maxSize" resultType="Long">
+		<![CDATA[
+			SELECT 
+				count(1)
+			FROM DEAL_LOG dl
+			WHERE 1 = 1
+			AND dl.DL_DEAL_STATUS = 1
+		]]>
+		<if test="logType != null">
+			AND dl.DL_LOG_TYPE = ${logType}
+		</if>
+		
+		<if test="dealLogSource != null">
+			AND dl.DL_DEAL_LOG_SOURCE = ${dealLogSource}
+		</if>
+	</select>
+	
+	<update id="update" >
+		<![CDATA[
+			UPDATE DEAL_LOG SET 
+				DL_UN_ORDERID = #{unOrderId},
+				DL_DEAL_STATUS = ${dealStatus},
+				DL_USER_TYPR = #{userType},
+				DL_USER_ID = ${userId},
+				DL_USER_NAME = #{userName},
+				DL_DEAL_LOG_SOURCE = ${dealLogSource},
+				DL_LOG_TYPE = ${logType},
+				DL_PROJECT_NAME = #{projectName},
+				DL_PROJECT_ID = ${projectId},
+				DL_PAY_PRICE = ${payPrice},
+				DL_DESCRIPTION = #{description},
+				DL_PAYTIME = DATE_FORMAT(#{payTime},'%Y-%m-%d %T'),
+				DL_UPDATETIME = CURRENT_TIMESTAMP 
+			WHERE DL_ID = ${dealId}
+		]]>
+		
+	</update>
+	
+	<insert id="save" useGeneratedKeys="true" keyProperty="dealId"
+		parameterType="DealLog">
+		
+		<![CDATA[
+			INSERT INTO DEAL_LOG (DL_BILLNO,
+				DL_UN_ORDERID,
+				DL_DEAL_STATUS,
+				DL_USER_TYPR,
+				DL_USER_ID,
+				DL_USER_NAME,
+				DL_DEAL_LOG_SOURCE,
+				DL_LOG_TYPE,
+				DL_PROJECT_NAME,
+				DL_PROJECT_ID,
+				DL_PAY_PRICE,
+				DL_DESCRIPTION,
+				DL_PAYTIME) VALUES(#{billNo},
+				#{unOrderId},
+				${dealStatus},
+				#{userType},
+				${userId},
+				#{userName},
+				${dealLogSource},
+				${logType},
+				#{projectName},
+				${projectId},
+				${payPrice},
+				#{description},
+				#{payTime}
+			)
+		]]>
+	</insert>
+	
+	<delete id="deleteByArray">
+		<![CDATA[
+			DELETE FROM DEAL_LOG
+				WHERE DL_ID = -1
+				
+		]]>
+		<if test="ids != null and ids != ''">
+			<![CDATA[
+				OR DL_ID IN
+			]]>
+			<foreach collection="ids" open="(" close=")" item="id"
+				separator=",">
+				${id}
+			</foreach>
+		</if>
+	</delete>
+	
+</mapper>

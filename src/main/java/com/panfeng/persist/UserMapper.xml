@@ -7,6 +7,7 @@
 	<select id="all" resultType="User">
 		<![CDATA[
 			SELECT u.ID AS id,
+				   u.ID AS userId,
 				   u.USERNAME AS userName,
 				   u.PASSWORD AS password,
 				   u.TELEPHONE AS telephone,
@@ -38,13 +39,25 @@
 				   u.USERCOMPANY AS userCompany,
 				   u.CLIENTLEVEL AS clientLevel,
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
-				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
+				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate,
+				   NOTE AS note
 			FROM USERS u
 			WHERE 1 = 1
 		]]>
 		<if test="userName != null and userName != ''">
 			AND u.USERNAME LIKE CONCAT(CONCAT('%',#{userName}),'%')
 		</if>
+		
+		<choose>
+			<when test="clientLevel == null">
+				AND u.clientLevel IS NULL
+			</when>
+			
+			<when test="clientLevel != null and clientLevel != -1">
+				AND u.clientLevel = ${clientLevel}
+			</when>
+		</choose>
+		
 		<![CDATA[
 			ORDER BY CREATEDATE,ID DESC
 			LIMIT ${begin} , ${limit}
@@ -60,6 +73,16 @@
 		<if test="userName != null and userName != ''">
 			AND u.USERNAME LIKE CONCAT(CONCAT('%',#{userName}),'%')
 		</if>
+		
+		<choose>
+			<when test="clientLevel == null">
+				AND u.clientLevel IS NULL
+			</when>
+			
+			<when test="clientLevel != null and clientLevel != -1">
+				AND u.clientLevel = ${clientLevel}
+			</when>
+		</choose>
 	</select>
 	
 	<select id="findUserById" resultType="User">
@@ -95,7 +118,13 @@
 				REALNAME,
 				QQ,
 				USERCOMPANY,
-				CLIENTLEVEL
+				NOTE
+		]]>
+				<if test="clientLevel != null">
+					,CLIENTLEVEL
+				</if>
+				
+		<![CDATA[
 			) VALUES(
 				#{userName},
 				#{telephone},
@@ -107,7 +136,14 @@
 				#{realName},
 				#{qq},
 				#{userCompany},
-				${clientLevel}
+				#{note}
+		]]>
+		
+		<if test="clientLevel != null">
+			,${clientLevel}
+		</if>
+		
+		<![CDATA[
 			)
 		]]>
 	</insert>
@@ -143,13 +179,17 @@
 		<if test="birthday != null and birthday != ''">
 			BIRTHDAY = DATE_FORMAT(#{birthday},'%Y-%m-%d'),
 		</if>
+		
+		<if test="clientLevel != null">
+			 CLIENTLEVEL = ${clientLevel},
+		</if>
 		<![CDATA[
 				   IMGURL = #{imgUrl},
 				   SEX = ${sex},
 				   REALNAME = #{realName},
 				   QQ = #{qq},
 				   USERCOMPANY = #{userCompany},
-				   CLIENTLEVEL = ${clientLevel}
+				   NOTE = #{note}
 			WHERE ID = ${id}
 		]]>
 	</update>
@@ -290,5 +330,14 @@
 		<if test="(userName == null or userName == '') and (realName == null or realName == '') ">
 			AND 1=2
 		</if>
+	</select>
+	
+	<select id="findUnlevelUsers" resultType="Long">
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM USERS
+			WHERE NOTE = ''
+				AND CLIENTLEVEL IS NULL
+		]]>
 	</select>
 </mapper>

@@ -157,16 +157,34 @@ public class ProjectController extends BaseController {
 		// add by wanglc,2016-06-23 10:00 begin
 		// -> 增加了3个参数,user_name,synergyid和ratio,用于后台修改
 		List<Synergy> list = new ArrayList<Synergy>();
-		String[] users = user_name.split(",");
-		String[] ratios = ratio.split(",");
-		String[] synergyids = synergyid.split(",");
-		for(int i=0;i<users.length;i++){
-			Synergy s = new Synergy();
-			s.setRatio(Double.parseDouble(ratios[i]));
-			s.setUserId(Long.parseLong(users[i]));
-			s.setSynergyId(Long.parseLong(synergyids[i]));
-			list.add(s);
+		String[] users = null;
+		String[] ratios = null;
+		String[] synergyids = null;
+		if(ValidateUtil.isValid(user_name)){
+			users = user_name.split(",");
 		}
+		if(ValidateUtil.isValid(ratio)){
+			ratios = ratio.split(",");
+		}
+		
+		if(ValidateUtil.isValid(synergyid)){
+			synergyids = synergyid.split(",");
+		}
+		
+		if(ValidateUtil.isValid(users)){
+			for(int i=0;i<users.length;i++){
+				Synergy s = new Synergy();
+				if(ValidateUtil.isValid(ratios)){
+					s.setRatio(Double.parseDouble(ratios[i]));
+				}
+				if(ValidateUtil.isValid(synergyids)){
+					s.setSynergyId(Long.parseLong(synergyids[i]));
+				}
+				s.setUserId(Long.parseLong(users[i]));
+				list.add(s);
+			}
+		}
+		
 		project.setSynergys(list);
 		// add by wanglc,2016-06-23 10:30 end
 		if (project.getState() == 3) { // 暂停动作同时调用工作流引擎暂停
@@ -286,6 +304,16 @@ public class ProjectController extends BaseController {
 		final IndentProject project = new IndentProject();
 		project.setSerial(indentProjectService.getProjectSerialID());
 		return project;
+	}
+	
+	/**
+	 * 获取所有项目
+	 * @return list
+	 */
+	@RequestMapping("/all")
+	public List<IndentProject> all(){
+		final List<IndentProject> list =indentProjectService.all();
+		return list;
 	}
 
 	// ------------------------------------------协同人处理部分------------------------------------------
