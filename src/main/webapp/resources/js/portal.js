@@ -58,7 +58,8 @@ $().ready(function(){
 	
 	// 每2分钟检测 订单状态，如果有 新订单 则弹出提示
 	/*checkIndentStatus();*/
-	checkUsrClientLevel();
+	//每2分钟检测 用户评级，如果有新用户未评级 则弹出提示
+	/*checkUsrClientLevel();*/
 	
 });
 
@@ -132,4 +133,29 @@ function editUserPwd(){
 			}
 		}]
 	});
+}
+function checkUsrClientLevel(){
+	window.setInterval(function(){
+		loadData(function(count){
+			if(count > 0){
+				$('.l-btn').click(); // 先清除所有的 alert 弹框
+				// 在menu出添加 徽章
+				var li_list = $('#menu').find('.tree-title');
+				
+				$.each(li_list,function(i,n){
+					if($(n).text() == '客户管理'){
+						$(this).find('.badge').remove();
+						var $span = '<span class="badge">new-';
+						$span += count;
+						$span += '</span>';
+						$(this).append($span);
+					}
+				});
+				$.messager.alert('Warning','您有'+ count +'用户未评级,请及时处理!');
+			} else {
+				$('.l-btn').click(); // 先清除所有的 alert 弹框
+				$('#menu').find('.tree-node').find('.badge').remove(); // 清除 徽章 效果
+			}
+		}, getContextPath() + '/portal/user/getUnLevelUserNotice', null);
+	}, 120000);
 }
