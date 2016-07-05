@@ -210,11 +210,10 @@
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
 			FROM USERS u
-			WHERE u.PASSWORD = #{password}
+			WHERE 1=1
 		]]>
-		<if test="userName != null and userName != ''">
-			AND u.TELEPHONE = #{userName}
-			OR  u.EMAIL = #{userName}
+		<if test="telephone != null and telephone != ''">
+			AND u.TELEPHONE = #{telephone}
 		</if>
 	</select>
 	

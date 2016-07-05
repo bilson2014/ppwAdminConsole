@@ -359,10 +359,12 @@ public class TeamController extends BaseController {
 	public boolean doLogin(@RequestBody final Team original,final HttpServletRequest request){
 		
 		try {
+			//add by wanglc 2016-7-5 16:40:02登录无需loginName begin
 			// 转码
 			//final String loginName = URLDecoder.decode(original.getLoginName(), "UTF-8");
 			final String password = URLDecoder.decode(original.getPassword(), "UTF-8");
 			//original.setLoginName(loginName);
+			//add by wanglc 2016-7-5 16:40:02登录无需loginName end
 			original.setPassword(password);
 			final Team team = service.doLogin(original);
 			
@@ -437,13 +439,14 @@ public class TeamController extends BaseController {
 	 */
 	@RequestMapping("/team/static/register")
 	public boolean register(@RequestBody final Team original,final HttpServletRequest request){
-		//modify by wanglc 2016-7-5 15:12:16 注册修改,无需密码 begin
-		/*try {
+		try {
 			if(original != null){
 				// 转码
-				final String loginName = URLDecoder.decode(original.getLoginName(), "UTF-8");
+				//modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
+			//	final String loginName = URLDecoder.decode(original.getLoginName(), "UTF-8");
 				final String password = URLDecoder.decode(original.getPassword(), "UTF-8");
-				original.setLoginName(loginName);
+			//	original.setLoginName(loginName);
+				//modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
 				original.setPassword(password);
 				
 				final Team team = service.register(original);
@@ -453,12 +456,6 @@ public class TeamController extends BaseController {
 			
 			logger.error("Decoder LoginName Or Password Error On Provider Register ...");
 			e.printStackTrace();
-		}
-		return false;*/
-		//modify by wanglc 2016-7-5 15:12:16 注册修改,无需密码end
-		if(original != null){
-			final Team team = service.register(original);
-			return initSessionInfo(team, request);
 		}
 		return false;
 	}
