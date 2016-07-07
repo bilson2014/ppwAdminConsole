@@ -189,6 +189,9 @@
 				   REALNAME = #{realName},
 				   QQ = #{qq},
 				   USERCOMPANY = #{userCompany},
+				   QQUNIQUE = #{qqUnique},
+				   WBUNIQUE = #{wbUnique},
+				   WECHATUNIQUE = #{wechatUnique},
 				   NOTE = #{note}
 			WHERE ID = ${id}
 		]]>
@@ -197,18 +200,20 @@
 	<select id="findUserByAttr" resultType="User">
 		<![CDATA[
 			SELECT u.ID AS id,
-				   u.USERNAME AS userName,
-				   u.PASSWORD AS password,
-				   u.TELEPHONE AS telephone,
-				   u.EMAIL AS email,
-				   u.IMGURL AS imgUrl,
-				   u.SEX AS sex,
-				   u.QQ AS qq,
-				   u.REALNAME as realName,
-				   u.USERCOMPANY AS userCompany,
-				   u.CLIENTLEVEL AS clientLevel,
-				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
-				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
+		   u.USERNAME AS userName,
+		   u.PASSWORD AS PASSWORD,
+		   u.TELEPHONE AS telephone,
+		   u.EMAIL AS email,
+		   u.BIRTHDAY AS birthday,
+		   u.IMGURL AS imgUrl,
+		   u.SEX AS sex,
+		   u.QQ AS qq,
+		   u.QQUNIQUE AS qqUnique,
+		   u.WBUNIQUE AS wbUnique,
+		   u.WECHATUNIQUE AS wechatUnique,
+		   u.REALNAME AS realName,
+		   u.USERCOMPANY AS userCompany,
+		   u.CLIENTLEVEL AS clientLevel
 			FROM USERS u
 			WHERE 1=1
 		]]>
@@ -283,6 +288,9 @@
 				   u.IMGURL AS imgUrl,
 				   u.SEX AS sex,
 				   u.QQ AS qq,
+				   u.QQUNIQUE AS qqUnique,
+	   			   u.WBUNIQUE AS wbUnique,
+	   			   u.WECHATUNIQUE AS wechatUnique,
 				   u.REALNAME as realName
 			FROM USERS u
 			WHERE QQUNIQUE = #{uniqueId}
@@ -296,12 +304,16 @@
 			INSERT INTO USERS(
 				USERNAME,
 				IMGURL,
+				PASSWORD,
+				TELEPHONE,
 				QQUNIQUE,
 				WBUNIQUE,
 				WECHATUNIQUE
 			) VALUES(
 				#{userName},
 				#{imgUrl},
+				#{password},
+				#{telephone},
 				#{qqUnique},
 				#{wbUnique},
 				#{wechatUnique}
@@ -339,4 +351,28 @@
 				AND CLIENTLEVEL IS NULL
 		]]>
 	</select>
+	
+	<select id="findUserByPhone" resultType="User">
+		<![CDATA[
+			SELECT u.ID AS id,
+				   u.ID AS userId,
+				   u.USERNAME AS userName,
+				   u.PASSWORD AS PASSWORD,
+				   u.TELEPHONE AS telephone,
+				   u.EMAIL AS email,
+				   u.IMGURL AS imgUrl,
+				   u.SEX AS sex,
+				   u.QQ AS qq,
+				   u.QQUNIQUE AS qqUnique,
+				   u.WBUNIQUE AS wbUnique,
+				   u.WECHATUNIQUE AS wechatUnique,
+				   u.REALNAME AS realName,
+				   u.USERCOMPANY AS userCompany,
+				   u.CLIENTLEVEL AS clientLevel,
+				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
+				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
+			FROM USERS u WHERE u.TELEPHONE=#{telephone}
+		]]>
+	</select>
+	
 </mapper>

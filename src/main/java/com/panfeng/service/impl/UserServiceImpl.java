@@ -1,17 +1,21 @@
 package com.panfeng.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.UserMapper;
+import com.panfeng.resource.model.ThirdBind;
 import com.panfeng.resource.model.User;
 import com.panfeng.resource.view.UserView;
 import com.panfeng.service.UserService;
 import com.panfeng.util.DataUtil;
-
+@Transactional
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -162,6 +166,108 @@ public class UserServiceImpl implements UserService{
 	public long findUnlevelUsers() {
 		final long count = mapper.findUnlevelUsers();
 		return count;
+	}
+
+	@Override
+	public User threeLoginPhone(String telephone) {
+		final User user = mapper.findUserByPhone(telephone);
+		return user;
+	}
+
+	/**
+	 * /**
+	 * 三方用户不存在 
+	 * 1.手机号没注册过 phoneStatus
+	 * 2.手机号注册过,但是未绑定第三方 thirdStatus
+	 * 3.手机号注册过,且绑定了第三方
+	 * 三方用户已经存在  ,但是未绑定手机
+	 * 4.手机号没注册过
+	 * 5.手机号注册过,但是未绑定第三方
+	 * 6.手机号注册了,也绑定了第三方
+	 */
+	@Override
+	public Map<String, Object> bindThird(ThirdBind bind) {
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("code", "1");
+		User user = new User();
+		if(bind.getCode()==0){//用户不存在
+			if(bind.getPhoneStatus().equals("noregister")){//注册新用户,绑定第三方
+				user.setUserName(bind.getUserName());
+				user.setImgUrl(bind.getImgUrl());
+				user.setPassword(DataUtil.md5("123456"));
+				user.setTelephone(bind.getTelephone());
+				if(bind.getType().equals("qq")){
+					user.setQqUnique(bind.getUnique());
+				}else if(bind.getType().equals("wechat")){
+					user.setWechatUnique(bind.getUnique());
+				}else if(bind.getType().equals("wb")){
+					user.setWbUnique(bind.getUnique());
+				}
+				mapper.saveByThirdLogin(user);
+				map.put("user", user);
+				map.put("msg", "绑定成功");
+			}
+			if(bind.getPhoneStatus().equals("register")
+					&& bind.getThirdStatus()==0){//更新phone的账号,绑定第三方
+				user.setTelephone(bind.getTelephone());
+				user = mapper.findUserByAttr(user);
+				if(null==user.getUserName() || "".equals(user.getUserName())){
+					user.setUserName(bind.getUserName());
+				}
+				if(null==user.getImgUrl() || "".equals(user.getImgUrl())){
+					user.setImgUrl(bind.getImgUrl());
+				}
+				if(bind.getType().equals("qq")){
+					user.setQqUnique(bind.getUnique());
+				}else if(bind.getType().equals("wechat")){
+					user.setWechatUnique(bind.getUnique());
+				}else if(bind.getType().equals("wb")){
+					user.setWbUnique(bind.getUnique());
+				}
+				mapper.update(user);
+				map.put("user", user);
+				map.put("msg", "绑定成功");
+			}
+			if(bind.getPhoneStatus().equals("register")
+					&& bind.getThirdStatus()==1){//提示手机号被占用
+				map.put("code", "0");
+				map.put("msg", "手机号被占用");
+			}
+		}else if(bind.getCode()==1){//第三方用户存在
+			if(bind.getPhoneStatus().equals("noregister")){//手机无注册,更新手机到第三方账户
+				user.setUniqueId(bind.getUnique());
+				user = mapper.verificationUserExistByThirdLogin(user).get(0);
+				user.setTelephone(bind.getTelephone());
+				mapper.update(user);
+				map.put("msg", "绑定成功");
+				map.put("user", user);
+			}
+			if(bind.getPhoneStatus().equals("register")
+					&& bind.getThirdStatus()==0){//删除第三方账户,更新phone用户
+				user.setUniqueId(bind.getUnique());
+				user = mapper.verificationUserExistByThirdLogin(user).get(0);
+				mapper.delete(user.getId());
+				user = new User();
+				user.setTelephone(bind.getTelephone());
+				user = mapper.findUserByAttr(user);
+				if(bind.getType().equals("qq")){
+					user.setQqUnique(bind.getUnique());
+				}else if(bind.getType().equals("wechat")){
+					user.setWechatUnique(bind.getUnique());
+				}else if(bind.getType().equals("wb")){
+					user.setWbUnique(bind.getUnique());
+				}
+				mapper.update(user);
+				map.put("msg", "绑定成功");
+				map.put("user", user);
+			}
+			if(bind.getPhoneStatus().equals("register")
+					&& bind.getThirdStatus()==1){//提示手机号被占用
+				map.put("code", "0");
+				map.put("msg", "手机号被占用");
+			}
+		}
+		return map;
 	}
 
 }

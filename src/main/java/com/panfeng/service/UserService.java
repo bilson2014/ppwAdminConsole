@@ -1,7 +1,9 @@
 package com.panfeng.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.panfeng.resource.model.ThirdBind;
 import com.panfeng.resource.model.User;
 import com.panfeng.resource.view.UserView;
 
@@ -96,4 +98,8 @@ public interface UserService {
 	 * @return
 	 */
 	public long findUnlevelUsers();
+
+	public User threeLoginPhone(String telephone);
+
+	public Map<String, Object> bindThird(ThirdBind bind);
 }
