@@ -150,16 +150,11 @@ public class UserController extends BaseController {
 		if(user != null){
 			// 不为空
 			final User orignUser = userService.findUserByAttr(user);
-			
 			if(orignUser != null){
-				
 				// 清空当前session
 				sessionService.removeSession(request);
-				
 				return initSessionInfo(orignUser, request);
 			}
-			
-			
 		}
 		return false;
 	}
