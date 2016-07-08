@@ -440,24 +440,37 @@ public class TeamController extends BaseController {
 	 */
 	@RequestMapping("/team/static/register")
 	public boolean register(@RequestBody final Team original, final HttpServletRequest request) {
-		try {
-			if (original != null) {
-				// 转码
-				// modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
-				// final String loginName =
-				// URLDecoder.decode(original.getLoginName(), "UTF-8");
-				final String password = URLDecoder.decode(original.getPassword(), "UTF-8");
-				// original.setLoginName(loginName);
-				// modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
-				original.setPassword(password);
+//		try {
+//			if (original != null) {
+//				// 转码
+//				// modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
+//				// final String loginName =
+//				// URLDecoder.decode(original.getLoginName(), "UTF-8");
+//				//final String password = URLDecoder.decode(original.getPassword(), "UTF-8");
+//				// original.setLoginName(loginName);
+//				// modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
+//				//original.setPassword(password);
+//
+//				final Team team = service.register(original);
+//				return initSessionInfo(team, request);
+//			}
+//		} catch (UnsupportedEncodingException e) {
+//
+//			logger.error("Decoder LoginName Or Password Error On Provider Register ...");
+//			e.printStackTrace();
+//		}
+		if (original != null) {
+			// 转码
+			// modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
+			// final String loginName =
+			// URLDecoder.decode(original.getLoginName(), "UTF-8");
+			//final String password = URLDecoder.decode(original.getPassword(), "UTF-8");
+			// original.setLoginName(loginName);
+			// modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
+			//original.setPassword(password);
 
-				final Team team = service.register(original);
-				return initSessionInfo(team, request);
-			}
-		} catch (UnsupportedEncodingException e) {
-
-			logger.error("Decoder LoginName Or Password Error On Provider Register ...");
-			e.printStackTrace();
+			final Team team = service.register(original);
+			return initSessionInfo(team, request);
 		}
 		return false;
 	}
@@ -567,7 +580,7 @@ public class TeamController extends BaseController {
 	@RequestMapping("/team/thirdLogin/bind")
 	public BaseMsg bind(@RequestBody final Team provider, final HttpServletRequest request) {
 		final BaseMsg baseMsg = service.bind(provider);
-		if (baseMsg.getErrorCode() == BaseMsg.NORMAL) {
+		if (baseMsg.getErrorCode().equals(BaseMsg.NORMAL) || baseMsg.getErrorCode().equals(BaseMsg.WARNING)) {
 			boolean login = initSessionInfo((Team) baseMsg.getResult(), request);
 			if (!login) {
 				return new BaseMsg(BaseMsg.ERROR, "绑定成功，登录失败", baseMsg.getResult());
