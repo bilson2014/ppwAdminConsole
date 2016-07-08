@@ -119,7 +119,10 @@
 				PRICERANGE,
 				DEMAND,
 				INFORESOURCE,
-				DESCRIPTION
+				DESCRIPTION,
+				QQUNIQUE,
+				wbUnique,
+				wechatUnique
 			) VALUES (
 				#{teamName},
 				#{teamPhotoUrl},
@@ -144,7 +147,10 @@
 				${priceRange},
 				#{demand},
 				${infoResource},
-				#{description}
+				#{description},
+				#{qqUnique},
+				#{wbUnique},
+				#{wechatUnique}
 			)
 		]]>
 	</insert>
@@ -297,10 +303,12 @@
 				   t.ADDRESS AS address,
 				   t.FLAG AS flag,
 				   t.LOGINNAME AS loginName,
-				   t.RECOMMENDATION AS recommendation
+				   t.RECOMMENDATION AS recommendation,
+				   t.WECHATUNIQUE AS wechatUnique,
+				   t.QQUNIQUE AS qqUnique,
+				   t.WBUNIQUE AS wbUnique
 			FROM TEAM t
-				WHERE t.LOGINNAME = #{loginName}
-					AND t.PASSWORD = #{password}
+				WHERE t.PHONENUMBER = #{phoneNumber}
 		]]>
 	</select>
 	
@@ -405,9 +413,9 @@
 				   t.PHONENUMBER AS phoneNumber,
 				   t.LOGINNAME AS loginName
 			FROM TEAM t 
-			WHERE QQUNIQUE = #{uniqueId}
-				OR wbUnique = #{uniqueId}
-				OR wechatUnique = #{uniqueId}
+			WHERE QQUNIQUE = #{qqUnique}
+				OR wbUnique = #{wbUnique}
+				OR wechatUnique = #{wechatUnique}
 		]]>
 	</select>
 	
@@ -415,18 +423,19 @@
 		<![CDATA[
 			UPDATE TEAM 
 			SET
+			UPDATEDATE = CURRENT_TIMESTAMP
 		]]>
 		
 		<if test="qqUnique != null and qqUnique != ''">
-			QQUNIQUE = #{qqUnique}
+			,QQUNIQUE = #{qqUnique}
 		</if>
 		
 		<if test="wbUnique != null and wbUnique != ''">
-			WBUNIQUE = #{wbUnique}
+			,WBUNIQUE = #{wbUnique}
 		</if>
 		
 		<if test="wechatUnique != null and wechatUnique != ''">
-			WECHATUNIQUE = #{wechatUnique}
+			,WECHATUNIQUE = #{wechatUnique}
 		</if>
 		<where>
 			TEAMID = ${teamId}

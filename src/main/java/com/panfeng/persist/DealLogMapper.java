@@ -26,6 +26,19 @@ public interface DealLogMapper {
 
 	long orderNumber(@Param("projectId") long projectId);
 	
+	/**
+	 * 根据用户来监测是否有为支付订单
+	 * @param userType
+	 * @param userId
+	 * @return
+	 */
 	long notPayNumber(@Param("userType") String userType,@Param("userId") long userId);
+	
+	/**
+	 * 根据项目来监测是否有为支付订单
+	 * @param projectId
+	 * @return
+	 */
+	long notPayNumberByProjectId(@Param("projectId") long projectId);
 
 }

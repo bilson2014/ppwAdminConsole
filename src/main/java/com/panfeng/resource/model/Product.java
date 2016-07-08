@@ -4,6 +4,7 @@ import com.panfeng.domain.BaseObject;
 
 /**
  * 项目业务类
+ * 
  * @author GY
  */
 public class Product extends BaseObject {
@@ -11,80 +12,78 @@ public class Product extends BaseObject {
 	private static final long serialVersionUID = 1070045570754608438L;
 
 	private long productId = 0l;
-	
+
 	private int showType = 1; // 默认开启图文显示
-	
+
 	private String videoUrl = null; // 视频连接
-	
+
 	private String videoDescription = null; // 视频说明
-	
+
 	private String pDescription = null; // 项目介绍
-	
+
 	private String productName = null; // 项目名称
-	
+
 	private String picHDUrl = null; // 缩略图
-	
+
 	private String picLDUrl = null; // 海报
-	
+
 	private int productType; // 项目类别
-	
+
 	private String productTypeName = null; // 项目类别名称
-	
+
 	private String uploadDate = null; // 上传时间
-	
+
 	private int recommend; // 推荐值
-	
+
 	private long supportCount; // 点赞
-	
+
 	private String videoLength = "0:00"; // 视频长度
-	
+
 	private int flag = 0; // 产品状态位
-	
+
 	private int visible = 0; // 产品是否可见 (0:可见,1:不可见)
-	
+
 	private String hret = ""; // 外链(优酷/土豆等url)
-	
+
 	private Long teamId = null;
-	
+
 	private String teamName = null;
-	
+
 	private String teamPhotoUrl = null; // 团队照片
-	
+
 	private String teamDescription = null; // 团队介绍
-	
+
 	private long serviceId = 0l; // 服务编号
-	
+
 	private double servicePrice = 0.0d; // 服务真实价格
-	
+
 	private double serviceRealPrice = 0.0d; // 折扣后价格
-	
+
 	private long mcoms = 0l; // 服务-影片长度
-	
+
 	private String itemName = null; // 类型名称
-	
+
 	private String tags = null; // 标签字段
-	
-	private String sessionId=null;
-	
+
+	private String sessionId = null;
+
+
 	public long getServiceId() {
 		return serviceId;
 	}
-	
 
 	public String getSessionId() {
 		return sessionId;
 	}
 
-
 	public void setSessionId(String sessionId) {
 		this.sessionId = sessionId;
 	}
 
-
 	public void setServiceId(long serviceId) {
 		this.serviceId = serviceId;
 	}
-	
+
 	public long getMcoms() {
 		return mcoms;
 	}
@@ -244,7 +243,7 @@ public class Product extends BaseObject {
 	public void setFlag(int flag) {
 		this.flag = flag;
 	}
-	
+
 	public int getVisible() {
 		return visible;
 	}
@@ -253,7 +252,6 @@ public class Product extends BaseObject {
 		this.visible = visible;
 	}
 
-	
 	public String getHret() {
 		return hret;
 	}
@@ -286,14 +284,12 @@ public class Product extends BaseObject {
 		this.tags = tags;
 	}
 
-
 	public int getShowType() {
 		return showType;
 	}
 
-
 	public void setShowType(int showType) {
 		this.showType = showType;
 	}
-	
+
 }

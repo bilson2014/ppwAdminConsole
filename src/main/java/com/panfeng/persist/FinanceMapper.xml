@@ -3,8 +3,7 @@
 <mapper namespace="com.panfeng.persist.FinanceMapper">
 
 	<select id="listWithPagination" resultType="DealLog">
-		<![CDATA[
-			SELECT 
+	<!-- SELECT 
 				dl.DL_BILLNO AS billNo,
 				DATE_FORMAT(dl.DL_CREATETIME,'%Y-%m-%d %T') AS createTime,
 				dl.DL_DEAL_LOG_SOURCE AS dealLogSource,
@@ -23,6 +22,31 @@
 				dl.DL_UN_ORDERID  AS unOrderId,
 				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime
 			FROM DEAL_LOG dl
+			WHERE 1 = 1
+			AND dl.DL_DEAL_STATUS = 1 
+			// 修改项目名用真实项目名字
+			-->
+			
+		<![CDATA[
+			SELECT 
+				dl.DL_BILLNO AS billNo,
+				DATE_FORMAT(dl.DL_CREATETIME,'%Y-%m-%d %T') AS createTime,
+				dl.DL_DEAL_LOG_SOURCE AS dealLogSource,
+				dl.DL_DEAL_STATUS AS dealStatus,
+				dl.DL_DESCRIPTION AS description,
+				dl.DL_ID AS dealId,
+				dl.DL_LOG_TYPE AS logType,
+				dl.DL_PAY_CHANNEL AS payChannel,
+				dl.DL_PAY_PRICE AS payPrice,
+				dl.DL_PROJECT_ID AS projectId,
+				ip.ip_project_name AS projectName,
+				DATE_FORMAT(dl.DL_UPDATETIME,'%Y-%m-%d %T') AS updateTime,
+				dl.DL_USER_ID AS userId,
+				dl.DL_USER_TYPR AS userType,
+				dl.DL_USER_NAME AS userName,
+				dl.DL_UN_ORDERID  AS unOrderId,
+				DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d %T') AS payTime
+			FROM DEAL_LOG dl INNER JOIN  INDENT_PROJECT ip ON dl.DL_PROJECT_ID = ip.IP_ID
 			WHERE 1 = 1
 			AND dl.DL_DEAL_STATUS = 1
 		]]>

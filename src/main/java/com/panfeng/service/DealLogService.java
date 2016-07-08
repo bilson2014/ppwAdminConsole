@@ -96,5 +96,13 @@ public interface DealLogService {
 	
 	BaseMsg orderNumber(long projectId);
 	
+	/**
+	 * 是否还有为支付订单
+	 * @param userType
+	 * @param userId
+	 * @return
+	 */
 	BaseMsg notPayNumber(String userType,long userId);
+	
+	long notPayNumber(long projectId);
 }

@@ -43,15 +43,12 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 
 	@Override
 	public ActivitiTask getCurrentTask(IndentProject indentProject) {
-		Task task = activitiEngineService.getCurrentTask(processDefinitionKey,
-				String.valueOf(indentProject.getId()),
+		Task task = activitiEngineService.getCurrentTask(processDefinitionKey, String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
 		if (task == null) {
 			// 请求流程状态
-			boolean isSuspended = activitiEngineService.isSuspended(
-					processDefinitionKey,
-					String.valueOf(indentProject.getId()),
-					getIndentCurrentFlowId(indentProject));
+			boolean isSuspended = activitiEngineService.isSuspended(processDefinitionKey,
+					String.valueOf(indentProject.getId()), getIndentCurrentFlowId(indentProject));
 			ActivitiTask activitiTask = null;
 			if (isSuspended) {
 				List<ActivitiTask> list = getAfterTask(indentProject);
@@ -68,10 +65,8 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 
 	@Override
 	public List<ActivitiTask> getAfterTask(IndentProject indentProject) {
-		List<HistoricTaskInstance> listTaskInstances = activitiEngineService
-				.getAfterTask(processDefinitionKey,
-						String.valueOf(indentProject.getId()),
-						getIndentCurrentFlowId(indentProject));
+		List<HistoricTaskInstance> listTaskInstances = activitiEngineService.getAfterTask(processDefinitionKey,
+				String.valueOf(indentProject.getId()), getIndentCurrentFlowId(indentProject));
 
 		List<ActivitiTask> list = new ArrayList<>();
 		for (HistoricTaskInstance historicTaskInstance : listTaskInstances) {
@@ -83,19 +78,15 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 
 	@Override
 	public HistoricProcessInstance getHistoryProcess(IndentProject indentProject) {
-		HistoricProcessInstance historicProcessInstance = activitiEngineService
-				.getHistoryProcess(processDefinitionKey,
-						String.valueOf(indentProject.getId()),
-						getIndentCurrentFlowId(indentProject));
+		HistoricProcessInstance historicProcessInstance = activitiEngineService.getHistoryProcess(processDefinitionKey,
+				String.valueOf(indentProject.getId()), getIndentCurrentFlowId(indentProject));
 		return historicProcessInstance;
 	}
 
 	@Override
 	public List<ActivitiTask> getHistoryProcessTask(IndentProject indentProject) {
-		List<HistoricTaskInstance> listTaskInstances = activitiEngineService
-				.getHistoryProcessTask(processDefinitionKey,
-						String.valueOf(indentProject.getId()),
-						getIndentCurrentFlowId(indentProject));
+		List<HistoricTaskInstance> listTaskInstances = activitiEngineService.getHistoryProcessTask(processDefinitionKey,
+				String.valueOf(indentProject.getId()), getIndentCurrentFlowId(indentProject));
 		List<ActivitiTask> list = new ArrayList<>();
 		for (HistoricTaskInstance historicTaskInstance : listTaskInstances) {
 			list.add(ActivitiTask.TaskToActivitiTask(historicTaskInstance));
@@ -104,10 +95,8 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	}
 
 	@Override
-	public List<HistoricTaskInstance> getHistoryProcessTask_O(
-			IndentProject indentProject) {
-		return activitiEngineService.getHistoryProcessTask(
-				processDefinitionKey, String.valueOf(indentProject.getId()),
+	public List<HistoricTaskInstance> getHistoryProcessTask_O(IndentProject indentProject) {
+		return activitiEngineService.getHistoryProcessTask(processDefinitionKey, String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
 	}
 
@@ -115,19 +104,17 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	public boolean completeTask(IndentProject indentProject) {
 
 		boolean res = false;
-		ActivitiTask activitiTask=getCurrentTask(indentProject);
-		indentCommentService.createSystemMsg("完成了\""+activitiTask.getName() + "\"任务", indentProject);
-		res = activitiEngineService.completeTask(processDefinitionKey,
-				String.valueOf(indentProject.getId()),
+		ActivitiTask activitiTask = getCurrentTask(indentProject);
+		indentCommentService.createSystemMsg("完成了\"" + activitiTask.getName() + "\"任务", indentProject);
+		res = activitiEngineService.completeTask(processDefinitionKey, String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
 		// 检测任务是否已经完成
 
-		boolean isFinish = activitiEngineService.isFinish(processDefinitionKey,
-				String.valueOf(indentProject.getId()),
+		boolean isFinish = activitiEngineService.isFinish(processDefinitionKey, String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
 		if (isFinish) {
 			// 更新项目状态
-			indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_FINISH);
+			indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_FINISH, null);
 		}
 		return res;
 	}
@@ -137,8 +124,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		// 禁用所有流程
 		disableAllFlow(indentProject);
 		// 启动流程
-		String flowId = activitiEngineService.startProcess(
-				processDefinitionKey, String.valueOf(indentProject.getId()));
+		String flowId = activitiEngineService.startProcess(processDefinitionKey, String.valueOf(indentProject.getId()));
 		// 设置关联
 		IndentFlow indentFlow = new IndentFlow();
 		indentFlow.setIfFlowId(flowId);
@@ -159,54 +145,48 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		// 获取动态节点
 		List<ActivitiTask> nodes = getNodes(indentProject);
 		// 填充流程时间节点
-		List<FlowDate> dates = IndentFlow.createFlowDates(flowId,
-				indentProject, nodes);
+		List<FlowDate> dates = IndentFlow.createFlowDates(flowId, indentProject, nodes);
 		for (FlowDate flowDate : dates) {
 			flowDateMapper.save(flowDate);
 		}
-		indentCommentService.createSystemMsg(
-				"创建了 " + indentProject.getProjectName() + "项目", indentProject);
+		indentCommentService.createSystemMsg("创建了 " + indentProject.getProjectName() + "项目", indentProject);
 		return l > 0 ? true : false;
 	}
 
 	@Override
 	public boolean suspendProcess(IndentProject indentProject) {
 
-		boolean res = activitiEngineService.suspendProcess(
-				processDefinitionKey, String.valueOf(indentProject.getId()),
+		boolean res = activitiEngineService.suspendProcess(processDefinitionKey, String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
-//		if (res) {
-//			indentCommentService.createSystemMsg(
-//					" 暂停了 " + indentProject.getProjectName() + "项目",
-//					indentProject);
-//			//add suspend state by laowang 2016.5.31 16:51 begin 
-//				indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_SUSPEND);
-//			//add suspend state by laowang 2016.5.31 16:51 end
-//		}
-		indentCommentService.createSystemMsg(
-				" 暂停了 " + indentProject.getProjectName() + "项目",
-				indentProject);
-			indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_SUSPEND);
+		// if (res) {
+		// indentCommentService.createSystemMsg(
+		// " 暂停了 " + indentProject.getProjectName() + "项目",
+		// indentProject);
+		// //add suspend state by laowang 2016.5.31 16:51 begin
+		// indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_SUSPEND);
+		// //add suspend state by laowang 2016.5.31 16:51 end
+		// }
+		indentCommentService.createSystemMsg(" 暂停了 " + indentProject.getProjectName() + "项目", indentProject);
+		indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_SUSPEND,
+				indentProject.getDescription());
 		return res;
 	}
 
 	@Override
 	public boolean resumeProcess(IndentProject indentProject) {
-		boolean res = activitiEngineService.resumeProcess(processDefinitionKey,
-				String.valueOf(indentProject.getId()),
+		boolean res = activitiEngineService.resumeProcess(processDefinitionKey, String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
-//		if (res) {
-//			indentCommentService.createSystemMsg(
-//					" 恢复了 " + indentProject.getProjectName() + "项目",
-//					indentProject);
-//		//add resume state by laowang 2016.5.31 16:51 begin 
-//			indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_NORMAL);
-//		//add resume state by laowang 2016.5.31 16:51 end
-//		}
-		indentCommentService.createSystemMsg(
-				" 恢复了 " + indentProject.getProjectName() + "项目",
-				indentProject);
-		indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_NORMAL);
+		// if (res) {
+		// indentCommentService.createSystemMsg(
+		// " 恢复了 " + indentProject.getProjectName() + "项目",
+		// indentProject);
+		// //add resume state by laowang 2016.5.31 16:51 begin
+		// indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_NORMAL);
+		// //add resume state by laowang 2016.5.31 16:51 end
+		// }
+		indentCommentService.createSystemMsg(" 恢复了 " + indentProject.getProjectName() + "项目", indentProject);
+		indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_NORMAL,
+				indentProject.getDescription());
 		return res;
 	}
 
@@ -217,44 +197,39 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	public boolean removeProcess(IndentProject indentProject) {
 		IndentFlow indentFlow = flowMapper.findFlowByIndent(indentProject);
 		flowMapper.deleteByflowId(indentProject, indentFlow.getFdFlowId());
-		return activitiEngineService
-				.removeProcess(processDefinitionKey,
-						String.valueOf(indentProject.getId()),
-						indentFlow.getFdFlowId());
+		return activitiEngineService.removeProcess(processDefinitionKey, String.valueOf(indentProject.getId()),
+				indentFlow.getFdFlowId());
 	}
 
 	@Override
 	public boolean jumpTask(IndentProject indentProject, String activityId) {
-		boolean res = activitiEngineService.jumpTask(processDefinitionKey,
-				String.valueOf(indentProject.getId()), activityId,
-				getIndentCurrentFlowId(indentProject));
-		
-//		if (res) {
-//			String taskName="";
-//			List<ActivitiTask> list=getNodes(indentProject);
-//			for (ActivitiTask activitiTask : list) {
-//				if(activityId.equals(activitiTask.getTaskDefinitionKey())){
-//					taskName=activitiTask.getName();
-//					break;
-//				}
-//			}
-//			indentCommentService.createSystemMsg(
-//					" 将任务节点跳转到 -->" + taskName+ "阶段",
-//					indentProject);
-//		}
-		
-		String taskName="";
-		List<ActivitiTask> list=getNodes(indentProject);
+		boolean res = activitiEngineService.jumpTask(processDefinitionKey, String.valueOf(indentProject.getId()),
+				activityId, getIndentCurrentFlowId(indentProject));
+
+		// if (res) {
+		// String taskName="";
+		// List<ActivitiTask> list=getNodes(indentProject);
+		// for (ActivitiTask activitiTask : list) {
+		// if(activityId.equals(activitiTask.getTaskDefinitionKey())){
+		// taskName=activitiTask.getName();
+		// break;
+		// }
+		// }
+		// indentCommentService.createSystemMsg(
+		// " 将任务节点跳转到 -->" + taskName+ "阶段",
+		// indentProject);
+		// }
+
+		String taskName = "";
+		List<ActivitiTask> list = getNodes(indentProject);
 		for (ActivitiTask activitiTask : list) {
-			if(activityId.equals(activitiTask.getTaskDefinitionKey())){
-				taskName=activitiTask.getName();
+			if (activityId.equals(activitiTask.getTaskDefinitionKey())) {
+				taskName = activitiTask.getName();
 				break;
 			}
 		}
-		indentCommentService.createSystemMsg(
-				" 将任务节点跳转到 -->" + taskName+ "阶段",
-				indentProject);
-		
+		indentCommentService.createSystemMsg(" 将任务节点跳转到 -->" + taskName + "阶段", indentProject);
+
 		return res;
 	}
 
@@ -289,20 +264,17 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	@Override
 	public List<ActivitiTask> getNodes(IndentProject indentProject) {
 		List<ActivitiTask> listactivitiTask = new ArrayList<>();
-		List<ActivityImpl> listaActivityImpls = activitiEngineService.getNodes(
-				processDefinitionKey, String.valueOf(indentProject.getId()),
-				getIndentCurrentFlowId(indentProject));
+		List<ActivityImpl> listaActivityImpls = activitiEngineService.getNodes(processDefinitionKey,
+				String.valueOf(indentProject.getId()), getIndentCurrentFlowId(indentProject));
 		if (listaActivityImpls == null || listaActivityImpls.size() < 1)
 			return listactivitiTask;
 
-		HistoricTaskInstance task = activitiEngineService.getDoneTaskInstance(
-				processDefinitionKey, String.valueOf(indentProject.getId()),
-				getIndentCurrentFlowId(indentProject));
+		HistoricTaskInstance task = activitiEngineService.getDoneTaskInstance(processDefinitionKey,
+				String.valueOf(indentProject.getId()), getIndentCurrentFlowId(indentProject));
 		String processInstanceId = task.getProcessInstanceId();
 
 		// 查询预计时间
-		List<FlowDate> listDates = flowDateMapper
-				.findFlowDateByFlowId(processInstanceId);
+		List<FlowDate> listDates = flowDateMapper.findFlowDateByFlowId(processInstanceId);
 		// 查询实际执行时间
 		List<ActivitiTask> activitiTasks = getAfterTask(indentProject);
 
@@ -320,21 +292,16 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			activitiTask = new ActivitiTask();
 			activitiTask.setTaskDefinitionKey(activityImpl.getId());
 			activitiTask.setName(name);
-			TaskDefinition td = (TaskDefinition) activityImpl
-					.getProperty("taskDefinition");
-			activitiTask.setDescription(activityImpl
-					.getProperty("documentation") + "");
+			TaskDefinition td = (TaskDefinition) activityImpl.getProperty("taskDefinition");
+			activitiTask.setDescription(activityImpl.getProperty("documentation") + "");
 			if (td != null && td.getAssigneeExpression() != null) {
-				activitiTask.setOwner(td.getAssigneeExpression()
-						.getExpressionText());
+				activitiTask.setOwner(td.getAssigneeExpression().getExpressionText());
 			}
 			// 填充预计时间
 			while (iteratorFlow.hasNext()) {
 				flowDate = iteratorFlow.next();
 				if (flowDate.getFdTaskId().equals(activityImpl.getId())) {
-					if (flowDate.getFdStartTime() == null
-							|| flowDate.getFdStartTime().equals(
-									IndentFlow.defaultDate)) {
+					if (flowDate.getFdStartTime() == null || flowDate.getFdStartTime().equals(IndentFlow.defaultDate)) {
 						flowDate.setFdStartTime("");
 					}
 					activitiTask.setScheduledTime(flowDate);
@@ -344,8 +311,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			// 填充实际时间
 			while (iteratorTask.hasNext()) {
 				nextTask = iteratorTask.next();
-				if (nextTask.getTaskDefinitionKey()
-						.equals(activityImpl.getId())) {
+				if (nextTask.getTaskDefinitionKey().equals(activityImpl.getId())) {
 					activitiTask.setCreateTime(nextTask.getCreateTime());
 				}
 			}
@@ -355,10 +321,8 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	}
 
 	@Override
-	public HistoricProcessInstance getHistoricProcessInstance(
-			IndentFlow indentFlow) {
-		return activitiEngineService.getHistoryProcess(processDefinitionKey,
-				String.valueOf(indentFlow.getIfIndentId()),
+	public HistoricProcessInstance getHistoricProcessInstance(IndentFlow indentFlow) {
+		return activitiEngineService.getHistoryProcess(processDefinitionKey, String.valueOf(indentFlow.getIfIndentId()),
 				indentFlow.getIfFlowId());
 	}
 
@@ -372,8 +336,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			ActivitiTask activitiTask2;
 			for (int i = 0; i < list.size(); i++) {
 				activitiTask2 = list.get(i);
-				if (activitiTask2.getTaskDefinitionKey().equals(currKey)
-						&& i != 0) {
+				if (activitiTask2.getTaskDefinitionKey().equals(currKey) && i != 0) {
 					activityId = list.get(i - 1).getTaskDefinitionKey();
 					break;
 				}

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panfeng.persist.SynergyMapper">
-	<insert id="save" parameterType="long">
+	<insert id="save" useGeneratedKeys="true" keyProperty="synergyId"
+		parameterType="long">
 		<![CDATA[
 		INSERT INTO SYNERGY (
-		S_USER_ID, S_PROJECT_ID, S_RATIO,S_USER_NAME
+			S_USER_ID, S_PROJECT_ID, S_RATIO,S_USER_NAME
 		) VALUES (
-		${userId}, ${projectId}, ${ratio},#{userName}
+			${userId}, ${projectId}, ${ratio},#{userName}
 		)
 		]]>
 	</insert>
@@ -20,7 +21,7 @@
 	<update id="update" parameterType="Long">
 		<![CDATA[
 			UPDATE SYNERGY SET
-		]]>		
+		]]>
 		<if test="projectId != null and projectId != '' ">
 			S_PROJECT_ID= ${projectId} ,
 		</if>
@@ -37,7 +38,7 @@
 		s_update_time=CURRENT_TIMESTAMP
 		WHERE 
 		s_id=${synergyId}
-		]]>		
+		]]>
 	</update>
 
 	<select id="findSynergyById" resultType="Synergy">
@@ -57,7 +58,7 @@
 			sy.S_ID = ${synergyId}
 		]]>
 	</select>
-	
+
 	<select id="findSynergyByProjectId" resultType="Synergy">
 		<![CDATA[
 			SELECT 
@@ -75,7 +76,7 @@
 			sy.S_PROJECT_ID = ${projectId} 
 		]]>
 	</select>
-	
+
 	<select id="findSynergyByUserId" resultType="Synergy">
 		<![CDATA[
 			SELECT 
@@ -93,7 +94,7 @@
 			sy.S_USER_ID = ${userId} 
 		]]>
 	</select>
-	
+
 	<select id="findSynergyList" resultType="Synergy">
 		<![CDATA[
 			SELECT 
@@ -108,7 +109,7 @@
 			GROUP BY sy.`s_project_id`,sy.s_id
 		]]>
 	</select>
-	
+
 	<select id="findSynergyMapByProjectId" resultType="Synergy">
 		<![CDATA[
 			SELECT 

@@ -3,6 +3,7 @@ package com.panfeng.service;
 import java.io.OutputStream;
 import java.util.List;
 
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.IndentProject;
@@ -91,4 +92,6 @@ public interface IndentProjectService {
 	 */
 	public long maxSizeAddSynergy(IndentProjectView view);
 	//add by wanglc 2016-6-29 10:41:24 end
+	
+	public BaseMsg verifyProjectInfo(long projectId);
 }
