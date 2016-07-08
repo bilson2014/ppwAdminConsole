@@ -22,6 +22,17 @@
 				<tr>
 					<th>用户名称:</th>
 					<td><input name="userName" placeholder="请输入用户名称"/></td>
+					<th>客户分级:</th>
+					<td>
+						<select name="clientLevel" class="easyui-combobox" editable="false">
+							<option value="-1" selected>-- 请选择 --</option>
+							<option value="">未分级</option>
+							<option value="3">S</option>
+							<option value="0">A</option>
+							<option value="1">B</option>
+							<option value="2">C</option>
+						</select>
+					</td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 					</td>

@@ -160,7 +160,10 @@ var project = {
 		
 		$('#search-projectId').combobox({
 			url : getContextPath() + '/project/getAllProject',
-			valueField : 'id',
+			//modify by wanglc 2016-7-4 16:58:23修改为项目名称的模糊查询begin
+			//valueField : 'id',
+			valueField : 'projectName',
+			//modify by wanglc 2016-7-4 16:58:23修改为项目名称的模糊查询begin
 			textField : 'projectName'
 		});
 		

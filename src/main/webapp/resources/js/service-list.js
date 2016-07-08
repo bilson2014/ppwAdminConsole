@@ -149,7 +149,10 @@ var service = {
 	dataInit : function(){
 		$('#search-name').combobox({
 			url : getContextPath() + '/portal/service/productSelect',
-			valueField : 'productId',
+			//modify by wanglc 2016-7-4 15:13:55 修改为模糊查询 bigin
+			valueField : 'productName',
+			//valueField : 'productId',
+			//modify by wanglc 2016-7-4 15:13:55 修改为模糊查询 end
 			textField : 'productName'
 		});
 	}

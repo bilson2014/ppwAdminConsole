@@ -37,7 +37,7 @@ public class UserTypeServiceImpl implements UserTempService {
 			if (imgUrl != null && !"".equals(imgUrl)) {
 				// TODO:
 				String filename = imgUrl.substring(imgUrl.lastIndexOf('/'), imgUrl.length());
-				userViewModel.setImgUrl("/employee/img/"+filename);
+				userViewModel.setImgUrl("/employee/img"+filename);
 			} else {
 				userViewModel.setImgUrl("/resources/img/flow/guanhead.png");
 			}

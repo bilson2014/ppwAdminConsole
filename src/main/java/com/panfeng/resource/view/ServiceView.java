@@ -7,7 +7,18 @@ public class ServiceView extends Pagination {
 	private Long serviceId = null;
 	
 	private Long productId = null;
+	
+	//add by wanglc 2016-7-4 15:15:13所属项目修改为模糊查询 bigin
+	private String productName = null;
+	
+	public String getProductName() {
+		return productName;
+	}
 
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	//add by wanglc 2016-7-4 15:15:13所属项目修改为模糊查询 bigin
 	public Long getServiceId() {
 		return serviceId;
 	}

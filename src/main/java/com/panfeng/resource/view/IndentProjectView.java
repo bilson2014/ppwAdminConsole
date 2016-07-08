@@ -18,6 +18,28 @@ public class IndentProjectView extends Pagination {
 	
 	//add by wanglc 2016-6-28 18:49:18 视频管家是否是协同人begin
 	private Integer isSynergy = 0;
+	//add by wanglc 2016-6-28 18:49:18 视频管家是否是协同人end
+	//add by wanglc 2016-7-4 16:21:57 添加项目和供应商模糊查询begin
+	private String projectName;
+	
+	private String teamName;
+	//add by wanglc 2016-7-4 16:21:57 添加项目和供应商模糊查询 end
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
 	public Integer getIsSynergy() {
 		return isSynergy;
 	}
@@ -25,7 +47,7 @@ public class IndentProjectView extends Pagination {
 	public void setIsSynergy(Integer isSynergy) {
 		this.isSynergy = isSynergy;
 	}
-	//add by wanglc 2016-6-28 18:49:18 视频管家是否是协同人end
+	
 	public Long getProjectId() {
 		return projectId;
 	}
