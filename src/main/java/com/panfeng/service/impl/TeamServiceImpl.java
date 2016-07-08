@@ -273,7 +273,7 @@ public class TeamServiceImpl implements TeamService {
 				// 默认新建时用三方登录名作为公司名
 				provider.setTeamName(provider.getLinkman());
 				mapper.save(provider);
-				baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定成功",provider);
+				baseMsg = new BaseMsg(BaseMsg.WARNING,"引导流程",provider);
 			}
 		}
 		return baseMsg;
