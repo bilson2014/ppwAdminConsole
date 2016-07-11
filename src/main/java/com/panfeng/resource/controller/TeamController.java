@@ -358,6 +358,25 @@ public class TeamController extends BaseController {
 
 	}
 
+	/*
+	 * @RequestMapping("/team/static/data/doLogin") public boolean
+	 * doLogin(@RequestBody final Team original,final HttpServletRequest
+	 * request){
+	 * 
+	 * try { // 转码 final String loginName =
+	 * URLDecoder.decode(original.getLoginName(), "UTF-8"); final String
+	 * password = URLDecoder.decode(original.getPassword(), "UTF-8");
+	 * original.setLoginName(loginName); original.setPassword(password); final
+	 * Team team = service.doLogin(original);
+	 * 
+	 * if(team != null){ // 存入session return initSessionInfo(team, request);
+	 * 
+	 * } } catch (UnsupportedEncodingException e) {
+	 * 
+	 * logger.error("Decoder LoginName Or Password Error On Provider Login ..."
+	 * ); e.printStackTrace(); } return false; }
+	 */
+
 	/**
 	 * 供应商登录
 	 * 
@@ -447,6 +466,25 @@ public class TeamController extends BaseController {
 		return false;
 	}
 
+	/*
+	 * @RequestMapping("/team/static/register") public boolean
+	 * register(@RequestBody final Team original,final HttpServletRequest
+	 * request){
+	 * 
+	 * try { if(original != null){ // 转码 final String loginName =
+	 * URLDecoder.decode(original.getLoginName(), "UTF-8"); final String
+	 * password = URLDecoder.decode(original.getPassword(), "UTF-8");
+	 * original.setLoginName(loginName); original.setPassword(password);
+	 * 
+	 * final Team team = service.register(original); return
+	 * initSessionInfo(team, request); } } catch (UnsupportedEncodingException
+	 * e) {
+	 * 
+	 * logger.error(
+	 * "Decoder LoginName Or Password Error On Provider Register ...");
+	 * e.printStackTrace(); } return false; }
+	 */
+
 	/**
 	 * 供应商 注册
 	 * 
@@ -456,35 +494,7 @@ public class TeamController extends BaseController {
 	 */
 	@RequestMapping("/team/static/register")
 	public boolean register(@RequestBody final Team original, final HttpServletRequest request) {
-//		try {
-//			if (original != null) {
-//				// 转码
-//				// modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
-//				// final String loginName =
-//				// URLDecoder.decode(original.getLoginName(), "UTF-8");
-//				//final String password = URLDecoder.decode(original.getPassword(), "UTF-8");
-//				// original.setLoginName(loginName);
-//				// modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
-//				//original.setPassword(password);
-//
-//				final Team team = service.register(original);
-//				return initSessionInfo(team, request);
-//			}
-//		} catch (UnsupportedEncodingException e) {
-//
-//			logger.error("Decoder LoginName Or Password Error On Provider Register ...");
-//			e.printStackTrace();
-//		}
 		if (original != null) {
-			// 转码
-			// modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
-			// final String loginName =
-			// URLDecoder.decode(original.getLoginName(), "UTF-8");
-			//final String password = URLDecoder.decode(original.getPassword(), "UTF-8");
-			// original.setLoginName(loginName);
-			// modify by wanglc 2016-7-5 16:41:44 登录无需loginName begin
-			//original.setPassword(password);
-
 			final Team team = service.register(original);
 			return initSessionInfo(team, request);
 		}
@@ -582,12 +592,15 @@ public class TeamController extends BaseController {
 
 		final List<Team> list = service.verificationTeamExist(provider);
 		if (ValidateUtil.isValid(list)) {
-			if (list.size() == 1) { // 绑定账户
-				// 清除当前session
-				sessionService.removeSession(request);
-				final Team team = list.get(0);
-				// 存入session中
-				return initSessionInfo(team, request);
+			if (list.size() == 1) {
+				if (ValidateUtil.isValid(list.get(0).getPhoneNumber())) {
+					// 绑定账户
+					// 清除当前session
+					sessionService.removeSession(request);
+					final Team team = list.get(0);
+					// 存入session中
+					return initSessionInfo(team, request);
+				}
 			}
 		}
 		return false;

@@ -417,7 +417,10 @@
 				   t.TEAMPHOTOURL AS teamPhotoUrl,
 				   t.TEAMDESCRIPTION AS teamDescription,
 				   t.PHONENUMBER AS phoneNumber,
-				   t.LOGINNAME AS loginName
+				   t.LOGINNAME AS loginName,
+				   t.WECHATUNIQUE AS wechatUnique,
+				   t.QQUNIQUE AS qqUnique,
+				   t.WBUNIQUE AS wbUnique
 			FROM TEAM t 
 			WHERE QQUNIQUE = #{qqUnique}
 				OR wbUnique = #{wbUnique}
@@ -442,6 +445,9 @@
 		
 		<if test="wechatUnique != null and wechatUnique != ''">
 			,WECHATUNIQUE = #{wechatUnique}
+		</if>
+		<if test="phoneNumber != null and phoneNumber != ''">
+			,PHONENUMBER = #{phoneNumber}
 		</if>
 		<where>
 			TEAMID = ${teamId}

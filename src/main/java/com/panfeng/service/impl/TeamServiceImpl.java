@@ -175,16 +175,17 @@ public class TeamServiceImpl implements TeamService {
 				for (Team team : teams) {
 					// 检测所偶有QqUnique相同的team，切QqUnique与绑定QQ相同
 					if (provider.getQqUnique().equals(team.getQqUnique())) {
-						if (team.getPhoneNumber() == null || team.getPhoneNumber().equals("")) {
+						if (!ValidateUtil.isValid(team.getPhoneNumber())) {
 							// 允许绑定
 							team.setQqUnique(provider.getQqUnique());
+							team.setPhoneNumber(provider.getPhoneNumber());
 							mapper.updateUniqueId(team);
-							baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定成功",team);
+							baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
 						} else if (team.getPhoneNumber().equals(provider.getPhoneNumber())) {
 							// 已经绑定过相同的qq
-							baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定成功",team);
+							baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
 						} else {
-							baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定失败",null);
+							baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定失败", null);
 							// 该QQ 号已经绑定过其他手机---》肯定不会出现
 						}
 					}
@@ -194,16 +195,17 @@ public class TeamServiceImpl implements TeamService {
 				for (Team team : teams) {
 					// 检测所偶有wechatUnique相同的team，切wechatUnique与绑定微信相同
 					if (provider.getWechatUnique().equals(team.getWechatUnique())) {
-						if (team.getPhoneNumber() == null || team.getPhoneNumber().equals("")) {
+						if (!ValidateUtil.isValid(team.getPhoneNumber())) {
 							// 允许绑定
 							team.setWechatUnique(provider.getWechatUnique());
+							team.setPhoneNumber(provider.getPhoneNumber());
 							mapper.updateUniqueId(team);
-							baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定成功",team);
+							baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
 						} else if (team.getPhoneNumber().equals(provider.getPhoneNumber())) {
 							// 已经绑定过相同的qq
-							baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定成功",team);
+							baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
 						} else {
-							baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定失败",null);
+							baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定失败", null);
 							// 该QQ 号已经绑定过其他手机---》肯定不会出现
 						}
 					}
@@ -213,16 +215,17 @@ public class TeamServiceImpl implements TeamService {
 				for (Team team : teams) {
 					// 检测所偶有wbUnique相同的team，切wbUnique与绑定微博相同
 					if (provider.getWbUnique().equals(team.getWbUnique())) {
-						if (team.getPhoneNumber() == null || team.getPhoneNumber().equals("")) {
+						if (!ValidateUtil.isValid(team.getPhoneNumber())) {
 							// 允许绑定
 							team.setWbUnique(provider.getWbUnique());
+							team.setPhoneNumber(provider.getPhoneNumber());
 							mapper.updateUniqueId(team);
-							baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定成功",team);
+							baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
 						} else if (team.getPhoneNumber().equals(provider.getPhoneNumber())) {
 							// 已经绑定过相同的qq
-							baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定成功",team);
+							baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
 						} else {
-							baseMsg = new BaseMsg(BaseMsg.ERROR,"绑定失败",null);
+							baseMsg = new BaseMsg(BaseMsg.ERROR, "绑定失败", null);
 							// 该QQ 号已经绑定过其他手机---》肯定不会出现
 						}
 					}
@@ -233,47 +236,48 @@ public class TeamServiceImpl implements TeamService {
 			// 新建
 			String phoneNumber = provider.getPhoneNumber();
 			Team team = mapper.checkTeam(phoneNumber);
-			if(team !=null){
+			if (team != null) {
 				switch (provider.getThirdLoginType()) {
 				case Team.LTYPE_QQ:
 					if (ValidateUtil.isValid(team.getQqUnique())) {
 						// 数据库中存在QqUnique，此手机号已经被绑定过
-						baseMsg = new BaseMsg(BaseMsg.ERROR,"绑定失败",null);
+						baseMsg = new BaseMsg(BaseMsg.ERROR, "绑定失败，改手机号已经被绑定过了。", null);
 					} else {
 						// 更新
 						team.setQqUnique(provider.getQqUnique());
 						mapper.updateUniqueId(team);
-						baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定成功",team);
+						baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
 					}
 					break;
 				case Team.LTYPE_WECHAT:
 					if (ValidateUtil.isValid(team.getWechatUnique())) {
 						// 数据库中存在QqUnique，此手机号已经被绑定过
-						baseMsg = new BaseMsg(BaseMsg.ERROR,"绑定失败",null);
+						baseMsg = new BaseMsg(BaseMsg.ERROR, "绑定失败，改手机号已经被绑定过了。", null);
 					} else {
 						// 更新
 						team.setWechatUnique(provider.getWechatUnique());
 						mapper.updateUniqueId(team);
-						baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定成功",team);
+						baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
 					}
 					break;
 				case Team.LTYPE_WEIBO:
 					if (ValidateUtil.isValid(team.getWbUnique())) {
 						// 数据库中存在QqUnique，此手机号已经被绑定过
-						baseMsg = new BaseMsg(BaseMsg.ERROR,"绑定失败",null);
+						baseMsg = new BaseMsg(BaseMsg.ERROR, "绑定失败，改手机号已经被绑定过了。", null);
 					} else {
 						// 更新
 						team.setWbUnique(provider.getWbUnique());
 						mapper.updateUniqueId(team);
-						baseMsg = new BaseMsg(BaseMsg.NORMAL,"绑定成功",team);
+						baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
 					}
 					break;
 				}
-			}else{
+			} else {
 				// 默认新建时用三方登录名作为公司名
 				provider.setTeamName(provider.getLinkman());
+				provider.setLoginName(provider.getLinkman());
 				mapper.save(provider);
-				baseMsg = new BaseMsg(BaseMsg.WARNING,"引导流程",provider);
+				baseMsg = new BaseMsg(BaseMsg.WARNING, "引导流程", provider);
 			}
 		}
 		return baseMsg;
