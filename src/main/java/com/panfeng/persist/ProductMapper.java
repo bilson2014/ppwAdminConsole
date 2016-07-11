@@ -1,7 +1,9 @@
 package com.panfeng.persist;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 
 import com.panfeng.resource.model.Product;
@@ -90,4 +92,11 @@ public interface ProductMapper {
 	 * @return 产品列表
 	 */
 	public List<Product> loadSalesProduct();
+
+	/**
+	 * 查询推荐值大于0的产品集合
+	 * @return 产品集合
+	 */
+	@MapKey(value = "productId")
+	public Map<Long, Product> getProductByRecommend();
 }

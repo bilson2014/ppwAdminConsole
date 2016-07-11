@@ -32,11 +32,11 @@ public class Product extends BaseObject {
 	private String productTypeName = null; // 项目类别名称
 
 	private String uploadDate = null; // 上传时间
-
-	private int recommend; // 推荐值
-
-	private long supportCount; // 点赞
-
+	
+	private int recommend = 0; // 推荐值
+	
+	private long supportCount = 0; // 点赞
+	
 	private String videoLength = "0:00"; // 视频长度
 
 	private int flag = 0; // 产品状态位

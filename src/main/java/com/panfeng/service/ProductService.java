@@ -1,6 +1,7 @@
 package com.panfeng.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.panfeng.resource.model.Product;
 import com.panfeng.resource.view.ProductView;
@@ -114,4 +115,10 @@ public interface ProductService {
 	 * @return 产品列表
 	 */
 	public List<Product> loadSalesProduct();
+	
+	/**
+	 * 查询推荐值大于0的产品集合
+	 * @return 产品集合
+	 */
+	public Map<Long,Product> getProductByRecommend();
 }
