@@ -59,7 +59,7 @@ $().ready(function(){
 	// 每2分钟检测 订单状态，如果有 新订单 则弹出提示
 	/*checkIndentStatus();*/
 	//每2分钟检测 用户评级，如果有新用户未评级 则弹出提示
-	/*checkUsrClientLevel();*/
+	checkUsrClientLevel();
 	
 });
 
@@ -143,7 +143,7 @@ function checkUsrClientLevel(){
 				var li_list = $('#menu').find('.tree-title');
 				
 				$.each(li_list,function(i,n){
-					if($(n).text() == '客户管理'){
+					if($(n).text() == '客户管理' && !($(n).parent().children(":first").attr("class")=='tree-hit tree-expanded')){
 						$(this).find('.badge').remove();
 						var $span = '<span class="badge">new-';
 						$span += count;
@@ -157,5 +157,5 @@ function checkUsrClientLevel(){
 				$('#menu').find('.tree-node').find('.badge').remove(); // 清除 徽章 效果
 			}
 		}, getContextPath() + '/portal/user/getUnLevelUserNotice', null);
-	}, 120000);
+	}, 1200);
 }
