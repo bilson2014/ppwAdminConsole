@@ -386,27 +386,11 @@ public class TeamController extends BaseController {
 	 */
 	@RequestMapping("/team/static/data/doLogin")
 	public boolean doLogin(@RequestBody final Team original, final HttpServletRequest request) {
-		try {
-			// add by wanglc 2016-7-5 16:40:02登录无需loginName begin
-			// 转码
-			// final String loginName =
-			// URLDecoder.decode(original.getLoginName(), "UTF-8");
-			final String password = URLDecoder.decode(original.getPassword(), "UTF-8");
-			// original.setLoginName(loginName);
-			// add by wanglc 2016-7-5 16:40:02登录无需loginName end
-			original.setPassword(password);
 			final Team team = service.doLogin(original.getPhoneNumber());
-
 			if (team != null) {
 				// 存入session
 				return initSessionInfo(team, request);
-
 			}
-		} catch (UnsupportedEncodingException e) {
-
-			logger.error("Decoder LoginName Or Password Error On Provider Login ...");
-			e.printStackTrace();
-		}
 		return false;
 	}
 
