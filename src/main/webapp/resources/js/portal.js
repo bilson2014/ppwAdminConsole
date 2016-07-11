@@ -138,7 +138,9 @@ function checkUsrClientLevel(){
 	window.setInterval(function(){
 		loadData(function(count){
 			if(count > 0){
-				$('.l-btn').click(); // 先清除所有的 alert 弹框
+				//$('.l-btn').click(); // 先清除所有的 alert 弹框
+				$.messager.progress('close');
+				//$(".badge").remove();
 				// 在menu出添加 徽章
 				var li_list = $('#menu').find('.tree-title');
 				
@@ -157,5 +159,5 @@ function checkUsrClientLevel(){
 				$('#menu').find('.tree-node').find('.badge').remove(); // 清除 徽章 效果
 			}
 		}, getContextPath() + '/portal/user/getUnLevelUserNotice', null);
-	}, 120000);
+	}, 12000);
 }
