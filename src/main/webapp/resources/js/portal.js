@@ -157,5 +157,5 @@ function checkUsrClientLevel(){
 				$('#menu').find('.tree-node').find('.badge').remove(); // 清除 徽章 效果
 			}
 		}, getContextPath() + '/portal/user/getUnLevelUserNotice', null);
-	}, 1200);
+	}, 120000);
 }
