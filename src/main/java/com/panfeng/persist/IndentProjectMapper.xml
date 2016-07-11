@@ -114,7 +114,7 @@
 				i.IP_TEAMID=${teamId},
 				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 				]]>
-		
+
 		<if test="state != null ">
 			,i.IP_STATE=${state}
 		</if>
@@ -163,6 +163,11 @@
 			UPDATE INDENT_PROJECT i
 				SET i.IP_STATE=${state},
 					i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
+		]]>
+		<if test="description != null and description != ''  ">
+			,i.IP_DESCRIPTION = #{description}
+		</if>
+		<![CDATA[
 			WHERE i.IP_ID = ${id}
 		]]>
 	</update>
@@ -172,21 +177,19 @@
 			UPDATE INDENT_PROJECT i
 				SET i.IP_STATE=${state},
 					i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
+		]]>
+		<if test="description != null and description != ''  ">
+			,i.IP_DESCRIPTION = #{description}
+		</if>
+		<![CDATA[
 			WHERE i.IP_ID = ${id}
 		]]>
 	</update>
 
-	<delete id="delete">
-		<![CDATA[
-			DELETE FROM INDENT_PROJECT
-				WHERE ID = ${id}
-		]]>
-	</delete>
-
 	<delete id="deleteById">
 		<![CDATA[
 			DELETE FROM INDENT_PROJECT
-				WHERE ID = ${projectId}
+				WHERE IP_ID = ${projectId}
 		]]>
 	</delete>
 
@@ -524,15 +527,15 @@
 			LEFT JOIN EMPLOYEE e ON i.ip_referrer_id = e.employeeId
      		WHERE IP_ID IN
      	]]>
-     		<foreach item="item" index="index" collection="list" open="("
+		<foreach item="item" index="index" collection="list" open="("
 			separator="," close=")">
 			${item}
-			</foreach>
+		</foreach>
 		<![CDATA[
      		ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID DESC
      	]]>
 	</select>
-	
+
 	<select id="all" resultType="IndentProject">
 		<![CDATA[
 			SELECT 
@@ -544,10 +547,9 @@
      		WHERE  1 = 1
 		]]>
 	</select>
-	
-	<!-- add by wanglc 2016-6-28 19:56:47
-	 * 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面  begin
-	  -->
+
+	<!-- add by wanglc 2016-6-28 19:56:47 * 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 
+		begin -->
 	<select id="listWithPaginationAddSynergy" resultType="IndentProject">
 		<![CDATA[
 			SELECT  i.IP_ID AS id,
@@ -601,13 +603,11 @@
 		<if test="state == 0">
 			AND i.IP_STATE = ${state}
 		</if>
-
 		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
 		<if test="teamName != null and teamName != ''">
 			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
 		</if>
 		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
-		
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
@@ -685,6 +685,42 @@
 		<![CDATA[
 			LIMIT ${begin} , ${limit}
 		]]>
-		
+
 	</select>
+	<select id="maxSizeAddSynergy" resultType="java.lang.Long">
+		<![CDATA[
+			SELECT  COUNT(1)
+			FROM INDENT_PROJECT i 
+			LEFT JOIN SYNERGY s
+				ON s.s_project_id=i.ip_id
+			WHERE 1 = 1
+			AND s.S_USER_ID = ${userId}
+			OR i.IP_USER_ID = ${userId}
+		]]>
+
+		<if test="projectId != null and projectId != ''">
+			AND i.IP_ID = ${projectId}
+		</if>
+
+		<if test="state != null and state != ''">
+			AND i.IP_STATE = #{state}
+		</if>
+
+		<if test="state == 0">
+			AND i.IP_STATE = ${state}
+		</if>
+
+		<if test="teamId != null and teamId != ''">
+			AND i.ip_teamId = ${teamId}
+		</if>
+
+		<if test="source != null and source != ''">
+			AND i.IP_SOURCE = #{source}
+		</if>
+		<![CDATA[
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+	<!-- add by wanglc 2016-6-28 19:56:47 * 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 
+		end -->
 </mapper>

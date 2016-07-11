@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.FlowDateMapper;
 import com.panfeng.persist.IndentFlowMapper;
@@ -26,6 +27,7 @@ import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.Synergy;
 import com.panfeng.resource.model.UserViewModel;
 import com.panfeng.resource.view.IndentProjectView;
+import com.panfeng.service.DealLogService;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentCommentService;
@@ -66,6 +68,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	// -> register EmployeeService to load employee informartion
 	@Autowired
 	final EmployeeService employeeService = null;
+	@Autowired
+	DealLogService dealLogService;
 
 	// add by Jack ,2016-06-03 17:18 end
 
@@ -79,7 +83,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		boolean isValid = ValidateUtil.isValid(list);
 		if (isValid) {
 			for (Synergy synergy : list) {
-				if(null==synergy.getUserName()){//后台添加的数据,没有视频管家名字
+				if (null == synergy.getUserName()) {// 后台添加的数据,没有视频管家名字
 					String realName = employeeService.findEmployerById(synergy.getUserId()).getEmployeeRealName();
 					synergy.setUserName(realName);
 				}
@@ -87,13 +91,22 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				synergyService.save(synergy);
 			}
 		}
-		// add synergy by laowang end 2016-5-25 12:20
-		return indentActivitiService.startProcess(indentProject);
+		// 解决项目重复big
+		boolean res = indentActivitiService.startProcess(indentProject);
+		if (!res) {
+			indentProjectMapper.deleteById(indentProject.getId());
+			for (Synergy synergy : list) {
+				synergyService.delete(synergy.getSynergyId());
+			}
+		}
+		return res;
 	}
 
 	@Override
 	public long delete(IndentProject indentProject) {
-		return indentProjectMapper.delete(indentProject);
+		if (indentProject == null)
+			return 0;
+		return indentProjectMapper.deleteById(indentProject.getId());
 	}
 
 	@Override
@@ -152,23 +165,21 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				flowDateMapper.update(flowDate);
 			}
 			// 获取项目的协同人 666
-			Map<Long,Synergy> map = synergyService.findSynergyMapByProjectId(indentProject.getId());
+			Map<Long, Synergy> map = synergyService.findSynergyMapByProjectId(indentProject.getId());
 			List<Synergy> sList = indentProject.getSynergys();
-			if(ValidateUtil.isValid(sList)){
+			if (ValidateUtil.isValid(sList)) {
 				for (final Synergy synergy : sList) {
 					Synergy originalSynergy = map.get(synergy.getSynergyId());
-					if(originalSynergy == null){
+					if (originalSynergy == null) {
 						synergy.setProjectId(indentProject.getId());
 						synergyService.save(synergy);
-					}else {
+					} else {
 						synergyService.update(synergy);
 					}
 				}
 			}
-			
-			indentCommentService.createSystemMsg(
-					"更新了 " + indentProject.getProjectName() + "项目",
-					indentProject);
+
+			indentCommentService.createSystemMsg("更新了 " + indentProject.getProjectName() + "项目", indentProject);
 			return true;
 		}
 		return false;
@@ -225,13 +236,23 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	public boolean cancelProject(IndentProject indentProject) {
 		indentProject.setState(IndentProject.PROJECT_CANCEL);
-		long l = indentProjectMapper.cancelProject(indentProject);
+		long l = indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_CANCEL,
+				indentProject.getDescription());
 		indentCommentService.createSystemMsg("取消了" + indentProject.getProjectName() + "项目", indentProject);
 		return (l > 0);
 	}
 
 	public void getReport(IndentProject indentProject, OutputStream outputStream) {
 		List<IndentProject> list = indentProjectMapper.findProjectList(indentProject);
+
+		// 为每一个项目添加协同人
+		if (list != null) {
+			for (IndentProject indentProject2 : list) {
+				List<Synergy> Synergys = synergyService.findSynergyByProjectId(indentProject2.getId());
+				indentProject2.setSynergys(Synergys);
+			}
+		}
+
 		getReport(list, outputStream);
 	}
 
@@ -267,32 +288,31 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	public List<IndentProject> listWithPagination(final IndentProjectView view) {
 
-		//List<IndentProject> list = indentProjectMapper.listWithPagination(view);
-		
-		//modify by wanglc 2016-6-28 19:54:21 
-		//添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 begin
+		// List<IndentProject> list =
+		// indentProjectMapper.listWithPagination(view);
+
+		// modify by wanglc 2016-6-28 19:54:21
+		// 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 begin
 		List<IndentProject> list = new ArrayList<IndentProject>();
-		if(null == view.getIsSynergy() || view.getIsSynergy() == 0){
+		if (null == view.getIsSynergy() || view.getIsSynergy() == 0) {
 			list = indentProjectMapper.listWithPagination(view);
-		}else{
+		} else {
 			list = indentProjectMapper.listWithPaginationAddSynergy(view);
 		}
-		//modify by wanglc 2016-6-28 19:54:21 end
+		// modify by wanglc 2016-6-28 19:54:21 end
 		Map<Long, Employee> eMap = employeeService.getEmployeeMap();
-		Map<Long,List<Synergy>> sMap = synergyService.findSynergyMap();
+		Map<Long, List<Synergy>> sMap = synergyService.findSynergyMap();
 		for (final IndentProject pro : list) {
 			final Employee user = eMap.get(pro.getUserId());
 			final Employee referer = eMap.get(pro.getReferrerId());
 			final List<Synergy> sList = sMap.get(pro.getId());
-			if(user != null)
-				pro.setEmployeeRealName(eMap.get(pro.getUserId())
-						.getEmployeeRealName());
+			if (user != null)
+				pro.setEmployeeRealName(eMap.get(pro.getUserId()).getEmployeeRealName());
 
 			if (referer != null)
-				pro.setReferrerName(eMap.get(pro.getReferrerId())
-						.getEmployeeRealName());
-			
-			if(ValidateUtil.isValid(sList)){
+				pro.setReferrerName(eMap.get(pro.getReferrerId()).getEmployeeRealName());
+
+			if (ValidateUtil.isValid(sList)) {
 				pro.setSynergys(sList);
 			}
 		}
@@ -358,15 +378,15 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public long update(IndentProject indentProject) {
-		Map<Long,Synergy> map = synergyService.findSynergyMapByProjectId(indentProject.getId());
+		Map<Long, Synergy> map = synergyService.findSynergyMapByProjectId(indentProject.getId());
 		List<Synergy> sList = indentProject.getSynergys();
-		if(ValidateUtil.isValid(sList)){
+		if (ValidateUtil.isValid(sList)) {
 			for (final Synergy synergy : sList) {
 				Synergy originalSynergy = map.get(synergy.getSynergyId());
-				if(originalSynergy == null){
+				if (originalSynergy == null) {
 					synergy.setProjectId(indentProject.getId());
 					synergyService.save(synergy);
-				}else {
+				} else {
 					synergyService.update(synergy);
 				}
 			}
@@ -393,10 +413,42 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		return new ArrayList<>();
 	}
 
+	// add by wanglc 2016-6-29 10:42:43 begin
+	// 项目管理:查询含有协同人的数据量
+	/**
+	 * 项目管理:查询含有协同人的数据量
+	 */
+	@Override
+	public long maxSizeAddSynergy(IndentProjectView view) {
+		long total = indentProjectMapper.maxSizeAddSynergy(view);
+		return total;
+	}
+	// add by wanglc 2016-6-29 10:42:57 end
+
 	@Override
 	public List<IndentProject> all() {
-		
+
 		final List<IndentProject> list = indentProjectMapper.all();
 		return list;
+	}
+
+	@Override
+	public BaseMsg verifyProjectInfo(long projectId) {
+		IndentProject indentProject = new IndentProject();
+		indentProject.setId(projectId);
+		indentProject = indentProjectMapper.findProjectInfo(indentProject);
+
+		if (indentProject != null) {
+			long teamId = indentProject.getTeamId();
+			if (teamId <= 0) {
+				return new BaseMsg(BaseMsg.ERROR, "错误", "必须完善供应商信息");
+			}
+		}
+		long count = dealLogService.notPayNumber(indentProject.getId());
+		if (count <= 0) {
+			return new BaseMsg(BaseMsg.NORMAL, "正常", "验证通过");
+		} else {
+			return new BaseMsg(BaseMsg.WARNING, "警告", "有未支付的订单");
+		}
 	}
 }

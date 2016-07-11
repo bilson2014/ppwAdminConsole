@@ -68,7 +68,7 @@ public class DealLogImpl implements DealLogService {
 		dealLog.setPayChannel("UN_WEB");
 		dealLog.setTitle(dealLog.getProjectName());
 		dealLog.setReturnUrl(UN_WEB_RETURNURL);
-		// step 2 end 
+		// step 2 end
 
 		// step 3 签名数据
 		// Sign sign = new
@@ -368,7 +368,7 @@ public class DealLogImpl implements DealLogService {
 	}
 
 	public BaseMsg offOrder(String token) throws Exception {
-		if(token == null)
+		if (token == null)
 			throw new NullPointerException("token,不能为空");
 		String[] data = decodeToken(token);
 		if (!verifyTime(data[1])) {
@@ -400,5 +400,10 @@ public class DealLogImpl implements DealLogService {
 	public BaseMsg notPayNumber(String userType, long userId) {
 		long count = dealLogMapper.notPayNumber(userType, userId);
 		return new BaseMsg(BaseMsg.NORMAL, "正常", count);
+	}
+
+	@Override
+	public long notPayNumber(long projectId) {
+		return dealLogMapper.notPayNumberByProjectId(projectId);
 	}
 }

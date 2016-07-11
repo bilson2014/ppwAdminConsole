@@ -2,6 +2,7 @@ package com.panfeng.service;
 
 import java.util.List;
 
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.TeamView;
 
@@ -54,7 +55,7 @@ public interface TeamService {
 	 * @param original 包含(登录名和密码(已加密))
 	 * @return
 	 */
-	public Team doLogin(final Team original);
+	public Team doLogin(final String phoneNumber);
 
 	/**
 	 * 检查手机号唯一性
@@ -108,4 +109,6 @@ public interface TeamService {
 	 * @return
 	 */
 	public long updateUniqueId(final Team provider);
+	
+	public BaseMsg bind(final Team provider);
 }

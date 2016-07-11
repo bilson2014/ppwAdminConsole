@@ -38,44 +38,26 @@
             				<option value="2" >完成</option>
 						</select>
 					</td>
-					<th>视频管家</th>
+					<th>视频管家:</th>
 					<td>
 					<input id="search-userId" name="userId"  class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
 					</td>
-					<!-- modify by wanglc 2016-6-28 17:46:35 增加协同人搜索的维度 begin-->
-					<%-- <th>供应商</th>
-					<td>
-					<input name="teamId" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>
-					</td>
-					<th>项目来源</th>
-					<td>
-					<input name="source" id="search-source"  class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
-					</td> 
-					 <td>
-						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
-						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
-						<r:permission uri="/project/export">
-							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="exportFun();">报表导出</a>
-						</r:permission>
-					</td>  --%>
-					<!-- modify by wanglc 2016-6-28 17:46:35 增加协同人搜索的维度  end-->
 				</tr>
-				<!-- add by wanglc 2016-6-28 17:48:32 增加协同人搜索的维度 begin-->
 				<tr>
-					<th>供应商</th>
+					<th>供应商:</th>
 					<td>
 					<%--modify by wanglc 2016-7-4 16:04:26供应商修改为模糊查询 begin --%>
 					<%--<input name="teamId" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>--%>
 					<input name="teamName" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>
 					<%--modify by wanglc 2016-7-4 16:04:26供应商修改为模糊查询 begin --%>
 					</td>
-					<th>项目来源</th>
+					<th>项目来源:</th>
 					<td>
 					<input name="source" id="search-source"  class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
 					</td>
-					<th>是否作为协同人</th>
+					<th>是否协同:</th>
 					<td>
-						<select disabled="disabled" id="isSynergy" name="isSynergy" editable="false" class="easyui-combobox" style="width: 100px;">
+						<select id="isSynergy" name="isSynergy" editable="false" class="easyui-combobox" style="width: 100px;">
 							<option value="0" >否</option>
             				<option value="1" >是</option>
 						</select>
@@ -88,7 +70,6 @@
 						</r:permission>
 					</td>
 				</tr>
-				<!-- add by wanglc 2016-6-28 17:48:32 增加协同人搜索的维度end-->
 			</table>
 		</form>
 	</div>

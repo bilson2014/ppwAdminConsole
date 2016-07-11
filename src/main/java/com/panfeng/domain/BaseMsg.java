@@ -7,6 +7,7 @@ public class BaseMsg {
 	private Object result = null;
 
 	public static int NORMAL = 200; // 正常
+	public static int WARNING = 300;
 	public static int ERROR = 500; // 错误
 	public static int UNKNOWN_ERROR = 600; // 异常
 	public static int URL_FAILURE = 601; // 失效

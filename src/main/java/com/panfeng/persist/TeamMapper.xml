@@ -123,7 +123,10 @@
 				PRICERANGE,
 				DEMAND,
 				INFORESOURCE,
-				DESCRIPTION
+				DESCRIPTION,
+				QQUNIQUE,
+				wbUnique,
+				wechatUnique
 			) VALUES (
 				#{teamName},
 				#{teamPhotoUrl},
@@ -148,7 +151,10 @@
 				${priceRange},
 				#{demand},
 				${infoResource},
-				#{description}
+				#{description},
+				#{qqUnique},
+				#{wbUnique},
+				#{wechatUnique}
 			)
 		]]>
 	</insert>
@@ -292,8 +298,7 @@
 	
 	<select id="checkTeam" resultType="Team">
 	<!-- WHERE t.LOGINNAME = #{loginName}
-					AND t.PASSWORD = #{password}
-					WHERE t.PHONENUMBER = #{phoneNumber} -->
+					AND t.PASSWORD = #{password} -->
 		<![CDATA[
 			SELECT t.TEAMID AS teamId,
 				   t.TEAMNAME AS teamName,
@@ -304,10 +309,12 @@
 				   t.ADDRESS AS address,
 				   t.FLAG AS flag,
 				   t.LOGINNAME AS loginName,
-				   t.RECOMMENDATION AS recommendation
+				   t.RECOMMENDATION AS recommendation,
+				   t.WECHATUNIQUE AS wechatUnique,
+				   t.QQUNIQUE AS qqUnique,
+				   t.WBUNIQUE AS wbUnique
 			FROM TEAM t
-				WHERE t.LOGINNAME = #{loginName}
-					AND t.PASSWORD = #{password}
+				WHERE t.PHONENUMBER = #{phoneNumber}
 		]]>
 	</select>
 	
@@ -410,11 +417,14 @@
 				   t.TEAMPHOTOURL AS teamPhotoUrl,
 				   t.TEAMDESCRIPTION AS teamDescription,
 				   t.PHONENUMBER AS phoneNumber,
-				   t.LOGINNAME AS loginName
+				   t.LOGINNAME AS loginName,
+				   t.WECHATUNIQUE AS wechatUnique,
+				   t.QQUNIQUE AS qqUnique,
+				   t.WBUNIQUE AS wbUnique
 			FROM TEAM t 
-			WHERE QQUNIQUE = #{uniqueId}
-				OR wbUnique = #{uniqueId}
-				OR wechatUnique = #{uniqueId}
+			WHERE QQUNIQUE = #{qqUnique}
+				OR wbUnique = #{wbUnique}
+				OR wechatUnique = #{wechatUnique}
 		]]>
 	</select>
 	
@@ -422,18 +432,22 @@
 		<![CDATA[
 			UPDATE TEAM 
 			SET
+			UPDATEDATE = CURRENT_TIMESTAMP
 		]]>
 		
 		<if test="qqUnique != null and qqUnique != ''">
-			QQUNIQUE = #{qqUnique}
+			,QQUNIQUE = #{qqUnique}
 		</if>
 		
 		<if test="wbUnique != null and wbUnique != ''">
-			WBUNIQUE = #{wbUnique}
+			,WBUNIQUE = #{wbUnique}
 		</if>
 		
 		<if test="wechatUnique != null and wechatUnique != ''">
-			WECHATUNIQUE = #{wechatUnique}
+			,WECHATUNIQUE = #{wechatUnique}
+		</if>
+		<if test="phoneNumber != null and phoneNumber != ''">
+			,PHONENUMBER = #{phoneNumber}
 		</if>
 		<where>
 			TEAMID = ${teamId}

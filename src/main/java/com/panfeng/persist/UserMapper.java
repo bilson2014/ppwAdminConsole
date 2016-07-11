@@ -86,4 +86,7 @@ public interface UserMapper {
 	 * @return
 	 */
 	public long findUnlevelUsers();
+
+	public User findUserByPhone(String telephone);
+	
 }

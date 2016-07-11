@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
@@ -39,7 +40,7 @@ public class ProjectController extends BaseController {
 
 	@Autowired
 	private IndentActivitiService activitiService = null;
-	
+
 	@Autowired
 	private IndentResourceService resourceService = null;
 
@@ -134,11 +135,15 @@ public class ProjectController extends BaseController {
 		final long rows = pf.getRows();
 		view.setBegin((page - 1) * rows);
 		view.setLimit(rows);
-		
+
 		DataGrid<IndentProject> dataGrid = new DataGrid<IndentProject>();
+		//add by wanglc 2016-7-11 13:46:29 接口限制视频管家与协同人的选择关系begin
+		if(view.getUserId()==0 && view.getIsSynergy()==1){//搜索 只选择了是否协同,没有选择视频管家
+			return dataGrid;
+		}
+		//add by wanglc 2016-7-11 13:46:29 接口限制视频管家与协同人的选择关系begin
 		final List<IndentProject> list = indentProjectService.listWithPagination(view);
 		dataGrid.setRows(list);
-		
 		final long total = indentProjectService.maxSize(view);
 		dataGrid.setTotal(total);
 		return dataGrid;
@@ -152,39 +157,38 @@ public class ProjectController extends BaseController {
 	}
 
 	@RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
-	public long updateInfo(final IndentProject project,
-			String user_name,String ratio,String synergyid) {
+	public long updateInfo(final IndentProject project, String user_name, String ratio, String synergyid) {
 		// add by wanglc,2016-06-23 10:00 begin
 		// -> 增加了3个参数,user_name,synergyid和ratio,用于后台修改
 		List<Synergy> list = new ArrayList<Synergy>();
 		String[] users = null;
 		String[] ratios = null;
 		String[] synergyids = null;
-		if(ValidateUtil.isValid(user_name)){
+		if (ValidateUtil.isValid(user_name)) {
 			users = user_name.split(",");
 		}
-		if(ValidateUtil.isValid(ratio)){
+		if (ValidateUtil.isValid(ratio)) {
 			ratios = ratio.split(",");
 		}
-		
-		if(ValidateUtil.isValid(synergyid)){
+
+		if (ValidateUtil.isValid(synergyid)) {
 			synergyids = synergyid.split(",");
 		}
-		
-		if(ValidateUtil.isValid(users)){
-			for(int i=0;i<users.length;i++){
+
+		if (ValidateUtil.isValid(users)) {
+			for (int i = 0; i < users.length; i++) {
 				Synergy s = new Synergy();
-				if(ValidateUtil.isValid(ratios)){
+				if (ValidateUtil.isValid(ratios)) {
 					s.setRatio(Double.parseDouble(ratios[i]));
 				}
-				if(ValidateUtil.isValid(synergyids)){
+				if (ValidateUtil.isValid(synergyids)) {
 					s.setSynergyId(Long.parseLong(synergyids[i]));
 				}
 				s.setUserId(Long.parseLong(users[i]));
 				list.add(s);
 			}
 		}
-		
+
 		project.setSynergys(list);
 		// add by wanglc,2016-06-23 10:30 end
 		if (project.getState() == 3) { // 暂停动作同时调用工作流引擎暂停
@@ -200,30 +204,31 @@ public class ProjectController extends BaseController {
 				}
 			}
 		}
-		
+
 		final long ret = indentProjectService.update(project);
 		return ret;
 	}
-	
+
 	/**
 	 * 获取资源文件列表
-	 * @param indentProject 项目实体（包含ID）
+	 * 
+	 * @param indentProject
+	 *            项目实体（包含ID）
 	 * @return 资源列表文件
 	 */
 	@RequestMapping("/getIndentResourceList")
-	public List<IndentResource> resouceList(final IndentProject indentProject){
-		
+	public List<IndentResource> resouceList(final IndentProject indentProject) {
+
 		final List<IndentResource> list = resourceService.findIndentList(indentProject);
 		return list;
 	}
 
 	@RequestMapping("/saveInfo")
-	public Boolean saveInfo(final IndentProject indentProject,
-			String user_name,String ratio) {
+	public Boolean saveInfo(final IndentProject indentProject, String user_name, String ratio) {
 		List<Synergy> list = new ArrayList<Synergy>();
 		String[] users = user_name.split(",");
 		String[] ratios = ratio.split(",");
-		for(int i=0;i<users.length;i++){
+		for (int i = 0; i < users.length; i++) {
 			Synergy s = new Synergy();
 			s.setRatio(Double.parseDouble(ratios[i]));
 			s.setUserId(Long.parseLong(users[i]));
@@ -232,6 +237,7 @@ public class ProjectController extends BaseController {
 		indentProject.setSynergys(list);
 		return indentProjectService.save(indentProject);
 	}
+
 	@RequestMapping("/delete")
 	public long delete(final long[] ids) {
 
@@ -275,7 +281,7 @@ public class ProjectController extends BaseController {
 		return list;
 	}
 
-	@RequestMapping(value="/export",method = RequestMethod.POST)
+	@RequestMapping(value = "/export", method = RequestMethod.POST)
 	public void export(final IndentProjectView view, final HttpServletResponse response) {
 		try {
 			response.setCharacterEncoding("utf-8");
@@ -305,23 +311,30 @@ public class ProjectController extends BaseController {
 		project.setSerial(indentProjectService.getProjectSerialID());
 		return project;
 	}
-	
+
 	/**
 	 * 获取所有项目
+	 * 
 	 * @return list
 	 */
 	@RequestMapping("/all")
-	public List<IndentProject> all(){
-		final List<IndentProject> list =indentProjectService.all();
+	public List<IndentProject> all() {
+		final List<IndentProject> list = indentProjectService.all();
 		return list;
 	}
 
+	@RequestMapping("/verifyProjectInfo")
+	public BaseMsg verifyProjectInfo(@RequestBody IndentProject indentProject) {
+		if(indentProject  == null)
+			return new BaseMsg(BaseMsg.ERROR,"错误","项目信息不能为空");
+		return indentProjectService.verifyProjectInfo(indentProject.getId());
+	}
 	// ------------------------------------------协同人处理部分------------------------------------------
 
 	@RequestMapping("/remove/synergy")
 	public boolean removeSynergy(@RequestBody final BizBean bizBean) {
 		long ret = 0l;
-		if (bizBean != null && bizBean.getName() != null){
+		if (bizBean != null && bizBean.getName() != null) {
 			ret = indentProjectService.removeSynergy(Long.parseLong(bizBean.getName()));
 		}
 		return ret > 0 ? true : false;

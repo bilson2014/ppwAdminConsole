@@ -3,6 +3,7 @@ package com.panfeng.service;
 import java.util.List;
 import java.util.Map;
 
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.view.EmployeeView;
 
@@ -62,4 +63,18 @@ public interface EmployeeService {
 	 * @return 人员列表
 	 */
 	public List<Employee> getEmployeesWithVersionManager(final String phoneNumber);
+	
+	/**
+	 * 检测三方登录是否已经绑定
+	 * @param employee
+	 * @return
+	 */
+	public List<Employee> verificationEmployeeExist(Employee employee);
+
+	/**
+	 * 三方登陆绑定
+	 * @param employee
+	 * @return
+	 */
+	public BaseMsg bind(Employee employee);
 }

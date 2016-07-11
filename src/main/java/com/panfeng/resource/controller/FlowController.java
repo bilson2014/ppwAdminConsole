@@ -44,7 +44,7 @@ public class FlowController extends BaseController {
 	}
 
 	@RequestMapping("/completeTask")
-	public boolean completeTask(@RequestBody final IndentProject indentProject) {
+	public Boolean completeTask(@RequestBody final IndentProject indentProject) {
 		return indentActivitiService.completeTask(indentProject);
 	}
 

@@ -140,6 +140,16 @@
 		]]>
 	</select>
 	
+	<select id="notPayNumberByProjectId" resultType="long">
+		<![CDATA[
+			SELECT  COUNT(dl.DL_ID) FROM DEAL_LOG dl 
+			WHERE dl.DL_PROJECT_ID = ${projectId}
+			AND dl.DL_DEAL_STATUS = 0
+		]]>
+	</select>
+	
+	
+	
 	<insert id="save" useGeneratedKeys="true" keyProperty="dealId"
 		parameterType="DealLog">
 		<![CDATA[
@@ -155,17 +165,9 @@
 				DL_USER_NAME,
 				DL_PAY_PRICE,
 				DL_DESCRIPTION
-				]]>
-			<if test="payTime != null and payTime != '' ">
 				,DL_PAYTIME
-			</if>
-			<if test="unOrderId != null and unOrderId != '' ">
 				,DL_UN_ORDERID
-			</if>
-			<if test="payChannel != null and payChannel != '' ">
 				,DL_PAY_CHANNEL
-			</if>
-		<![CDATA[
 			)
 			VALUES(
 				#{billNo},
@@ -178,23 +180,10 @@
 				${projectId},
 				#{userName},
 				${payPrice}
-				]]>
-				<if test="description != null and description != '' ">
-					,#{description}
-				</if>
-				<if test="description == null ">
-					,""
-				</if>
-				<if test="payTime != null and payTime != '' ">
-					,DATE_FORMAT(#{payTime},'%Y-%m-%d %T')
-				</if>
-				<if test="unOrderId != null and unOrderId != '' ">
-					,#{unOrderId}
-				</if>
-				<if test="payChannel != null and payChannel != '' ">
-					,#{payChannel}
-				</if>
-			<![CDATA[
+				,#{description}
+				,DATE_FORMAT(#{payTime},'%Y-%m-%d %T')
+				,#{unOrderId}
+				,#{payChannel}
 			)
 			]]>
 	</insert>

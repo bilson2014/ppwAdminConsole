@@ -13,8 +13,6 @@ public interface IndentProjectMapper {
 
 	public long update(IndentProject indentProject);
 
-	public long delete(IndentProject indentProject);
-
 	public List<IndentProject> findProjectList(IndentProject indentProject);
 
 	public IndentProject findProjectInfo(IndentProject indentProject);
@@ -56,7 +54,7 @@ public interface IndentProjectMapper {
 	 */
 	public long getProjectCount();
 	
-	public long updateState(@Param("id") final long id, @Param("state") int state);
+	public long updateState(@Param("id") final long id, @Param("state") int state,@Param("description") String msg);
 
 	/**
 	 * add by wanglc 2016-6-28 19:56:47

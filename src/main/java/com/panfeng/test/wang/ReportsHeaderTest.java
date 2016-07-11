@@ -16,7 +16,7 @@ public class ReportsHeaderTest {
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
 		try {
-			OutputStream outputStream=new FileOutputStream(new File("I:\\wangliming\\2016-05-12 周四\\资源\\test.xlsx"));
+			OutputStream outputStream=new FileOutputStream(new File("F:\\test.xlsx"));
 			ge.generate(projectPoiAdapter,outputStream);
 			if(outputStream!=null)
 				outputStream.close();

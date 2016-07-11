@@ -32,6 +32,53 @@ public class Employee extends Customer {
 	private String phoneNumber = null; // 电话号码
 	
 	private String email = null; // 邮箱
+	
+	// laowang add 
+	private String qqUnique = null; // QQToken
+
+	private String wbUnique = null; // 微博Token
+
+	private String wechatUnique = null; // 微信Token
+
+	private String thirdLoginType = null; // 第三方登录类型
+
+	public final static String LTYPE_WEIBO = "weibo";
+
+	public final static String LTYPE_QQ = "qq";
+
+	public final static String LTYPE_WECHAT = "wechat";
+
+	public String getQqUnique() {
+		return qqUnique;
+	}
+
+	public void setQqUnique(String qqUnique) {
+		this.qqUnique = qqUnique;
+	}
+
+	public String getWbUnique() {
+		return wbUnique;
+	}
+
+	public void setWbUnique(String wbUnique) {
+		this.wbUnique = wbUnique;
+	}
+
+	public String getWechatUnique() {
+		return wechatUnique;
+	}
+
+	public void setWechatUnique(String wechatUnique) {
+		this.wechatUnique = wechatUnique;
+	}
+
+	public String getThirdLoginType() {
+		return thirdLoginType;
+	}
+
+	public void setThirdLoginType(String thirdLoginType) {
+		this.thirdLoginType = thirdLoginType;
+	}
 
 	public long getEmployeeId() {
 		return employeeId;
