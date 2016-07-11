@@ -17,6 +17,8 @@ public final class GlobalConstant extends BaseObject {
 	private static final long serialVersionUID = -7702371618133614803L;
 
 	public static final String CONTEXT_RIGHT_MAP = "context_right_map"; // 权限集合
+	
+	public static final String CONTEXT_PORTAL_VIDEO_MAP = "context_portal_video_map"; // 首页视频集合
 
 	public static final String SESSION_INFO = "sessionInfo"; // 当前用户
 

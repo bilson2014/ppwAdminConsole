@@ -1,6 +1,7 @@
 package com.panfeng.test;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,4 +86,11 @@ public class ProductTest {
 			}
 		}
 	}*/
+	
+	@Test
+	public void testLoadProductMap(){
+		
+		Map<Long,Product> map = mapper.getProductByRecommend();
+		System.err.println(map);
+	}
 }

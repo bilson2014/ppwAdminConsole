@@ -26,7 +26,7 @@ import com.panfeng.util.HanlpUtil;
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class SolrTest {
 
-	final static String SOLR_URL = "http://localhost:7001/solr/db";
+	final static String SOLR_URL = "http://www.apaipian.com:7001/solr/db";
 	
 	@Autowired
 	private final SolrService service = null;
@@ -34,7 +34,7 @@ public class SolrTest {
 	@Test
 	public void test(){
 		final SolrQuery query = new SolrQuery();
-		query.setQuery("productName:快乐 pDescription:快乐");
+		query.setQuery("productName:* pDescription:*");
 		query.setFields("productName,pDescription,itemName,teamName");
 		query.setStart(0);
 		query.setRows(10);

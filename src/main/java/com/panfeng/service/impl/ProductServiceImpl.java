@@ -1,11 +1,13 @@
 package com.panfeng.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.panfeng.dao.PortalVideoDao;
 import com.panfeng.persist.ProductMapper;
 import com.panfeng.persist.ServiceMapper;
 import com.panfeng.persist.TeamMapper;
@@ -26,6 +28,9 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired
 	private final TeamMapper teamMapper = null;
 	
+	@Autowired
+	private final PortalVideoDao videoDao = null;
+	
 	@Override
 	public List<Product> listWithPagination(final ProductView view) {
 		
@@ -37,6 +42,13 @@ public class ProductServiceImpl implements ProductService{
 	public long save(final Product product) {
 		
 		mapper.save(product);
+		
+		// 如果推荐值大于0，那么更新redis的首页视频集合
+		if(product.getRecommend() > 0){
+			final Map<Long,Product> portalVideomap = mapper.getProductByRecommend();
+			videoDao.resetPortalVideo(portalVideomap);
+		}
+		
 		return product.getProductId();
 	}
 
@@ -44,10 +56,25 @@ public class ProductServiceImpl implements ProductService{
 	public List<Product> delete(final long[] ids) {
 		
 		final List<Product> originalList = mapper.findProductByArray(ids);
+		
+		final Map<Long,Product> portalVideoMap = videoDao.getProductsFromRedis(); // 首页推荐视频集合
+		boolean flag = false;
 		if(ids.length > 0){
 			for (long id : ids) {
 				mapper.delete(id);
 				scMapper.deleteByProduct(id);
+				
+				// 判断是否在首页推荐视频
+				final Product product = portalVideoMap.get(id);
+				if(product != null){
+					flag = true;
+				}
+			}
+			
+			if(flag){
+				// 更新redis首页推荐视频列表
+				final Map<Long,Product> productMap = mapper.getProductByRecommend();
+				videoDao.resetPortalVideo(productMap);
 			}
 		}
 		return originalList;
@@ -202,6 +229,13 @@ public class ProductServiceImpl implements ProductService{
 			product.setServicePrice(service.getServicePrice());
 		}
 		return list;
+	}
+
+	@Override
+	public Map<Long, Product> getProductByRecommend() {
+		
+		final Map<Long,Product> map = mapper.getProductByRecommend();
+		return map;
 	}
 
 }

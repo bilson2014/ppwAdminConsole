@@ -292,7 +292,8 @@
 	
 	<select id="checkTeam" resultType="Team">
 	<!-- WHERE t.LOGINNAME = #{loginName}
-					AND t.PASSWORD = #{password} -->
+					AND t.PASSWORD = #{password}
+					WHERE t.PHONENUMBER = #{phoneNumber} -->
 		<![CDATA[
 			SELECT t.TEAMID AS teamId,
 				   t.TEAMNAME AS teamName,
@@ -305,7 +306,8 @@
 				   t.LOGINNAME AS loginName,
 				   t.RECOMMENDATION AS recommendation
 			FROM TEAM t
-				WHERE t.PHONENUMBER = #{phoneNumber}
+				WHERE t.LOGINNAME = #{loginName}
+					AND t.PASSWORD = #{password}
 		]]>
 	</select>
 	

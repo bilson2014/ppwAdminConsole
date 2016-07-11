@@ -133,7 +133,9 @@
 				TAGS = #{tags},
 				UPDATEDATE = CURRENT_TIMESTAMP,
 				SHOWTYPE = ${showType},
-				SESSIONID = #{sessionId}
+				SESSIONID = #{sessionId},
+				RECOMMEND = ${recommend},
+				SUPPORTCOUNT = ${supportCount}
 		]]>
 		<if test="videoUrl != null and videoUrl != ''">
 			,VIDEOURL = #{videoUrl} 
@@ -144,12 +146,7 @@
 		<if test="picLDUrl != null and picLDUrl != ''">
 			,PICLDURL = #{picLDUrl} 
 		</if>
-		<if test="recommend != null and recommend != ''">
-			,RECOMMEND = ${recommend}
-		</if>
-		<if test="supportCount != null and supportCount != ''">
-			,SUPPORTCOUNT = ${supportCount}
-		</if>
+		
 		<![CDATA[
 			WHERE PRODUCTID = ${productId}
 		]]>
@@ -246,12 +243,7 @@
 			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d %T') =
 			#{uploadDate}
 		</if>
-		<if test="recommend != null and recommend != ''">
-			AND pro.RECOMMEND = ${recommend}
-		</if>
-		<if test="supportCount != null and supportCount != ''">
-			AND pro.SUPPORTCOUNT = ${supportCount}
-		</if>
+		
 		<if test="videoLength != null and videoLength != ''">
 			AND pro.VIDEOLENGTH = #{videoLength}
 		</if>
@@ -601,4 +593,21 @@
 				AND pro.visible = 0
 	</select>
 	
+	<select id="getProductByRecommend" resultType="Product" >
+		<![CDATA[
+			SELECT DISTINCT pro.PRODUCTID AS productId,
+				   pro.PRODUCTNAME AS productName,
+				   pro.TAGS AS tags,
+				   t.TEAMNAME AS teamName
+			FROM PRODUCT pro
+			INNER JOIN ITEM i ON pro.PRODUCTTYPE = i.ITEMID
+			INNER JOIN TEAM t ON pro.TEAMID = t.TEAMID
+			WHERE 1 = 1
+			AND pro.FLAG = 1
+			AND pro.visible = 0
+			AND pro.RECOMMEND <> 0
+			AND i.ISACTIVE = 0
+			AND t.FLAG = 1
+		]]>
+	</select>
 </mapper>

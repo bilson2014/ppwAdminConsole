@@ -6,6 +6,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
+import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Right;
 
 /**
@@ -26,6 +27,21 @@ public class RedisUtils {
 				final Gson gson = new Gson();
 				final String str = gson.toJson(right);
 				objMap.put(entry.getKey(), str);
+			}
+		}
+		return objMap;
+	}
+	
+	public static Map<String, String> productMaptoJson(final Map<Long, Product> map) {
+
+		final Map<String, String> objMap = new HashMap<String, String>();
+		if (ValidateUtil.isValid(map)) {
+			for (Map.Entry<Long, Product> entry : map.entrySet()) {
+				final Product product = entry.getValue();
+				// 转换为json
+				final Gson gson = new Gson();
+				final String str = gson.toJson(product);
+				objMap.put(entry.getKey().toString(), str);
 			}
 		}
 		return objMap;
@@ -83,6 +99,26 @@ public class RedisUtils {
 				}
 			}
 			return rightMap;
+		}
+		return null;
+	}
+	
+	public static Map<Long, Product> productsFromJson(final Map<String, String> map) {
+
+		if (ValidateUtil.isValid(map)) {
+			final Map<Long, Product> productMap = new HashMap<Long, Product>();
+			for (Map.Entry<String, String> entry : map.entrySet()) {
+				final String key = entry.getKey();
+				if (ValidateUtil.isValid(key)) {
+					final String str = entry.getValue();
+					if (ValidateUtil.isValid(str)) {
+						final Gson gson = new Gson();
+						final Product product = gson.fromJson(str, Product.class);
+						productMap.put(Long.parseLong(key), product);
+					}
+				}
+			}
+			return productMap;
 		}
 		return null;
 	}

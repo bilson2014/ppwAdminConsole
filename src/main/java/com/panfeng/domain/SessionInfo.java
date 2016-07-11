@@ -28,6 +28,8 @@ public class SessionInfo extends BaseObject {
 	
 	private String photo = null; // 头像
 	
+	private Integer clientLevel = null; // 客户级别
+	
 	public String getToken() {
 		return token;
 	}
@@ -121,6 +123,14 @@ public class SessionInfo extends BaseObject {
 
 	public void setPhoto(String photo) {
 		this.photo = photo;
+	}
+
+	public Integer getClientLevel() {
+		return clientLevel;
+	}
+
+	public void setClientLevel(Integer clientLevel) {
+		this.clientLevel = clientLevel;
 	}
 	
 }
