@@ -70,7 +70,8 @@ function checkIndentStatus(){
 	function loadStatus(){
 		loadData(function(count){
 			if(count > 0){
-				$('.l-btn').click(); // 先清除所有的 alert 弹框
+				$.messager.progress('close');
+				$(".badge").remove();
 				// 在menu出添加 徽章
 				var li_list = $('#menu').find('.tree-node');
 				
@@ -138,9 +139,8 @@ function checkUsrClientLevel(){
 	window.setInterval(function(){
 		loadData(function(count){
 			if(count > 0){
-				//$('.l-btn').click(); // 先清除所有的 alert 弹框
 				$.messager.progress('close');
-				//$(".badge").remove();
+				$(".badge").remove();
 				// 在menu出添加 徽章
 				var li_list = $('#menu').find('.tree-title');
 				
