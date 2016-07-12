@@ -283,4 +283,10 @@ public class TeamServiceImpl implements TeamService {
 		return baseMsg;
 	}
 
+	@Override
+	public Team findTeamByLoginNameAndPwd(Team original) {
+		final Team team = mapper.findTeamByLoginNameAndPwd(original);
+		return team;
+	}
+
 }

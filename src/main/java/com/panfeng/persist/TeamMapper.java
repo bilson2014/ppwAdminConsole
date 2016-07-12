@@ -97,4 +97,10 @@ public interface TeamMapper {
 
 	public long updateUniqueId(final Team provider);
 
+	/**
+	 * 根据用户名和密码登录供应商
+	 * @param original
+	 * @return
+	 */
+	public Team findTeamByLoginNameAndPwd(Team original);
 }
