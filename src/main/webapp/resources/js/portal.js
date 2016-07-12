@@ -59,7 +59,7 @@ $().ready(function(){
 	// 每2分钟检测 订单状态，如果有 新订单 则弹出提示
 	/*checkIndentStatus();*/
 	//每2分钟检测 用户评级，如果有新用户未评级 则弹出提示
-	/*checkUsrClientLevel();*/
+	checkUsrClientLevel();
 	
 });
 
@@ -70,7 +70,8 @@ function checkIndentStatus(){
 	function loadStatus(){
 		loadData(function(count){
 			if(count > 0){
-				$('.l-btn').click(); // 先清除所有的 alert 弹框
+				$('.l-btn').click();// 先清除所有的 alert 弹框
+				$(".badge").remove();
 				// 在menu出添加 徽章
 				var li_list = $('#menu').find('.tree-node');
 				
@@ -138,12 +139,13 @@ function checkUsrClientLevel(){
 	window.setInterval(function(){
 		loadData(function(count){
 			if(count > 0){
-				$('.l-btn').click(); // 先清除所有的 alert 弹框
+				$('.l-btn').click();// 先清除所有的 alert 弹框
+				$(".badge").remove();
 				// 在menu出添加 徽章
 				var li_list = $('#menu').find('.tree-title');
 				
 				$.each(li_list,function(i,n){
-					if($(n).text() == '客户管理'){
+					if($(n).text() == '客户管理' && !($(n).parent().children(":first").attr("class")=='tree-hit tree-expanded')){
 						$(this).find('.badge').remove();
 						var $span = '<span class="badge">new-';
 						$span += count;

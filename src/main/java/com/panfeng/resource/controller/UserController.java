@@ -148,7 +148,7 @@ public class UserController extends BaseController {
 	@RequestMapping("/user/encipherment")
 	public boolean encryption(@RequestBody final User user,final HttpServletRequest request){
 		if(user != null){
-			// 不为空
+			// 不为空 
 			final User orignUser = userService.findUserByAttr(user);
 			if(orignUser != null){
 				// 清空当前session
@@ -425,7 +425,7 @@ public class UserController extends BaseController {
 		info.setSuperAdmin(false);
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(user.getId());
-		
+		info.setClientLevel(user.getClientLevel()); // 客户级别
 		
 		final Role role = roleService.findRoleById(3l); // 获取用户角色
 		final List<Role> roles = new ArrayList<Role>();
