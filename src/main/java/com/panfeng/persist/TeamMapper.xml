@@ -335,7 +335,8 @@
 				   t.QQUNIQUE AS qqUnique,
 				   t.WBUNIQUE AS wbUnique
 			FROM TEAM t
-				WHERE t.PHONENUMBER = #{phoneNumber}
+				WHERE t.LOGINNAME = #{loginName}
+					AND t.PASSWORD = #{password}
 		]]>
 	</select>
 	
