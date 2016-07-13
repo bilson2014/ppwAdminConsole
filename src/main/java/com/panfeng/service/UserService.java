@@ -102,4 +102,13 @@ public interface UserService {
 	public User threeLoginPhone(String telephone);
 
 	public Map<String, Object> bindThird(ThirdBind bind);
+
+	//add by wanglc 2016-7-13 14:27:00 begin
+	/**
+	 * 根据loginName和密码查询用户
+	 * @param user
+	 * @return
+	 */
+	public User findUserByLoginNameAndPwd(User user);
+	//add by wanglc 2016-7-13 14:27:00 end
 }
