@@ -314,7 +314,28 @@
 				   t.QQUNIQUE AS qqUnique,
 				   t.WBUNIQUE AS wbUnique
 			FROM TEAM t
-				WHERE t.PHONENUMBER = #{phoneNumber}
+				 WHERE  t.PHONENUMBER = #{phoneNumber}
+		]]>
+	</select>
+	
+	<select id="findTeamByLoginNameAndPwd" resultType="Team">
+		<![CDATA[
+			SELECT t.TEAMID AS teamId,
+				   t.TEAMNAME AS teamName,
+				   t.TEAMPHOTOURL AS teamPhotoUrl,
+				   t.TEAMDESCRIPTION AS teamDescription,
+				   t.PHONENUMBER AS phoneNumber,
+				   t.EMAIL AS email,
+				   t.ADDRESS AS address,
+				   t.FLAG AS flag,
+				   t.LOGINNAME AS loginName,
+				   t.RECOMMENDATION AS recommendation,
+				   t.WECHATUNIQUE AS wechatUnique,
+				   t.QQUNIQUE AS qqUnique,
+				   t.WBUNIQUE AS wbUnique
+			FROM TEAM t
+				WHERE t.LOGINNAME = #{loginName}
+					AND t.PASSWORD = #{password}
 		]]>
 	</select>
 	

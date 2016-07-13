@@ -270,4 +270,11 @@ public class UserServiceImpl implements UserService{
 		return map;
 	}
 
+	//add by wanglc 2016-7-13 14:27:34 begin
+	//根据用户名和密码查询用户
+	@Override
+	public User findUserByLoginNameAndPwd(User user) {
+		return mapper.findUserByLoginNameAndPwd(user);
+	}
+	//add by wanglc 2016-7-13 14:27:34 begin
 }

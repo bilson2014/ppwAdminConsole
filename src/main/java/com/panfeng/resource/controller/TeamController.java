@@ -449,7 +449,12 @@ public class TeamController extends BaseController {
 	 */
 	@RequestMapping("/team/static/data/doLogin")
 	public boolean doLogin(@RequestBody final Team original, final HttpServletRequest request) {
-		final Team team = service.doLogin(original.getPhoneNumber());
+		Team team = null;
+		if (null != original && null != original.getPhoneNumber() && !"".equals(original.getPhoneNumber())) {
+			team = service.doLogin(original.getPhoneNumber());
+		} else {
+			team = service.findTeamByLoginNameAndPwd(original);
+		}
 		if (team != null) {
 			// 存入session
 			return initSessionInfo(team, request);

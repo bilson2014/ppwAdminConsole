@@ -35,6 +35,7 @@ import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
 import com.panfeng.service.SessionInfoService;
 import com.panfeng.service.UserService;
+import com.panfeng.util.Constants.loginType;
 import com.panfeng.util.DataUtil;
 
 /**
@@ -147,9 +148,18 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping("/user/encipherment")
 	public boolean encryption(@RequestBody final User user,final HttpServletRequest request){
+		
+		User orignUser = null; 
 		if(user != null){
+			//modify by wanglc 2016-7-13 14:36:39 添加用户名密码登录begin
+			//orignUser = userService.findUserByAttr(user);
 			// 不为空 
-			final User orignUser = userService.findUserByAttr(user);
+			if(user.getLoginType().equals(loginType.phone.getKey())){
+				orignUser = userService.findUserByAttr(user);
+			}else if(user.getLoginType().equals(loginType.account.getKey())){
+				orignUser = userService.findUserByLoginNameAndPwd(user);
+			}
+			//modify by wanglc 2016-7-13 14:36:39 添加用户名密码登录begin
 			if(orignUser != null){
 				// 清空当前session
 				sessionService.removeSession(request);
