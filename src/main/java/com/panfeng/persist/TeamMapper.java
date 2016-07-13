@@ -46,7 +46,7 @@ public interface TeamMapper {
 	 *            供应商信息（需包含登录名和密码(已加密)）
 	 * @return 供应商信息
 	 */
-	public Team checkTeam(@Param("phoneNumber") String phoneNumber);
+	public List<Team> checkTeam(@Param("phoneNumber") String phoneNumber);
 
 	/**
 	 * 密码重置
