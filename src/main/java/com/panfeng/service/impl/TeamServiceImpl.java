@@ -2,6 +2,8 @@ package com.panfeng.service.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +17,7 @@ import com.panfeng.util.ValidateUtil;
 
 @Service
 public class TeamServiceImpl implements TeamService {
-
+	private static Logger logger = LoggerFactory.getLogger("error");
 	@Autowired
 	private final TeamMapper mapper = null;
 
@@ -84,8 +86,17 @@ public class TeamServiceImpl implements TeamService {
 	@Override
 	public Team doLogin(final String phoneNumber) {
 
-		final Team team = mapper.checkTeam(phoneNumber);
-		return team;
+		final List<Team> team = mapper.checkTeam(phoneNumber);
+		if (team != null) {
+			if (team.size() == 1) {
+				return team.get(0);
+			} else {
+				logger.error("数据库中存在多个相同手机号：" + phoneNumber);
+			}
+		} else {
+			logger.error("数据库中不存在该供应商 手机号：" + phoneNumber);
+		}
+		return null;
 	}
 
 	@Override
@@ -235,52 +246,67 @@ public class TeamServiceImpl implements TeamService {
 		} else {
 			// 新建
 			String phoneNumber = provider.getPhoneNumber();
-			Team team = mapper.checkTeam(phoneNumber);
-			if (team != null) {
-				switch (provider.getThirdLoginType()) {
-				case Team.LTYPE_QQ:
-					if (ValidateUtil.isValid(team.getQqUnique())) {
-						// 数据库中存在QqUnique，此手机号已经被绑定过
-						baseMsg = new BaseMsg(BaseMsg.ERROR, "绑定失败，改手机号已经被绑定过了。", null);
-					} else {
-						// 更新
-						team.setQqUnique(provider.getQqUnique());
-						mapper.updateUniqueId(team);
-						baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
+			final List<Team> teamsPhone = mapper.checkTeam(phoneNumber);
+			if (teamsPhone.size() < 2) {
+				if (teamsPhone != null && teamsPhone.size() > 0) {
+					Team team = teamsPhone.get(0);
+					switch (provider.getThirdLoginType()) {
+					case Team.LTYPE_QQ:
+						if (ValidateUtil.isValid(team.getQqUnique())) {
+							// 数据库中存在QqUnique，此手机号已经被绑定过
+							baseMsg = new BaseMsg(BaseMsg.ERROR, "绑定失败，改手机号已经被绑定过了。", null);
+						} else {
+							// 更新
+							team.setQqUnique(provider.getQqUnique());
+							mapper.updateUniqueId(team);
+							baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
+						}
+						break;
+					case Team.LTYPE_WECHAT:
+						if (ValidateUtil.isValid(team.getWechatUnique())) {
+							// 数据库中存在QqUnique，此手机号已经被绑定过
+							baseMsg = new BaseMsg(BaseMsg.ERROR, "绑定失败，改手机号已经被绑定过了。", null);
+						} else {
+							// 更新
+							team.setWechatUnique(provider.getWechatUnique());
+							mapper.updateUniqueId(team);
+							baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
+						}
+						break;
+					case Team.LTYPE_WEIBO:
+						if (ValidateUtil.isValid(team.getWbUnique())) {
+							// 数据库中存在QqUnique，此手机号已经被绑定过
+							baseMsg = new BaseMsg(BaseMsg.ERROR, "绑定失败，改手机号已经被绑定过了。", null);
+						} else {
+							// 更新
+							team.setWbUnique(provider.getWbUnique());
+							mapper.updateUniqueId(team);
+							baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
+						}
+						break;
 					}
-					break;
-				case Team.LTYPE_WECHAT:
-					if (ValidateUtil.isValid(team.getWechatUnique())) {
-						// 数据库中存在QqUnique，此手机号已经被绑定过
-						baseMsg = new BaseMsg(BaseMsg.ERROR, "绑定失败，改手机号已经被绑定过了。", null);
-					} else {
-						// 更新
-						team.setWechatUnique(provider.getWechatUnique());
-						mapper.updateUniqueId(team);
-						baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
-					}
-					break;
-				case Team.LTYPE_WEIBO:
-					if (ValidateUtil.isValid(team.getWbUnique())) {
-						// 数据库中存在QqUnique，此手机号已经被绑定过
-						baseMsg = new BaseMsg(BaseMsg.ERROR, "绑定失败，改手机号已经被绑定过了。", null);
-					} else {
-						// 更新
-						team.setWbUnique(provider.getWbUnique());
-						mapper.updateUniqueId(team);
-						baseMsg = new BaseMsg(BaseMsg.NORMAL, "绑定成功", team);
-					}
-					break;
+				} else {
+					// 默认新建时用三方登录名作为公司名
+					provider.setTeamName(provider.getPhoneNumber());
+					provider.setLoginName(provider.getLinkman());
+					baseMsg = new BaseMsg(BaseMsg.WARNING, "引导流程", provider);
 				}
 			} else {
-				// 默认新建时用三方登录名作为公司名
-				provider.setTeamName(provider.getLinkman());
-				provider.setLoginName(provider.getLinkman());
-				mapper.save(provider);
-				baseMsg = new BaseMsg(BaseMsg.WARNING, "引导流程", provider);
+				logger.error("数据库中存在多个相同手机号：" + phoneNumber);
 			}
 		}
 		return baseMsg;
+	}
+
+	@Override
+	public Team findTeamByLoginNameAndPwd(Team original) {
+		final Team team = mapper.findTeamByLoginNameAndPwd(original);
+		return team;
+	}
+
+	@Override
+	public long updateTeamAccount(Team original) {
+		return mapper.updateTeamAccount(original);
 	}
 
 }

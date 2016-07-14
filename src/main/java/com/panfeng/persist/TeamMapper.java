@@ -12,7 +12,7 @@ public interface TeamMapper {
 	public List<Team> listWithPagination(final TeamView view);
 
 	public long save(final Team team);
-	
+
 	public long saveTeamPhotoUrl(final Team team);
 
 	public long update(final Team team);
@@ -46,7 +46,7 @@ public interface TeamMapper {
 	 *            供应商信息（需包含登录名和密码(已加密)）
 	 * @return 供应商信息
 	 */
-	public Team checkTeam(@Param("phoneNumber") String phoneNumber);
+	public List<Team> checkTeam(@Param("phoneNumber") String phoneNumber);
 
 	/**
 	 * 密码重置
@@ -97,4 +97,14 @@ public interface TeamMapper {
 
 	public long updateUniqueId(final Team provider);
 
+	/**
+	 * 根据用户名和密码登录供应商
+	 * 
+	 * @param original
+	 * @return
+	 */
+	public Team findTeamByLoginNameAndPwd(Team original);
+
+	// 添加团队共享登录名 密码
+	public long updateTeamAccount(Team team);
 }

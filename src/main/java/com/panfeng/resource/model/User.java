@@ -52,7 +52,27 @@ public class User extends Customer{
 	private Integer clientLevel = null; // 客户级别
 	
 	private String note = null; // 备注信息
+	//add by wanglc 2016-07-13 15:10:43 客户用户名密码登录 begin
+	private String loginType;//登录方式
 	
+	private String loginName;//客户登录名
+	//add by wanglc 2016-07-13 15:10:43 客户用户名密码登录 end
+	public String getLoginName() {
+		return loginName;
+	}
+
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
+	}
+
+	public String getLoginType() {
+		return loginType;
+	}
+
+	public void setLoginType(String loginType) {
+		this.loginType = loginType;
+	}
+
 	public long getId() {
 		return id;
 	}

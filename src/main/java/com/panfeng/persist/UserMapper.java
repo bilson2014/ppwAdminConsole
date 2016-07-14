@@ -88,5 +88,12 @@ public interface UserMapper {
 	public long findUnlevelUsers();
 
 	public User findUserByPhone(String telephone);
-	
+
+	//add by wanglc 2016-7-13 14:35:49 begin
+	/**
+	 * 根据用户名和密码查询用户
+	 * @param user
+	 */
+	public User findUserByLoginNameAndPwd(User user);
+	//add by wanglc 2016-7-13 14:35:49 begin
 }

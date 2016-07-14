@@ -358,24 +358,87 @@ public class TeamController extends BaseController {
 
 	}
 
-	/*
-	 * @RequestMapping("/team/static/data/doLogin") public boolean
-	 * doLogin(@RequestBody final Team original,final HttpServletRequest
-	 * request){
+	/**
+	 * 注册供应商
 	 * 
-	 * try { // 转码 final String loginName =
-	 * URLDecoder.decode(original.getLoginName(), "UTF-8"); final String
-	 * password = URLDecoder.decode(original.getPassword(), "UTF-8");
-	 * original.setLoginName(loginName); original.setPassword(password); final
-	 * Team team = service.doLogin(original);
-	 * 
-	 * if(team != null){ // 存入session return initSessionInfo(team, request);
-	 * 
-	 * } } catch (UnsupportedEncodingException e) {
-	 * 
-	 * logger.error("Decoder LoginName Or Password Error On Provider Login ..."
-	 * ); e.printStackTrace(); } return false; }
+	 * @param team
+	 *            包含(供应商名称、简介、地址、邮箱等)
+	 * @return 结果
 	 */
+	@RequestMapping("/team/static/data/registerteam")
+	public boolean registerTeam(@RequestBody final Team team, HttpServletRequest request) {
+		if (team != null) {
+			try {
+				// 解码
+				final String teamName = team.getTeamName();
+				final String teamDesc = team.getTeamDescription();
+				final String address = team.getAddress();
+				final String email = team.getEmail();
+				final String linkman = team.getLinkman();
+				final String webchat = team.getWebchat();
+				final String officialSite = team.getOfficialSite();
+				final String scale = team.getScale();
+				final String businessDesc = team.getBusinessDesc();
+				final String demand = team.getDemand();
+				final String description = team.getDescription();
+
+				if (teamName != null && !"".equals(teamName)) {
+					team.setTeamName(URLDecoder.decode(teamName, "UTF-8"));
+				}
+
+				if (teamDesc != null && !"".equals(teamDesc)) {
+					team.setTeamDescription(URLDecoder.decode(teamDesc, "UTF-8"));
+				}
+
+				if (address != null && !"".equals(address)) {
+					team.setAddress(URLDecoder.decode(address, "UTF-8"));
+				}
+
+				if (email != null && !"".equals(email)) {
+					team.setEmail(URLDecoder.decode(email, "UTF-8"));
+				}
+
+				if (linkman != null && !"".equals(linkman)) {
+					team.setLinkman(URLDecoder.decode(linkman, "UTF-8"));
+				}
+
+				if (webchat != null && !"".equals(webchat)) {
+					team.setWebchat(URLDecoder.decode(webchat, "UTF-8"));
+				}
+
+				if (officialSite != null && !"".equals(officialSite)) {
+					team.setOfficialSite(URLDecoder.decode(officialSite, "UTF-8"));
+				}
+
+				if (scale != null && !"".equals(scale)) {
+					team.setScale(URLDecoder.decode(scale, "UTF-8"));
+				}
+
+				if (businessDesc != null && !"".equals(businessDesc)) {
+					team.setBusinessDesc(URLDecoder.decode(businessDesc, "UTF-8"));
+				}
+
+				if (demand != null && !"".equals(demand)) {
+					team.setDemand(URLDecoder.decode(demand, "UTF-8"));
+				}
+
+				if (description != null && !"".equals(description)) {
+					team.setDescription(URLDecoder.decode(description, "UTF-8"));
+				}
+
+				Team dbteam = service.register(team);
+
+				if (dbteam != null && dbteam.getTeamId() > 0) {
+					return initSessionInfo(dbteam, request);
+				}
+			} catch (UnsupportedEncodingException e) {
+				logger.error("Provider Infomation Decode error On Provider updateTeamInformation ...");
+				e.printStackTrace();
+			}
+		}
+		return false;
+
+	}
 
 	/**
 	 * 供应商登录
@@ -386,38 +449,39 @@ public class TeamController extends BaseController {
 	 */
 	@RequestMapping("/team/static/data/doLogin")
 	public boolean doLogin(@RequestBody final Team original, final HttpServletRequest request) {
-			final Team team = service.doLogin(original.getPhoneNumber());
-			if (team != null) {
-				// 存入session
-				return initSessionInfo(team, request);
-			}
+		Team team = null;
+		if (null != original && null != original.getPhoneNumber() && !"".equals(original.getPhoneNumber())) {
+			team = service.doLogin(original.getPhoneNumber());
+		} else {
+			team = service.findTeamByLoginNameAndPwd(original);
+		}
+		if (team != null) {
+			// 存入session
+			return initSessionInfo(team, request);
+		}
 		return false;
 	}
 
 	@RequestMapping("/team/static/data/checkPwd")
 	public boolean checkPwd(@RequestBody final Team original, final HttpServletRequest request) {
+		try {
+			// 转码
+			final String loginName = URLDecoder.decode(original.getLoginName(), "UTF-8");
+			final String password = URLDecoder.decode(original.getPassword(), "UTF-8");
+			original.setLoginName(loginName);
+			original.setPassword(password);
+			final Team team = service.findTeamByLoginNameAndPwd(original);
 
-		// try {
-		// // 转码
-		// final String loginName = URLDecoder.decode(original.getLoginName(),
-		// "UTF-8");
-		// final String password = URLDecoder.decode(original.getPassword(),
-		// "UTF-8");
-		// original.setLoginName(loginName);
-		// original.setPassword(password);
-		// final Team team = service.doLogin(original);
-		//
-		// if (team != null) {
-		// // 存入session
-		// return true;
-		//
-		// }
-		// } catch (UnsupportedEncodingException e) {
-		//
-		// logger.error("Decoder LoginName Or Password Error On Provider Login
-		// ...");
-		// e.printStackTrace();
-		// }
+			if (team != null) {
+				// 存入session
+				return true;
+
+			}
+		} catch (UnsupportedEncodingException e) {
+
+			logger.error("Decoder LoginName Or Password Error On Provider Login...");
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -593,12 +657,6 @@ public class TeamController extends BaseController {
 	@RequestMapping("/team/thirdLogin/bind")
 	public BaseMsg bind(@RequestBody final Team provider, final HttpServletRequest request) {
 		final BaseMsg baseMsg = service.bind(provider);
-		if (baseMsg.getErrorCode().equals(BaseMsg.NORMAL) || baseMsg.getErrorCode().equals(BaseMsg.WARNING)) {
-			boolean login = initSessionInfo((Team) baseMsg.getResult(), request);
-			if (!login) {
-				return new BaseMsg(BaseMsg.ERROR, "绑定成功，登录失败", baseMsg.getResult());
-			}
-		}
 		return baseMsg;
 	}
 
@@ -642,4 +700,13 @@ public class TeamController extends BaseController {
 		map.put(GlobalConstant.SESSION_INFO, info);
 		return sessionService.addSession(request, map);
 	}
+	@RequestMapping("/team/static/data/add/account")
+	public boolean addAccount(@RequestBody final Team team) {
+		long count = service.updateTeamAccount(team);
+		if (count > 0) {
+			return true;
+		}
+		return false;
+	}
+
 }

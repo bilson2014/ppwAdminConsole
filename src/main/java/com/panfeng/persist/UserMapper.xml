@@ -181,15 +181,24 @@
 		<if test="clientLevel != null">
 			 CLIENTLEVEL = ${clientLevel},
 		</if>
+		
+		<if test="qqUnique != null and qqUnique != ''">
+			 QQUNIQUE = #{qqUnique},
+		</if>
+		
+		<if test="wbUnique != null and wbUnique != ''">
+			 WBUNIQUE = #{wbUnique},
+		</if>
+		
+		<if test="wechatUnique != null and wechatUnique != ''">
+			 WECHATUNIQUE = #{wechatUnique},
+		</if>
 		<![CDATA[
 				   IMGURL = #{imgUrl},
 				   SEX = ${sex},
 				   REALNAME = #{realName},
 				   QQ = #{qq},
 				   USERCOMPANY = #{userCompany},
-				   QQUNIQUE = #{qqUnique},
-				   WBUNIQUE = #{wbUnique},
-				   WECHATUNIQUE = #{wechatUnique},
 				   NOTE = #{note}
 			WHERE ID = ${id}
 		]]>
@@ -373,4 +382,30 @@
 		]]>
 	</select>
 	
+	<!-- add by wanglc 2016-7-13 14:35:13 根据用户名和密码查询客户begin -->
+	<select id="findUserByLoginNameAndPwd" resultType="User">
+		<![CDATA[
+			SELECT u.ID AS id,
+				   u.ID AS userId,
+				   u.USERNAME AS userName,
+				   u.PASSWORD AS PASSWORD,
+				   u.TELEPHONE AS telephone,
+				   u.LOGINNAME as loginName,
+				   u.EMAIL AS email,
+				   u.IMGURL AS imgUrl,
+				   u.SEX AS sex,
+				   u.QQ AS qq,
+				   u.QQUNIQUE AS qqUnique,
+				   u.WBUNIQUE AS wbUnique,
+				   u.WECHATUNIQUE AS wechatUnique,
+				   u.REALNAME AS realName,
+				   u.USERCOMPANY AS userCompany,
+				   u.CLIENTLEVEL AS clientLevel,
+				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
+				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
+			FROM USERS u WHERE  u.LOGINNAME=#{loginName}
+			               AND  u.PASSWORD=#{password}
+		]]>
+	</select>
+	<!-- add by wanglc 2016-7-13 14:35:13 根据用户名和密码查询客户end -->
 </mapper>
