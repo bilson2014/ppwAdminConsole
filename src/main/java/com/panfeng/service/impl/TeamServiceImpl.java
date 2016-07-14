@@ -304,4 +304,9 @@ public class TeamServiceImpl implements TeamService {
 		return team;
 	}
 
+	@Override
+	public long updateTeamAccount(Team original) {
+		return mapper.updateTeamAccount(original);
+	}
+
 }

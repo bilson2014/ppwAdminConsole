@@ -464,28 +464,24 @@ public class TeamController extends BaseController {
 
 	@RequestMapping("/team/static/data/checkPwd")
 	public boolean checkPwd(@RequestBody final Team original, final HttpServletRequest request) {
+		try {
+			// 转码
+			final String loginName = URLDecoder.decode(original.getLoginName(), "UTF-8");
+			final String password = URLDecoder.decode(original.getPassword(), "UTF-8");
+			original.setLoginName(loginName);
+			original.setPassword(password);
+			final Team team = service.findTeamByLoginNameAndPwd(original);
 
-		// try {
-		// // 转码
-		// final String loginName = URLDecoder.decode(original.getLoginName(),
-		// "UTF-8");
-		// final String password = URLDecoder.decode(original.getPassword(),
-		// "UTF-8");
-		// original.setLoginName(loginName);
-		// original.setPassword(password);
-		// final Team team = service.doLogin(original);
-		//
-		// if (team != null) {
-		// // 存入session
-		// return true;
-		//
-		// }
-		// } catch (UnsupportedEncodingException e) {
-		//
-		// logger.error("Decoder LoginName Or Password Error On Provider Login
-		// ...");
-		// e.printStackTrace();
-		// }
+			if (team != null) {
+				// 存入session
+				return true;
+
+			}
+		} catch (UnsupportedEncodingException e) {
+
+			logger.error("Decoder LoginName Or Password Error On Provider Login...");
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -702,4 +698,13 @@ public class TeamController extends BaseController {
 		map.put(GlobalConstant.SESSION_INFO, info);
 		return sessionService.addSession(request, map);
 	}
+	@RequestMapping("/team/static/data/add/account")
+	public boolean addAccount(@RequestBody final Team team) {
+		long count = service.updateTeamAccount(team);
+		if (count > 0) {
+			return true;
+		}
+		return false;
+	}
+
 }

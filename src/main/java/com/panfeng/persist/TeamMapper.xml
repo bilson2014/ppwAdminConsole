@@ -474,4 +474,23 @@
 			TEAMID = ${teamId}
 		</where>
 	</update>
+	
+	<update id="updateTeamAccount">
+		<![CDATA[
+			UPDATE TEAM 
+			SET
+			UPDATEDATE = CURRENT_TIMESTAMP
+		]]>
+		
+		<if test="loginName != null and loginName != ''">
+			,LOGINNAME = #{loginName}
+		</if>
+		<if test="password != null and password != ''">
+			,PASSWORD = #{password}
+		</if>
+		<where>
+			TEAMID = ${teamId}
+		</where>
+	</update>
+	
 </mapper>
