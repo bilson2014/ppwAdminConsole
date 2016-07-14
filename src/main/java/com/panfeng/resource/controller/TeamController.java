@@ -623,6 +623,8 @@ public class TeamController extends BaseController {
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(team.getTeamId());
 		info.setPhoto(team.getTeamPhotoUrl());
+		if(team.getFlag() == 1)
+			info.setIsIdentification(true);
 
 		final Role role = roleService.findRoleById(2l); // 获取用户角色
 		final List<Role> roles = new ArrayList<Role>();
