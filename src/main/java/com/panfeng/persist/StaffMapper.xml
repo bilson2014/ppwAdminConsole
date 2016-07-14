@@ -28,7 +28,7 @@
 			FROM STAFF s 
 			WHERE 1 = 1
 			
-			ORDER BY s.OD,s.STAFFID ASC
+			ORDER BY s.STAFFID ASC
 		]]>
 	</select>
 	
@@ -52,7 +52,7 @@
 		</if>
 		
 		<![CDATA[
-			ORDER BY s.OD,s.STAFFID ASC
+			ORDER BY s.STAFFID ASC
 		]]>
 	</select>
 	
@@ -72,7 +72,7 @@
 			AND s.STAFFNAME LIKE CONCAT(CONCAT('%',#{staffName}),'%')
 		</if>
 		<![CDATA[
-			ORDER BY s.OD,s.STAFFID ASC
+			ORDER BY s.STAFFID ASC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>

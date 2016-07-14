@@ -30,6 +30,8 @@ public class SessionInfo extends BaseObject {
 	
 	private Integer clientLevel = null; // 客户级别
 	
+	private boolean isIdentification = false; // 供应商是否被审核
+	
 	public String getToken() {
 		return token;
 	}
@@ -131,6 +133,14 @@ public class SessionInfo extends BaseObject {
 
 	public void setClientLevel(Integer clientLevel) {
 		this.clientLevel = clientLevel;
+	}
+
+	public boolean isIdentification() {
+		return isIdentification;
+	}
+
+	public void setIsIdentification(boolean isIdentification) {
+		this.isIdentification = isIdentification;
 	}
 	
 }
