@@ -24,8 +24,7 @@ public class CommentController extends BaseController {
 
 	@RequestMapping(value = "/getAllComment", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public List<IndentComment> getAllComment(@RequestBody final IndentProject indentProject) {
-		List<IndentComment> list = indentCommentService
-				.getIndentCommentList(indentProject);
+		List<IndentComment> list = indentCommentService.getIndentCommentList(indentProject);
 		return list;
 	}
 

@@ -298,7 +298,8 @@
 				   u.QQUNIQUE AS qqUnique,
 	   			   u.WBUNIQUE AS wbUnique,
 	   			   u.WECHATUNIQUE AS wechatUnique,
-				   u.REALNAME as realName
+				   u.REALNAME AS realName,
+				   u.CLIENTLEVEL AS clientLevel
 			FROM USERS u
 			WHERE QQUNIQUE = #{uniqueId}
 			   OR WBUNIQUE = #{uniqueId}

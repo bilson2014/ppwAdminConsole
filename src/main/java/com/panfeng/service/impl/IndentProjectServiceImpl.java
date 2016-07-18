@@ -58,11 +58,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Autowired
 	UserTempService userTempService;
 
-	// add synergy by laowang ,2016-5-25 12:00 bengin
-	// ->
 	@Autowired
 	SynergyService synergyService;
-	// add synergy by laowang ,2016-5-25 12:00 end
 
 	// add by Jack ,2016-06-03 17:18 bengin
 	// -> register EmployeeService to load employee informartion
