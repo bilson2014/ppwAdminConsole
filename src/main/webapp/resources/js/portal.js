@@ -145,7 +145,7 @@ function checkUsrClientLevel(){
 				var li_list = $('#menu').find('.tree-title');
 				
 				$.each(li_list,function(i,n){
-					if($(n).text() == '客户管理' && !($(n).parent().children(":first").attr("class")=='tree-hit tree-expanded')){
+					if($(n).text() == '客户列表管理'){
 						$(this).find('.badge').remove();
 						var $span = '<span class="badge">new-';
 						$span += count;

@@ -46,9 +46,14 @@ public class SearchResourceInterceptor implements HandlerInterceptor {
 					// 用户未分级，不能访问资源库，只能访问首页推荐视频
 					flag = false;
 				}
-			}else {
-				// 供应商不能访问资源库，只能访问首页推荐视频
-				flag = false;
+			}else if(GlobalConstant.ROLE_PROVIDER.equals(type)){
+				// 通过审核的供应商可以访问资源库
+				if(info.isIdentification()){
+					flag = true;
+				}else {
+					// 未通过审核的供应商不能访问资源库
+					flag = false;
+				}
 			}
 		} else {
 			// 未登录不能访问资源库，只能访问首页推荐视频
