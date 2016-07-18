@@ -23,10 +23,7 @@
 				<tr>
 					<th>项目名称:</th>
 					<td>
-					<%--modify by wanglc 2016-7-4 16:57:17 修改为项目名称模糊查询begin --%>
-						<%-- <input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;"/>--%>
 						<input id="search-projectId" name="projectName" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;"/>
-					<%--modify by wanglc 2016-7-4 16:57:17 修改为项目名称模糊查询begin --%>
 					</td>
 					<th>项目状态:</th>
 					<td>
@@ -38,20 +35,20 @@
             				<option value="2" >完成</option>
 						</select>
 					</td>
-					<th>视频管家</th>
+					<th>视频管家:</th>
 					<td>
 						<input id="search-userId" name="userId" class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
 					</td>
 				</tr>
 				<tr>
-					<th>是否作为协同人</th>
+					<th>是否协同:</th>
 					<td>
-						<select disabled="disabled" id="isSynergy" name="isSynergy" editable="false" class="easyui-combobox" style="width: 100px;">
+						<select id="isSynergy" name="isSynergy" editable="false" class="easyui-combobox" style="width: 100px;">
 							<option value="0" >否</option>
             				<option value="1" >是</option>
 						</select>
 					</td>
-					<th>项目来源</th>
+					<th>项目来源:</th>
 					<td>
 						<input id="search-source" name="source" class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
 					</td>

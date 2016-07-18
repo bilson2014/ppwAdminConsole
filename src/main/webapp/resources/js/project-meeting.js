@@ -363,16 +363,25 @@ function openDialog(id,data){
 
 // 查询
 function searchFun(){
+	//add by wanglc 2016-7-11 13:25:46 只有选择视频管家才能选择是否协同,之前让协同disable兼容性有问题,改在这里提示 begin
+	var employee = $('#search-userId').combobox('getValue');
+	var isSynergy = $('#isSynergy').combobox('getValue');
+	if((null==employee||''==employee||undefined==employee) && isSynergy==1){
+		$.messager.show({
+			title:'消息提示',
+			msg:'请先选择视频管家',
+			timeout:5000,
+			showType:'slide'
+		});
+	return false;
+	}
+	//add by wanglc 2016-7-11 13:25:46 只有选择视频管家才能选择是否协同,之前让协同disable兼容性有问题,改在这里提示 end
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
 
 // 清除
 function cleanFun() {
 	$('#searchForm').form('clear');
-	//add by wanglc,2016-6-30 10:42:52 begin
-	//重新禁用是否是协同人选项
-	$("#isSynergy").combobox('disable');
-	//add by wanglc2016-6-30 10:42:57 end
 	datagrid.datagrid('load', {});
 }
 
