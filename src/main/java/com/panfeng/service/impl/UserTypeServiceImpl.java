@@ -30,17 +30,17 @@ public class UserTypeServiceImpl implements UserTempService {
 			// 视频管家
 			Employee employee = employeeService.findEmployerById(userId);
 			//modify by wanglc 2016-7-18 13:59:19 视频管家为空 begin
+			//if(null != employee)
 			if(null != employee){
 				userViewModel.setUserName(employee.getEmployeeRealName() == null || employee.getEmployeeRealName().equals("")
 								? "内部员工" : employee.getEmployeeRealName());
 				String imgUrl = employee.getEmployeeImg();
 				if (imgUrl != null && !"".equals(imgUrl)) {
-					// TODO:
 					String filename = imgUrl.substring(imgUrl.lastIndexOf('/'), imgUrl.length());
 					userViewModel.setImgUrl("/employee/img"+filename);
 				} else userViewModel.setImgUrl("/resources/img/flow/guanhead.png");
 			}else userViewModel.setImgUrl("/resources/img/flow/guanhead.png");
-			
+			//modify by wanglc 2016-7-18 13:59:19 视频管家为空 end
 			userViewModel.setUserType("内部员工");
 			userViewModel.setOrgName("");
 			break;

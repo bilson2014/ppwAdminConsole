@@ -293,11 +293,20 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 		// modify by wanglc 2016-6-28 19:54:21
 		// 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 begin
-		List<IndentProject> list = new ArrayList<IndentProject>();
+		List<IndentProject> returnList = new ArrayList<IndentProject>();
 		if (null == view.getIsSynergy() || view.getIsSynergy() == 0) {
-			list = indentProjectMapper.listWithPagination(view);
+			returnList = indentProjectMapper.listWithPaginationNoLimit(view);
 		} else {
-			list = indentProjectMapper.listWithPaginationAddSynergy(view);
+			returnList = indentProjectMapper.listWithPaginationNoLimit(view);
+			List<IndentProject> list2 = indentProjectMapper.listWithPaginationAddSynergy(view);
+			returnList.addAll(list2);
+		}
+		List<IndentProject> list = new ArrayList<IndentProject>();
+		int begin = (int) view.getBegin();
+		int size = (int) view.getLimit();
+		int end = size > (returnList.size()-begin)?returnList.size():size;
+		for(int i=begin;i<end;i++){
+			list.add(returnList.get(i));
 		}
 		// modify by wanglc 2016-6-28 19:54:21 end
 		Map<Long, Employee> eMap = employeeService.getEmployeeMap();

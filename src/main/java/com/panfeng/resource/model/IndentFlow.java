@@ -144,16 +144,18 @@ public class IndentFlow extends BaseObject {
 	public static void indentProjectFillDate(IndentProject indentProject,
 			List<IndentFlow> indentFlows) {
 		Map<String, String> time = new HashMap<>();
-		
-		for (IndentFlow flowDate : indentFlows) {
-			final String firstDate = flowDate.getFdStartTime();
-			if(ValidateUtil.isValid(firstDate)){
-				
-				String dateStr = flowDate.getFdStartTime().equals(defaultDate) ? ""
-						: flowDate.getFdStartTime();
-				time.put(flowDate.getFdTaskId(), dateStr);
-			}else {
-				time.put(flowDate.getFdTaskId(), "");
+		//add by wanglc if(null != indentFlows && indentFlows.size() > 0){  添加不为空验证
+		if(null != indentFlows && indentFlows.size() > 0){
+			for (IndentFlow flowDate : indentFlows) {
+				final String firstDate = flowDate.getFdStartTime();
+				if(ValidateUtil.isValid(firstDate)){
+					
+					String dateStr = flowDate.getFdStartTime().equals(defaultDate) ? ""
+							: flowDate.getFdStartTime();
+					time.put(flowDate.getFdTaskId(), dateStr);
+				}else {
+					time.put(flowDate.getFdTaskId(), "");
+				}
 			}
 		}
 		indentProject.setTime(time);

@@ -48,6 +48,8 @@
 							<div class="light-info">
 								<div class="light-tip icon-tip"></div>
 								<div>欢迎使用拍片网后台管理系统。</div>
+								<div id="order"></div>
+								<div id="new_user"></div>
 							</div>
 						</r:identity>
 					</div>
