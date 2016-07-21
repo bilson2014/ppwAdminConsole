@@ -72,5 +72,7 @@ public interface IndentProjectMapper {
 	 * @return list
 	 */
 	public List<IndentProject> all();
+
+	public List<IndentProject> listWithPaginationNoLimit(IndentProjectView view);
 	
 }
