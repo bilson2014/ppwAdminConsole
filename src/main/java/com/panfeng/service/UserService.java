@@ -10,48 +10,55 @@ import com.panfeng.resource.view.UserView;
 public interface UserService {
 
 	public List<User> all();
-	
+
 	public List<User> listWithPagination(final UserView view);
-	
+
 	public long maxSize(final UserView view);
-	
+
 	/**
-	 * 根据 服务编号 删除 service 
-	 * @param serviceId service 编号
+	 * 根据 服务编号 删除 service
+	 * 
+	 * @param serviceId
+	 *            service 编号
 	 */
 	public long delete(final long[] ids);
-	
+
 	public long save(final User user);
-	
+
 	public long update(final User user);
-	
+
 	/**
 	 * 根据用户ID获取用户
-	 * @param id 用户唯一编号
+	 * 
+	 * @param id
+	 *            用户唯一编号
 	 * @return 用户信息
 	 */
 	public User findUserById(final long id);
 
 	/**
-	 * 密码相同的前提下，通过用户名称获取用户
-	 * 根据用户名匹配手机号或者邮件
-	 * @param user 用户密码 以及 用户名称
+	 * 密码相同的前提下，通过用户名称获取用户 根据用户名匹配手机号或者邮件
+	 * 
+	 * @param user
+	 *            用户密码 以及 用户名称
 	 * @return 用户信息
 	 */
 	public User findUserByAttr(final User user);
 
 	/**
 	 * 检查手机号是否存在
-	 * @param telephone 手机号码
+	 * 
+	 * @param telephone
+	 *            手机号码
 	 * @return 存在个数
 	 */
-	public int validationPhone(final String telephone);
+	public int validationPhone(final String telephone, String loginName);
 
 	/**
 	 * 密码重置
 	 */
 	public long recover(final User user);
-	
+
 	/**
 	 * 注册用户
 	 */
@@ -59,18 +66,19 @@ public interface UserService {
 
 	/**
 	 * 修改 用户基本信息(昵称、性别、真实姓名、电子邮件、QQ)
+	 * 
 	 * @param (昵称、性别、真实姓名、电子邮件、QQ、用户ID)
 	 * @return 修改个数
 	 */
 	public long modifyUserInfo(final User user);
 
 	/**
-	 *  修改 用户密码
+	 * 修改 用户密码
 	 */
 	public long modifyUserPassword(final User user);
 
 	/**
-	 *  修改 用户手机号码
+	 * 修改 用户手机号码
 	 */
 	public long modifyUserPhone(final User user);
 
@@ -90,11 +98,12 @@ public interface UserService {
 	public long saveByThirdLogin(final User createUser);
 
 	public List<User> findUserByName(final User user);
-	
+
 	public long simpleSave(final User user);
-	
+
 	/**
 	 * 获取新注册的用户数量，用来提示客服还有多少新注册用户未完成分级
+	 * 
 	 * @return
 	 */
 	public long findUnlevelUsers();
@@ -103,12 +112,17 @@ public interface UserService {
 
 	public Map<String, Object> bindThird(ThirdBind bind);
 
-	//add by wanglc 2016-7-13 14:27:00 begin
+	// add by wanglc 2016-7-13 14:27:00 begin
 	/**
 	 * 根据loginName和密码查询用户
+	 * 
 	 * @param user
 	 * @return
 	 */
 	public User findUserByLoginNameAndPwd(User user);
-	//add by wanglc 2016-7-13 14:27:00 end
+	// add by wanglc 2016-7-13 14:27:00 end
+
+	public long modifyUserLoginName(User user);
+
+
 }
