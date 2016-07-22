@@ -3,5 +3,4 @@
 logs/
 
 .classpath
-derby.log
 *.class

@@ -65,7 +65,7 @@ $().ready(function(){
 
 // 查看 订单状态
 function checkIndentStatus(){
-	window.setInterval(loadStatus, 300000);
+	window.setInterval(loadStatus, 480000);
 	
 	function loadStatus(){
 		loadData(function(count){
@@ -163,5 +163,5 @@ function checkUsrClientLevel(){
 				$('#menu').find('.tree-node').find('.badge').remove(); // 清除 徽章 效果
 			}
 		}, getContextPath() + '/portal/user/getUnLevelUserNotice', null);
-	}, 300000);
+	}, 300000) ;
 }
