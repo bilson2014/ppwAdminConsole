@@ -13,7 +13,7 @@ public class Team extends Customer {
 
 	private long teamId = 0l;
 
-	private String password = "E10ADC3949BA59ABBE56E057F20F883E"; //123456 密码
+	private String password = "E10ADC3949BA59ABBE56E057F20F883E"; // 123456 密码
 
 	private String phoneNumber = null; // 联系电话
 
@@ -83,6 +83,47 @@ public class Team extends Customer {
 
 	public final static String LTYPE_WECHAT = "wechat";
 
+	private String teamCity = null; // 城市ID
+
+	private String teamProvince = null; // 省ID
+
+	// 冗余字段
+	private String teamProvinceName = null;// 省名
+	
+	private String teamCityName = null; // 城市名
+	
+	
+	public String getTeamProvinceName() {
+		return teamProvinceName;
+	}
+
+	public void setTeamProvinceName(String teamProvinceName) {
+		this.teamProvinceName = teamProvinceName;
+	}
+
+	public String getTeamCityName() {
+		return teamCityName;
+	}
+
+	public void setTeamCityName(String teamCityName) {
+		this.teamCityName = teamCityName;
+	}
+
+	public String getTeamCity() {
+		return teamCity;
+	}
+
+	public void setTeamCity(String teamCity) {
+		this.teamCity = teamCity;
+	}
+
+	public String getTeamProvince() {
+		return teamProvince;
+	}
+
+	public void setTeamProvince(String teamProvince) {
+		this.teamProvince = teamProvince;
+	}
 
 	public long getTeamId() {
 		return teamId;

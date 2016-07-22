@@ -140,7 +140,7 @@ public class ProjectController extends BaseController {
 		//add by wanglc 2016-7-11 13:46:29 接口限制视频管家与协同人的选择关系begin
 		if(whetherJustChooseSynergy(view)){//搜索 只选择了是否协同,没有选择视频管家
 			return dataGrid;
-		}
+		} 
 		//add by wanglc 2016-7-11 13:46:29 接口限制视频管家与协同人的选择关系begin
 		final List<IndentProject> list = indentProjectService.listWithPagination(view);
 		dataGrid.setRows(list);

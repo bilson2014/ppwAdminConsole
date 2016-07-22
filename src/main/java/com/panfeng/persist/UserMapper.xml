@@ -38,7 +38,8 @@
 				   u.CLIENTLEVEL AS clientLevel,
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate,
-				   NOTE AS note
+				   NOTE AS note,
+				   u.CUSTOMERSOURCE AS customerSource
 			FROM USERS u
 			WHERE 1 = 1
 		]]>
@@ -97,7 +98,9 @@
 				   u.USERCOMPANY AS userCompany,
 				   u.CLIENTLEVEL AS clientLevel,
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
-				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate
+				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate,
+				   u.LOGINNAME AS loginName,
+				   u.CUSTOMERSOURCE AS customerSource
 			FROM USERS u
 			WHERE u.ID = ${id}
 		]]>
@@ -199,7 +202,8 @@
 				   REALNAME = #{realName},
 				   QQ = #{qq},
 				   USERCOMPANY = #{userCompany},
-				   NOTE = #{note}
+				   NOTE = #{note},
+				   CUSTOMERSOURCE = ${customerSource}
 			WHERE ID = ${id}
 		]]>
 	</update>
@@ -232,10 +236,23 @@
 	<select id="validationPhone" resultType="int">
 		<![CDATA[
 			SELECT COUNT(1)
-				FROM USERS u
-			WHERE u.TELEPHONE = #{telephone}
+				FROM USERS u WHERE 1 = 1
 		]]>
+		<if test="telephone != null and telephone != ''">
+			AND u.TELEPHONE = #{telephone}
+		</if>
+		<if test="loginName != null and loginName != ''">
+			AND u.LOGINNAME = #{loginName}
+		</if>
 	</select>
+	<update id="modifyUserLoginName">
+		<![CDATA[
+			UPDATE USERS
+				SET PASSWORD  = #{password},
+				loginName = #{loginName} 
+				WHERE id = ${id}
+		]]>
+	</update>
 	
 	<update id="recover">
 		<![CDATA[
@@ -257,7 +274,8 @@
 					REALNAME = #{realName},
 					email = #{email},
 					qq = #{qq},
-					USERCOMPANY = #{userCompany}
+					USERCOMPANY = #{userCompany},
+					customerSource = #{customerSource}
 			WHERE id = ${id}
 		]]>
 	</update>
@@ -298,7 +316,8 @@
 				   u.QQUNIQUE AS qqUnique,
 	   			   u.WBUNIQUE AS wbUnique,
 	   			   u.WECHATUNIQUE AS wechatUnique,
-				   u.REALNAME as realName
+				   u.REALNAME AS realName,
+				   u.CLIENTLEVEL AS clientLevel
 			FROM USERS u
 			WHERE QQUNIQUE = #{uniqueId}
 			   OR WBUNIQUE = #{uniqueId}

@@ -47,77 +47,15 @@ $().ready(function(){
 							} 
 						}
 					},{
-						field : 'city',
+						field : 'teamProvinceName',
+						title : '所在省',
+						width : 100,
+						align : 'center'
+					},{
+						field : 'teamCityName',
 						title : '所在城市',
 						width : 100,
-						align : 'center',
-						formatter : function(value , record , index){
-							if(value == 0){
-								return '<span style=color:black; >北京</span>' ;
-							} else if( value == 1){
-								return '<span style=color:black; >上海</span>' ; 
-							} else if( value == 2){
-								return '<span style=color:black; >深圳</span>' ;
-							} else if( value == 3){
-								return '<span style=color:black; >武汉</span>' ;
-							} else if(value == 4){
-								return '<span style=color:black; >广州</span>' ;
-							} else if(value == 5){
-								return '<span style=color:black; >杭州</span>' ;
-							} else if(value == 6){
-								return '<span style=color:black; >成都</span>' ;
-							} else if(value == 7){
-								return '<span style=color:black; >石家庄</span>' ;
-							} else if(value == 8){
-								return '<span style=color:black; >沈阳</span>' ;
-							} else if(value == 9){
-								return '<span style=color:black; >哈尔滨</span>' ;
-							} else if(value == 11){
-								return '<span style=color:black; >福州</span>' ;
-							} else if(value == 12){
-								return '<span style=color:black; >济南</span>' ;
-							} else if(value == 13){
-								return '<span style=color:black; >昆明</span>' ;
-							} else if(value == 14){
-								return '<span style=color:black; >兰州</span>' ;
-							} else if(value == 15){
-								return '<span style=color:black; >台北</span>' ;
-							} else if(value == 16){
-								return '<span style=color:black; >南宁</span>' ;
-							} else if(value == 17){
-								return '<span style=color:black; >银川</span>' ;
-							} else if(value == 18){
-								return '<span style=color:black; >太原</span>' ;
-							} else if(value == 19){
-								return '<span style=color:black; >长春</span>' ;
-							} else if(value == 20){
-								return '<span style=color:black; >南京</span>' ;
-							} else if(value == 21){
-								return '<span style=color:black; >合肥</span>' ;
-							} else if(value == 22){
-								return '<span style=color:black; >南昌</span>' ;
-							} else if(value == 23){
-								return '<span style=color:black; >郑州</span>' ;
-							} else if(value == 24){
-								return '<span style=color:black; >长沙</span>' ;
-							} else if(value == 25){
-								return '<span style=color:black; >海口</span>' ;
-							} else if(value == 26){
-								return '<span style=color:black; >贵阳</span>' ;
-							} else if(value == 27){
-								return '<span style=color:black; >西安</span>' ;
-							} else if(value == 28){
-								return '<span style=color:black; >西宁</span>' ;
-							} else if(value == 29){
-								return '<span style=color:black; >呼和浩特</span>' ;
-							} else if(value == 30){
-								return '<span style=color:black; >拉萨</span>' ;
-							} else if(value == 31){
-								return '<span style=color:black; >乌鲁木齐</span>' ;
-							} else if(value == 32){
-								return '<span style=color:black; >天津</span>' ;
-							}
-						}
+						align : 'center'
 					},{
 						field : 'linkman',
 						title : '联系人',
@@ -321,6 +259,29 @@ var team = {
 
 function addFuc(){ // 注册 增加按钮
 	$('#fm').form('clear');
+	$('#teamProvince').combobox({
+		url : getContextPath() + '/portal/get/provinces',
+		valueField : 'provinceID',
+		textField : 'province',
+		onSelect : function(record){
+			$('#teamCity').combobox('clear');
+			var id = $('#teamProvince').combobox('getValue');
+			$('#teamCity').combobox({
+				url : getContextPath() + '/portal/get/citys/'+id,
+				valueField : 'cityID',
+				textField : 'city'
+			});
+		}
+		,onLoadSuccess: function(record){
+			var id = $('#teamProvince').combobox('getValue');
+			$('#teamCity').combobox({
+				url : getContextPath() + '/portal/get/citys/'+rows[0].teamProvince,
+				valueField : 'cityID',
+				textField : 'city'
+			});
+			$('#teamCity').combobox('select',rows[0].teamCityName);
+		}
+	});
 	openDialog('dlg');
 	formUrl = getContextPath() + '/portal/team/save';
 	$('input[name="teamId"]').val(0);
@@ -343,6 +304,30 @@ function editFuc(){ // 注册 修改 按钮
 				});
 			}
 		}
+		$('#teamProvince').combobox({
+			url : getContextPath() + '/portal/get/provinces',
+			valueField : 'provinceID',
+			textField : 'province',
+			onSelect : function(record){
+				$('#teamCity').combobox('clear');
+				var id = $('#teamProvince').combobox('getValue');
+				$('#teamCity').combobox({
+					url : getContextPath() + '/portal/get/citys/'+id,
+					valueField : 'cityID',
+					textField : 'city'
+				});
+			}
+			,onLoadSuccess: function(record){
+				var id = $('#teamProvince').combobox('getValue');
+				$('#teamCity').combobox({
+					url : getContextPath() + '/portal/get/citys/'+rows[0].teamProvince,
+					valueField : 'cityID',
+					textField : 'city'
+				});
+				$('#teamCity').combobox('select',rows[0].teamCityName);
+			}
+		});
+		$('#teamProvince').combobox('select',rows[0].teamProvinceName);
 		openDialog('dlg');
 		formUrl = getContextPath() + '/portal/team/update';
 	} else {

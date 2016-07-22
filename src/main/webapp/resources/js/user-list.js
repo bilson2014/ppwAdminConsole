@@ -148,6 +148,40 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'customerSource' ,
+						title : '客户来源' ,
+						align : 'center' ,
+						width : 60,
+						formatter : function(value , record , index){
+							switch (value) {
+							case 1:
+								return '<span style=color:blue; >渠道</span>' ;
+							case 2:
+								return '<span style=color:blue; >推广</span>' ;
+							case 3:
+								return '<span style=color:blue; >自主开发</span>' ;
+							case 4:
+								return '<span style=color:blue; >活动</span>' ;
+							case 5:
+								return '<span style=color:blue; >推荐</span>' ;
+							}
+						},
+						editor:{
+							type:'combobox' , 
+							options:{
+								data:[{id:1 , val:'渠道'},{id:2 , val:'推广'},{id:3 , val:'自主开发'},{id:4 , val:'活动'},{id:5 , val:'推荐'}] ,
+								valueField:'id' , 
+								textField:'val' ,
+								required:true , 
+								editable : false
+							}
+						}
+					},{
+						field : 'createDate',
+						title : '注册日期',
+						width : 120,
+						align : 'center'
+					},{
 						field : 'birthday',
 						title : '出生日期',
 						width : 120,

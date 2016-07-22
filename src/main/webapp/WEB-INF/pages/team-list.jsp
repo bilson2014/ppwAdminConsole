@@ -7,6 +7,7 @@
 <spring:url value="/resources/lib/My97DatePicker/WdatePicker.js" var="WdatePickerJs" />
 <spring:url value="/resources/js/team-list.js" var="teamListJs" />
 
+
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -19,6 +20,7 @@
 <link rel="stylesheet" href="${teamListCss }">
 <script src="${WdatePickerJs }"></script>
 <script src="${teamListJs }"></script>
+
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 	
@@ -112,44 +114,6 @@
 	            	<tr>
 	            		<th >公司名称</th>
 	            		<td><input name="teamName" class="easyui-textbox" required="true"></td>
-	            		
-	            		<th >所在城市</th>
-	            		<td>
-	            			<select name="city" class="easyui-combobox" editable="false">
-	            				<option value="0" selected>北京</option>
-	            				<option value="1" >上海</option>
-	            				<option value="2" >深圳</option>
-	            				<option value="3" >武汉</option>
-	            				<option value="4" >广州</option>
-	            				<option value="5" >杭州</option>
-	            				<option value="6" >成都</option>
-	            				<option value="7" >石家庄</option>
-	            				<option value="8" >沈阳</option>
-	            				<option value="9" >哈尔滨</option>
-	            				<option value="11" >福州</option>
-	            				<option value="12" >济南</option>
-	            				<option value="13" >昆明</option>
-	            				<option value="14" >兰州</option>
-	            				<option value="15" >台北</option>
-	            				<option value="16" >南宁</option>
-	            				<option value="17" >银川</option>
-	            				<option value="18" >太原</option>
-	            				<option value="19" >长春</option>
-	            				<option value="20" >南京</option>
-	            				<option value="21" >合肥</option>
-	            				<option value="22" >南昌</option>
-	            				<option value="23" >郑州</option>
-	            				<option value="24" >长沙</option>
-	            				<option value="25" >海口</option>
-	            				<option value="26" >贵阳</option>
-	            				<option value="27" >西安</option>
-	            				<option value="28" >西宁</option>
-	            				<option value="29" >呼和浩特</option>
-	            				<option value="30" >拉萨</option>
-	            				<option value="31" >乌鲁木齐</option>
-	            				<option value="32" >天津</option>
-	            			</select>
-	            		</td>
 	            	</tr>
 	            	<tr>
 	            		<th >登录名</th>
@@ -195,6 +159,21 @@
 	            		<td><input class="easyui-textbox" name="address" required="true"/></td>
 	            		<th>成立时间</th>
 	            		<td><input class="textbox" name="establishDate" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly"/></td>
+	            	</tr>
+	            	
+	            	<tr>
+	            	<th >所在省</th>
+	            		<td>
+	            			<select name="teamProvince" id="teamProvince" class="easyui-combobox" editable="false" style="width:90%;">
+	            				
+	            			</select>
+	            		</td>
+            		<th >所在城市</th>
+	            		<td>
+	            			<select name="teamCity" id="teamCity" class="easyui-combobox" editable="false" style="width:90%;">
+	            				
+	            			</select>
+	            		</td>
 	            	</tr>
 	            	
 	            	<tr>

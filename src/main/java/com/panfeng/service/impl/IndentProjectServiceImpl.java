@@ -58,11 +58,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Autowired
 	UserTempService userTempService;
 
-	// add synergy by laowang ,2016-5-25 12:00 bengin
-	// ->
 	@Autowired
 	SynergyService synergyService;
-	// add synergy by laowang ,2016-5-25 12:00 end
 
 	// add by Jack ,2016-06-03 17:18 bengin
 	// -> register EmployeeService to load employee informartion
@@ -238,7 +235,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		indentProject.setState(IndentProject.PROJECT_CANCEL);
 		long l = indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_CANCEL,
 				indentProject.getDescription());
-		indentCommentService.createSystemMsg("取消了" + indentProject.getProjectName() + "项目", indentProject);
+		indentCommentService.createSystemMsg("取消了" + indentProject.getProjectName() + "项目,原因："+ indentProject.getDescription(), indentProject);
 		return (l > 0);
 	}
 
