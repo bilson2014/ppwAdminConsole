@@ -6,7 +6,7 @@
 			SELECT 
 				ID AS id,
 				PROVINCEID AS provinceID,
-				PROVINCE AS province
+				PROVINCE AS provinceName
 			FROM PROVINCE
 		]]>
 	</select>
@@ -16,7 +16,7 @@
 			SELECT 
 				ID AS id,
 				PROVINCEID AS provinceID,
-				PROVINCE AS province
+				PROVINCE AS provinceName
 			FROM PROVINCE WHERE PROVINCEID = #{ProvinceId}
 		]]>
 	</select>

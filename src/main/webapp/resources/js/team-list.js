@@ -262,7 +262,7 @@ function addFuc(){ // 注册 增加按钮
 	$('#teamProvince').combobox({
 		url : getContextPath() + '/portal/get/provinces',
 		valueField : 'provinceID',
-		textField : 'province',
+		textField : 'provinceName',
 		onSelect : function(record){
 			$('#teamCity').combobox('clear');
 			var id = $('#teamProvince').combobox('getValue');
@@ -275,11 +275,10 @@ function addFuc(){ // 注册 增加按钮
 		,onLoadSuccess: function(record){
 			var id = $('#teamProvince').combobox('getValue');
 			$('#teamCity').combobox({
-				url : getContextPath() + '/portal/get/citys/'+rows[0].teamProvince,
+				url : getContextPath() + '/portal/get/citys/'+id,
 				valueField : 'cityID',
 				textField : 'city'
 			});
-			$('#teamCity').combobox('select',rows[0].teamCityName);
 		}
 	});
 	openDialog('dlg');
@@ -307,7 +306,7 @@ function editFuc(){ // 注册 修改 按钮
 		$('#teamProvince').combobox({
 			url : getContextPath() + '/portal/get/provinces',
 			valueField : 'provinceID',
-			textField : 'province',
+			textField : 'provinceName',
 			onSelect : function(record){
 				$('#teamCity').combobox('clear');
 				var id = $('#teamProvince').combobox('getValue');

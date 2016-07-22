@@ -12,7 +12,7 @@ public class Province extends BaseObject {
 
 	private int id; // 唯一ID
 	private String provinceID; // 省ID
-	private String province;// 省名
+	private String provinceName;// 省名
 
 	public int getId() {
 		return id;
@@ -30,12 +30,13 @@ public class Province extends BaseObject {
 		this.provinceID = provinceID;
 	}
 
-	public String getProvince() {
-		return province;
+	public String getProvinceName() {
+		return provinceName;
 	}
 
-	public void setProvince(String province) {
-		this.province = province;
+	public void setProvinceName(String provinceName) {
+		this.provinceName = provinceName;
 	}
+
 
 }

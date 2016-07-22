@@ -138,18 +138,16 @@
 					</div>
 				</div>
 				
-				<r:permission uri="/portal/product/part/update">
-					<div class="online">
-						<div class="lable l-width">推荐值</div>
-						<div class="d-float f-width1">
-							<input id="recommend" name="recommend" class="easyui-numberbox" required="true" precision="0" />
-						</div>
-						<div class="lable-right l-width">赞值</div>
-						<div class="d-float f-width1">
-							<input id="supportCount" name="supportCount" class="easyui-numberbox" required="true" precision="0" />
-						</div>
+				<div class="online">
+					<div class="lable l-width">推荐值</div>
+					<div class="d-float f-width1">
+						<input id="recommend" name="recommend" class="easyui-numberbox" required="true" precision="0" />
 					</div>
-				</r:permission>
+					<div class="lable-right l-width">赞值</div>
+					<div class="d-float f-width1">
+						<input id="supportCount" name="supportCount" class="easyui-numberbox" required="true" precision="0" />
+					</div>
+				</div>
 				
 				<div class="online">
 					<div class="lable l-width">视频文件</div>

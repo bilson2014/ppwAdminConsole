@@ -119,7 +119,8 @@
 				REALNAME,
 				QQ,
 				USERCOMPANY,
-				NOTE
+				NOTE,
+				CUSTOMERSOURCE
 		]]>
 				<if test="clientLevel != null">
 					,CLIENTLEVEL
@@ -137,7 +138,8 @@
 				#{realName},
 				#{qq},
 				#{userCompany},
-				#{note}
+				#{note},
+				#{customerSource}
 		]]>
 		
 		<if test="clientLevel != null">
@@ -334,7 +336,8 @@
 				TELEPHONE,
 				QQUNIQUE,
 				WBUNIQUE,
-				WECHATUNIQUE
+				WECHATUNIQUE,
+				CUSTOMERSOURCE
 			) VALUES(
 				#{userName},
 				#{imgUrl},
@@ -342,7 +345,8 @@
 				#{telephone},
 				#{qqUnique},
 				#{wbUnique},
-				#{wechatUnique}
+				#{wechatUnique},
+				${customerSource}
 			)
 		]]>
 	</insert>
