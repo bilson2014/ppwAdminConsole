@@ -326,7 +326,7 @@ function createEditor(name){
 	editor = KindEditor.create(name, {
 		cssPath : getContextPath() + '/resources/lib/kindeditor/plugins/code/prettify.css',
 		uploadJson : getContextPath() + '/kindeditor/uploadImage',
-		zIndex : 999999,
+		zIndex : 9999,
 		width : '520px',
 		height : '350px',
 		resizeType:0,

@@ -29,7 +29,7 @@ public final class VerifyFileUtils {
 		extDocList.add("pdf");
 	}
 
-	private final static long DEFAULT_FILE_MAX_SIZE = 250 * 1024;
+	private final static long DEFAULT_FILE_MAX_SIZE = 500 * 1024;
 
 	public static boolean verifyDocFile(String extName) {
 		extName = extName.toLowerCase();
