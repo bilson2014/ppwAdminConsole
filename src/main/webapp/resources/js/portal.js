@@ -57,7 +57,7 @@ $().ready(function(){
 	});
 	
 	// 每2分钟检测 订单状态，如果有 新订单 则弹出提示
-	/*checkIndentStatus();*/
+	checkIndentStatus();
 	//每2分钟检测 用户评级，如果有新用户未评级 则弹出提示
 	checkUsrClientLevel();
 	
@@ -65,10 +65,11 @@ $().ready(function(){
 
 // 查看 订单状态
 function checkIndentStatus(){
-	window.setInterval(loadStatus, 120000);
+	window.setInterval(loadStatus, 300000);
 	
 	function loadStatus(){
 		loadData(function(count){
+			$("#order").html("");
 			if(count > 0){
 				$('.l-btn').click();// 先清除所有的 alert 弹框
 				$(".badge").remove();
@@ -85,6 +86,7 @@ function checkIndentStatus(){
 					}
 				});
 				$.messager.alert('Warning','您有'+ count +'条订单未处理,请及时处理!');
+				$("#order").html('您有'+ count +'条订单未处理,请及时处理!');
 			} else {
 				$('.l-btn').click(); // 先清除所有的 alert 弹框
 				$('#menu').find('.tree-node').find('.badge').remove(); // 清除 徽章 效果
@@ -138,6 +140,7 @@ function editUserPwd(){
 function checkUsrClientLevel(){
 	window.setInterval(function(){
 		loadData(function(count){
+			$("#new_user").html('您有'+ count +'条订单未处理,请及时处理!');
 			if(count > 0){
 				$('.l-btn').click();// 先清除所有的 alert 弹框
 				$(".badge").remove();
@@ -154,10 +157,11 @@ function checkUsrClientLevel(){
 					}
 				});
 				$.messager.alert('Warning','您有'+ count +'用户未评级,请及时处理!');
+				$("#new_user").html('您有'+ count +'用户未评级,请及时处理!');
 			} else {
 				$('.l-btn').click(); // 先清除所有的 alert 弹框
 				$('#menu').find('.tree-node').find('.badge').remove(); // 清除 徽章 效果
 			}
 		}, getContextPath() + '/portal/user/getUnLevelUserNotice', null);
-	}, 120000);
+	}, 300000);
 }

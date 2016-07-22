@@ -30,10 +30,16 @@
 				   t.EMAIL AS email,
 				   t.ADDRESS AS address,
 				   t.FLAG AS flag,
-				   t.LOGINNAME AS loginName
-			FROM TEAM t
-				WHERE 1 = 1
-					AND t.flag <> 3
+				   t.LOGINNAME AS loginName,
+				   p.PROVINCE AS teamProvinceName,
+				   c.CITY AS teamCityName,
+				   t.TEAMPROVINCE AS teamProvince,
+				   t.TEAMCITY AS teamCity
+		    FROM TEAM t  
+		    	LEFT JOIN  PROVINCE p ON t.teamProvince = p.provinceID 
+				LEFT JOIN CITY c on t.teamCity = c.cityID
+			WHERE 1 = 1
+				AND t.flag <> 3
 		]]>
 		<if test="teamId != null and teamId != ''">
 			AND t.TEAMID = ${teamId}
@@ -44,16 +50,17 @@
 		<if test="priceRange != null and priceRange != ''">
 			AND t.PRICERANGE = #{priceRange}
 		</if>
-		<!--add by wanglc 2016-6-30 11:28:08 团队查询按照teamName like查询 begin  -->
+		<!--add by wanglc 2016-6-30 11:28:08 团队查询按照teamName like查询 begin -->
 		<if test="teamName != null and teamName != ''">
-			AND t.TEAMNAME  LIKE CONCAT('%',#{teamName},'%')  
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
 		</if>
-		<!--add by wanglc  2016-6-30 11:28:14 end  -->
+		<!--add by wanglc 2016-6-30 11:28:14 end -->
 		<if test="business != null and business != ''">
-			<foreach collection="business" item="bus" separator="OR" open="AND (" close=")">
+			<foreach collection="business" item="bus" separator="OR"
+				open="AND (" close=")">
 				t.BUSINESS LIKE CONCAT(CONCAT('%',#{bus}),'%')
 			</foreach>
-			
+
 		</if>
 		<![CDATA[		   
 			ORDER BY t.OD ASC,UPDATEDATE DESC,CREATEDATE DESC
@@ -71,28 +78,29 @@
 		<if test="teamId != null and teamId != ''">
 			AND t.TEAMID = ${teamId}
 		</if>
-		<!--add by wanglc 2016-7-4 15:56:31 团队查询按照teamName like查询 begin  -->
+		<!--add by wanglc 2016-7-4 15:56:31 团队查询按照teamName like查询 begin -->
 		<if test="teamName != null and teamName != ''">
-			AND t.TEAMNAME  LIKE CONCAT('%',#{teamName},'%')  
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
 		</if>
-		<!--add by wanglc  2016-7-4 15:56:39 end  -->
+		<!--add by wanglc 2016-7-4 15:56:39 end -->
 		<if test="flag != null and flag != ''">
 			AND t.FLAG = #{flag}
 		</if>
-		
+
 		<if test="loginName != null and loginName != ''">
 			AND t.LOGINNAME = #{loginName}
 		</if>
-		
+
 		<if test="priceRange != null and priceRange != ''">
 			AND t.PRICERANGE = #{priceRange}
 		</if>
-		
+
 		<if test="business != null and business != ''">
-			<foreach collection="business" item="bus" separator="OR" open="AND (" close=")">
+			<foreach collection="business" item="bus" separator="OR"
+				open="AND (" close=")">
 				t.BUSINESS LIKE CONCAT(CONCAT('%',#{bus}),'%')
 			</foreach>
-			
+
 		</if>
 	</select>
 
@@ -125,8 +133,10 @@
 				INFORESOURCE,
 				DESCRIPTION,
 				QQUNIQUE,
-				wbUnique,
-				wechatUnique
+				WBUNIQUE,
+				WECHATUNIQUE,
+				TEAMCITY,
+				TEAMPROVINCE
 			) VALUES (
 				#{teamName},
 				#{teamPhotoUrl},
@@ -154,7 +164,9 @@
 				#{description},
 				#{qqUnique},
 				#{wbUnique},
-				#{wechatUnique}
+				#{wechatUnique},
+				#{teamCity},
+				#{teamProvince}
 			)
 		]]>
 	</insert>
@@ -203,6 +215,16 @@
 		<if test="phoneNumber != null and phoneNumber != ''">
 			<![CDATA[
 				,PHONENUMBER = #{phoneNumber}
+			]]>
+		</if>
+		<if test="teamProvince != null and teamProvince != ''">
+			<![CDATA[
+				,TEAMPROVINCE = #{teamProvince}
+			]]>
+		</if>
+		<if test="teamCity != null and teamCity != ''">
+			<![CDATA[
+				,TEAMCITY = #{teamCity}
 			]]>
 		</if>
 		<![CDATA[
@@ -259,7 +281,9 @@
 				   t.PHONENUMBER AS phoneNumber,
 				   t.EMAIL AS email,
 				   t.ADDRESS AS address,
-				   t.LOGINNAME AS loginName
+				   t.LOGINNAME AS loginName,
+				   t.TEAMCITY AS teamCity,
+				   t.TEAMPROVINCE AS teamProvince
 			FROM TEAM t
 			WHERE TEAMID = ${teamId}
 		]]>
@@ -295,10 +319,9 @@
 				AND t.flag <> 3
 		]]>
 	</select>
-	
+
 	<select id="checkTeam" resultType="Team">
-	<!-- WHERE t.LOGINNAME = #{loginName}
-					AND t.PASSWORD = #{password} -->
+		<!-- WHERE t.LOGINNAME = #{loginName} AND t.PASSWORD = #{password} -->
 		<![CDATA[
 			SELECT t.TEAMID AS teamId,
 				   t.TEAMNAME AS teamName,
@@ -317,7 +340,7 @@
 				 WHERE  t.PHONENUMBER = #{phoneNumber}
 		]]>
 	</select>
-	
+
 	<select id="findTeamByLoginNameAndPwd" resultType="Team">
 		<![CDATA[
 			SELECT t.TEAMID AS teamId,
@@ -338,7 +361,7 @@
 					AND t.PASSWORD = #{password}
 		]]>
 	</select>
-	
+
 	<update id="recover">
 		<![CDATA[
 			UPDATE TEAM
@@ -346,7 +369,7 @@
 			WHERE PHONENUMBER = #{phoneNumber}
 		]]>
 	</update>
-	
+
 	<update id="updateTeamInfomation">
 		<![CDATA[
 			UPDATE TEAM
@@ -367,18 +390,20 @@
 					PRICERANGE = ${priceRange},
 					DEMAND = #{demand},
 					INFORESOURCE = ${infoResource},
-					DESCRIPTION = #{description}
+					DESCRIPTION = #{description},
+					TEAMPROVINCE = #{teamProvince},
+					teamCity = #{teamCity}
 		]]>
-		
+
 		<if test="phoneNumber != null and phoneNumber != ''">
-				,PHONENUMBER = #{phoneNumber}
+			,PHONENUMBER = #{phoneNumber}
 		</if>
 		
 		<![CDATA[
 			WHERE TEAMID = ${teamId}
 		]]>
 	</update>
-	
+
 	<update id="updatePasswordByLoginName">
 		<![CDATA[
 			UPDATE TEAM
@@ -386,7 +411,7 @@
 			WHERE LOGINNAME = #{loginName}
 		]]>
 	</update>
-	
+
 	<update id="updateTeamStatus">
 		<![CDATA[
 			UPDATE TEAM
@@ -394,7 +419,7 @@
 			WHERE TEAMID = ${teamId}
 		]]>
 	</update>
-	
+
 	<select id="checkExist" resultType="long">
 		<![CDATA[
 			SELECT COUNT(1)
@@ -408,8 +433,8 @@
 			AND t.LOGINNAME = #{loginName}
 		</if>
 	</select>
-	
-	
+
+
 	<select id="findTeamByNameOrContact" resultType="Team">
 		<![CDATA[
 			SELECT 
@@ -419,18 +444,19 @@
 				   t.LINKMAN AS loginName
 			 FROM TEAM t WHERE 1=1
 		]]>
-		
+
 		<if test="teamName != null and teamName != ''">
-			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')  
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
 		</if>
 		<if test="loginName != null and loginName != ''">
-			AND t.LOGINNAME LIKE CONCAT('%',#{loginName},'%') 
+			AND t.LOGINNAME LIKE CONCAT('%',#{loginName},'%')
 		</if>
-		<if test="(loginName == null or loginName == '') and (teamName == null or teamName == '') ">
+		<if
+			test="(loginName == null or loginName == '') and (teamName == null or teamName == '') ">
 			AND 1=2
 		</if>
 	</select>
-	
+
 	<select id="verificationTeamExist" resultType="Team">
 		<![CDATA[
 			SELECT t.TEAMID AS teamId,
@@ -448,22 +474,22 @@
 				OR wechatUnique = #{wechatUnique}
 		]]>
 	</select>
-	
+
 	<update id="updateUniqueId">
 		<![CDATA[
 			UPDATE TEAM 
 			SET
 			UPDATEDATE = CURRENT_TIMESTAMP
 		]]>
-		
+
 		<if test="qqUnique != null and qqUnique != ''">
 			,QQUNIQUE = #{qqUnique}
 		</if>
-		
+
 		<if test="wbUnique != null and wbUnique != ''">
 			,WBUNIQUE = #{wbUnique}
 		</if>
-		
+
 		<if test="wechatUnique != null and wechatUnique != ''">
 			,WECHATUNIQUE = #{wechatUnique}
 		</if>
@@ -474,14 +500,14 @@
 			TEAMID = ${teamId}
 		</where>
 	</update>
-	
+
 	<update id="updateTeamAccount">
 		<![CDATA[
 			UPDATE TEAM 
 			SET
 			UPDATEDATE = CURRENT_TIMESTAMP
 		]]>
-		
+
 		<if test="loginName != null and loginName != ''">
 			,LOGINNAME = #{loginName}
 		</if>
@@ -492,5 +518,5 @@
 			TEAMID = ${teamId}
 		</where>
 	</update>
-	
+
 </mapper>

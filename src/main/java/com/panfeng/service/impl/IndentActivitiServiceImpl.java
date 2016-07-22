@@ -158,15 +158,8 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 
 		boolean res = activitiEngineService.suspendProcess(processDefinitionKey, String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
-		// if (res) {
-		// indentCommentService.createSystemMsg(
-		// " 暂停了 " + indentProject.getProjectName() + "项目",
-		// indentProject);
-		// //add suspend state by laowang 2016.5.31 16:51 begin
-		// indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_SUSPEND);
-		// //add suspend state by laowang 2016.5.31 16:51 end
-		// }
-		indentCommentService.createSystemMsg(" 暂停了 " + indentProject.getProjectName() + "项目", indentProject);
+		indentCommentService.createSystemMsg(
+				" 暂停了 " + indentProject.getProjectName() + "项目，原因：" + indentProject.getDescription(), indentProject);
 		indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_SUSPEND,
 				indentProject.getDescription());
 		return res;
@@ -176,14 +169,6 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	public boolean resumeProcess(IndentProject indentProject) {
 		boolean res = activitiEngineService.resumeProcess(processDefinitionKey, String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
-		// if (res) {
-		// indentCommentService.createSystemMsg(
-		// " 恢复了 " + indentProject.getProjectName() + "项目",
-		// indentProject);
-		// //add resume state by laowang 2016.5.31 16:51 begin
-		// indentProjectMapper.updateState(indentProject.getId(),IndentProject.PROJECT_NORMAL);
-		// //add resume state by laowang 2016.5.31 16:51 end
-		// }
 		indentCommentService.createSystemMsg(" 恢复了 " + indentProject.getProjectName() + "项目", indentProject);
 		indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_NORMAL,
 				indentProject.getDescription());
@@ -205,21 +190,6 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	public boolean jumpTask(IndentProject indentProject, String activityId) {
 		boolean res = activitiEngineService.jumpTask(processDefinitionKey, String.valueOf(indentProject.getId()),
 				activityId, getIndentCurrentFlowId(indentProject));
-
-		// if (res) {
-		// String taskName="";
-		// List<ActivitiTask> list=getNodes(indentProject);
-		// for (ActivitiTask activitiTask : list) {
-		// if(activityId.equals(activitiTask.getTaskDefinitionKey())){
-		// taskName=activitiTask.getName();
-		// break;
-		// }
-		// }
-		// indentCommentService.createSystemMsg(
-		// " 将任务节点跳转到 -->" + taskName+ "阶段",
-		// indentProject);
-		// }
-
 		String taskName = "";
 		List<ActivitiTask> list = getNodes(indentProject);
 		for (ActivitiTask activitiTask : list) {
@@ -229,7 +199,6 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			}
 		}
 		indentCommentService.createSystemMsg(" 将任务节点跳转到 -->" + taskName + "阶段", indentProject);
-
 		return res;
 	}
 

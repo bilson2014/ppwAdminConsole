@@ -176,8 +176,30 @@
 	margin-left: -280px;
 	background-color: #ffffff;
 }
+.log-modalDialog {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 560px;
+	height: 280px;
+	margin-top: -140px;
+	margin-left: -280px;
+	background-color: #ffffff;
+}
 
 .picture-condition-body {
+	position: absolute;
+	width: 560px;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0px;
+	border: 1px solid #CCC;
+	background-color: #ffffff;
+	box-shadow: 1px 2px 4px 2px rgba(0, 0, 0, 0.3);
+	border-radius: 3px;
+}
+.log-condition-body {
 	position: absolute;
 	width: 560px;
 	left: 0;
@@ -207,8 +229,23 @@
 	text-align: center;
 	line-height:27px;
 }
+.log-submit{
+	float:right;
+	margin-left:3px;
+	width:75px;
+	height:27px;
+	text-align: center;
+	line-height:27px;
+}
 
 .p-label{
+	position: absolute;
+	top: 290px;
+	width: 550px;
+	height: 28px;
+	line-height: 28px;
+}
+.log-label{
 	position: absolute;
 	top: 290px;
 	width: 550px;

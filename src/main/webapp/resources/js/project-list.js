@@ -639,6 +639,33 @@ function loadResourceFuc(){
 	}
 }
 
+//日志列表
+function loadLogFuc(){
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length == 1){
+		$('#log-condition').removeClass('hide');
+		$('#log-cancel').unbind('click');
+		$('#log-cancel').bind('click',logCancelFuc);
+		var data = rows[0];
+		var projectId = data.id;
+		loadData(function(rList){
+			$("#log-container").html("");
+			var content = '';
+			$.each(rList,function(i,n){
+				content += '<div style="font-size:16px">在' +n.icCreateDate + " 时间    " + n.icContent + '</div>';
+			});
+			$("#log-container").append(content);
+		}, getContextPath() + '/getAllComment', $.toJSON({
+			id : projectId
+		}))
+	} else {
+		$.message('只能选择一条记录进行查看!');
+	}
+}
+//取消日志列表
+function logCancelFuc(){
+	$('#log-condition').addClass('hide');
+}
 // 取消文件列表
 function resourceCancelFuc(){
 	$('#picture-condition').addClass('hide');

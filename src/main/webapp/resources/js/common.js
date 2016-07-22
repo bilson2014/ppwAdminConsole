@@ -54,6 +54,25 @@ function loadData(Func,url,param){
 		}
 	});
 }
+//AJAX POST
+function syncLoadData(Func,url,param){
+	$.ajax({
+		url : url,
+		type : 'POST',
+		data : param,
+		dataType : 'json',
+		async:false,
+		contentType : 'application/json; charset=UTF-8',
+		success : function(data){
+			Func(data);
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			console.error('ajax(' + url + ')[' + jqXHR.status + ']' + jqXHR.statusText);
+			console.error(jqXHR.responseText);
+			console.error('[' + textStatus + ']' + errorThrown);
+		}
+	});
+}
 
 //导出excel
 function download(url,condition){

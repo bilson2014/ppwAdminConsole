@@ -382,22 +382,24 @@
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
 		</if>
-		
+		<!--modify by wanglc 2016-7-19 14:57:46修改为id倒序 begin
+		 ORDER BY i.IP_UPDATE_TIME DESC  -->
 		<![CDATA[
-			ORDER BY i.IP_UPDATE_TIME DESC
+			ORDER BY i.IP_ID DESC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
 
 	<select id="maxSize" resultType="java.lang.Long">
 		<![CDATA[
-			SELECT COUNT(1)
-			FROM INDENT_PROJECT i
-			LEFT JOIN SYNERGY s
-				ON s.s_project_id=i.ip_id 
-			LEFT JOIN TEAM t
-				ON i.IP_TEAMID=t.teamId
-			WHERE 1=1
+		SELECT COUNT(*)FROM	
+		(SELECT DISTINCT(i.IP_ID)
+		FROM INDENT_PROJECT i
+		LEFT JOIN SYNERGY s
+			ON s.s_project_id=i.ip_id 
+		LEFT JOIN TEAM t
+			ON i.IP_TEAMID=t.teamId
+		WHERE 1=1
 		]]>
 
 		<if test="projectId != null and projectId != ''">
@@ -439,8 +441,10 @@
 		<if test="isSynergy == 1">
 			AND (s.S_USER_ID = ${userId} OR i.IP_USER_ID = ${userId})
 		</if>
+		<![CDATA[
+		)t
+		]]>
 	</select>
-
 	<select id="getAllUser" resultType="IndentProject">
 		<![CDATA[
 			SELECT u.ID AS customerId,
@@ -450,7 +454,6 @@
 			FROM USERS u
 		]]>
 	</select>
-
 	<select id="getAllTeam" resultType="IndentProject">
 		<![CDATA[
 			SELECT t.TEAMID AS teamId,
@@ -547,9 +550,6 @@
      		WHERE  1 = 1
 		]]>
 	</select>
-
-	<!-- add by wanglc 2016-6-28 19:56:47 * 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 
-		begin -->
 	<select id="listWithPaginationAddSynergy" resultType="IndentProject">
 		<![CDATA[
 			SELECT  i.IP_ID AS id,
@@ -582,20 +582,20 @@
 				ON i.IP_CUSTOMERID=u.id 
 			LEFT JOIN TEAM t
 				ON i.IP_TEAMID=t.teamId
+			LEFT JOIN SYNERGY s
+				ON s.s_project_id=i.ip_id
 			WHERE 1 = 1
-			 and i.IP_USER_ID = ${userId}
+			AND s.S_USER_ID = ${userId}
 		]]>
-
 		<if test="projectId != null and projectId != ''">
 			AND i.IP_ID = ${projectId}
 		</if>
-
-		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
+		<!-- add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin -->
 		<if test="projectName != null and projectName != ''">
 			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
 		</if>
-		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
-		
+		<!-- add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin -->
+
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = ${state}
 		</if>
@@ -603,55 +603,55 @@
 		<if test="state == 0">
 			AND i.IP_STATE = ${state}
 		</if>
-		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
-		<if test="teamName != null and teamName != ''">
-			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
-		</if>
-		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
+		<!-- add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
+		<if test="teamName != null and teamName != ''">
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
+		</if>
+		<!-- add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
 
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
 		</if>
-		
 		<![CDATA[
-		UNION
-		SELECT  i.IP_ID AS id,
-				i.IP_PROJECT_NAME AS projectName,
-				u.USERNAME AS userName,
-				u.CLIENTLEVEL AS clientLevel,
-				i.IP_USER_CONTACT AS userContact,
-				i.IP_USER_PHONE AS userPhone,
-				t.TEAMNAME AS teamName,
-				i.IP_TEAM_CONTACT AS teamContact,
-				i.IP_TEAM_PHONE AS teamPhone,
-				i.IP_USER_TYPE AS userType,
-				i.IP_USER_ID AS userId,
-				i.IP_DESCRIPTION AS description,
-				i.IP_SERIAL AS serial,
-				i.IP_SOURCE AS source,
-				i.IP_STATE AS state,
-				i.IP_CUSTOMERID	AS customerId,
-				i.ip_teamId AS teamId,
-				i.IP_PRICE_FIRST AS priceFirst,
-				i.IP_PRICE_LAST AS priceLast,
-				i.IP_PRICE_FINISH AS priceFinish,
-				i.IP_REFERRER_ID AS referrerId,
-				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
-				i.IP_CUSTOMER_PAYMENT AS customerPayment,
-				i.IP_PROVIDER_PAYMENT AS providerPayment
+			ORDER BY i.IP_ID DESC
+		]]>
+	</select>	
+	<select id="listWithPaginationNoLimit" resultType="IndentProject">
+		<![CDATA[
+			SELECT  i.IP_ID AS id,
+					i.IP_PROJECT_NAME AS projectName,
+					u.USERNAME AS userName,
+					u.CLIENTLEVEL AS clientLevel,
+					i.IP_USER_CONTACT AS userContact,
+					i.IP_USER_PHONE AS userPhone,
+					t.TEAMNAME AS teamName,
+					i.IP_TEAM_CONTACT AS teamContact,
+					i.IP_TEAM_PHONE AS teamPhone,
+					i.IP_USER_TYPE AS userType,
+					i.IP_USER_ID AS userId,
+					i.IP_DESCRIPTION AS description,
+					i.IP_SERIAL AS serial,
+					i.IP_SOURCE AS source,
+					i.IP_STATE AS state,
+					i.IP_CUSTOMERID	AS customerId,
+					i.ip_teamId AS teamId,
+					i.IP_PRICE_FIRST AS priceFirst,
+					i.IP_PRICE_LAST AS priceLast,
+					i.IP_PRICE_FINISH AS priceFinish,
+					i.IP_REFERRER_ID AS referrerId,
+					DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
+					i.IP_CUSTOMER_PAYMENT AS customerPayment,
+					i.IP_PROVIDER_PAYMENT AS providerPayment
 				
 			FROM INDENT_PROJECT i 
 			LEFT JOIN USERS u 
 				ON i.IP_CUSTOMERID=u.id 
 			LEFT JOIN TEAM t
 				ON i.IP_TEAMID=t.teamId
-			LEFT JOIN SYNERGY s
-				ON s.s_project_id=i.ip_id
 			WHERE 1 = 1
-			AND s.S_USER_ID = ${userId}
 		]]>
 
 		<if test="projectId != null and projectId != ''">
@@ -662,7 +662,6 @@
 			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
 		</if>
 		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
-
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = ${state}
 		</if>
@@ -670,46 +669,17 @@
 		<if test="state == 0">
 			AND i.IP_STATE = ${state}
 		</if>
-		<if test="teamId != null and teamId != ''">
-			AND i.ip_teamId = ${teamId}
+
+		<if test="userId != null and userId != ''">
+			AND i.IP_USER_ID = ${userId}
 		</if>
+
 		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
 		<if test="teamName != null and teamName != ''">
 			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
 		</if>
 		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
-
-		<if test="source != null and source != ''">
-			AND i.IP_SOURCE = #{source}
-		</if>
-		<![CDATA[
-			LIMIT ${begin} , ${limit}
-		]]>
-
-	</select>
-	<select id="maxSizeAddSynergy" resultType="java.lang.Long">
-		<![CDATA[
-			SELECT  COUNT(1)
-			FROM INDENT_PROJECT i 
-			LEFT JOIN SYNERGY s
-				ON s.s_project_id=i.ip_id
-			WHERE 1 = 1
-			AND s.S_USER_ID = ${userId}
-			OR i.IP_USER_ID = ${userId}
-		]]>
-
-		<if test="projectId != null and projectId != ''">
-			AND i.IP_ID = ${projectId}
-		</if>
-
-		<if test="state != null and state != ''">
-			AND i.IP_STATE = #{state}
-		</if>
-
-		<if test="state == 0">
-			AND i.IP_STATE = ${state}
-		</if>
-
+		
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
@@ -718,9 +688,7 @@
 			AND i.IP_SOURCE = #{source}
 		</if>
 		<![CDATA[
-			LIMIT ${begin} , ${limit}
+			ORDER BY i.IP_ID DESC
 		]]>
 	</select>
-	<!-- add by wanglc 2016-6-28 19:56:47 * 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 
-		end -->
 </mapper>

@@ -138,15 +138,20 @@ public class ProjectController extends BaseController {
 
 		DataGrid<IndentProject> dataGrid = new DataGrid<IndentProject>();
 		//add by wanglc 2016-7-11 13:46:29 接口限制视频管家与协同人的选择关系begin
-		if(view.getUserId()==0 && view.getIsSynergy()==1){//搜索 只选择了是否协同,没有选择视频管家
+		if(whetherJustChooseSynergy(view)){//搜索 只选择了是否协同,没有选择视频管家
 			return dataGrid;
-		}
+		} 
 		//add by wanglc 2016-7-11 13:46:29 接口限制视频管家与协同人的选择关系begin
 		final List<IndentProject> list = indentProjectService.listWithPagination(view);
 		dataGrid.setRows(list);
 		final long total = indentProjectService.maxSize(view);
 		dataGrid.setTotal(total);
 		return dataGrid;
+	}
+
+	private boolean whetherJustChooseSynergy(final IndentProjectView view) {
+		boolean b = view.getUserId() == null && (view.getIsSynergy()!=null && view.getIsSynergy()==1);
+		return b;
 	}
 
 	@RequestMapping("/update")
