@@ -8,6 +8,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.domain.GlobalConstant;
+import com.panfeng.domain.ResourceToken;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.service.SessionInfoService;
 
@@ -31,12 +32,14 @@ public class SearchResourceInterceptor implements HandlerInterceptor {
 		final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO); // 获取session
 		
 		boolean flag = false;
+		String solrUrl = GlobalConstant.SOLR_URL;
 		// 如果是供应商和没有分类的用户，则只有首页推荐视频
 		if(info != null){
 			final String type =  info.getSessionType();
 			if(GlobalConstant.ROLE_EMPLOYEE.equals(type)){
 				// 如果是内部员工，则可以查询资源库
 				flag = true;
+				solrUrl = GlobalConstant.SOLR_EMPLOYEE_URL;
 			}else if(GlobalConstant.ROLE_CUSTOMER.equals(type)){
 				// 如果是用户，则判断是否定义级别
 				if(info.getClientLevel() != null){
@@ -60,7 +63,10 @@ public class SearchResourceInterceptor implements HandlerInterceptor {
 			flag = false;
 		}
 		
-		request.setAttribute("resourceToken", flag);
+		final ResourceToken token = new ResourceToken();
+		token.setFlag(flag);
+		token.setSolrUrl(solrUrl);
+		request.setAttribute("resourceToken", token);
 		return true;
 	}
 	
