@@ -540,6 +540,7 @@
 				   pro.TAGS AS tags,
 				   pro.SHOWTYPE AS showType,
 				   pro.SESSIONID AS sessionId,
+				   pro.RECOMMEND AS recommend,
 				   ser.SERVICEREALPRICE AS serviceRealPrice,
 				   ser.SERVICEPRICE AS servicePrice,
 				   t.TEAMNAME AS teamName

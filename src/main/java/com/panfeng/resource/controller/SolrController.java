@@ -1,20 +1,15 @@
 package com.panfeng.resource.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.dao.PortalVideoDao;
+import com.panfeng.domain.GlobalConstant;
+import com.panfeng.domain.ResourceToken;
 import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Solr;
 import com.panfeng.resource.view.DataGrid;
@@ -44,24 +41,6 @@ public class SolrController extends BaseController {
 	@Autowired
 	private final PortalVideoDao videoDao = null;
 	
-	private static final Logger logger = LoggerFactory.getLogger("error");
-	
-	private static String SOLR_URL = null;
-	
-	public SolrController() {
-		if(SOLR_URL == null || "".equals(SOLR_URL)){
-			final InputStream is = this.getClass().getClassLoader().getResourceAsStream("jdbc.properties"); 
-			try {
-				Properties propertis = new Properties();
-				propertis.load(is);
-				SOLR_URL = propertis.getProperty("solr.url");
-			} catch (IOException e) {
-				logger.error("Solr load Properties fail ...");
-				e.printStackTrace();
-			}
-		}
-	}
-
 	@RequestMapping("/solr-list")
 	public ModelAndView SolrView(){
 		
@@ -114,7 +93,7 @@ public class SolrController extends BaseController {
 		
 		// 设置排序规则-按照价格升序排列
 		//query.setSort("productName", ORDER.desc);
-		final List<Solr> list = service.queryDocs(SOLR_URL, query);
+		final List<Solr> list = service.queryDocs(GlobalConstant.SOLR_URL, query);
 		long total = 0l;
 		if(list != null && !list.isEmpty()){
 			final Solr solr = list.get(0);
@@ -133,11 +112,14 @@ public class SolrController extends BaseController {
 	public List<Solr> search(@RequestBody final SolrView view,final HttpServletRequest request){
 		
 		try {
-			final boolean flag = (boolean) request.getAttribute("resourceToken"); // 访问资源库令牌
+			final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
+			
+			final boolean flag = token.flag;
 			
 			final Map<Long,Product> productMap = videoDao.getProductsFromRedis();
 			
 			String condition = URLDecoder.decode(view.getCondition(), "UTF-8");
+			
 			//condition = HanlpUtil.segment(condition);
 
 			final SolrQuery query = new SolrQuery();
@@ -194,7 +176,7 @@ public class SolrController extends BaseController {
 			query.setHighlightSimplePre("<font color=\"red\">");
 			query.setHighlightSimplePost("</font>");
 			
-			final List<Solr> list = service.queryDocs(SOLR_URL, query);
+			final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
 			
 			// 如果没有访问资源，那么只能搜索首页推荐视频
 			final List<Solr> resultList = new ArrayList<Solr>();
@@ -202,6 +184,8 @@ public class SolrController extends BaseController {
 				for (final Solr solr : list) {
 					final String productId = solr.getProductId();
 					final Product product = productMap.get(Long.parseLong(productId));
+					final long total = list.size();
+					solr.setTotal(total);
 					if(product != null){
 						resultList.add(solr);
 					}
@@ -270,7 +254,7 @@ public class SolrController extends BaseController {
 			query.setHighlightSimplePre("<font color=\"red\">");
 			query.setHighlightSimplePost("</font>");
 			
-			final List<Solr> list = service.queryDocs(SOLR_URL, query);
+			final List<Solr> list = service.queryDocs(GlobalConstant.SOLR_URL, query);
 			return list;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -289,7 +273,7 @@ public class SolrController extends BaseController {
 				query.set("qt", "/suggest");
 				query.set("q", word);
 				query.set("spellcheck.build", "true");
-				List<String> list = service.suggestDocs(SOLR_URL, query);
+				List<String> list = service.suggestDocs(GlobalConstant.SOLR_URL, query);
 				final List<Solr> sList = new ArrayList<Solr>();
 				if (list != null){
 					
