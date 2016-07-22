@@ -72,6 +72,8 @@
 	<div id="toolbar" style="display: none;">
 		<a onclick="loadResourceFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">文件列表</a>
 		
+		<a onclick="loadLogFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">日志列表</a>
+		
 		<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 	</div>
 	
@@ -97,5 +99,17 @@
 			</div>
 		</div>
 		<!-- file list show content end-->
+		
+		<div id="log-condition" class="log-condition hide">
+			<div class="log-modalDialog">
+				<div class="log-condition-body">
+					<div class="operation-panel" id="log-container">
+					</div>
+					<div class="log-label">
+						<a href="javascript:void(0);" class="button log-submit" id="log-cancel">取消</a>
+					</div>
+				</div>
+			</div>
+		</div>
 </body>
 </html>
