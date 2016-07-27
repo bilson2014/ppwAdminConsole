@@ -266,7 +266,7 @@ public class UserController extends BaseController {
 	 * 用户信息-修改用户基本信息(昵称、性别、真实姓名、电子邮件、QQ)
 	 */
 	@RequestMapping("/user/modify/info")
-	public boolean modifyUserInfo(@RequestBody final User user) {
+	public boolean modifyUserInfo(@RequestBody final User user,HttpServletRequest request) {
 
 		boolean flag = true;
 		try {
@@ -276,8 +276,14 @@ public class UserController extends BaseController {
 				user.setRealName(URLDecoder.decode(user.getRealName(), "UTF-8"));
 				user.setUserName(URLDecoder.decode(user.getUserName(), "UTF-8"));
 
-				if (user.getId() != 0)
+				if (user.getId() != 0){
 					userService.modifyUserInfo(user);
+					//add by wanglc 修改个人资料后,更新缓存 2016-7-26 19:27:47 begin
+					sessionService.removeSession(request);
+					initSessionInfo(user, request);
+					//add by wanglc 修改个人资料后,更新缓存 2016-7-26 19:27:47 end
+					
+				}
 				else
 					flag = false;
 
