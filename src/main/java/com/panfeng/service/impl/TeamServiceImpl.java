@@ -1,6 +1,8 @@
 package com.panfeng.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -307,6 +309,56 @@ public class TeamServiceImpl implements TeamService {
 	@Override
 	public long updateTeamAccount(Team original) {
 		return mapper.updateTeamAccount(original);
+	}
+
+	@Override
+	public Map<String, Object> thirdStatus(Team t) {
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("qq", "0");
+		map.put("wechat","0");
+		map.put("wb", "0");
+		Team team = mapper.findTeamById(t.getTeamId());
+		if(null!=team){
+			if(ValidateUtil.isValid(team.getQqUnique())){
+				map.put("qq", "1");
+			}
+			if(ValidateUtil.isValid(team.getWechatUnique())){
+				map.put("wechat", "1");
+			}
+			if(ValidateUtil.isValid(team.getWbUnique())){
+				map.put("wb", "1");
+			}
+		}
+		return map;
+	}
+
+	@Override
+	public boolean teamInfoBind(Team t) {
+		//查询第三方是不是存在绑定
+		List<Team> list = mapper.verificationTeamExistByThirdLogin(t);
+		if(list.size()>0){
+			return false;//已经存在绑定
+		}else{
+			Team team = mapper.findTeamById(t.getTeamId());
+			if(t.getThirdLoginType().equals("qq")){
+				team.setQqUnique(t.getUniqueId());
+			}else if(t.getThirdLoginType().equals("weibo")){
+				team.setWbUnique(t.getUniqueId());
+			}else if(t.getThirdLoginType().equals("wechat")){
+				team.setWechatUnique(t.getUniqueId());
+			}
+			if(!ValidateUtil.isValid(team.getTeamName())){
+				team.setTeamName(t.getTeamName());
+			}
+			mapper.updateUniqueId(team);
+			return true;
+		}
+	}
+
+	@Override
+	public boolean teamInfoUnBind(Team team) {
+		mapper.unBindThird(team);
+		return true;
 	}
 
 }

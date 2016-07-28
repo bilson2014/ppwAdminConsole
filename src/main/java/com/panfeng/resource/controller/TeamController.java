@@ -701,12 +701,39 @@ public class TeamController extends BaseController {
 		return sessionService.addSession(request, map);
 	}
 	@RequestMapping("/team/static/data/add/account")
-	public boolean addAccount(@RequestBody final Team team) {
+	public boolean addAccount(@RequestBody final Team team,HttpServletRequest request) {
 		long count = service.updateTeamAccount(team);
 		if (count > 0) {
+			Team t = service.findTeamById(team.getTeamId());
+			sessionService.removeSession(request);
+			initSessionInfo(t, request);
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * 查询第三方绑定状态
+	 */
+	@RequestMapping("/team/third/status")
+	public Map<String, Object> thirdStatus(@RequestBody final Team team, HttpServletRequest request) {
+		Map<String, Object> map = service.thirdStatus(team);
+		return map;
+	}
+	
+	/**
+	 * 用户资料页面绑定第三方
+	 */
+	@RequestMapping("/team/info/bind")
+	public boolean userInfoBind(@RequestBody final Team team, HttpServletRequest request) {
+		return service.teamInfoBind(team);
+	}
+	/**
+	 * 用户资料页面解除绑定第三方
+	 */
+	@RequestMapping("/team/info/unbind")
+	public boolean userInfoUnBind(@RequestBody final Team team, HttpServletRequest request) {
+		return service.teamInfoUnBind(team);
 	}
 
 }
