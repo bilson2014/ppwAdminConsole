@@ -477,6 +477,7 @@ public class UserController extends BaseController {
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(user.getId());
 		info.setClientLevel(user.getClientLevel()); // 客户级别
+		info.setTelephone(user.getTelephone());
 
 		final Role role = roleService.findRoleById(3l); // 获取用户角色
 		final List<Role> roles = new ArrayList<Role>();
@@ -543,4 +544,27 @@ public class UserController extends BaseController {
 		return map;
 	}
 	
+	/**
+	 * 查询第三方绑定状态
+	 */
+	@RequestMapping("/user/third/status")
+	public Map<String, Object> thirdStatus(@RequestBody final User user, HttpServletRequest request) {
+		Map<String, Object> map = userService.thirdStatus(user);
+		return map;
+	}
+	
+	/**
+	 * 用户资料页面绑定第三方
+	 */
+	@RequestMapping("/user/info/bind")
+	public boolean userInfoBind(@RequestBody final User user, HttpServletRequest request) {
+		return userService.userInfoBind(user);
+	}
+	/**
+	 * 用户资料页面解除绑定第三方
+	 */
+	@RequestMapping("/user/info/unbind")
+	public boolean userInfoUnBind(@RequestBody final User user, HttpServletRequest request) {
+		return userService.userInfoUnBind(user);
+	}
 }

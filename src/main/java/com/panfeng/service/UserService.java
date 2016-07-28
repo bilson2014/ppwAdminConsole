@@ -103,8 +103,6 @@ public interface UserService {
 
 	/**
 	 * 获取新注册的用户数量，用来提示客服还有多少新注册用户未完成分级
-	 * 
-	 * @return
 	 */
 	public long findUnlevelUsers();
 
@@ -112,17 +110,27 @@ public interface UserService {
 
 	public Map<String, Object> bindThird(ThirdBind bind);
 
-	// add by wanglc 2016-7-13 14:27:00 begin
 	/**
 	 * 根据loginName和密码查询用户
-	 * 
-	 * @param user
-	 * @return
 	 */
 	public User findUserByLoginNameAndPwd(User user);
-	// add by wanglc 2016-7-13 14:27:00 end
 
 	public long modifyUserLoginName(User user);
+
+	/**
+	 * 查询第三方绑定状态
+	 */
+	public Map<String, Object> thirdStatus(User user);
+
+	/**
+	 * 用户个人资料页面绑定第三方
+	 */
+	public boolean userInfoBind(User user);
+
+	/**
+	 * 用户个人资料页面解除绑定第三方
+	 */
+	public boolean userInfoUnBind(User user);
 
 
 }

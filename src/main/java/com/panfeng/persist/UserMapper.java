@@ -89,22 +89,19 @@ public interface UserMapper {
 
 	/**
 	 * 获取新注册的用户数量，用来提示客服还有多少新注册用户未完成分级
-	 * 
-	 * @return
 	 */
 	public long findUnlevelUsers();
 
 	public User findUserByPhone(String telephone);
 
-	// add by wanglc 2016-7-13 14:35:49 begin
 	/**
 	 * 根据用户名和密码查询用户
-	 * 
-	 * @param user
 	 */
 	public User findUserByLoginNameAndPwd(User user);
-	// add by wanglc 2016-7-13 14:35:49 begin
 
 	// 修改用户名和密码
 	public long modifyUserLoginName(User user);
+
+	//解除第三方绑定
+	public void unBindThird(User u);
 }

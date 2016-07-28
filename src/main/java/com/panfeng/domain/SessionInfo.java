@@ -32,6 +32,17 @@ public class SessionInfo extends BaseObject {
 	
 	private boolean isIdentification = false; // 供应商是否被审核
 	
+	//add by wanglc 缓存手机号信息
+	private String  telephone = null;//手机号
+	
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
 	public String getToken() {
 		return token;
 	}
