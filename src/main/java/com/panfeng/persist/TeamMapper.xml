@@ -559,4 +559,11 @@
 			   OR WECHATUNIQUE = #{uniqueId}
 		]]>
 	</select>
+	<update id="modifyTeamPhone">
+		<![CDATA[
+			UPDATE TEAM
+				SET PHONENUMBER =  #{phoneNumber}
+			WHERE TEAMID = ${teamId}
+		]]>
+	</update>
 </mapper>

@@ -111,4 +111,6 @@ public interface TeamMapper {
 	public void unBindThird(Team team);
 
 	public List<Team> verificationTeamExistByThirdLogin(Team t);
+
+	public long modifyTeamPhone(Team team);
 }

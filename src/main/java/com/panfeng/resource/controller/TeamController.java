@@ -34,6 +34,7 @@ import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Role;
 import com.panfeng.resource.model.Team;
+import com.panfeng.resource.model.User;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.TeamView;
@@ -734,6 +735,18 @@ public class TeamController extends BaseController {
 	@RequestMapping("/team/info/unbind")
 	public boolean userInfoUnBind(@RequestBody final Team team, HttpServletRequest request) {
 		return service.teamInfoUnBind(team);
+	}
+	/**
+	 * 供应商信息-修改供应商手机号码
+	 */
+	@RequestMapping("/team/modify/phone")
+	public boolean modifyUserPhone(@RequestBody final Team team) {
+		boolean result = false;
+		final long ret = service.modifyTeamPhone(team);
+		if (ret > 0) {
+			result = true;
+		}
+		return result;
 	}
 
 }
