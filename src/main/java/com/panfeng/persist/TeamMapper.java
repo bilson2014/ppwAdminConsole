@@ -107,4 +107,9 @@ public interface TeamMapper {
 
 	// 添加团队共享登录名 密码
 	public long updateTeamAccount(Team team);
+	
+	// 重置代表作
+	public void resetMasterWork(@Param("teamId")final long teamId);
+	
+	public void setMasterWork(@Param("productId")final long productId,@Param("status") int status);
 }

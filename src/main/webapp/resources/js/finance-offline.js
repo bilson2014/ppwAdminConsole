@@ -3,7 +3,7 @@ var flag  ;	  //判断新增和修改方法
 var formUrl;
 var datagrid;
 $().ready(function(){
-		
+	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath()+ '/portal/finance-offline/list',
@@ -22,8 +22,8 @@ $().ready(function(){
 						title : '交易流水号',
 						align : 'center'
 					},{
-						field : 'userName' ,
-						title : '交易方' ,
+						field : 'projectName',
+						title : '项目名称',
 						align : 'center'
 					},{
 						field : 'payTime',
@@ -56,8 +56,8 @@ $().ready(function(){
 						title : '订单编号',
 						align : 'center'
 					},{
-						field : 'projectName',
-						title : '项目名称',
+						field : 'userName' ,
+						title : '交易方' ,
 						align : 'center'
 					},{
 						field : 'payPrice',
@@ -191,6 +191,20 @@ function openDialog(id,data){
 				textField : 'projectName',
 				onSelect : function(record){
 					$('#projectName').val(record.projectName);
+					var id = $('#projectId').combobox('getValue');
+					loadData(function(flag){
+						var userId = flag.customerId;
+						$('#userId').combobox('setValue',userId);
+						var userName = $('#userId').combobox('getText');
+						$('#userName').val(userName);
+					}, getContextPath() + '/project/get-projectInfo', $.toJSON({
+						id : id
+					}));
+				},
+				filter: function(q, row){
+					if(row.projectName == null)
+						return false;
+					return row.projectName.indexOf(q) >= 0;
 				}
 			});
 			
@@ -200,15 +214,23 @@ function openDialog(id,data){
 				textField : 'userName',
 				onSelect : function(record){
 					$('#userName').val(record.userName);
+				},
+				filter: function(q, row){
+					// 修改过滤器增加模糊搜索
+					if(row.userName == null)
+						return false;
+					return row.userName.indexOf(q) >= 0;
 				}
 			});
 			
 			if(data != null && data != undefined && data != ''){
 				var userId = data.userId;
 				var projectId = data.projectId;
-				
+				 
 				if(userId != null && userId != undefined && userId != ''){
 					$('#userId').combobox('setValue',userId);
+					var userName = $('#userId').combobox('getText');
+					$('#userName').val(userName);
 				}else {
 					$('#userId').combobox('setValue','');
 				}

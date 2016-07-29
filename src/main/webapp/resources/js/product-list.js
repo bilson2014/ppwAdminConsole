@@ -136,7 +136,7 @@ $().ready(function(){
 						field : 'recommend' ,
 						title : '推荐值' ,
 						align : 'center' ,
-						width : 60,
+						width : 50,
 						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
@@ -210,6 +210,24 @@ $().ready(function(){
 						title : '文件夹编号' ,
 						align : 'center' ,
 						width : 80
+					},{
+						field : 'creationTime' ,
+						title : '作品创作时间' ,
+						align : 'center' ,
+						width : 100
+					},{
+						field : 'masterWork' ,
+						title : '代表作' ,
+						align : 'center' ,
+						width : 100,
+						sortable : true ,
+						formatter : function(value , record , index){
+							if(value == 0){
+								return '';
+							} else if( value == 1){
+								return '<span style=color:green; >代表作品</span>' ; 
+							} 
+						}
 					}]] ,
 		pagination: true ,
 		pageSize : 50,
@@ -504,4 +522,23 @@ function searchFun(){
 function cleanFun() {
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {});
+}
+//设置代表作
+function setMaster(){
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length == 1){
+		var productId  = $.trim(rows[0].productId);
+		var teamId  = $.trim(rows[0].teamId);
+		loadData(function(){
+			datagrid.datagrid('clearSelections');
+			datagrid.datagrid('reload');
+			progressClose();
+			$.message('操作成功!');
+		}, getContextPath() + '/portal/set/masterWork',$.toJSON({
+			productId : productId,
+			teamId:teamId
+		}));
+	} else {
+		$.message('只能选择一条记录进行修改!');
+	}
 }

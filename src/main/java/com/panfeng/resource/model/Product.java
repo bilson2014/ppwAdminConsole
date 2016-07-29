@@ -10,6 +10,12 @@ import com.panfeng.domain.BaseObject;
 public class Product extends BaseObject {
 
 	private static final long serialVersionUID = 1070045570754608438L;
+	
+	public  static int MASTERWORK_LEVEL_0 = 0; // 普通项目
+	
+	public  static int MASTERWORK_LEVEL_1 = 1;	// 代表作
+	
+	public  static int MASTERWORK_LEVEL_2 = 2;
 
 	private long productId = 0l;
 
@@ -66,7 +72,26 @@ public class Product extends BaseObject {
 	private String tags = null; // 标签字段
 
 	private String sessionId = null;
+	
+	private String creationTime = null; // 创作时间
+	
+	private Integer masterWork = null; // 推荐作品，0为正常 1 为推荐 
 
+	public String getCreationTime() {
+		return creationTime;
+	}
+
+	public void setCreationTime(String creationTime) {
+		this.creationTime = creationTime;
+	}
+
+	public Integer getMasterWork() {
+		return masterWork;
+	}
+
+	public void setMasterWork(Integer masterWork) {
+		this.masterWork = masterWork;
+	}
 
 	public long getServiceId() {
 		return serviceId;

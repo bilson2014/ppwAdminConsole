@@ -71,9 +71,9 @@
 	                <label>交易流水号:</label>
 	                <input name="unOrderId" class="easyui-textbox" required="true" />
 	            </div>
-	            <div class="fitem">
-	                <label>交易方:</label>
-	                <input id="userId" name="userId" class="easyui-combobox" required="true" />
+	           <div class="fitem">
+	                <label>项目名称:</label>
+	               	<input id="projectId" name="projectId" class="easyui-combobox" required="true" />
 	            </div>
 	            <div class="fitem">
 	                <label>交易时间:</label>
@@ -86,9 +86,9 @@
            				<option value="1" >出账</option>
 					</select>
 	            </div>
-	            <div class="fitem">
-	                <label>项目名称:</label>
-	               	<input id="projectId" name="projectId" class="easyui-combobox" required="true" />
+	             <div class="fitem">
+	                <label>交易方:</label>
+	                <input id="userId" name="userId" class="easyui-combobox" required="true" />
 	            </div>
 	            <div class="fitem">
 	                <label>交易金额:</label>

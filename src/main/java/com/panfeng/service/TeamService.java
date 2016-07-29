@@ -3,6 +3,7 @@ package com.panfeng.service;
 import java.util.List;
 
 import com.panfeng.domain.BaseMsg;
+import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.TeamView;
 
@@ -141,4 +142,6 @@ public interface TeamService {
 	public Team findTeamByLoginNameAndPwd(Team original);
 
 	public long updateTeamAccount(Team original);
+	
+	public void setMasterWork(final Product product);
 }

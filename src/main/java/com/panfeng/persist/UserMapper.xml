@@ -226,7 +226,8 @@
 		   u.WECHATUNIQUE AS wechatUnique,
 		   u.REALNAME AS realName,
 		   u.USERCOMPANY AS userCompany,
-		   u.CLIENTLEVEL AS clientLevel
+		   u.CLIENTLEVEL AS clientLevel,
+		   u.LOGINNAME AS loginName
 			FROM USERS u
 			WHERE 1=1
 		]]>

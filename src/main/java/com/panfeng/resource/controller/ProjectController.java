@@ -85,7 +85,6 @@ public class ProjectController extends BaseController {
 
 	@RequestMapping("/getProjectTags")
 	public List<BizBean> getProjectTags() {
-
 		return indentProjectService.getTags();
 	}
 

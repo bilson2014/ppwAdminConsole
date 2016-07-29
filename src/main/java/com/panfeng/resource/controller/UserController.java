@@ -440,6 +440,7 @@ public class UserController extends BaseController {
 	@RequestMapping("/user/save/simple")
 	public long addSimpleUser(@RequestBody final User user) {
 		return userService.simpleSave(user);
+		
 	}
 
 	/**
@@ -464,14 +465,13 @@ public class UserController extends BaseController {
 		// 存入session中
 		final String sessionId = request.getSession().getId();
 		final SessionInfo info = new SessionInfo();
-		info.setLoginName(user.getUserName());
+		info.setLoginName(user.getLoginName());
 		info.setRealName(user.getRealName());
 		info.setSessionType(GlobalConstant.ROLE_CUSTOMER);
 		info.setSuperAdmin(false);
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(user.getId());
 		info.setClientLevel(user.getClientLevel()); // 客户级别
-
 		final Role role = roleService.findRoleById(3l); // 获取用户角色
 		final List<Role> roles = new ArrayList<Role>();
 		roles.add(role);
@@ -534,6 +534,7 @@ public class UserController extends BaseController {
 				initSessionInfo(user, request);
 			}
 		}
+	
 		return map;
 	}
 	

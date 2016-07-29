@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.persist.TeamMapper;
+import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.TeamView;
 import com.panfeng.service.TeamService;
@@ -307,6 +308,14 @@ public class TeamServiceImpl implements TeamService {
 	@Override
 	public long updateTeamAccount(Team original) {
 		return mapper.updateTeamAccount(original);
+	}
+
+	@Override
+	public void setMasterWork(Product product) {
+		// 重置所有代表作初始值
+		mapper.resetMasterWork(product.getTeamId());
+		// 设置代表作
+		mapper.setMasterWork(product.getProductId(), Product.MASTERWORK_LEVEL_1);
 	}
 
 }

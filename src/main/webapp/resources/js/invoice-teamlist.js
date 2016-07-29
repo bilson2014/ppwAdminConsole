@@ -200,13 +200,33 @@ function openDialog(id,data){
 			$('#invoiceProjectId').combobox({
 				url : getContextPath() + '/project/all',
 				valueField : 'projectId',
-				textField : 'projectName'
+				textField : 'projectName',
+				filter: function(q, row){
+					if(row.projectName == null)
+						return false;
+					return row.projectName.indexOf(q) >= 0;
+				},
+				onSelect : function(record){
+					var id = $('#invoiceProjectId').combobox('getValue');
+					loadData(function(flag){
+						var teamId = flag.teamId;
+						$('#invoiceProviderId').combobox('setValue',teamId);
+					}, getContextPath() + '/project/get-projectInfo', $.toJSON({
+						id : id
+					}));
+				}
 			});
 			
 			$('#invoiceProviderId').combobox({
 				url : getContextPath() + '/project/getAllTeam',
 				valueField : 'teamId',
-				textField : 'teamName'
+				textField : 'teamName',
+				filter: function(q, row){
+					// 修改过滤器增加模糊搜索
+					if(row.userName == null)
+						return false;
+					return row.userName.indexOf(q) >= 0;
+				}
 			});
 			
 			if(data != null && data != undefined && data != ''){

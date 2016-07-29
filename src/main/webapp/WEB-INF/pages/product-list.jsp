@@ -12,7 +12,7 @@
 <spring:url value="/resources/lib/kindeditor/kindeditor-all-min.js" var="kindeditorJs" />
 <spring:url value="/resources/lib/kindeditor/plugins/code/prettify.js" var="prettifyJs" />
 <spring:url value="/resources/lib/kindeditor/lang/zh_CN.js" var="kindeditorzhJs" />
-
+<spring:url value="/resources/lib/My97DatePicker/WdatePicker.js" var="WdatePickerJs" />
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -32,6 +32,7 @@
 <script src="${kindeditorzhJs }"></script>
 <script src="${youkuJs }"></script>
 <script src="${productListJs }"></script>
+<script src="${WdatePickerJs }" ></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 	
@@ -93,6 +94,8 @@
 			</r:permission>
 			
 			<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
+			
+			<a onclick="setMaster();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">设为代表作</a>
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 500px;"
@@ -141,11 +144,11 @@
 				<div class="online">
 					<div class="lable l-width">推荐值</div>
 					<div class="d-float f-width1">
-						<input id="recommend" name="recommend" class="easyui-numberbox" required="true" precision="0" />
+						<input id="recommend" name="recommend" class="easyui-numberbox" style="width: 141px" required="true" precision="0" />
 					</div>
-					<div class="lable-right l-width">赞值</div>
+					<div class="lable-right l-width">创作时间</div>
 					<div class="d-float f-width1">
-						<input id="supportCount" name="supportCount" class="easyui-numberbox" required="true" precision="0" />
+						<input class="textbox" name="creationTime" id = "creationTime" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly"/>
 					</div>
 				</div>
 				
@@ -173,8 +176,13 @@
 				
 				<div class="online">
 					<div class="lable l-width">标签</div>
-					<div class="d-float f-width">
+					<div class="d-float f-width1">
 						<input type="text" id="tags" name="tags" class="easyui-textbox" />
+					</div>
+					
+					<div class="lable-right l-width">赞值</div>
+					<div class="d-float f-width1">
+						<input id="supportCount" name="supportCount" class="easyui-numberbox" required="true" precision="0" />
 					</div>
 				</div>
 				
