@@ -70,21 +70,19 @@ public class CommonController extends BaseController {
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		if(null!=sessionInfo){
 			String type = sessionInfo.getSessionType();
-			switch (type) {
+			switch (type) { 
 			case "role_customer":
 				User user = userService.findUserById(sessionInfo.getReqiureId());
 				if(ValidateUtil.isValid(user.getLoginName())){
 					return true;
-				}
-				break;
+				}return false;
 			case "role_provider":
 				Team team = teamService.findTeamById(sessionInfo.getReqiureId());
 				if(ValidateUtil.isValid(team.getLoginName())){
 					return true;
-				}
-				break;
+				}return false;
 			}
 		}
-		return false;
+		return true;
 	}
 }

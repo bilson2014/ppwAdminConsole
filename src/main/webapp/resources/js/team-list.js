@@ -323,6 +323,7 @@ function editFuc(){ // 注册 修改 按钮
 					valueField : 'cityID',
 					textField : 'city'
 				});
+
 				$('#teamCity').combobox('setValue',rows[0].teamCityName);
 			}
 		});
