@@ -5,8 +5,12 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.panfeng.domain.GlobalConstant;
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.User;
+import com.panfeng.service.SessionInfoService;
 
 /**
  * 资源基类
@@ -17,7 +21,8 @@ import com.panfeng.resource.model.User;
 public abstract class BaseController {
 
 	private static Logger logger = LoggerFactory.getLogger("error");
-	
+	@Autowired
+	final SessionInfoService sessionService = null;
 	// get current user
 	protected User getUser (final HttpServletRequest request){
 		
@@ -34,6 +39,12 @@ public abstract class BaseController {
 			user.setUserName("缺省用户");
 		}
 		return user;
+	}
+	
+	
+	protected SessionInfo getCurrentInfo(final HttpServletRequest request){
+		final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
+		return info;
 	}
 	
 }

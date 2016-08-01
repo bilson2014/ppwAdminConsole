@@ -15,6 +15,7 @@ import com.panfeng.resource.model.User;
 import com.panfeng.resource.view.UserView;
 import com.panfeng.service.UserService;
 import com.panfeng.util.DataUtil;
+import com.panfeng.util.ValidateUtil;
 
 @Transactional
 @Service
@@ -261,17 +262,71 @@ public class UserServiceImpl implements UserService {
 		return map;
 	}
 
-	// add by wanglc 2016-7-13 14:27:34 begin
 	// 根据用户名和密码查询用户
 	@Override
 	public User findUserByLoginNameAndPwd(User user) {
 		return mapper.findUserByLoginNameAndPwd(user);
 	}
-	// add by wanglc 2016-7-13 14:27:34 begin
 
 	@Override
 	public long modifyUserLoginName(User user) {
 		return mapper.modifyUserLoginName(user);
+	}
+
+	//查询第三方绑定状态
+	@Override
+	public Map<String, Object> thirdStatus(User u) {
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("qq", "0");
+		map.put("wechat","0");
+		map.put("wb", "0");
+		User user = mapper.findUserById(u.getId());
+		if(null!=user){
+			if(ValidateUtil.isValid(user.getQqUnique())){
+				map.put("qq", "1");
+			}
+			if(ValidateUtil.isValid(user.getWechatUnique())){
+				map.put("wechat", "1");
+			}
+			if(ValidateUtil.isValid(user.getWbUnique())){
+				map.put("wb", "1");
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * 用户个人资料页面绑定第三方
+	 */
+	@Override
+	public boolean userInfoBind(User u) {
+		//查询第三方是不是存在绑定
+		List<User> list = mapper.verificationUserExistByThirdLogin(u);
+		if(list.size()>0){
+			return false;//已经存在绑定
+		}else{
+			User user = mapper.findUserById(u.getId());
+			if(u.getlType().equals("qq")){
+				user.setQqUnique(u.getUniqueId());
+			}else if(u.getlType().equals("weibo")){
+				user.setWbUnique(u.getUniqueId());
+			}else if(u.getlType().equals("wechat")){
+				user.setWechatUnique(u.getUniqueId());
+			}
+			if(!ValidateUtil.isValid(user.getUserName())){
+				user.setUserName(u.getUserName());
+			}
+			mapper.update(user);
+			return true;
+		}
+	}
+	/**
+	 * 用户个人资料页面解除绑定第三方
+	 */
+	@Override
+	public boolean userInfoUnBind(User u) {
+		mapper.unBindThird(u);
+		return true;
 	}
 
 }

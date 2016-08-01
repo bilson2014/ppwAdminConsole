@@ -85,7 +85,6 @@ public class FinanceController extends BaseController{
 	
 	@RequestMapping(value = "/finance/save", method = RequestMethod.POST)
 	public long save(final DealLog dealLog){
-		
 		dealLog.setDealLogSource(1); // 线下支付
 		dealLog.setDealStatus(1); // 线下支付默认支付成功
 		dealLog.setUserType(GlobalConstant.ROLE_CUSTOMER);

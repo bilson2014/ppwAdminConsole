@@ -200,13 +200,34 @@ function openDialog(id,data){
 			$('#invoiceProjectId').combobox({
 				url : getContextPath() + '/project/all',
 				valueField : 'projectId',
-				textField : 'projectName'
+				textField : 'projectName',
+				filter: function(q, row){
+					if(row.projectName == null)
+						return false;
+					return row.projectName.indexOf(q) >= 0;
+				},
+				onSelect : function(record){
+					$('#projectName').val(record.projectName);
+					var id = $('#invoiceProjectId').combobox('getValue');
+					loadData(function(flag){
+						var userId = flag.customerId;
+						$('#invoiceUserId').combobox('setValue',userId);
+					}, getContextPath() + '/project/get-projectInfo', $.toJSON({
+						id : id
+					}));
+				}
 			});
 			
 			$('#invoiceUserId').combobox({
 				url : getContextPath() + '/portal/user/all',
 				valueField : 'userId',
-				textField : 'userName'
+				textField : 'userName',
+				filter: function(q, row){
+					// 修改过滤器增加模糊搜索
+					if(row.userName == null)
+						return false;
+					return row.userName.indexOf(q) >= 0;
+				}
 			});
 			
 			if(data != null && data != undefined && data != ''){

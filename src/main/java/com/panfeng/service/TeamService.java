@@ -1,8 +1,10 @@
 package com.panfeng.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.panfeng.domain.BaseMsg;
+import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.TeamView;
 
@@ -141,4 +143,24 @@ public interface TeamService {
 	public Team findTeamByLoginNameAndPwd(Team original);
 
 	public long updateTeamAccount(Team original);
+	
+	public void setMasterWork(final Product product);
+
+	/**
+	 * 查询第三方绑定状态
+	 */
+	public Map<String, Object> thirdStatus(Team team);
+
+	/**
+	 * 基本信息页面绑定第三方
+	 */
+	public boolean teamInfoBind(Team team);
+
+	/**
+	 * 基本信息解除绑定第三方
+	 */
+	public boolean teamInfoUnBind(Team team);
+
+	public long modifyTeamPhone(Team team);
+
 }

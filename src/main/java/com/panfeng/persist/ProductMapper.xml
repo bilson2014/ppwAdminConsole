@@ -24,7 +24,9 @@
 				   t.TEAMNAME AS teamName,
 				   pro.TAGS AS tags,
 				   pro.SHOWTYPE AS showType,
-				   pro.SESSIONID AS sessionId
+				   pro.SESSIONID AS sessionId,
+				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
+				   pro.MASTERWORK AS masterWork
 			FROM PRODUCT pro
 			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
@@ -91,7 +93,8 @@
 				HRET,
 				TAGS,
 				SHOWTYPE,
-				SESSIONID
+				SESSIONID,
+				CREATIONTIME
 			) VALUES(
 				#{videoDescription},
 				#{pDescription},
@@ -106,7 +109,8 @@
 				#{hret},
 				#{tags},
 				${showType},
-				#{sessionId}
+				#{sessionId},
+				DATE_FORMAT(#{creationTime},'%Y-%m-%d')
 			)
 		]]>
 	</insert>
@@ -146,7 +150,9 @@
 		<if test="picLDUrl != null and picLDUrl != ''">
 			,PICLDURL = #{picLDUrl} 
 		</if>
-		
+		<if test="creationTime != null and creationTime != ''">
+			,CREATIONTIME = DATE_FORMAT(#{creationTime},'%Y-%m-%d')
+		</if>
 		<![CDATA[
 			WHERE PRODUCTID = ${productId}
 		]]>
@@ -184,7 +190,9 @@
 				   pro.HRET AS hret,
 				   pro.TAGS AS tags,
 				   pro.SHOWTYPE AS showType,
-				   pro.SESSIONID AS sessionId
+				   pro.SESSIONID AS sessionId,
+				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
+				   pro.MASTERWORK AS masterWork
 			FROM PRODUCT pro
 			LEFT JOIN TEAM t ON pro.TEAMID = t.TEAMID
 			WHERE pro.PRODUCTID = ${productId}
@@ -209,7 +217,9 @@
 				   pro.HRET AS hret,
 				   pro.TAGS AS tags,
 				   pro.SHOWTYPE AS showType,
-				   pro.SESSIONID AS sessionId
+				   pro.SESSIONID AS sessionId,
+				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
+				   pro.MASTERWORK AS masterWork
 			FROM PRODUCT pro
 			WHERE 1 = 1
 		]]>
@@ -289,7 +299,9 @@
 				   t.TEAMNAME AS teamName,
 				   pro.TAGS AS tags,
 				   pro.SHOWTYPE AS showType,
-				   pro.SESSIONID AS sessionId
+				   pro.SESSIONID AS sessionId,
+				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
+				   pro.MASTERWORK AS masterWork
 			FROM PRODUCT pro
 			LEFT JOIN (
 				SELECT MIN(serviceRealPrice) AS SERVICEREALPRICE,MIN(servicePrice) AS SERVICEPRICE,productId 
@@ -337,7 +349,9 @@
 				   pro.TEAMID AS teamId,
 				   pro.TAGS AS tags,
 				   pro.SHOWTYPE AS showType,
-				   pro.SESSIONID AS sessionId
+				   pro.SESSIONID AS sessionId,
+				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
+				   pro.MASTERWORK AS masterWork
 			FROM PRODUCT pro
 			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			WHERE 1 = 1
@@ -364,7 +378,9 @@
 				   pro.SESSIONID AS sessionId,
 				   pro.SHOWTYPE AS showType,
 				   t.TEAMNAME AS teamName,
-				   t.TEAMDESCRIPTION AS teamDescription
+				   t.TEAMDESCRIPTION AS teamDescription,
+				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
+				   pro.MASTERWORK AS masterWork
 			FROM PRODUCT pro
 			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
@@ -397,7 +413,9 @@
 				   t.TEAMNAME AS teamName,
 				   pro.TAGS AS tags,
 				   pro.SHOWTYPE AS showType,
-				   pro.SESSIONID AS sessionId
+				   pro.SESSIONID AS sessionId,
+				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
+				   pro.MASTERWORK AS masterWork
 			FROM PRODUCT pro
 			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
@@ -465,6 +483,9 @@
 		<if test="picLDUrl != null and picLDUrl != ''">
 			,PICLDURL = #{picLDUrl} 
 		</if>
+		<if test="creationTime != null and creationTime != ''">
+			,CREATIONTIME = DATE_FORMAT(#{creationTime},'%Y-%m-%d')
+		</if>
 		<![CDATA[
 			WHERE PRODUCTID = ${productId}
 		]]>
@@ -488,7 +509,9 @@
 				   pro.HRET AS hret,
 				   pro.TAGS AS tags,
 				   pro.SHOWTYPE AS showType,
-				   pro.SESSIONID AS sessionId
+				   pro.SESSIONID AS sessionId,
+				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
+				   pro.MASTERWORK AS masterWork
 			FROM PRODUCT pro
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
 			WHERE pro.TEAMID = ${teamId}
@@ -519,7 +542,9 @@
 				   pro.HRET AS hret,
 				   pro.TAGS AS tags,
 				   pro.SHOWTYPE AS showType,
-				   pro.SESSIONID AS sessionId
+				   pro.SESSIONID AS sessionId,
+				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
+				   pro.MASTERWORK AS masterWork
 			FROM PRODUCT pro
 			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			INNER JOIN TEAM t ON t.TEAMID = pro.TEAMID

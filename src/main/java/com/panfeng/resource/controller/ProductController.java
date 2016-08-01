@@ -127,6 +127,7 @@ public class ProductController extends BaseController {
 		final List<Team> list = teamService.getAll();
 		return list;
 	}
+	
 
 	/**
 	 * 分页检索
@@ -720,5 +721,11 @@ public class ProductController extends BaseController {
 		
 		final List<Product> list = proService.loadSalesProduct();
 		return list;
+	}
+	
+	@RequestMapping(value = "/set/masterWork")
+	public boolean setMasterWork(@RequestBody final Product product) {
+		teamService.setMasterWork(product);
+		return true;
 	}
 }
