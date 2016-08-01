@@ -21,4 +21,7 @@ public interface ItemService {
 
 	// 获取活动之外的分类
 	public List<Item> listWithoutActive();
+
+	public List<Item> getTagsById(List<Long> ids);
+	
 }

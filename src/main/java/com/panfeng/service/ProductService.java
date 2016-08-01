@@ -68,6 +68,8 @@ public interface ProductService {
 	 * @return
 	 */
 	public List<Product> loadProductByTeam(final long teamId);
+	
+	public List<Product> loadProductByTeamOrder(final long teamId);
 
 	// 加载首页 更多视频
 	public List<Product> loadData(final ProductView view);
@@ -121,4 +123,6 @@ public interface ProductService {
 	 * @return 产品集合
 	 */
 	public Map<Long,Product> getProductByRecommend();
+
+	public Product getMasterWork(long teamId);
 }

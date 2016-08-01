@@ -63,13 +63,13 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private final ServiceService serService = null;
-	
+
 	@Autowired
 	private KindeditorService kindService;
-	
+
 	@Autowired
 	private SolrService solrService = null;
-	
+
 	@Autowired
 	private final PortalVideoDao videoDao = null;
 
@@ -82,21 +82,18 @@ public class ProductController extends BaseController {
 	private static String ALLOW_IMAGE_TYPE = null;
 
 	private static String ALLOW_VIDEO_TYPE = null;
-	
+
 	private static String SOLR_URL = null;
 
 	public ProductController() {
 		if (PRODUCT_VIDEO_PATH == null || "".equals(PRODUCT_VIDEO_PATH)) {
-			final InputStream is = this.getClass().getClassLoader()
-					.getResourceAsStream("jdbc.properties");
+			final InputStream is = this.getClass().getClassLoader().getResourceAsStream("jdbc.properties");
 			try {
 				Properties propertis = new Properties();
 				propertis.load(is);
 				FILE_PROFIX = propertis.getProperty("file.prefix");
-				PRODUCT_VIDEO_PATH = propertis
-						.getProperty("upload.server.product.video");
-				PRODUCT_IMAGE_PATH = propertis
-						.getProperty("upload.server.product.image");
+				PRODUCT_VIDEO_PATH = propertis.getProperty("upload.server.product.video");
+				PRODUCT_IMAGE_PATH = propertis.getProperty("upload.server.product.image");
 				ALLOW_VIDEO_TYPE = propertis.getProperty("videoType");
 				ALLOW_IMAGE_TYPE = propertis.getProperty("imageType");
 				SOLR_URL = propertis.getProperty("solr.url");
@@ -111,14 +108,14 @@ public class ProductController extends BaseController {
 
 		return new ModelAndView("product-list", model);
 	}
-	
-	@RequestMapping(value = "/product/sessionId",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+
+	@RequestMapping(value = "/product/sessionId", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public Product getSessionId(final ModelMap map) {
-		
+
 		final String sessionId = DataUtil.getUuid();
 		Product product = new Product();
 		product.setSessionId(sessionId);
-		return product; 
+		return product;
 	}
 
 	@RequestMapping(value = "/product/init", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
@@ -127,22 +124,21 @@ public class ProductController extends BaseController {
 		final List<Team> list = teamService.getAll();
 		return list;
 	}
-	
 
 	/**
 	 * 分页检索
 	 * 
 	 * @param view
-	 * product-条件视图
+	 *            product-条件视图
 	 */
 	@RequestMapping(value = "/product/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public DataGrid<Product> list(final ProductView view,final PageFilter pf) {
+	public DataGrid<Product> list(final ProductView view, final PageFilter pf) {
 
 		final long page = pf.getPage();
 		final long rows = pf.getRows();
 		view.setBegin((page - 1) * rows);
 		view.setLimit(rows);
-		
+
 		DataGrid<Product> dataGrid = new DataGrid<Product>();
 		final List<Product> list = proService.listWithPagination(view);
 		for (Product product : list) {
@@ -161,7 +157,7 @@ public class ProductController extends BaseController {
 	 * 删除
 	 * 
 	 * @param ids
-	 * product id array
+	 *            product id array
 	 */
 	@RequestMapping(value = "/product/delete", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public long delete(final long[] ids) {
@@ -183,12 +179,12 @@ public class ProductController extends BaseController {
 					// 删除 视频
 					final String videoUrl = product.getVideoUrl();
 					FileUtils.deleteFile(videoUrl);
-					
+
 					// 删除产品编辑页图片
 					String sessionId = product.getSessionId();
 					if (sessionId != null && !"".equals(sessionId))
 						kindService.deleteImageDir(product.getSessionId());
-					
+
 					// 删除搜索索引
 					solrService.deleteDoc(product.getProductId(), SOLR_URL);
 				}
@@ -200,10 +196,8 @@ public class ProductController extends BaseController {
 	}
 
 	@RequestMapping(value = "/product/save", method = RequestMethod.POST)
-	public void save(final HttpServletRequest request,
-			final HttpServletResponse response,
-			@RequestParam final MultipartFile[] uploadFiles,
-			final Product product) {
+	public void save(final HttpServletRequest request, final HttpServletResponse response,
+			@RequestParam final MultipartFile[] uploadFiles, final Product product) {
 		response.setContentType("text/html;charset=UTF-8");
 
 		// 保存 product
@@ -230,22 +224,17 @@ public class ProductController extends BaseController {
 				final MultipartFile multipartFile = uploadFiles[i];
 				if (!multipartFile.isEmpty()) {
 					// 分组保存video、image
-					final String multipartFileName = multipartFile
-							.getOriginalFilename();
-					final String extName = FileUtils.getExtName(
-							multipartFileName, ".");
-					final short fileType = FileUtils.divideIntoGroup(extName,
-							ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE);
+					final String multipartFileName = multipartFile.getOriginalFilename();
+					final String extName = FileUtils.getExtName(multipartFileName, ".");
+					final short fileType = FileUtils.divideIntoGroup(extName, ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE);
 					final StringBuffer fileName = new StringBuffer();
 					fileName.append("product" + productId);
 					fileName.append("-");
 					final Calendar calendar = new GregorianCalendar();
 					fileName.append(calendar.get(Calendar.YEAR));
-					fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0"
-							+ (calendar.get(Calendar.MONTH) + 1)
+					fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0" + (calendar.get(Calendar.MONTH) + 1)
 							: (calendar.get(Calendar.MONTH) + 1));
-					fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0"
-							+ calendar.get(Calendar.DAY_OF_MONTH)
+					fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0" + calendar.get(Calendar.DAY_OF_MONTH)
 							: calendar.get(Calendar.DAY_OF_MONTH));
 					fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
 					fileName.append(calendar.get(Calendar.MINUTE));
@@ -284,26 +273,23 @@ public class ProductController extends BaseController {
 	}
 
 	@RequestMapping(value = "/product/update", method = RequestMethod.POST)
-	public void update(final HttpServletRequest request,
-			final HttpServletResponse response,
-			@RequestParam final MultipartFile[] uploadFiles,
-			final Product product) {
-		
+	public void update(final HttpServletRequest request, final HttpServletResponse response,
+			@RequestParam final MultipartFile[] uploadFiles, final Product product) {
+
 		final long productId = product.getProductId(); // product id
 		final Product originalProduct = proService.findProductById(productId);
-		
+
 		final int recomment = product.getRecommend(); // 修改之后的推荐值
 		final int originalRecomment = originalProduct.getRecommend();
-		
-		if(recomment != 0 || originalRecomment != 0){
+
+		if (recomment != 0 || originalRecomment != 0) {
 			// 推荐值改变,更新redis的首页视频集合
-			if(product.getRecommend() > 0){
-				final Map<Long,Product> portalVideomap = proService.getProductByRecommend();
+			if (product.getRecommend() > 0) {
+				final Map<Long, Product> portalVideomap = proService.getProductByRecommend();
 				videoDao.resetPortalVideo(portalVideomap);
 			}
 		}
-		
-		
+
 		// 获取未更改前的product对象,用于删除修改过的文件
 		final List<String> pathList = new ArrayList<String>(); // 路径集合
 
@@ -326,22 +312,17 @@ public class ProductController extends BaseController {
 				if (!multipartFile.isEmpty()) {
 					// file字段 如果不为空,说明 更改了上传文件
 					// 分组保存video、image
-					final String multipartFileName = multipartFile
-							.getOriginalFilename();
-					final String extName = FileUtils.getExtName(
-							multipartFileName, ".");
-					final short fileType = FileUtils.divideIntoGroup(extName,
-							ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE);
+					final String multipartFileName = multipartFile.getOriginalFilename();
+					final String extName = FileUtils.getExtName(multipartFileName, ".");
+					final short fileType = FileUtils.divideIntoGroup(extName, ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE);
 					final StringBuffer fileName = new StringBuffer();
 					fileName.append("product" + productId);
 					fileName.append("-");
 					final Calendar calendar = new GregorianCalendar();
 					fileName.append(calendar.get(Calendar.YEAR));
-					fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0"
-							+ (calendar.get(Calendar.MONTH) + 1)
+					fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0" + (calendar.get(Calendar.MONTH) + 1)
 							: (calendar.get(Calendar.MONTH) + 1));
-					fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0"
-							+ calendar.get(Calendar.DAY_OF_MONTH)
+					fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0" + calendar.get(Calendar.DAY_OF_MONTH)
 							: calendar.get(Calendar.DAY_OF_MONTH));
 					fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
 					fileName.append(calendar.get(Calendar.MINUTE));
@@ -409,10 +390,10 @@ public class ProductController extends BaseController {
 		}
 
 	}
-	
+
 	// add by wliming, 2016/02/24 18:53 begin
 	// -> 增加信息模板的更新方法
-	@RequestMapping(value = "/product/saveVideoDescription", method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/product/saveVideoDescription", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public long saveVideoDescription(@RequestBody final Product product) {
 		proService.updateVideoDescription(product);
 		return 1l;
@@ -449,7 +430,8 @@ public class ProductController extends BaseController {
 	/**
 	 * 获取作品总数
 	 * 
-	 * @param view 分类标准
+	 * @param view
+	 *            分类标准
 	 * @return 总数
 	 */
 	@RequestMapping("/product/static/pageSize")
@@ -462,8 +444,10 @@ public class ProductController extends BaseController {
 	/**
 	 * 作品页 数据
 	 * 
-	 * @param itemId 分类标准
-	 * @param order 排序规则
+	 * @param itemId
+	 *            分类标准
+	 * @param order
+	 *            排序规则
 	 */
 	@RequestMapping(value = "/product/static/listWithCondition")
 	public List<Product> listWithCondition(@RequestBody final ProductView view) {
@@ -481,8 +465,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/product/static/view/{teamId}/{productId}")
 	public ModelAndView redirect(@PathVariable("teamId") final Integer teamId,
-			@PathVariable("productId") final Integer productId,
-			final ModelMap model) {
+			@PathVariable("productId") final Integer productId, final ModelMap model) {
 		model.addAttribute("teamId", teamId);
 		model.addAttribute("productId", productId);
 		Product product = proService.loadProduct(productId);
@@ -496,16 +479,25 @@ public class ProductController extends BaseController {
 	 * @param teamId
 	 */
 	@RequestMapping("/product/static/team/{teamId}")
-	public List<Product> productInformationByTeam(
-			@PathVariable("teamId") final Integer teamId) {
+	public List<Product> productInformationByTeam(@PathVariable("teamId") final Integer teamId) {
 
 		final List<Product> list = proService.loadProductByTeam(teamId);
 		return list;
 	}
+	/**
+	 * 
+	 * 
+	 * @param teamId
+	 */
+	@RequestMapping("/product/static/order/team/{teamId}")
+	public List<Product> productInformationByTeamOrder(@PathVariable("teamId") final Integer teamId) {
+		
+		final List<Product> list = proService.loadProductByTeamOrder(teamId);
+		return list;
+	}
 
 	@RequestMapping("/product/static/information/{productId}")
-	public Product information(
-			@PathVariable("productId") final Integer productId) {
+	public Product information(@PathVariable("productId") final Integer productId) {
 
 		final Product product = proService.loadProduct(productId);
 		return product;
@@ -514,12 +506,12 @@ public class ProductController extends BaseController {
 	/**
 	 * 通过 供应商ID 获取已审核及审核中的视频
 	 * 
-	 * @param providerId 供应商唯一编码
+	 * @param providerId
+	 *            供应商唯一编码
 	 * @return 已审核的产品列表
 	 */
 	@RequestMapping("/product/static/data/loadProducts/{providerId}")
-	public List<Product> loadProductByProviderId(
-			@PathVariable("providerId") final long teamId) {
+	public List<Product> loadProductByProviderId(@PathVariable("providerId") final long teamId) {
 
 		final List<Product> list = proService.loadProductByProviderId(teamId);
 		return list;
@@ -529,19 +521,18 @@ public class ProductController extends BaseController {
 	 * 供应商根据 产品ID 删除视频
 	 * 
 	 * @param productId
-	 * 视频唯一编号
+	 *            视频唯一编号
 	 */
 	@RequestMapping("/product/static/data/deleteProduct/{productId}")
-	public boolean deleteProductByProvider(
-			@PathVariable("productId") final long productId) {
+	public boolean deleteProductByProvider(@PathVariable("productId") final long productId) {
 
 		long[] ids = new long[1];
 		ids[0] = productId;
 		List<Product> list = proService.delete(ids); // 删除视频信息
-		
+
 		// 删除搜索索引
 		solrService.deleteDoc(productId, SOLR_URL);
-		
+
 		serService.deleteByProduct(productId); // 删除服务信息
 
 		// delete file on disk
@@ -569,15 +560,15 @@ public class ProductController extends BaseController {
 	/**
 	 * 根据 视频ID 获取视频
 	 * 
-	 * @param productId 视频唯一编号
+	 * @param productId
+	 *            视频唯一编号
 	 */
 	@RequestMapping("/product/static/data/{videoId}")
 	public Product findProductById(@PathVariable("videoId") final long productId) {
 
 		final Product product = proService.findProductById(productId);
 		// 获取服务价格
-		Service service = serService.loadSingleService(Integer.parseInt(String
-				.valueOf(productId)));
+		Service service = serService.loadSingleService(Integer.parseInt(String.valueOf(productId)));
 		if (service != null) {
 			product.setServicePrice(service.getServicePrice());
 			product.setServiceId(service.getServiceId());
@@ -595,12 +586,9 @@ public class ProductController extends BaseController {
 
 		// 解码
 		try {
-			product.setpDescription(URLDecoder.decode(
-					product.getpDescription(), "UTF-8"));
-			product.setProductName(URLDecoder.decode(product.getProductName(),
-					"UTF-8"));
-			product.setVideoLength(URLDecoder.decode(product.getVideoLength(),
-					"UTF-8"));
+			product.setpDescription(URLDecoder.decode(product.getpDescription(), "UTF-8"));
+			product.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
+			product.setVideoLength(URLDecoder.decode(product.getVideoLength(), "UTF-8"));
 
 			if (product.getTags() != null && !"".equals(product.getTags())) {
 				product.setTags(URLDecoder.decode(product.getTags(), "UTF-8"));
@@ -618,13 +606,11 @@ public class ProductController extends BaseController {
 			service.setServicePrice(product.getServicePrice());
 
 			// 获取该服务打折信息
-			Service originalService = serService.loadServiceById(product
-					.getServiceId());
+			Service originalService = serService.loadServiceById(product.getServiceId());
 			final double discount = originalService.getServiceDiscount();
 			final double realPrice = product.getServicePrice() * discount;
 			BigDecimal bg = new BigDecimal(realPrice);
-			final double roundRealPrice = bg.setScale(2,
-					BigDecimal.ROUND_HALF_UP).doubleValue();
+			final double roundRealPrice = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 			service.setServiceRealPrice(roundRealPrice);
 
 			serService.updatePriceAndMcoms(service); // 更新 服务信息
@@ -634,8 +620,7 @@ public class ProductController extends BaseController {
 			service.setProductId(product.getProductId());
 			service.setProductName(product.getProductName());
 			service.setServiceDiscount(1);
-			service.setServiceName("service" + product.getProductId() + "-"
-					+ product.getProductName());
+			service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
 			service.setServiceOd(0);
 			service.setServicePrice(servicePrice);
 			service.setServiceRealPrice(servicePrice);
@@ -654,12 +639,9 @@ public class ProductController extends BaseController {
 	public long saveProductInfo(@RequestBody final Product product) {
 		try {
 			// 解码
-			product.setpDescription(URLDecoder.decode(
-					product.getpDescription(), "UTF-8"));
-			product.setProductName(URLDecoder.decode(product.getProductName(),
-					"UTF-8"));
-			product.setVideoLength(URLDecoder.decode(product.getVideoLength(),
-					"UTF-8"));
+			product.setpDescription(URLDecoder.decode(product.getpDescription(), "UTF-8"));
+			product.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
+			product.setVideoLength(URLDecoder.decode(product.getVideoLength(), "UTF-8"));
 			if (product.getTags() != null && !"".equals(product.getTags())) {
 				product.setTags(URLDecoder.decode(product.getTags(), "UTF-8"));
 			}
@@ -674,8 +656,7 @@ public class ProductController extends BaseController {
 		service.setProductId(product.getProductId());
 		service.setProductName(product.getProductName());
 		service.setServiceDiscount(1);
-		service.setServiceName("service" + product.getProductId() + "-"
-				+ product.getProductName());
+		service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
 		service.setServiceOd(0);
 		service.setServicePrice(servicePrice);
 		service.setServiceRealPrice(servicePrice);
@@ -688,7 +669,7 @@ public class ProductController extends BaseController {
 	 * 更新文件路径
 	 * 
 	 * @param product
-	 * 包含 视频唯一编号、缩略图、封面、视频路径
+	 *            包含 视频唯一编号、缩略图、封面、视频路径
 	 */
 	@RequestMapping("/product/static/data/updateFilePath")
 	public long updateFilePath(@RequestBody final Product product) {
@@ -699,7 +680,8 @@ public class ProductController extends BaseController {
 	/**
 	 * 获取单个作品ID
 	 * 
-	 * @param teamId 供应商唯一编号
+	 * @param teamId
+	 *            供应商唯一编号
 	 * @return 作品ID
 	 */
 	@RequestMapping("/product/static/data/loadSingleProduct/{teamId}")
@@ -711,21 +693,33 @@ public class ProductController extends BaseController {
 		else
 			return 0l;
 	}
-	
+
 	/**
 	 * 获取分销产品
+	 * 
 	 * @return 分销列表
 	 */
 	@RequestMapping("/product/static/data/salesproduct")
-	public List<Product> salesProject(final HttpServletRequest request){
-		
+	public List<Product> salesProject(final HttpServletRequest request) {
+
 		final List<Product> list = proService.loadSalesProduct();
 		return list;
 	}
-	
+
 	@RequestMapping(value = "/set/masterWork")
 	public boolean setMasterWork(@RequestBody final Product product) {
 		teamService.setMasterWork(product);
 		return true;
+	}
+	@RequestMapping(value = "/get/masterWork/{teamId}")
+	public Product getMasterWork(@PathVariable("teamId")Long teamId) {
+		if (teamId == null || teamId <= 0) {
+			logger.error("productId is null ...");
+			return null;
+		}
+		Product product = proService.getMasterWork(teamId);
+		if (product == null)
+			logger.error("product is null ...");
+		return product;
 	}
 }

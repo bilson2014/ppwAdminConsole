@@ -681,7 +681,7 @@ public class TeamController extends BaseController {
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(team.getTeamId());
 		info.setPhoto(team.getTeamPhotoUrl());
-		if(team.getFlag() == 1)
+		if (team.getFlag() == 1)
 			info.setIsIdentification(true);
 
 		final Role role = roleService.findRoleById(2l); // 获取用户角色
@@ -700,8 +700,9 @@ public class TeamController extends BaseController {
 		map.put(GlobalConstant.SESSION_INFO, info);
 		return sessionService.addSession(request, map);
 	}
+
 	@RequestMapping("/team/static/data/add/account")
-	public boolean addAccount(@RequestBody final Team team,HttpServletRequest request) {
+	public boolean addAccount(@RequestBody final Team team, HttpServletRequest request) {
 		long count = service.updateTeamAccount(team);
 		if (count > 0) {
 			Team t = service.findTeamById(team.getTeamId());
@@ -711,7 +712,7 @@ public class TeamController extends BaseController {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 查询第三方绑定状态
 	 */
@@ -720,7 +721,7 @@ public class TeamController extends BaseController {
 		Map<String, Object> map = service.thirdStatus(team);
 		return map;
 	}
-	
+
 	/**
 	 * 用户资料页面绑定第三方
 	 */
@@ -728,6 +729,7 @@ public class TeamController extends BaseController {
 	public boolean userInfoBind(@RequestBody final Team team, HttpServletRequest request) {
 		return service.teamInfoBind(team);
 	}
+
 	/**
 	 * 用户资料页面解除绑定第三方
 	 */
@@ -735,6 +737,7 @@ public class TeamController extends BaseController {
 	public boolean userInfoUnBind(@RequestBody final Team team, HttpServletRequest request) {
 		return service.teamInfoUnBind(team);
 	}
+
 	/**
 	 * 供应商信息-修改供应商手机号码
 	 */
@@ -746,6 +749,18 @@ public class TeamController extends BaseController {
 			result = true;
 		}
 		return result;
+	}
+
+	@RequestMapping("/team/info/{teamId}")
+	public Team getTeamInfo(@PathVariable("teamId") Long teamId) {
+		if (teamId == null || teamId <= 0) {
+			logger.error("teamId is null ...");
+			return null;
+		}
+		Team team = service.getTeamInfo(teamId);
+		if (team == null)
+			logger.error("team is null ...");
+		return team;
 	}
 
 }

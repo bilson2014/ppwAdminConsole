@@ -576,4 +576,20 @@
 	<update id="setMasterWork">
 		UPDATE PRODUCT SET masterWork = ${status} WHERE productId = ${productId}
 	</update>
+	<select id="getTeamInfo" resultType="Team">
+		<![CDATA[
+			SELECT t.TEAMNAME AS teamName,
+			p.PROVINCE AS teamProvinceName,
+			c.CITY AS teamCityName,
+			t.TEAMDESCRIPTION AS teamDescription,
+			t.BUSINESS AS business,
+			t.TEAMPHOTOURL AS teamPhotoUrl
+			FROM TEAM t 
+				LEFT JOIN  PROVINCE p ON t.TEAMPROVINCE = p.provinceID 
+				LEFT JOIN CITY c on t.TEAMCITY = c.cityID
+			WHERE TEAMID = ${teamId}
+		]]>
+	</select>
+	
+	
 </mapper>

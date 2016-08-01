@@ -373,4 +373,9 @@ public class TeamServiceImpl implements TeamService {
 		return mapper.modifyTeamPhone(team);
 	}
 
+	@Override
+	public Team getTeamInfo(Long teamId) {
+		return mapper.getTeamInfo(teamId);
+	}
+
 }

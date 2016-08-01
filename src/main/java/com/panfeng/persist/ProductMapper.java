@@ -40,6 +40,8 @@ public interface ProductMapper {
 	public Product loadProduct(@Param("productId") final Integer productId);
 
 	public List<Product> loadProductByTeam(@Param("teamId") final long teamId);
+	
+	public List<Product> loadProductByTeamOrder(@Param("teamId") final long teamId);
 
 	public List<Product> loadData(final ProductView view);
 	
@@ -99,4 +101,11 @@ public interface ProductMapper {
 	 */
 	@MapKey(value = "productId")
 	public Map<Long, Product> getProductByRecommend();
+	
+	/**
+	 * 获取代表作 
+	 * @param productId
+	 * @return
+	 */
+	public Product getMasterWork(@Param("teamId")long teamId);
 }

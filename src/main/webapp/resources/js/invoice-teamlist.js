@@ -223,9 +223,9 @@ function openDialog(id,data){
 				textField : 'teamName',
 				filter: function(q, row){
 					// 修改过滤器增加模糊搜索
-					if(row.userName == null)
+					if(row.teamName == null)
 						return false;
-					return row.userName.indexOf(q) >= 0;
+					return row.teamName.indexOf(q) >= 0;
 				}
 			});
 			

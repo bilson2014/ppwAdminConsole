@@ -23,4 +23,6 @@ public interface ItemMapper {
 
 	// 获取活动之外的分类
 	public List<Item> listWithoutActive();
+	// 获取标签集合
+	public List<Item> getTagsById(@Param("ids")List<Long> ids);
 }
