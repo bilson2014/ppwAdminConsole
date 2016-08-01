@@ -121,4 +121,6 @@ public interface ProductService {
 	 * @return 产品集合
 	 */
 	public Map<Long,Product> getProductByRecommend();
+
+	public Product getMasterWork(long teamId);
 }

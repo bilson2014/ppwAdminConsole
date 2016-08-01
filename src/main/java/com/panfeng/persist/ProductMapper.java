@@ -99,4 +99,11 @@ public interface ProductMapper {
 	 */
 	@MapKey(value = "productId")
 	public Map<Long, Product> getProductByRecommend();
+	
+	/**
+	 * 获取代表作 
+	 * @param productId
+	 * @return
+	 */
+	public Product getMasterWork(@Param("teamId")long teamId);
 }

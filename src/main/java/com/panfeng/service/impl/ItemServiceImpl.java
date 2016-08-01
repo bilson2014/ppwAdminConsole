@@ -70,4 +70,9 @@ public class ItemServiceImpl implements ItemService {
 		return list;
 	}
 
+	@Override
+	public List<Item> getTagsById(List<Long> ids) {
+		return	mapper.getTagsById(ids);
+	}
+
 }

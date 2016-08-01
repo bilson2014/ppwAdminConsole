@@ -238,4 +238,9 @@ public class ProductServiceImpl implements ProductService{
 		return map;
 	}
 
+	@Override
+	public Product getMasterWork(long teamId) {
+		return mapper.getMasterWork(teamId);
+	}
+
 }

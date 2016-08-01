@@ -90,4 +90,20 @@
 				AND isActive = 0 
 		]]>
 	</select>
+	
+	<select id="getTagsById" resultType="Item">
+		<![CDATA[
+			SELECT i.ITEMID AS itemId,
+				   i.ITEMNAME AS itemName,
+				   i.ITEMDESCRIPTION AS itemDescription,
+				   DATE_FORMAT(i.CREATEDATE,'%Y-%m-%d %T') AS createDate,
+				   i.OD AS od
+			FROM ITEM i
+			WHERE ITEMID IN 
+		]]>
+		<foreach collection="ids" item="bus" separator=","
+				open="(" close=")">
+				#{bus}
+		</foreach>
+	</select>
 </mapper>

@@ -118,5 +118,10 @@ public interface TeamMapper {
 	public List<Team> verificationTeamExistByThirdLogin(Team t);
 
 	public long modifyTeamPhone(Team team);
-
+	/**
+	 * 供应商页获取基本信息
+	 * @param teamId
+	 * @return
+	 */
+	public Team getTeamInfo(@Param("teamId") long teamId);
 }

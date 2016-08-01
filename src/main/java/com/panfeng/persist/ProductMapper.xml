@@ -636,4 +636,13 @@
 			AND t.FLAG = 1
 		]]>
 	</select>
+	
+	<select id="getMasterWork" resultType="Product"> 
+		<![CDATA[
+			SELECT * FROM PRODUCT 
+			WHERE teamId = ${teamId}
+			AND masterWork = 1
+		]]>
+	</select>
+	
 </mapper>

@@ -162,5 +162,7 @@ public interface TeamService {
 	public boolean teamInfoUnBind(Team team);
 
 	public long modifyTeamPhone(Team team);
+	
+	public Team getTeamInfo(Long teamId);
 
 }
