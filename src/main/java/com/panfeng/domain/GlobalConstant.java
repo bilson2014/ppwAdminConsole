@@ -47,9 +47,11 @@ public final class GlobalConstant extends BaseObject {
 
 	public static String COOKIES_SCOPE = null;
 
-	public static String SOLR_URL; // 供应商及客户 SOLR URL 入口
+	public static String SOLR_URL; // 通过审核的供应商及分级的客户 SOLR URL 入口
 	
 	public static String SOLR_EMPLOYEE_URL; // 内部员工SOLR URL 入口
+	
+	public static String SOLR_PORTAL_URL; // 未审核的供应商及未分级的客户的SOLR URL 入口
 	
 	public static String FILE_PROFIX; // 文件前缀
 	
@@ -87,6 +89,7 @@ public final class GlobalConstant extends BaseObject {
 				propertis.load(is);
 				SOLR_URL = propertis.getProperty("solr.url");
 				SOLR_EMPLOYEE_URL = propertis.getProperty("solr.employee.url");
+				SOLR_PORTAL_URL = propertis.getProperty("solr.portal.url");
 				FILE_PROFIX = propertis.getProperty("file.prefix");
 				EMPLOYEE_IMAGE_PATH = propertis.getProperty("upload.server.employee.image");
 				STAFF_IMAGE_PATH = propertis.getProperty("upload.server.staff.image");

@@ -34,7 +34,6 @@ import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Role;
 import com.panfeng.resource.model.Team;
-import com.panfeng.resource.model.User;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.TeamView;

@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,10 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.panfeng.dao.PortalVideoDao;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.ResourceToken;
-import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Solr;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.SolrView;
@@ -37,9 +34,6 @@ public class SolrController extends BaseController {
 
 	@Autowired
 	private final SolrService service = null;
-	
-	@Autowired
-	private final PortalVideoDao videoDao = null;
 	
 	@RequestMapping("/solr-list")
 	public ModelAndView SolrView(){
@@ -114,10 +108,6 @@ public class SolrController extends BaseController {
 		try {
 			final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
 			
-			final boolean flag = token.flag;
-			
-			final Map<Long,Product> productMap = videoDao.getProductsFromRedis();
-			
 			String condition = URLDecoder.decode(view.getCondition(), "UTF-8");
 			
 			//condition = HanlpUtil.segment(condition);
@@ -126,19 +116,8 @@ public class SolrController extends BaseController {
 			query.set("qf", "productName^4 tags^3 teamName^2 pDescription^1");
 			
 			if("*".equals(condition)){
-				// 如果是查询全部，那么判断是否有访问资源的权利
-				if(flag){
-					query.setQuery("*:*");
-				}else {
-					// 没有，则只能访问首页推荐视频
-					final StringBuffer querySQL = new StringBuffer();
-					for (Map.Entry<Long, Product> entry : productMap.entrySet()) {
-						Long productId = entry.getKey();
-						querySQL.append("productId:" + productId + " ");
-					}
-					
-					query.setQuery(querySQL.toString());
-				}
+				// 查询全部
+				query.setQuery("*:*");
 			}else {
 				
 				query.set("defType", "dismax");
@@ -177,21 +156,6 @@ public class SolrController extends BaseController {
 			query.setHighlightSimplePost("</font>");
 			
 			final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
-			
-			// 如果没有访问资源，那么只能搜索首页推荐视频
-			final List<Solr> resultList = new ArrayList<Solr>();
-			if(!flag){
-				for (final Solr solr : list) {
-					final String productId = solr.getProductId();
-					final Product product = productMap.get(Long.parseLong(productId));
-					final long total = list.size();
-					solr.setTotal(total);
-					if(product != null){
-						resultList.add(solr);
-					}
-				}
-				return resultList;
-			}
 			
 			return list;
 			

@@ -32,7 +32,7 @@ public class SearchResourceInterceptor implements HandlerInterceptor {
 		final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO); // 获取session
 		
 		boolean flag = false;
-		String solrUrl = GlobalConstant.SOLR_URL;
+		String solrUrl = null;
 		// 如果是供应商和没有分类的用户，则只有首页推荐视频
 		if(info != null){
 			final String type =  info.getSessionType();
@@ -45,22 +45,27 @@ public class SearchResourceInterceptor implements HandlerInterceptor {
 				if(info.getClientLevel() != null){
 					// 用户已经分出级别，可以查询资源库
 					flag = true;
+					solrUrl = GlobalConstant.SOLR_URL;
 				} else {
 					// 用户未分级，不能访问资源库，只能访问首页推荐视频
 					flag = false;
+					solrUrl = GlobalConstant.SOLR_PORTAL_URL;
 				}
 			}else if(GlobalConstant.ROLE_PROVIDER.equals(type)){
 				// 通过审核的供应商可以访问资源库
 				if(info.isIdentification()){
 					flag = true;
+					solrUrl = GlobalConstant.SOLR_URL;
 				}else {
 					// 未通过审核的供应商不能访问资源库
 					flag = false;
+					solrUrl = GlobalConstant.SOLR_PORTAL_URL;
 				}
 			}
 		} else {
 			// 未登录不能访问资源库，只能访问首页推荐视频
 			flag = false;
+			solrUrl = GlobalConstant.SOLR_PORTAL_URL;
 		}
 		
 		final ResourceToken token = new ResourceToken();
@@ -75,10 +80,7 @@ public class SearchResourceInterceptor implements HandlerInterceptor {
 	 */
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView mv) throws Exception {
-		// TODO Auto-generated method stub
 		
-		
-		System.err.println("方法执行完了找我啊。。。");
 	}
 
 	/**
@@ -86,7 +88,6 @@ public class SearchResourceInterceptor implements HandlerInterceptor {
 	 */
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 
