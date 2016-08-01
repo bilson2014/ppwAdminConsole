@@ -403,7 +403,6 @@
 				   pro.PICHDURL AS picHDUrl,
 				   pro.PICLDURL AS picLDUrl,
 				   pro.VISIBLE AS visible,
-				   i.ITEMNAME AS productTypeName,
 				   t.TEAMPHOTOURL AS teamPhotoUrl,
 				   pro.VIDEOLENGTH AS videoLength,
 				   pro.TEAMID AS teamId,
@@ -416,7 +415,6 @@
 				   pro.MASTERWORK AS masterWork,
 				   DATE_FORMAT(IF(creationTime <> NULL ,creationTime,uploadDate),'%Y-%m-%d') AS creationTime
 			FROM PRODUCT pro
-			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
 			WHERE 1 = 1
 				AND pro.FLAG = 1

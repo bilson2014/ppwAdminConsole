@@ -43,6 +43,7 @@ import com.panfeng.service.SolrService;
 import com.panfeng.service.TeamService;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.FileUtils;
+import com.panfeng.util.ValidateUtil;
 
 /**
  * 产品管理类
@@ -718,8 +719,14 @@ public class ProductController extends BaseController {
 			return null;
 		}
 		Product product = proService.getMasterWork(teamId);
-		if (product == null)
-			logger.error("product is null ...");
+		if (product == null){
+			List<Product> products = proService.loadProductByTeam(teamId);
+			if(ValidateUtil.isValid(products)){
+				product = products.get(0);
+			}else{
+				logger.error("product is null ...");
+			}
+		}
 		return product;
 	}
 }
