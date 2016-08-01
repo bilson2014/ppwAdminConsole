@@ -323,10 +323,10 @@ function editFuc(){ // 注册 修改 按钮
 					valueField : 'cityID',
 					textField : 'city'
 				});
-				$('#teamCity').combobox('select',rows[0].teamCityName);
+				$('#teamCity').combobox('setValue',rows[0].teamCity);
 			}
 		});
-		$('#teamProvince').combobox('select',rows[0].teamProvinceName);
+		$('#teamProvince').combobox('setValue',rows[0].teamProvince);
 		openDialog('dlg');
 		formUrl = getContextPath() + '/portal/team/update';
 	} else {
