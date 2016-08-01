@@ -484,6 +484,17 @@ public class ProductController extends BaseController {
 		final List<Product> list = proService.loadProductByTeam(teamId);
 		return list;
 	}
+	/**
+	 * 
+	 * 
+	 * @param teamId
+	 */
+	@RequestMapping("/product/static/order/team/{teamId}")
+	public List<Product> productInformationByTeamOrder(@PathVariable("teamId") final Integer teamId) {
+		
+		final List<Product> list = proService.loadProductByTeamOrder(teamId);
+		return list;
+	}
 
 	@RequestMapping("/product/static/information/{productId}")
 	public Product information(@PathVariable("productId") final Integer productId) {
@@ -700,8 +711,8 @@ public class ProductController extends BaseController {
 		teamService.setMasterWork(product);
 		return true;
 	}
-	@RequestMapping(value = "/get/masterWork")
-	public Product getMasterWork(Long teamId) {
+	@RequestMapping(value = "/get/masterWork/{teamId}")
+	public Product getMasterWork(@PathVariable("teamId")Long teamId) {
 		if (teamId == null || teamId <= 0) {
 			logger.error("productId is null ...");
 			return null;

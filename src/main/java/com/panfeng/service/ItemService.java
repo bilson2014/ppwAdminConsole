@@ -23,4 +23,5 @@ public interface ItemService {
 	public List<Item> listWithoutActive();
 
 	public List<Item> getTagsById(List<Long> ids);
+	
 }

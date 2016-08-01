@@ -751,8 +751,8 @@ public class TeamController extends BaseController {
 		return result;
 	}
 
-	@RequestMapping("/team/info")
-	public Team getTeamInfo(Long teamId) {
+	@RequestMapping("/team/info/{teamId}")
+	public Team getTeamInfo(@PathVariable("teamId") Long teamId) {
 		if (teamId == null || teamId <= 0) {
 			logger.error("teamId is null ...");
 			return null;

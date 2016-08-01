@@ -40,6 +40,8 @@ public interface ProductMapper {
 	public Product loadProduct(@Param("productId") final Integer productId);
 
 	public List<Product> loadProductByTeam(@Param("teamId") final long teamId);
+	
+	public List<Product> loadProductByTeamOrder(@Param("teamId") final long teamId);
 
 	public List<Product> loadData(final ProductView view);
 	

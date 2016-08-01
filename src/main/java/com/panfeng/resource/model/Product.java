@@ -1,5 +1,7 @@
 package com.panfeng.resource.model;
 
+import java.util.List;
+
 import com.panfeng.domain.BaseObject;
 
 /**
@@ -76,6 +78,17 @@ public class Product extends BaseObject {
 	private String creationTime = null; // 创作时间
 	
 	private Integer masterWork = null; // 推荐作品，0为正常 1 为推荐 
+	
+	// 冗余字段
+	private List<String> tagsArray = null;
+
+	public List<String> getTagsArray() {
+		return tagsArray;
+	}
+
+	public void setTagsArray(List<String> tagsArray) {
+		this.tagsArray = tagsArray;
+	}
 
 	public String getCreationTime() {
 		return creationTime;
