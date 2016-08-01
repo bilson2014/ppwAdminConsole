@@ -100,7 +100,10 @@
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate,
 				   u.LOGINNAME AS loginName,
-				   u.CUSTOMERSOURCE AS customerSource
+				   u.CUSTOMERSOURCE AS customerSource,
+				   u.QQUNIQUE AS qqUnique,
+				   u.WBUNIQUE AS wbUnique,
+				   u.WECHATUNIQUE AS wechatUnique
 			FROM USERS u
 			WHERE u.ID = ${id}
 		]]>
@@ -432,4 +435,25 @@
 		]]>
 	</select>
 	<!-- add by wanglc 2016-7-13 14:35:13 根据用户名和密码查询客户end -->
+	
+	<update id="unBindThird">
+		<![CDATA[
+			UPDATE USERS
+			   SET 
+		]]>
+		<if test="lType=='qq'">
+			 QQUNIQUE =''
+		</if>
+		
+		<if test="lType=='wb'">
+			 WBUNIQUE =''
+		</if>
+		
+		<if test="lType=='wechat'">
+			 WECHATUNIQUE =''
+		</if>
+		<![CDATA[
+			WHERE ID = ${id}
+		]]>
+	</update>
 </mapper>

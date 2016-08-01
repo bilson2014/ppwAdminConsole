@@ -112,4 +112,11 @@ public interface TeamMapper {
 	public void resetMasterWork(@Param("teamId")final long teamId);
 	
 	public void setMasterWork(@Param("productId")final long productId,@Param("status") int status);
+	
+	public void unBindThird(Team team);
+
+	public List<Team> verificationTeamExistByThirdLogin(Team t);
+
+	public long modifyTeamPhone(Team team);
+
 }
