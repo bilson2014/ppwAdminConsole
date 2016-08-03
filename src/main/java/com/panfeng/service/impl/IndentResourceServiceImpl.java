@@ -205,6 +205,7 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	public List<String> getTags() {
 		List<String> tags = new ArrayList<String>();
 		tags.add("需求文档");
+		tags.add("报价单");
 		tags.add("Q&A文档");
 		tags.add("排期表");
 		tags.add("策划方案");
