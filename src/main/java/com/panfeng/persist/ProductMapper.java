@@ -108,4 +108,5 @@ public interface ProductMapper {
 	 * @return
 	 */
 	public Product getMasterWork(@Param("teamId")long teamId);
+
 }

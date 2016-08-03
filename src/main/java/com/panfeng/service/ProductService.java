@@ -125,4 +125,5 @@ public interface ProductService {
 	public Map<Long,Product> getProductByRecommend();
 
 	public Product getMasterWork(long teamId);
+
 }
