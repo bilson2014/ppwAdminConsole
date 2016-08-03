@@ -303,6 +303,7 @@ function editFuc(){ // 注册 修改 按钮
 				});
 			}
 		}
+		var first =true;
 		$('#teamProvince').combobox({
 			url : getContextPath() + '/portal/get/provinces',
 			valueField : 'provinceID',
@@ -321,13 +322,17 @@ function editFuc(){ // 注册 修改 按钮
 				$('#teamCity').combobox({
 					url : getContextPath() + '/portal/get/citys/'+rows[0].teamProvince,
 					valueField : 'cityID',
-					textField : 'city'
+					textField : 'city',
+					onLoadSuccess :function (){
+						if(first){
+							$('#teamCity').combobox('setValue',rows[0].teamCity);
+							first = false;
+						}
+					}
 				});
-
-				$('#teamCity').combobox('setValue',rows[0].teamCityName);
+				$('#teamProvince').combobox('setValue',rows[0].teamProvince);
 			}
 		});
-		$('#teamProvince').combobox('setValue',rows[0].teamProvinceName);
 		openDialog('dlg');
 		formUrl = getContextPath() + '/portal/team/update';
 	} else {
