@@ -120,7 +120,7 @@ public class SolrController extends BaseController {
 				query.setQuery("*:*");
 			}else {
 				
-				query.set("defType", "dismax");
+				//query.set("defType", "dismax");
 				query.setQuery("productName:" + condition + " tags:" + condition + " teamName:" + condition + " pDescription:" + condition);
 			}
 			query.setFields("teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
