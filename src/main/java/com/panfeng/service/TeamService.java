@@ -164,5 +164,7 @@ public interface TeamService {
 	public long modifyTeamPhone(Team team);
 	
 	public Team getTeamInfo(Long teamId);
+	
+	public List<String> getTags(List<Integer> ids);
 
 }
