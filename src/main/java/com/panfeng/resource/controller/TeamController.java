@@ -762,5 +762,16 @@ public class TeamController extends BaseController {
 			logger.error("team is null ...");
 		return team;
 	}
+	
+	@RequestMapping("/team/tags")
+	public List<String> getTags(@RequestBody List<Integer> ids){
+		if(ValidateUtil.isValid(ids)){
+			List<String> tags = service.getTags(ids);
+			return tags;
+		}else{
+			logger.error("ids is null ...");
+		}
+		return null;
+	}
 
 }
