@@ -413,7 +413,7 @@
 				   t.TEAMNAME AS teamName,
 				   t.TEAMDESCRIPTION AS teamDescription,
 				   pro.MASTERWORK AS masterWork,
-				   DATE_FORMAT(IF(creationTime <> NULL ,creationTime,uploadDate),'%Y-%m-%d') AS creationTime
+				   DATE_FORMAT(IF(creationTime IS NULL ,uploadDate,creationTime),'%Y-%m-%d') AS creationTime
 			FROM PRODUCT pro
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
 			WHERE 1 = 1

@@ -712,6 +712,7 @@ public class ProductController extends BaseController {
 		teamService.setMasterWork(product);
 		return true;
 	}
+	
 	@RequestMapping(value = "/get/masterWork/{teamId}")
 	public Product getMasterWork(@PathVariable("teamId")Long teamId) {
 		if (teamId == null || teamId <= 0) {
