@@ -104,4 +104,7 @@ public interface UserMapper {
 
 	//解除第三方绑定
 	public void unBindThird(User u);
+
+	//根据昵称查询用户
+	public List<User> findUserByUserName(User user);
 }

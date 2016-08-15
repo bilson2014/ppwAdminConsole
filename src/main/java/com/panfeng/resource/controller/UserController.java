@@ -569,4 +569,14 @@ public class UserController extends BaseController {
 	public boolean userInfoUnBind(@RequestBody final User user, HttpServletRequest request) {
 		return userService.userInfoUnBind(user);
 	}
+	/**
+	 * 验证用户名昵称唯一性
+	 * true 可用
+	 * false 不可用
+	 */
+	@RequestMapping(value="/user/unique/username",method = RequestMethod.POST)
+	public boolean uniqueUserName(@RequestBody final User user, HttpServletRequest request) {
+		return userService.uniqueUserName(user);
+	}
+	
 }

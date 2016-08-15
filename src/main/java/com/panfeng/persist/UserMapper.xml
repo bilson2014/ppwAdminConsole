@@ -409,7 +409,6 @@
 		]]>
 	</select>
 	
-	<!-- add by wanglc 2016-7-13 14:35:13 根据用户名和密码查询客户begin -->
 	<select id="findUserByLoginNameAndPwd" resultType="User">
 		<![CDATA[
 			SELECT u.ID AS id,
@@ -434,7 +433,6 @@
 			               AND  u.PASSWORD=#{password}
 		]]>
 	</select>
-	<!-- add by wanglc 2016-7-13 14:35:13 根据用户名和密码查询客户end -->
 	
 	<update id="unBindThird">
 		<![CDATA[
@@ -456,4 +454,11 @@
 			WHERE ID = ${id}
 		]]>
 	</update>
+	
+		
+	<select id="findUserByUserName" resultType="User">
+		<![CDATA[
+			SELECT ID FROM USERS  WHERE USERNAME = #{userName} 
+		]]>
+	</select>
 </mapper>
