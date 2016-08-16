@@ -10,82 +10,52 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.panfeng.resource.model.Invoice;
+import com.panfeng.resource.model.UserInvoice;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.InvoiceView;
 import com.panfeng.resource.view.PageFilter;
-import com.panfeng.service.InvoiceService;
+import com.panfeng.service.UserInvoiceService;
 import com.panfeng.util.ValidateUtil;
 
 @RestController
 @RequestMapping("/portal")
-public class InvoiceController extends BaseController {
+public class UserInvoiceController extends BaseController {
 
 	@Autowired
-	private final InvoiceService service = null;
+	private final UserInvoiceService service = null;
 
 	@RequestMapping("/invoice-customlist")
 	public ModelAndView customview(final HttpServletRequest request) {
 
 		return new ModelAndView("invoice-customlist");
 	}
-	
-	@RequestMapping("/invoice-teamlist")
-	public ModelAndView teamlist(final HttpServletRequest request) {
-
-		return new ModelAndView("invoice-teamlist");
-	}
-
 	/**
 	 * 客户发票查询
 	 */
 	@RequestMapping(value = "/invoice/custom/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public DataGrid<Invoice> custromList(final InvoiceView view, final PageFilter pf) {
+	public DataGrid<UserInvoice> custromList(final InvoiceView view, final PageFilter pf) {
 
 		final long page = pf.getPage();
 		final long rows = pf.getRows();
 		view.setBegin((page - 1) * rows);
 		view.setLimit(rows);
-		view.setInvoiceType(0); // 客户发票
 
-		final List<Invoice> list = service.listWithPagination(view);
+		final List<UserInvoice> list = service.listWithPagination(view);
 		final long total = service.maxSize(view);
-		final DataGrid<Invoice> dataGrid = new DataGrid<Invoice>();
+		final DataGrid<UserInvoice> dataGrid = new DataGrid<UserInvoice>();
 		dataGrid.setRows(list);
 		dataGrid.setTotal(total);
 		return dataGrid;
 	}
-	
-	/**
-	 * 供应商发票查询
-	 */
-	@RequestMapping(value = "/invoice/team/list", method = RequestMethod.POST, 
-			produces = "application/json; charset=UTF-8")
-	public DataGrid<Invoice> teamList(final InvoiceView view, final PageFilter pf) {
-
-		final long page = pf.getPage();
-		final long rows = pf.getRows();
-		view.setBegin((page - 1) * rows);
-		view.setLimit(rows);
-		view.setInvoiceType(1); // 供应商发票
-
-		final List<Invoice> list = service.listWithPagination(view);
-		final long total = service.maxSize(view);
-		final DataGrid<Invoice> dataGrid = new DataGrid<Invoice>();
-		dataGrid.setRows(list);
-		dataGrid.setTotal(total);
-		return dataGrid;
-	}
-	
 	@RequestMapping("/invoice/update")
-	public long update(final Invoice invoice){
+	public long update(final UserInvoice invoice){
 	
 		final long ret = service.update(invoice);
 		return ret;
 	}
 	
 	@RequestMapping("/invoice/save")
-	public long save(final Invoice invoice){
+	public long save(final UserInvoice invoice){
 
 		final long ret = service.save(invoice);
 		return ret;
@@ -102,5 +72,11 @@ public class InvoiceController extends BaseController {
 		
 		return 0l;	
 	}
-	
+	/**
+	 * 审批
+	 */
+	@RequestMapping("/invoice/user/auditing")
+	public long auditing(final UserInvoice invoice){
+		return service.auditing(invoice);
+	}
 }

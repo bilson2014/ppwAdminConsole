@@ -578,5 +578,4 @@ public class UserController extends BaseController {
 	public boolean uniqueUserName(@RequestBody final User user, HttpServletRequest request) {
 		return userService.uniqueUserName(user);
 	}
-	
 }

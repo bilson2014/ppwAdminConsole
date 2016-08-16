@@ -23,14 +23,11 @@
 				<tr>
 					<th>项目名称:</th>
 					<td>
-					<%--modify by wanglc 2016-7-4 16:02:04 项目名称改为模糊查询 begin --%>
-					<%--<input id="search-projectId" name="projectId" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;" /> --%>
-					<input id="search-projectId" name="projectName" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;" />
-					<%--modify by wanglc 2016-7-4 16:02:04 项目名称改为模糊查询 end --%> 
+						<input id="search-projectId" name="projectName" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;" />
 					</td>
 					<th>项目状态:</th>
 					<td>
-					<select id="search-state" name="state" editable="false" class="easyui-combobox" style="width: 100px;">
+						<select id="search-state" name="state" editable="false" class="easyui-combobox" style="width: 100px;">
 							<option value="" selected></option>
 							<option value="0" >正常</option>
             				<option value="1" >取消</option>
@@ -40,20 +37,21 @@
 					</td>
 					<th>视频管家:</th>
 					<td>
-					<input id="search-userId" name="userId"  class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
+						<input id="search-userId" name="userId"  class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
+					</td>
+					<th>客户:</th>
+					<td>
+						<input id="search-customerId" name="customerId"  class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
 					</td>
 				</tr>
 				<tr>
 					<th>供应商:</th>
 					<td>
-					<%--modify by wanglc 2016-7-4 16:04:26供应商修改为模糊查询 begin --%>
-					<%--<input name="teamId" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>--%>
-					<input name="teamName" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>
-					<%--modify by wanglc 2016-7-4 16:04:26供应商修改为模糊查询 begin --%>
+						<input name="teamName" id="search-teamId" class="easyui-combobox" placeholder="请输入供应商名称" style="width: 136px;"/>
 					</td>
 					<th>项目来源:</th>
 					<td>
-					<input name="source" id="search-source"  class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
+						<input name="source" id="search-source"  class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
 					</td>
 					<th>是否协同:</th>
 					<td>
@@ -62,6 +60,7 @@
             				<option value="1" >是</option>
 						</select>
 					</td>
+					<th></th>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
@@ -169,14 +168,14 @@
 	        			
 	        			<th>供应商联系人</th>
 	        			<td>
-	        				<input id="teamContact" name="teamContact" class="easyui-textbox" required="true"/>
+	        				<input id="teamContact" name="teamContact" class="easyui-textbox"/>
 	        			</td>
 	        		</tr>
 	        		
 	        		<tr>
 	        			<th>供应商电话</th>
 	        			<td>
-	        				<input id="teamPhone" name="teamPhone" class="easyui-textbox" required="true" />
+	        				<input id="teamPhone" name="teamPhone" class="easyui-textbox" />
 	        			</td>
 	        			<th>最终价格(元)</th>
 	        			<td>
@@ -220,7 +219,6 @@
 							<input id="referrerId" name="referrerId" class="easyui-combobox" style="width: 180px;"/>
 						</td>
 					</tr>
-					<%--add by wanglc,2016-06-23 23:00 添加协同人 begin--%>
 	        		<tr id="synergy-content">
 	        			<th>协同人
 	        				<a onclick="addSynergy()" id="add-synergy" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'"></a>
@@ -229,15 +227,6 @@
 	        				<span class="ratio-error hide" style="color:red"></span>
 	        			</td>
 	        		</tr>
-	        		<!-- <tr>
-	        			<th></th>
-	        			<td colspan="3">
-	        				<input name="user_name" class="easyui-combobox" editable="false" required="true"/>
-	        				<input name="ratio" class="easyui-textbox" required="true" style="width: 30%;"/>%
-	        				<a href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'"></a>
-	        			</td>
-	        		</tr> -->
-	        		<%--add by wanglc,2016-06-23 23:00 end--%>
 	        	</table>
 	        </form>
 	    </div>

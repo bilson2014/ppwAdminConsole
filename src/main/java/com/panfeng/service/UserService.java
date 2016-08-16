@@ -139,5 +139,4 @@ public interface UserService {
 	 */
 	public boolean uniqueUserName(User user);
 
-
 }

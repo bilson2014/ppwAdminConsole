@@ -12,11 +12,22 @@ public class InvoiceView extends Pagination {
 	
 	private Long invoiceUserId = null; // 客户ID
 	
-	private Integer invoiceType = null; // 0:客户发票 1:供应商发票
+	private Integer invoiceType = null; 
 	
-	private Integer invoiceFlag = null; // 0:视频管家未领 1:视频管家已领
+	private Integer invoiceFlag = null; 
 	
-	private Integer invoiceDraw = null; // 0:发票领取方未领取 1:发票领取方已领取
+	private Integer invoiceDraw = null; 
+	
+	private String invoiceCode = null;//发票号
+	
+
+	public String getInvoiceCode() {
+		return invoiceCode;
+	}
+
+	public void setInvoiceCode(String invoiceCode) {
+		this.invoiceCode = invoiceCode;
+	}
 
 	public String getInvoiceName() {
 		return invoiceName;

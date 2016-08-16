@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.TeamInvoiceMapper">
+
+	<select id="listWithPagination" resultType="TeamInvoice">
+		<![CDATA[
+		   SELECT i.INVOICE_ID AS invoiceId,
+				   i.INVOICE_CODE AS invoiceCode,
+				   i.INVOICE_TYPE AS invoiceType,
+				   i.INVOICE_CONTENT AS invoiceContent,
+				   i.INVOICE_TOTAL AS invoiceTotal,
+				   i.INVOICE_RADIO AS invoiceRadio,
+				   DATE_FORMAT(i.INVOICE_STAMPTIME,'%Y-%m-%d %T')AS invoiceStampTime,
+				   DATE_FORMAT( i.INVOICE_TEAMTIME,'%Y-%m-%d %T') AS invoiceTeamTime,
+				   i.INVOICE_TEAMID AS invoiceTeamId,
+				   i.INVOICE_PROJECTID AS invoiceProjectId,
+				   i.INVOICE_EMPLOYEEID AS invoiceEmployeeId,
+				   i.INVOICE_NOTICE AS invoiceNotice,
+				   i.INVOICE_STATUS AS invoiceStatus,
+				   i.REASON AS reason,
+				   p.IP_PROJECT_NAME AS projectName,
+				   t.TEAMNAME AS teamName,
+				   e.employeeRealName AS invoiceEmployeeName
+			FROM TEAM_INVOICE i
+			INNER JOIN INDENT_PROJECT p
+				ON i.INVOICE_PROJECTID = p.IP_ID
+			LEFT JOIN TEAM t
+				ON i.INVOICE_TEAMID = t.TEAMID
+			LEFT JOIN EMPLOYEE e
+				 ON i.invoice_employeeId = e.employeeId
+			WHERE 1 = 1
+		]]>
+		<if test="invoiceType != null and invoiceType !=0 ">
+			AND i.INVOICE_TYPE = ${invoiceType}
+		</if>
+		<if test="invoiceCode != null ">
+			AND i.INVOICE_CODE LIKE CONCAT('%',#{invoiceCode},'%')
+		</if>
+		<if test="invoiceProjectId != null ">
+			AND i.INVOICE_PROJECTID = ${invoiceProjectId}
+		</if>
+		<![CDATA[
+			ORDER BY i.INVOICE_ID DESC
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+	
+	<select id="maxSize" resultType="Long">
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM TEAM_INVOICE i
+			WHERE 1 = 1
+		]]>
+		
+		<if test="invoiceType != null and invoiceType !=0 ">
+			AND i.INVOICE_TYPE = ${invoiceType}
+		</if>
+		
+		<if test="invoiceCode != null ">
+			AND i.INVOICE_CODE LIKE CONCAT('%',#{invoiceCode},'%')
+		</if>
+		
+		<if test="invoiceProjectId != null ">
+			AND i.invoice_projectId = ${invoiceProjectId}
+		</if>
+	</select>
+	
+	<insert id="save" useGeneratedKeys="true" keyProperty="invoiceId"
+		parameterType="TeamInvoice">
+		<![CDATA[
+			INSERT INTO TEAM_INVOICE(INVOICE_CODE,
+			   INVOICE_TYPE,
+			   INVOICE_CONTENT,
+			   INVOICE_TOTAL,
+			   INVOICE_RADIO,
+			   INVOICE_STAMPTIME,
+			   INVOICE_TEAMTIME,
+			   INVOICE_TEAMID,
+			   INVOICE_PROJECTID,
+			   INVOICE_EMPLOYEEID,
+			   INVOICE_NOTICE,
+			   INVOICE_STATUS
+			  )
+			VALUES (
+			#{invoiceCode},
+			#{invoiceType},
+			#{invoiceContent},
+			${invoiceTotal},
+			#{invoiceRadio},
+			DATE_FORMAT(#{invoiceStampTime},'%Y-%m-%d %T'),
+			DATE_FORMAT(#{invoiceTeamTime},'%Y-%m-%d %T'),
+			${invoiceTeamId},
+			${invoiceProjectId},
+			${invoiceEmployeeId},
+			#{invoiceNotice},
+			#{invoiceStatus}
+			)
+		]]>
+	</insert>
+	
+	<update id="update">
+		<![CDATA[
+			UPDATE TEAM_INVOICE
+				SET INVOICE_CODE = #{invoiceCode},
+					INVOICE_TYPE = ${invoiceType},
+					INVOICE_CONTENT = #{invoiceContent},
+					INVOICE_TOTAL = ${invoiceTotal},
+					INVOICE_RADIO = #{invoiceRadio},
+					INVOICE_STAMPTIME = DATE_FORMAT(#{invoiceStampTime},'%Y-%m-%d %T'),
+					INVOICE_TEAMTIME = DATE_FORMAT(#{invoiceTeamTime},'%Y-%m-%d %T'),
+					INVOICE_TEAMID = ${invoiceTeamId},
+					INVOICE_PROJECTID = ${invoiceProjectId},
+					INVOICE_EMPLOYEEID = ${invoiceEmployeeId},
+					INVOICE_NOTICE = #{invoiceNotice},
+					INVOICE_STATUS = #{invoiceStatus}
+				WHERE INVOICE_ID = ${invoiceId}
+		]]>
+	</update>
+	
+	<delete id="deleteByIds">
+		<![CDATA[
+			DELETE FROM TEAM_INVOICE
+				WHERE INVOICE_ID = -1
+		]]>
+		<if test="ids != null and ids != ''">
+			<![CDATA[
+				OR INVOICE_ID IN
+			]]>
+			<foreach collection="ids" open="(" close=")" item="id"
+				separator=",">
+				${id}
+			</foreach>
+		</if>
+	</delete>
+	
+	<update id="agreeInvoiceByIds">
+		<![CDATA[
+			UPDATE TEAM_INVOICE
+				SET INVOICE_STATUS = 1,
+					REASON = ''
+				WHERE INVOICE_ID = -1
+		]]>
+		<if test="ids != null and ids != ''">
+			<![CDATA[
+				OR INVOICE_ID IN
+			]]>
+			<foreach collection="ids" open="(" close=")" item="id"
+				separator=",">
+				${id}
+			</foreach>
+		</if>
+	</update>
+	
+	<update id="disagreeInvoice">
+		<![CDATA[
+			UPDATE TEAM_INVOICE
+				SET INVOICE_STATUS = 2,
+					REASON = #{reason}
+				WHERE INVOICE_ID = ${invoiceId}
+		]]>
+	</update>
+</mapper>

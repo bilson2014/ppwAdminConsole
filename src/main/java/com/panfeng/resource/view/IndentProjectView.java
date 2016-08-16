@@ -14,18 +14,24 @@ public class IndentProjectView extends Pagination {
 	
 	private String source = null; // 项目来源
 	
+	private Long customerId = null; // 客户id
+	
 	private String payment = "no_user"; // 付款金额，此字段作为冗余字段，没有作用
 	
-	//add by wanglc 2016-6-28 18:49:18 视频管家是否是协同人begin
+	//视频管家是否是协同人
 	private Integer isSynergy = 0;
-	//add by wanglc 2016-6-28 18:49:18 视频管家是否是协同人end
-	//add by wanglc 2016-7-4 16:21:57 添加项目和供应商模糊查询begin
+	//添加项目和供应商模糊查询
 	private String projectName;
-	
 	private String teamName;
-	//add by wanglc 2016-7-4 16:21:57 添加项目和供应商模糊查询 end
 	public String getProjectName() {
 		return projectName;
+	}
+
+	public Long getCustomerId() {
+		return customerId;
+	}
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
 	public void setProjectName(String projectName) {

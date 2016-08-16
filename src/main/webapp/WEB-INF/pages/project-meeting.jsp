@@ -52,6 +52,10 @@
 					<td>
 						<input id="search-source" name="source" class="easyui-combobox" placeholder="请选择项目来源" editable="false" style="width: 100px;"/>
 					</td>
+					<th>客户:</th>
+					<td>
+						<input id="search-customerId" name="customerId"  class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
+					</td>
 					<th></th>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>

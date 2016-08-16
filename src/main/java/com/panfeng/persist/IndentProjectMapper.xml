@@ -399,45 +399,37 @@
 			ON s.s_project_id=i.ip_id 
 		LEFT JOIN TEAM t
 			ON i.IP_TEAMID=t.teamId
+		LEFT JOIN USERS u 
+			ON i.IP_CUSTOMERID=u.id 
 		WHERE 1=1
 		]]>
-
 		<if test="projectId != null and projectId != ''">
 			AND i.IP_ID = ${projectId}
 		</if>
-		
-		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
 		<if test="projectName != null and projectName != ''">
 			AND IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
 		</if>
-		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
-
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = #{state}
 		</if>
-
 		<if test="state == 0">
 			AND i.IP_STATE = ${state}
 		</if>
-
 		<if test=" isSynergy != 1 and userId != null and userId != ''">
 			AND i.IP_USER_ID = ${userId}
 		</if>
-
-		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
 		<if test="teamName != null and teamName != ''">
 			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
 		</if>
-		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
-		
+		<if test="customerId != null and customerId != '' and customerId != 0">
+			AND u.ID = ${customerId}
+		</if>
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
-
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
 		</if>
-		
 		<if test="isSynergy == 1">
 			AND (s.S_USER_ID = ${userId} OR i.IP_USER_ID = ${userId})
 		</if>
@@ -590,12 +582,9 @@
 		<if test="projectId != null and projectId != ''">
 			AND i.IP_ID = ${projectId}
 		</if>
-		<!-- add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin -->
 		<if test="projectName != null and projectName != ''">
 			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
 		</if>
-		<!-- add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin -->
-
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = ${state}
 		</if>
@@ -606,14 +595,14 @@
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
-		<!-- add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
 		<if test="teamName != null and teamName != ''">
 			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
 		</if>
-		<!-- add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
-
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
+		</if>
+		<if test="customerId != null and customerId != '' and customerId != 0">
+			AND u.ID = ${customerId}
 		</if>
 		<![CDATA[
 			ORDER BY i.IP_ID DESC
@@ -657,11 +646,9 @@
 		<if test="projectId != null and projectId != ''">
 			AND i.IP_ID = ${projectId}
 		</if>
-		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
 		<if test="projectName != null and projectName != ''">
 			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
 		</if>
-		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = ${state}
 		</if>
@@ -674,11 +661,9 @@
 			AND i.IP_USER_ID = ${userId}
 		</if>
 
-		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
 		<if test="teamName != null and teamName != ''">
 			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
 		</if>
-		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
 		
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
@@ -686,6 +671,10 @@
 
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
+		</if>
+		
+		<if test="customerId != null and customerId != '' and customerId != 0">
+			AND u.ID = ${customerId}
 		</if>
 		<![CDATA[
 			ORDER BY i.IP_ID DESC
