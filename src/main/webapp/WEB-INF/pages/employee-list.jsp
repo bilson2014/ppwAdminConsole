@@ -50,10 +50,6 @@
 				<a onclick="editFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">修改</a>
 			</r:permission>
 			
-			<r:permission uri="/portal/employee/delete">
-				<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
-			</r:permission>
-			
 			<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 		</div>
 		
@@ -82,8 +78,16 @@
 	                <input name="email" id="email" class="easyui-validatebox textbox" validType="email" required="true" />
 	            </div>
 	            <div class="fitem">
+	                <label>在职状态:</label>
+	                <select name="dimissionStatus" class="easyui-combobox" id="dimissionStatus" style="width: 160px;" editable="false" required="true" >
+	               		<option value="0">在职</option>
+	                	<option value="1">离职</option>
+	                </select>
+	            </div>
+	            <div class="fitem">
 	                <label>角色:</label>
-	                <select name="roleIds" id="roleIds" style="width: 160px;"></select>
+	                <select name="roleIds" id="roleIds" style="width: 160px;">
+	                </select>
 	            </div>
 	            <div class="fitem">
 	                <label>头像:</label>

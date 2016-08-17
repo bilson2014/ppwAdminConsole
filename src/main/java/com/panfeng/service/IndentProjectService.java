@@ -78,7 +78,7 @@ public interface IndentProjectService {
 	 * 
 	 * @return
 	 */
-	public String getProjectSerialID();
+	public String getProjectSerialID(Long id);
 
 	/**
 	 * 删除项目协同人
@@ -106,4 +106,6 @@ public interface IndentProjectService {
 	// add by wanglc 2016-6-29 10:41:24 end
 
 	public BaseMsg verifyProjectInfo(long projectId);
+	
+	public String verifyIntegrity(IndentProject indentProject); 
 }

@@ -3,6 +3,7 @@ package com.panfeng.service.impl;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,10 +21,12 @@ import com.panfeng.poi.GenerateExcel;
 import com.panfeng.poi.ProjectPoiAdapter;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.BizBean;
+import com.panfeng.resource.model.DealLog;
 import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.FlowDate;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
+import com.panfeng.resource.model.IndentResource;
 import com.panfeng.resource.model.Synergy;
 import com.panfeng.resource.model.UserViewModel;
 import com.panfeng.resource.view.IndentProjectView;
@@ -32,6 +35,7 @@ import com.panfeng.service.EmployeeService;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentProjectService;
+import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.SynergyService;
 import com.panfeng.service.UserTempService;
 import com.panfeng.util.PathFormatUtils;
@@ -61,20 +65,20 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Autowired
 	SynergyService synergyService;
 
-	// add by Jack ,2016-06-03 17:18 bengin
-	// -> register EmployeeService to load employee informartion
 	@Autowired
 	final EmployeeService employeeService = null;
 	@Autowired
 	DealLogService dealLogService;
-
-	// add by Jack ,2016-06-03 17:18 end
+	@Autowired
+	IndentResourceService indentResourceService;
 
 	@Override
 	public boolean save(IndentProject indentProject) {
-		indentProject.setSerial(getProjectSerialID());
 
 		indentProjectMapper.save(indentProject);
+		indentProject.setSerial(getProjectSerialID(indentProject.getId()));
+		indentProjectMapper.updateSerialID(indentProject);
+
 		// add synergy by laowang begin 2016-5-25 12:01
 		List<Synergy> list = indentProject.getSynergys();
 		boolean isValid = ValidateUtil.isValid(list);
@@ -88,7 +92,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				synergyService.save(synergy);
 			}
 		}
-		// 解决项目重复big
+		// 解决项目重复bug
 		boolean res = indentActivitiService.startProcess(indentProject);
 		if (!res) {
 			indentProjectMapper.deleteById(indentProject.getId());
@@ -209,12 +213,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public List<BizBean> getTags() {
 		String[] tags = new String[6];
-		// tags[0] = "网站下单";
-		// tags[1] = "友情推荐";
-		// tags[2] = "活动下单";
-		// tags[3] = "渠道优惠";
-		// tags[4] = "团购下单";
-		// tags[5] = "媒体推广";
 		tags[0] = "电话下单";
 		tags[1] = "个人信息下单";
 		tags[2] = "系统下单";
@@ -235,7 +233,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		indentProject.setState(IndentProject.PROJECT_CANCEL);
 		long l = indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_CANCEL,
 				indentProject.getDescription());
-		indentCommentService.createSystemMsg("取消了" + indentProject.getProjectName() + "项目,原因："+ indentProject.getDescription(), indentProject);
+		indentCommentService.createSystemMsg(
+				"取消了" + indentProject.getProjectName() + "项目,原因：" + indentProject.getDescription(), indentProject);
 		return (l > 0);
 	}
 
@@ -369,8 +368,13 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	}
 
 	@Override
-	public String getProjectSerialID() {
-		long count = indentProjectMapper.getProjectCount();
+	public String getProjectSerialID(Long id) {
+		long count;
+		if (id != null && id != 0) {
+			count = id;
+		} else {
+			count = indentProjectMapper.getProjectCount();
+		}
 		String date = PathFormatUtils.parse("{yyyy}{mm}{dd}");
 		String formatNum = count + "";
 		if (count < 100) {
@@ -458,4 +462,250 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			return new BaseMsg(BaseMsg.WARNING, "警告", "有未支付的订单");
 		}
 	}
+
+	@Override
+	public String verifyIntegrity(IndentProject indentProject) {
+		List<fileType> file = new ArrayList<>();
+		List<InfoType> info = new ArrayList<>();
+		List<PayType> pay = new ArrayList<>();
+		// 根据步骤，拼装不同验证组件（调度中心）
+		switch (indentProject.getTask().getName()) {
+		case "沟通":
+			info.add(InfoType.base);
+			info.add(InfoType.time);
+			file.add(fileType.XuQiuWenDang);
+			file.add(fileType.QA);
+			break;
+		case "方案":
+			info.add(InfoType.provider);
+			file.add(fileType.CeHuaFangAn);
+			file.add(fileType.BaoJiaDan);
+			file.add(fileType.PaiQiBiao);
+			break;
+		case "商务":
+			info.add(InfoType.customerPayment);
+			pay.add(PayType.payFinish);
+			break;
+		case "制作":
+			file.add(fileType.FenJingTouJiaoBen);
+			break;
+		case "交付":
+			info.add(InfoType.providerPayment);
+			info.add(InfoType.priceFinish);
+			break;
+		}
+
+		// 进入业务操作
+		if (ValidateUtil.isValid(file)) {
+			String res = verifyResFile(file, indentProject);
+			if (ValidateUtil.isValid(res)) {
+				return res;
+			}
+		}
+		if (ValidateUtil.isValid(info)) {
+			String res = verifyInfo(info, indentProject);
+			if (ValidateUtil.isValid(res)) {
+				return res;
+			}
+		}
+		if (ValidateUtil.isValid(pay)) {
+			String res = verifyPay(pay, indentProject);
+			if (ValidateUtil.isValid(res)) {
+				return res;
+			}
+		}
+		return "";
+	}
+
+	/**
+	 * 验证资源文件
+	 * 
+	 * @param resType
+	 * @param projectId
+	 * @return
+	 */
+	private String verifyResFile(List<fileType> resTypes, IndentProject indentProject) {
+		// 一次性查询项目相关的全部文件，减小数据库压力
+		List<IndentResource> resList = indentResourceService.findIndentList(indentProject);
+		for (int i = 0; i < resTypes.size(); i++) {
+			String type = resTypes.get(i).getText();
+			boolean isExist = false;
+			for (int j = 0; j < resList.size(); j++) {
+				IndentResource indentResource = resList.get(j);
+				String resType = indentResource.getIrtype();
+				if (resType.equals(type)) {
+					isExist = true;
+				}
+			}
+			if (isExist) {
+				isExist = false;
+			} else {
+				return "缺少资源文件\"" + type + "\"请补充！";
+			}
+		}
+		return "";
+	}
+
+	/**
+	 * 验证项目信息
+	 * 
+	 * @param scope
+	 * @param projectId
+	 * @return
+	 */
+	private String verifyInfo(List<InfoType> scope, IndentProject indentProject) {
+		// 完整的项目信息
+		IndentProject ip = getRedundantProject(indentProject);
+		InfoType infoType;
+		for (int i = 0; i < scope.size(); i++) {
+			infoType = scope.get(i);
+			switch (infoType) {
+			case base:
+				if (!ValidateUtil.isValid(ip.getProjectName())) {
+					return "项目名称不正确，请补充！";
+				}
+
+				if (!ValidateUtil.isValid(ip.getSource())) {
+					return "项目来源信息不完整，请补充！";
+				} else if (ip.getSource().equals("个人信息下单") && !(ip.getReferrerId() != null && ip.getReferrerId() > 0)) {
+					return "友情推荐人填写错误，请补充！";
+				}
+
+				if (ip.getCustomerId() == null || ip.getCustomerId() <= 0) {
+					return "客户信息不完整，请补充！";
+				}
+				if (!ValidateUtil.isValid(ip.getUserName())) {
+					return "客户信息不完整，请补充！";
+				}
+				if (!ValidateUtil.isValid(ip.getUserContact())) {
+					return "客户信息不完整，请补充！";
+				}
+				if (!ValidateUtil.isValid(ip.getUserPhone())) {
+					return "客户信息不完整，请补充！";
+				}
+
+				if (ip.getPriceFirst() <= 0) {
+					return "价格区间未填写，请补充！";
+				}
+				if (ip.getPriceLast() <= 0) {
+					return "价格区间未填写，请补充！";
+				}
+
+				break;
+			case time:
+				Map<String, String> ipTime = ip.getTime();
+				for (String val : ipTime.values()) {
+					if (val.equals(""))
+						return "预计时间填写不完整，请补充！";
+				}
+				break;
+			case provider:
+				if (ip.getTeamId() == null || ip.getTeamId() <= 0) {
+					return "供应商信息不完整，请补充！";
+				}
+				if (!ValidateUtil.isValid(ip.getTeamName())) {
+					return "供应商信息不完整，请补充！";
+				}
+				if (!ValidateUtil.isValid(ip.getTeamContact())) {
+					return "供应商信息不完整，请补充！";
+				}
+				if (!ValidateUtil.isValid(ip.getTeamPhone())) {
+					return "供应商信息不完整，请补充！";
+				}
+				break;
+			case synergy:
+				List<Synergy> synergys = ip.getSynergys();
+				if (!ValidateUtil.isValid(synergys)) {
+					return "协同人信息不完整，请补充！";
+				}
+				break;
+			case providerPayment:
+				if (ip.getProviderPayment() == null || ip.getProviderPayment() <= 0) {
+					return "供应商实际支付金额未填写，请补充！";
+				}
+				break;
+			case customerPayment:
+				if (ip.getCustomerPayment() == null || ip.getCustomerPayment() <= 0) {
+					return "客户实际支付金额未填写，请补充！";
+				}
+				break;
+			case priceFinish:
+				if (ip.getPriceFirst() == null || ip.getPriceFirst() <= 0) {
+					return "最终价格未填写，请补充！";
+				}
+				break;
+			}
+		}
+		return "";
+	}
+
+	/**
+	 * 验证支付信息
+	 * 
+	 * @param scope
+	 * @param projectId
+	 * @return
+	 */
+	private String verifyPay(List<PayType> scope, IndentProject indentProject) {
+		Map<String, String> pram = new HashMap<>();
+		IndentProject ip = getRedundantProject(indentProject);
+		pram.put("userid", ip.getUserId() + "");
+		pram.put("userType", ip.getUserType());
+		pram.put("projectId", ip.getId() + "");
+		List<DealLog> deals = dealLogService.getDealLogByProject(pram);
+		if (deals.size() > 0) {
+			for (PayType payType : scope) {
+				switch (payType) {
+				case payFinish:
+					boolean hasPayComplete = false;
+					for (DealLog dealLog : deals) {
+						if (dealLog.getDealStatus() == 1) {
+							hasPayComplete = true;
+						}
+					}
+					if (!hasPayComplete)
+						return "必须有一个订单支付完成，请补充！";
+					break;
+				}
+			}
+		}else{
+			return "必须有一个订单支付完成，请补充！";
+		}
+		return "";
+	}
+
+	enum InfoType {
+		base, time, provider, synergy, providerPayment, customerPayment, priceFinish
+	}
+
+	enum PayType {
+		payFinish
+	}
+
+	/*
+	 * tags.add("需求文档"); tags.add("Q&A文档"); tags.add("排期表"); tags.add("策划方案");
+	 * tags.add("报价单"); tags.add("制作导演信息"); tags.add("分镜头脚本"); tags.add("花絮");
+	 * tags.add("成片");
+	 */
+	enum fileType {
+
+		XuQiuWenDang("需求文档"), QA("Q&A文档"), PaiQiBiao("排期表"), CeHuaFangAn("策划方案"), BaoJiaDan("报价单"), ZhiZuoDaoYan(
+				"制作导演信息"), FenJingTouJiaoBen("分镜头脚本"), HuaXun("花絮");
+
+		fileType(String text) {
+			this.text = text;
+		}
+
+		private String text;
+
+		public String getText() {
+			return text;
+		}
+
+		public void setText(String text) {
+			this.text = text;
+		}
+
+	}
+
 }

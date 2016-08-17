@@ -18,6 +18,7 @@
 		<result property="qqUnique" column="qqUnique" />
 		<result property="wbUnique" column="wbUnique" />
 		<result property="wechatUnique" column="wechatUnique" />
+		<result property="dimissionStatus" column="dimissionStatus" />
 	</resultMap>
 
 	<resultMap type="Employee" id="EmployeeRoleMap" extends="EmployeeMap">
@@ -67,7 +68,8 @@
 				   DATE_FORMAT(e.UPDATEDATE,'%Y-%m-%d %T') AS updateDate,
 				   r.ROLEID,
 				   r.ROLENAME,
-				   r.ROLEDESCRIPTION
+				   r.ROLEDESCRIPTION,
+				   e.DIMISSIONSTATUS AS dimissionStatus
 			FROM EMPLOYEE e 
 				   LEFT JOIN EMPLOYEE_ROLE er
 				   		ON e.EMPLOYEEID = er.EMPLOYEEID
@@ -132,6 +134,7 @@
 				   		ON er.ROLEID = r.ROLEID
 			WHERE  e.EMPLOYEELOGINNAME = #{loginName}
 			   AND e.EMPLOYEEPASSWORD = #{password}
+			   AND DIMISSIONSTATUS = 0
 		]]>
 	</select>
 
@@ -143,14 +146,18 @@
 				   EMPLOYEEPASSWORD,
 				   EMPLOYEEDESCRIPTION,
 				   EMAIL,
-				   PHONENUMBER)
+				   PHONENUMBER,
+				   DIMISSIONSTATUS
+				   )
 			VALUES (
 				#{employeeLoginName},
 				#{employeeRealName},
 				#{employeePassword},
 				#{employeeDescription},
 				#{email},
-				#{phoneNumber})
+				#{phoneNumber},
+				${dimissionStatus}
+				)
 		]]>
 	</insert>
 
@@ -184,6 +191,7 @@
 						EMPLOYEEDESCRIPTION = #{employeeDescription},
 						PHONENUMBER = #{phoneNumber},
 						EMAIL = #{email},
+						DIMISSIONSTATUS = ${dimissionStatus},
 						UPDATEDATE = CURRENT_TIMESTAMP
 			WHERE EMPLOYEEID = ${employeeId}
 		]]>
@@ -259,6 +267,7 @@
 			WHERE e.EMPLOYEEREALNAME LIKE CONCAT('%',#{employeeRealName},'%') 
 			AND e.FLAG =  1
 			AND r.roleName like '视频管家%'
+			AND DIMISSIONSTATUS = 0
 		]]>
 	</select>
 
@@ -275,7 +284,8 @@
 				   DATE_FORMAT(e.UPDATEDATE,'%Y-%m-%d %T') AS updateDate
 			FROM EMPLOYEE e 
 			WHERE e.EMPLOYEEREALNAME LIKE CONCAT('%',#{employeeRealName},'%') 
-			AND e.FLAG =  1
+			AND e.FLAG =  1 
+			AND DIMISSIONSTATUS = 0
 		]]>
 	</select>
 
@@ -284,7 +294,7 @@
 			SELECT e.EMPLOYEEID AS employeeId,
 				   e.EMPLOYEEREALNAME AS employeeRealName
 			FROM EMPLOYEE e
-			WHERE e.FLAG = 1
+			WHERE e.FLAG = 1 AND DIMISSIONSTATUS = 0
 		]]>
 	</select>
 
@@ -309,6 +319,7 @@
 			on r.roleId = inl.roleId
 			WHERE e.FLAG =  1
 			AND r.roleName like '视频管家%'
+			AND DIMISSIONSTATUS = 0
 		]]>
 	</select>
 
@@ -342,15 +353,17 @@
 				    r.ROLEDESCRIPTION,
 					e.qqUnique,
 					e.wechatUnique,
-					e.wbUnique
+					e.wbUnique,
+					e.PHONENUMBER
 			FROM EMPLOYEE e 
 				   LEFT JOIN EMPLOYEE_ROLE er
 				   		ON e.EMPLOYEEID = er.EMPLOYEEID
 				   LEFT JOIN ROLE r
 				   		ON er.ROLEID = r.ROLEID
-			WHERE QQUNIQUE = #{qqUnique}
+			WHERE (QQUNIQUE = #{qqUnique}
 				OR wbUnique = #{wbUnique}
-				OR wechatUnique = #{wechatUnique}
+				OR wechatUnique = #{wechatUnique})
+				AND DIMISSIONSTATUS = 0
 		]]>
 	</select>
 
