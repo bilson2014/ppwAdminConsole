@@ -444,7 +444,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	}
 
 	@Override
-	public BaseMsg verifyProjectInfo(long projectId) {
+	public synchronized BaseMsg verifyProjectInfo(long projectId) {
 		IndentProject indentProject = new IndentProject();
 		indentProject.setId(projectId);
 		indentProject = indentProjectMapper.findProjectInfo(indentProject);
@@ -484,6 +484,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			break;
 		case "商务":
 			info.add(InfoType.customerPayment);
+			info.add(InfoType.priceFinish);
 			pay.add(PayType.payFinish);
 			break;
 		case "制作":
@@ -491,7 +492,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			break;
 		case "交付":
 			info.add(InfoType.providerPayment);
-			info.add(InfoType.priceFinish);
 			break;
 		}
 

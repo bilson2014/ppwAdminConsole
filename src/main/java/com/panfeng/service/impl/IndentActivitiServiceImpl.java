@@ -105,7 +105,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	}
 
 	@Override
-	public String completeTask(IndentProject indentProject) {
+	public synchronized String completeTask(IndentProject indentProject) {
 
 		// 完整性认证
 		ActivitiTask activitiTask = getCurrentTask(indentProject);
