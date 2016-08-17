@@ -300,8 +300,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		List<IndentProject> list = new ArrayList<IndentProject>();
 		int begin = (int) view.getBegin();
 		int size = (int) view.getLimit();
-		int end = size > (returnList.size() - begin) ? returnList.size() : size;
-		for (int i = begin; i < end; i++) {
+		int total = (begin + size) < returnList.size() ? (begin + size) : returnList.size();
+		//int end = (size > (returnList.size()-begin)?returnList.size():size) + size;
+		for(int i=begin;i<total;i++){
 			list.add(returnList.get(i));
 		}
 		// modify by wanglc 2016-6-28 19:54:21 end

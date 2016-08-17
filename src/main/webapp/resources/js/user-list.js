@@ -25,8 +25,8 @@ $().ready(function(){
 							type : 'validatebox' ,
 							options : {
 								required : true , 
-								missingMessage : '请填写昵称!'
-							}
+								missingMessage : '请填写昵称!',
+							},
 						}
 					},{
 						field : 'realName',
@@ -219,12 +219,29 @@ $().ready(function(){
 		toolbar : '#toolbar',
 		onAfterEdit:function(index , record){
 			delete record.roles;
-			$.post(flag =='add' ? getContextPath() + '/portal/user/save' : getContextPath() + '/portal/user/update', record , function(result){
-				datagrid.datagrid('clearSelections');
-				datagrid.datagrid('reload');
-				$.message('操作成功!');
-			});
-		}
+			//$.post(flag =='add' ? getContextPath() + '/portal/user/save' : getContextPath() + '/portal/user/update', record , function(result){
+			//	datagrid.datagrid('clearSelections');
+			///	datagrid.datagrid('reload');
+			//	$.message('操作成功!');
+			//});
+			//modify by wanglc 添加用户名唯一性 验证 begin
+			loadData(function(data){
+				if(data){
+					$.post(flag =='add' ? getContextPath() + '/portal/user/save' : getContextPath() + '/portal/user/update', record , function(result){
+						datagrid.datagrid('clearSelections');
+						datagrid.datagrid('reload');
+						$.message('操作成功!');
+					});
+				}else{
+					datagrid.datagrid('beginEdit', index);
+					$.message('用户名已经存在!');
+				}
+			}, getContextPath() + '/portal/user/unique/username',$.toJSON({
+				userName : record.userName,
+				id:record.id
+			}));
+			//modify by wanglc 添加用户名唯一性 验证 end
+		},
 	});
 	
 });
