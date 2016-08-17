@@ -123,6 +123,6 @@ public class IndentProjectTest {
 	}
 	@Test
 	public void getid(){
-		System.out.println(indentProjectService.getProjectSerialID());
+		System.out.println(indentProjectService.getProjectSerialID(1L));
 	}
 }

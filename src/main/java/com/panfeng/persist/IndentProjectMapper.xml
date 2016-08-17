@@ -185,6 +185,15 @@
 			WHERE i.IP_ID = ${id}
 		]]>
 	</update>
+	
+	<update id="updateSerialID">
+		<![CDATA[
+			UPDATE INDENT_PROJECT i
+				SET i.IP_SERIAL = #{serial}
+			WHERE
+				i.IP_ID = ${id}
+		]]>
+	</update>
 
 	<delete id="deleteById">
 		<![CDATA[
@@ -192,7 +201,7 @@
 				WHERE IP_ID = ${projectId}
 		]]>
 	</delete>
-
+	
 	<select id="findProjectList" resultType="IndentProject">
 		<![CDATA[
 			SELECT 

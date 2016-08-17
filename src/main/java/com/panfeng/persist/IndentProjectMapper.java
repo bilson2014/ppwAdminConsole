@@ -75,4 +75,6 @@ public interface IndentProjectMapper {
 
 	public List<IndentProject> listWithPaginationNoLimit(IndentProjectView view);
 	
+	public void updateSerialID(IndentProject indentProject);
+	
 }
