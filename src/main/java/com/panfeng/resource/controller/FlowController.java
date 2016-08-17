@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
@@ -43,9 +44,10 @@ public class FlowController extends BaseController {
 		return indentActivitiService.getCurrentTask(indentProject);
 	}
 
-	@RequestMapping("/completeTask")
-	public Boolean completeTask(@RequestBody final IndentProject indentProject) {
-		return indentActivitiService.completeTask(indentProject);
+	@RequestMapping(value = "/completeTask" ,method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public BaseMsg completeTask(@RequestBody final IndentProject indentProject) {
+		String res =  indentActivitiService.completeTask(indentProject);
+		return new BaseMsg(BaseMsg.ERROR,"",res);
 	}
 
 	@RequestMapping("/getIndentFlows")

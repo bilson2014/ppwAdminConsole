@@ -136,11 +136,11 @@ public class ProjectController extends BaseController {
 		view.setLimit(rows);
 
 		DataGrid<IndentProject> dataGrid = new DataGrid<IndentProject>();
-		//add by wanglc 2016-7-11 13:46:29 接口限制视频管家与协同人的选择关系begin
-		if(whetherJustChooseSynergy(view)){//搜索 只选择了是否协同,没有选择视频管家
+		// add by wanglc 2016-7-11 13:46:29 接口限制视频管家与协同人的选择关系begin
+		if (whetherJustChooseSynergy(view)) {// 搜索 只选择了是否协同,没有选择视频管家
 			return dataGrid;
-		} 
-		//add by wanglc 2016-7-11 13:46:29 接口限制视频管家与协同人的选择关系begin
+		}
+		// add by wanglc 2016-7-11 13:46:29 接口限制视频管家与协同人的选择关系begin
 		final List<IndentProject> list = indentProjectService.listWithPagination(view);
 		dataGrid.setRows(list);
 		final long total = indentProjectService.maxSize(view);
@@ -149,7 +149,7 @@ public class ProjectController extends BaseController {
 	}
 
 	private boolean whetherJustChooseSynergy(final IndentProjectView view) {
-		boolean b = view.getUserId() == null && (view.getIsSynergy()!=null && view.getIsSynergy()==1);
+		boolean b = view.getUserId() == null && (view.getIsSynergy() != null && view.getIsSynergy() == 1);
 		return b;
 	}
 
@@ -229,16 +229,18 @@ public class ProjectController extends BaseController {
 
 	@RequestMapping("/saveInfo")
 	public Boolean saveInfo(final IndentProject indentProject, String user_name, String ratio) {
-		List<Synergy> list = new ArrayList<Synergy>();
-		String[] users = user_name.split(",");
-		String[] ratios = ratio.split(",");
-		for (int i = 0; i < users.length; i++) {
-			Synergy s = new Synergy();
-			s.setRatio(Double.parseDouble(ratios[i]));
-			s.setUserId(Long.parseLong(users[i]));
-			list.add(s);
+		if(null!=user_name && null != ratio){
+			List<Synergy> list = new ArrayList<Synergy>();
+			String[] users = user_name.split(",");
+			String[] ratios = ratio.split(",");
+			for (int i = 0; i < users.length; i++) {
+				Synergy s = new Synergy();
+				s.setRatio(Double.parseDouble(ratios[i]));
+				s.setUserId(Long.parseLong(users[i]));
+				list.add(s);
+			}
+			indentProject.setSynergys(list);
 		}
-		indentProject.setSynergys(list);
 		return indentProjectService.save(indentProject);
 	}
 
@@ -312,7 +314,7 @@ public class ProjectController extends BaseController {
 	public IndentProject getProjectSerialID() {
 
 		final IndentProject project = new IndentProject();
-		project.setSerial(indentProjectService.getProjectSerialID());
+		project.setSerial(indentProjectService.getProjectSerialID(null));
 		return project;
 	}
 
@@ -329,8 +331,8 @@ public class ProjectController extends BaseController {
 
 	@RequestMapping("/verifyProjectInfo")
 	public BaseMsg verifyProjectInfo(@RequestBody IndentProject indentProject) {
-		if(indentProject  == null)
-			return new BaseMsg(BaseMsg.ERROR,"错误","项目信息不能为空");
+		if (indentProject == null)
+			return new BaseMsg(BaseMsg.ERROR, "错误", "项目信息不能为空");
 		return indentProjectService.verifyProjectInfo(indentProject.getId());
 	}
 	// ------------------------------------------协同人处理部分------------------------------------------
@@ -348,4 +350,10 @@ public class ProjectController extends BaseController {
 	public List<IndentProject> getSynergys(@RequestBody final IndentProject indentProject) {
 		return indentProjectService.getSynergys(indentProject);
 	}
+	// -------------------------------- 验证流程资源完整度------------------------------
+	
+//	public boolean verifyIntegrity(){
+//		
+//		return true;
+//	}
 }

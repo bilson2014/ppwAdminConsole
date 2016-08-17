@@ -4,36 +4,37 @@ import java.util.List;
 
 /**
  * 职工表
+ * 
  * @author GY
  *
  */
 public class Employee extends Customer {
 
 	private static final long serialVersionUID = -2956477405160485997L;
-	
+
 	private long employeeId = 0l; // 职工ID
-	
+
 	private String employeeLoginName = null; // 职工登录名
-	
+
 	private String employeeRealName = null; // 职工姓名
-	
+
 	private String employeePassword = null; // 登陆密码
-	
+
 	private String employeeDescription = null; // 职工描述
-	
+
 	private String createDate = null; // 创建时间
-	
+
 	private String updateDate = null; // 更新时间
-	
+
 	private List<Long> roleIds = null; // 角色ID集合
-	
+
 	private String employeeImg = null;
-	
+
 	private String phoneNumber = null; // 电话号码
-	
+
 	private String email = null; // 邮箱
-	
-	// laowang add 
+
+	// laowang add
 	private String qqUnique = null; // QQToken
 
 	private String wbUnique = null; // 微博Token
@@ -42,14 +43,28 @@ public class Employee extends Customer {
 
 	private String thirdLoginType = null; // 第三方登录类型
 
+	private Integer dimissionStatus = null; // 离职状态
+
 	public final static String LTYPE_WEIBO = "weibo";
 
 	public final static String LTYPE_QQ = "qq";
 
 	public final static String LTYPE_WECHAT = "wechat";
 
+	public final static int DIMISSIONSTATUS_DIMISSION = 1; // 离职
+
+	public final static int DIMISSIONSTATUS_IN_SERVICE = 0;// 在职
+
 	public String getQqUnique() {
 		return qqUnique;
+	}
+	
+	public Integer getDimissionStatus() {
+		return dimissionStatus;
+	}
+
+	public void setDimissionStatus(Integer dimissionStatus) {
+		this.dimissionStatus = dimissionStatus;
 	}
 
 	public void setQqUnique(String qqUnique) {

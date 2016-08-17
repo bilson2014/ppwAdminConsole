@@ -82,7 +82,7 @@ public class ValidateUtil {
 		}
 		return false;
 	}
-
+	
 	@SuppressWarnings("rawtypes")
 	public static boolean isValid(Map map) {
 		

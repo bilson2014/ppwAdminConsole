@@ -329,4 +329,20 @@ public class UserServiceImpl implements UserService {
 		return true;
 	}
 
+	@Override
+	public boolean uniqueUserName(User user) {
+		if(null!=user){
+			List<User> list = mapper.findUserByUserName(user);
+			if(list.size()==0){
+				return true;
+			}
+			if(list.size()==1){
+				User u = list.get(0);
+				if(null == u || u.getId()==user.getId()){//是自身
+					return true;
+				}
+			}
+			return false;
+		}return false;
+	}
 }

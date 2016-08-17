@@ -4,10 +4,10 @@ import com.panfeng.domain.BaseObject;
 
 /**
  * 
- * 发票信息实体
+ * 客户发票信息实体
  * @author Jack
  */
-public class Invoice extends BaseObject {
+public class ProviderInvoice extends BaseObject {
 
 	private static final long serialVersionUID = -6519482800672773697L;
 

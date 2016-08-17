@@ -47,6 +47,17 @@ $().ready(function(){
 						title : '人员列表',
 						align : 'center',
 						hidden : true
+					},{
+						field : 'dimissionStatus' ,
+						title : '离职状态',
+						align : 'center',
+						formatter : function(value , record , index){
+							if(value == 0){
+								return '<span>在职</span>' ;
+							} else if( value == 1){
+								return '<span>离职</span>' ; 
+							} 
+						}
 					}]],
 		pagination: true ,
 		pageSize : 50,
@@ -76,36 +87,6 @@ function editFuc(){
 		formUrl = getContextPath() + '/portal/employee/update';
 	} else {
 		$.message('只能选择一条记录进行修改!');
-	}
-}
-
-// 删除
-function delFuc(){
-	var arr = datagrid.datagrid('getSelections');
-	if(arr.length <= 0 ){
-		$.messager.show({
-			title:'提示信息',
-			msg:'请选择进行删除操作!'
-		});
-	} else {
-		$.messager.confirm('提示信息' , '确认删除?' , function(r){
-			if(r){
-				var ids = '';
-				for(var i = 0 ; i < arr.length ; i++){
-					ids += arr[i].employeeId + ',';
-				}
-				ids = ids.substring(0,ids.length-1);
-				$.post(getContextPath() + '/portal/employee/delete', {ids:ids},function(result){
-					
-					// 刷新数据
-					datagrid.datagrid('clearSelections');
-					datagrid.datagrid('reload');
-					$.message('操作成功!');
-				});
-			} else {
-				 return ;
-			}
-		});
 	}
 }
 

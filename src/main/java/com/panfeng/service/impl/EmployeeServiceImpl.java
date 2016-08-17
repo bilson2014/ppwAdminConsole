@@ -178,15 +178,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 		if (ValidateUtil.isValid(employees)) {
 			// 不存在情况 --->只存在重复绑定
 			for (Employee empl : employees) {
-				if (employee.equals(Employee.LTYPE_QQ)) {
+				if (employee.getThirdLoginType().equals(Employee.LTYPE_QQ)) {
 					if (empl.getQqUnique().equals(employee.getQqUnique())) {
 						return new BaseMsg(BaseMsg.NORMAL, "绑定成功", empl);
 					}
-				} else if (employee.equals(Employee.LTYPE_WECHAT)) {
+				} else if (employee.getThirdLoginType().equals(Employee.LTYPE_WECHAT)) {
 					if (empl.getWechatUnique().equals(employee.getWechatUnique())) {
 						return new BaseMsg(BaseMsg.NORMAL, "绑定成功", empl);
 					}
-				} else if (employee.equals(Employee.LTYPE_WEIBO)) {
+				} else if (employee.getThirdLoginType().equals(Employee.LTYPE_WEIBO)) {
 					if (empl.getWbUnique().equals(employee.getWbUnique())) {
 						return new BaseMsg(BaseMsg.NORMAL, "绑定成功", empl);
 					}

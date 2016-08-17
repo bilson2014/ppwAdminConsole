@@ -45,6 +45,23 @@ $().ready(function(){
 						title : '视频管家' ,
 						align : 'center'
 					},{
+						field : 'synergys',
+						title : '协同人',
+						align : 'center',
+						formatter : function(value , row , index){
+							var info = '';
+							if(value != null && value != '' && value != undefined){
+								// 有项目协同人
+								for(var i = 0 ;i < value.length;i ++){
+									info += value[i].userName + '(' + value[i].ratio + '%)';
+									if(i != value.length - 1){
+										info += ' ,';
+									}
+								}
+							}
+							return '<span style=color:orange; >'+ info +'</span>' ;
+						}
+					},{
 						field : 'userName',
 						title : '客户公司',
 						align : 'center'
@@ -123,23 +140,6 @@ $().ready(function(){
 						title : '供应商实付金额',
 						align : 'center'
 					},{
-						field : 'synergys',
-						title : '协同人',
-						align : 'center',
-						formatter : function(value , row , index){
-							var info = '';
-							if(value != null && value != '' && value != undefined){
-								// 有项目协同人
-								for(var i = 0 ;i < value.length;i ++){
-									info += value[i].userName + '(' + value[i].ratio + '%)';
-									if(i != value.length - 1){
-										info += ' ,';
-									}
-								}
-							}
-							return '<span style=color:orange; >'+ info +'</span>' ;
-						}
-					},{
 						field : 'description',
 						title : '项目描述',
 						align : 'center'
@@ -194,30 +194,30 @@ var project = {
 	initData : function(){
 		$('#search-teamId').combobox({
 			url : getContextPath() + '/project/getAllTeam',
-			//modify by wanglc 2016-7-4 16:06:41 修改为模糊查询 begin
 			valueField : 'teamName',
-			//valueField : 'teamId',
-			//modify by wanglc 2016-7-4 16:06:41 修改为模糊查询 begin
 			textField : 'teamName'
 		});
 		
+		$('#search-customerId').combobox({
+			url : getContextPath() + '/portal/user/all',
+			valueField : 'id',
+			textField : 'userName',
+			filter: function(q, row){
+				if(row.userName == null)
+					return false;
+				return row.userName.indexOf(q) >= 0;
+			}
+		});
+		
 		$('#search-userId').combobox({
-			// modify by wanglc,2016-6-24 14:47:59 begin
-			// -> 更换接口 
-			//url : getContextPath() + 'project/getAllVersionManager',
-			//valueField : 'userId',
 			url : getContextPath() + '/portal/employee/findSynergy',
 			valueField : 'employeeId',
-			// modify by wanglc,2016-6-24 14:48:03 end
 			textField : 'employeeRealName'
 		});
 		
 		$('#search-projectId').combobox({
 			url : getContextPath() + '/project/getAllProject',
-			//modify by wanglc 2016-7-4 16:08:08 修改为模糊查询begin
-			//valueField : 'id',
 			valueField : 'projectName',
-			//modify by wanglc 2016-7-4 16:08:08 修改为模糊查询begin
 			textField : 'projectName'
 		});
 		
@@ -313,7 +313,6 @@ function save(){
 		}
 	});
 }
-//add by wanglc,2016-6-24 14:48:11 begin
 // -> 协同人提交前验证信息
 function confirmSynergy(){
 	var synergyName = document.getElementsByName("user_name");
@@ -344,9 +343,7 @@ function confirmSynergy(){
 		return -1;
 	}
 }
-//add by wanglc,2016-6-24 14:48:17 end
 
-//add by wanglc,2016-6-24 14:48:20 begin
 // ->  协同人模板
 function createSynergyView(name,ratio,userid,synergyid){
 	var $body='<tr class="synergy">'+
@@ -360,9 +357,7 @@ function createSynergyView(name,ratio,userid,synergyid){
 		$body+='</tr> ';
 	return $body;
 }
-//add by wanglc,2016-6-24 14:48:25 end
 
-//add by wanglc,2016-6-24 14:48:28 begin
 //->  添加协同人按钮
 function addSynergy(){
 	var time = $(".synergy").length;
@@ -384,9 +379,7 @@ function addSynergy(){
 	 //删除协同人
 	 delSynergy();
 }
-//add by wanglc,2016-6-24 14:48:47 end
 
-//add by wanglc,2016-6-24 14:48:50 begin
 // -> 删除协同人
 function delSynergy(){
 	//需要先解除绑定
@@ -406,7 +399,6 @@ function delSynergy(){
 		
 	});
 }
-//add by wanglc,2016-6-24 14:48:56 end
 
 // 打开dialog
 function openDialog(id,data){
@@ -465,13 +457,8 @@ function openDialog(id,data){
 			});
 			
 			$('#userId').combobox({
-				// modify by wanglc,2016-6-24 14:49:02 begin
-				// -> 更换接口 
-				//url : getContextPath() + 'project/getAllVersionManager',
-				//valueField : 'userId',
 				url : getContextPath() + '/portal/employee/findSynergy',
 				valueField : 'employeeId',
-				// modify by wanglc,2016-6-24 14:49:06 end
 				textField : 'employeeRealName'
 			});
 			
@@ -524,7 +511,6 @@ function openDialog(id,data){
 		},
 	}).dialog('open').dialog('center');
 }
-//add by wanglc,2016-6-24 14:49:20 begin
 // -> 打开弹窗,加载协同人模板
 function addSynergyModel(name,ratio,userid,synergyid){
 	var html = createSynergyView(name == undefined ? "" : name,
@@ -539,10 +525,6 @@ function addSynergyModel(name,ratio,userid,synergyid){
 	 $.parser.parse($(newSynergy));
 	 var box = "synergy-content:eq("+time+")";
 	 $("."+box).combobox({
-		// modify by wanglc,2016-06-24 begin
-			// -> 更换接口 
-			//url : getContextPath() + 'project/getAllVersionManager',
-			//valueField : 'userId',
 			url : getContextPath() + '/portal/employee/findSynergy',
 			valueField : 'employeeId',
 			textField : 'employeeRealName',
@@ -552,7 +534,6 @@ function addSynergyModel(name,ratio,userid,synergyid){
 	 });
 	 delSynergy();
 }
-//add by wanglc,2016-6-24 14:49:36 end
 // 查询
 function searchFun(){
 	//add by wanglc 2016-7-11 13:25:46 只有选择视频管家才能选择是否协同,之前让协同disable兼容性有问题,改在这里提示 begin

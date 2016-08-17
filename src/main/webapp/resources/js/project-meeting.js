@@ -44,6 +44,23 @@ $().ready(function(){
 						title : '视频管家' ,
 						align : 'center'
 					},{
+						field : 'synergys',
+						title : '协同人',
+						align : 'center',
+						formatter : function(value , row , index){
+							var info = '';
+							if(value != null && value != '' && value != undefined){
+								// 有项目协同人
+								for(var i = 0 ;i < value.length;i ++){
+									info += value[i].userName + '(' + value[i].ratio + '%)';
+									if(i != value.length - 1){
+										info += ' ,';
+									}
+								}
+							}
+							return '<span style=color:orange; >'+ info +'</span>' ;
+						}
+					},{
 						field : 'clientLevel',
 						title : '客户级别',
 						align : 'center',
@@ -85,23 +102,6 @@ $().ready(function(){
 						field : 'providerPayment',
 						title : '支付供应商金额',
 						align : 'center'
-					},{
-						field : 'synergys',
-						title : '协同人',
-						align : 'center',
-						formatter : function(value , row , index){
-							var info = '';
-							if(value != null && value != '' && value != undefined){
-								// 有项目协同人
-								for(var i = 0 ;i < value.length;i ++){
-									info += value[i].userName + '(' + value[i].ratio + '%)';
-									if(i != value.length - 1){
-										info += ' ,';
-									}
-								}
-							}
-							return '<span style=color:orange; >'+ info +'</span>' ;
-						}
 					},{
 						field : 'description',
 						title : '项目描述',
@@ -150,20 +150,26 @@ var project = {
 			url : getContextPath() + '/portal/employee/findSynergy',
 			valueField : 'employeeId',
 			textField : 'employeeRealName',
-			// add by wanglc,2016-6-30 10:41:31 begin
 			//视频管家选中后 开始是否作为协同人
 			onSelect : function(record){
 				$("#isSynergy").combobox('enable');
 			}
-			// add by wanglc,2016-6-30 10:41:36 end
+		});
+		
+		$('#search-customerId').combobox({
+			url : getContextPath() + '/portal/user/all',
+			valueField : 'id',
+			textField : 'userName',
+			filter: function(q, row){
+				if(row.userName == null)
+					return false;
+				return row.userName.indexOf(q) >= 0;
+			}
 		});
 		
 		$('#search-projectId').combobox({
 			url : getContextPath() + '/project/getAllProject',
-			//modify by wanglc 2016-7-4 16:58:23修改为项目名称的模糊查询begin
-			//valueField : 'id',
 			valueField : 'projectName',
-			//modify by wanglc 2016-7-4 16:58:23修改为项目名称的模糊查询begin
 			textField : 'projectName'
 		});
 		

@@ -2,17 +2,17 @@ package com.panfeng.service;
 
 import java.util.List;
 
-import com.panfeng.resource.model.Invoice;
+import com.panfeng.resource.model.TeamInvoice;
 import com.panfeng.resource.view.InvoiceView;
 
-public interface InvoiceService {
+public interface TeamInvoiceService {
 
 	/**
 	 * 分页查询书
 	 * @param view 条件
 	 * @return
 	 */
-	public List<Invoice> listWithPagination(final InvoiceView view);
+	public List<TeamInvoice> listWithPagination(final InvoiceView view);
 	
 	/**
 	 * 总条目数
@@ -26,14 +26,14 @@ public interface InvoiceService {
 	 * @param invoice 发票实体
 	 * @return
 	 */
-	public long save(final Invoice invoice);
+	public long save(final TeamInvoice invoice);
 	
 	/**
 	 * 更新
 	 * @param invoice 发票实体
 	 * @return
 	 */
-	public long update(final Invoice invoice);
+	public long update(final TeamInvoice invoice);
 	
 	/**
 	 * 批量删除发票
@@ -41,4 +41,9 @@ public interface InvoiceService {
 	 * @return
 	 */
 	public long deleteByIds(final long[] ids);
+
+	/**
+	 * 审核发票
+	 */
+	public long auditing(TeamInvoice invoice);
 }

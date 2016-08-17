@@ -24,16 +24,21 @@
 			<form id="searchForm">
 				<table>
 				<tr>
-					<th>发票名称:</th>
+					<th>发票类型:</th>
 					<td>
-						<input type="text" name="invoiceName" class="easyui-textbox" placeholder="请输入发票名称"/>
+						<select id="search-type"  name="invoiceType" editable="false" class="easyui-combobox" style="width: 120px;">
+							<option value="1" selected>增值税专用发票</option>
+           					<option value="2" >增值税普通发票</option>
+						</select>
 					</td>
-					<th>是否最终领票:</th>
+					<th>发票号:</th>
 					<td>
-						<select id="search-type"  name="invoiceDraw" editable="false" class="easyui-combobox" style="width: 76px;">
-							<option value=""></option>
-							<option value="0" >未领取</option>
-            				<option value="1" >已领取</option>
+						<input id="search-code" name="invoiceCode" class="easyui-textbox" style="width: 120px;"/>
+					</td>
+					<th>项目名称:</th>
+					<td>
+						<select id="search-projectId"  name="invoiceProjectId" editable="false" class="easyui-combobox" style="width: 120px;">
+							
 						</select>
 					</td>
 					<td>
@@ -63,33 +68,46 @@
 			</r:permission>
 			
 			<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
+			<r:permission uri="/portal/invoice/user/auditing">
+				<a onclick="auditFuc(this);" href="javascript:void(0);" class="easyui-linkbutton" data-flag="ok" data-options="plain:true,iconCls:'icon-ok'">审批通过</a>
+				<a onclick="auditFuc(this);" href="javascript:void(0);" class="easyui-linkbutton" data-flag="no" data-options="plain:true,iconCls:'icon-no'">审批未通过</a>
+			</r:permission>
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" style="width:360px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons" title="发票信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input name="invoiceId" type="hidden" />
-	        	<input name="invoiceType" type="hidden" value="0" />
-	        	<input name="invoiceProviderId" type="hidden" value="0" />
+	        	 <div class="fitem">
+	                <label>发票类型:</label>
+	               	<select name="invoiceType" class="easyui-combobox" editable="false" required="true">
+						<option value="1" selected>增值税专用发票</option>
+           				<option value="2" >增值税普通发票</option>
+					</select>
+	            </div>
 	            <div class="fitem">
 	                <label>发票编号:</label>
 	                <input name="invoiceCode" class="easyui-textbox" required="true" />
 	            </div>
 	            <div class="fitem">
-	                <label>发票名称:</label>
-	                <input name="invoiceName" class="easyui-textbox" required="true" />
+	                <label>发票内容:</label>
+	                <input name="invoiceContent" class="easyui-textbox" required="true" />
 	            </div>
 	            <div class="fitem">
-	                <label>发票金额:</label>
-	               	<input name="invoicePrice" class="easyui-numberbox" required="true" precision="2" />
+	                <label>价税合计:</label>
+	               	<input name="invoiceTotal" class="easyui-numberbox" required="true" precision="6" />
 	            </div>
 	            <div class="fitem">
 	                <label>发票税率:</label>
 	               	<input name="invoiceRadio" class="easyui-numberbox" required="true" precision="2" />
 	            </div>
 	            <div class="fitem">
-	                <label>交易时间:</label>
-	                <input name="payTime" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" required="true" />
+	                <label>开票时间:</label>
+	                <input name="invoiceStampTime"  required="true" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" required="true" />
+	            </div>
+	            <div class="fitem">
+	                <label>视频管家领票时间:</label>
+	                <input name="invoiceReceiveTime"  required="true" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" required="true" />
 	            </div>
 	            <div class="fitem">
 	                <label>项目名称:</label>
@@ -100,18 +118,8 @@
 	               	<input id="invoiceUserId" name="invoiceUserId" class="easyui-combobox" required="true" />
 	            </div>
 	            <div class="fitem">
-	                <label>视频管家是否领取发票:</label>
-	               	<select name="invoiceFlag" class="easyui-combobox" editable="false" required="true" >
-						<option value="0" selected>未领</option>
-           				<option value="1" >已领</option>
-					</select>
-	            </div>
-	            <div class="fitem">
-	                <label>客户是否领取发票:</label>
-	                <select name="invoiceDraw" class="easyui-combobox" editable="false" required="true" >
-						<option value="0" selected>未领</option>
-           				<option value="1" >已领</option>
-					</select>
+	                <label>领取人:</label>
+	               	<input id="invoiceEmployeeId" name="invoiceEmployeeId" class="easyui-combobox" required="true" />
 	            </div>
 	            <div class="fitem">
 	                <label>备注:</label>

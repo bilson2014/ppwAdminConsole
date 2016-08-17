@@ -132,5 +132,11 @@ public interface UserService {
 	 */
 	public boolean userInfoUnBind(User user);
 
+	/**
+	 * 验证用户名昵称唯一性
+	 * true 可用
+	 * false 不可用
+	 */
+	public boolean uniqueUserName(User user);
 
 }

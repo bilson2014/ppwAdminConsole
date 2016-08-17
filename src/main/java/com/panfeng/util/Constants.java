@@ -29,6 +29,9 @@ public final class Constants {
 
 	public final static int ENABLED = 0;
 	public final static int DISABLED = 1;
+	
+	public final static int INVOICE_STATUS_OK = 1;
+	public final static int INVOICE_STATUS_NO = 2;
 
 	private Constants() {
 		load();
