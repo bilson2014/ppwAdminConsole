@@ -215,22 +215,15 @@ function auditFuc(data){
 		});
 	} else if(operate == "no"){
 		if(arr.length == 1 ){
-			$.messager.prompt('提示信息' , '请输入未通过原因' , function(r){
-				if(r){
-					$.post(getContextPath() + '/portal/invoice/team/auditing', {
-						invoiceId:arr[0].invoiceId,
-						invoiceStatus:2,
-						reason:r
-						},function(result){
-						// 刷新数据
-						datagrid.datagrid('clearSelections');
-						datagrid.datagrid('reload');
-						$.message('操作成功!');
-					});
-				} else {
-					 return ;
+			$('#invoicedlg').dialog({
+				modal : true,
+				onOpen : function(){
+					var rows = datagrid.datagrid('getSelections');
+					$('#invoicedlgfm').form('clear');
+					$('#invoicedlgfm').form('load',rows[0]);
+					$('#invoicefm_invoiceStatus').val(2);
 				}
-			});
+			}).dialog('open').dialog('center');
 		}else{
 			$.message('只能选择一条进行审批未通过!');
 			return false;
@@ -238,7 +231,25 @@ function auditFuc(data){
 		
 	}
 }
-
+function saveInvoiceReason(){
+	$('#invoicedlgfm').form('submit',{
+		url : getContextPath() + '/portal/invoice/team/auditing',
+		onSubmit : function() {
+			var flag = $(this).form('validate');
+			var msg = "请填写原因!"
+			if(!flag){
+				$.message(msg);
+			}
+			return flag;
+		},
+		success : function(result) {
+			$('#invoicedlg').dialog('close');
+			datagrid.datagrid('reload');
+			datagrid.datagrid('clearSelections');
+			$.message('操作成功!');
+		}
+	});
+}
 // 确认事件
 function save(){
 	

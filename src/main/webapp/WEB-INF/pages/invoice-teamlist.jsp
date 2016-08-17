@@ -137,5 +137,24 @@
 	    	
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
+	    
+	    
+	  <div id="invoicedlg" class="easyui-dialog" style="width:360px;padding:10px 20px"
+		closed="true" buttons="#invoicedlg-buttons" title="未通过原因">
+		<form id="invoicedlgfm" method="post" enctype="multipart/form-data">
+			<input name="invoiceId" type="hidden" />
+			<input name="invoiceStatus" id="invoicefm_invoiceStatus" type="hidden" value="2"/>
+			<div class="fitem">
+				<label>请填写未通过原因:</label>
+				<input class="easyui-textbox text-area" name="reason"  required="true" multiline="true" style="height: 100px;width: 92%;" />
+			</div>
+		</form>
+		</div>
+		<div id="invoicedlg-buttons">
+	    	<r:permission uri="/portal/invoice/team/auditing">
+		        <a href="javascript:void(0)" id="saveInvoice" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveInvoiceReason()" >保存</a>
+	    	</r:permission>
+	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#invoicedlg').dialog('close')" >取消</a>
+	    </div>
 </body>
 </html>
