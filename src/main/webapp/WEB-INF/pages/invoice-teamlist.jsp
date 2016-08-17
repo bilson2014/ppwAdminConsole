@@ -100,7 +100,7 @@
 	            </div>
 	            <div class="fitem">
 	                <label>发票税率:</label>
-	               	<input name="invoiceRadio" class="easyui-numberbox" required="true" precision="2" />
+	               	<input name="invoiceRadio" class="easyui-numberbox" required="true" precision="2" max="1.00"/>
 	            </div>
 	            <div class="fitem">
 	                <label>开票时间:</label>
