@@ -204,7 +204,7 @@
 	
 	<select id="findProjectList" resultType="IndentProject">
 		<![CDATA[
-			SELECT 
+			SELECT
 				i.IP_ID AS id,
 				i.IP_PROJECT_NAME AS projectName,
 				i.IP_USER_CONTACT AS userContact,
@@ -221,21 +221,36 @@
 				i.IP_TEAMID AS teamId,
 				u.USERNAME AS userName,
 				u.CLIENTLEVEL AS clientLevel,
-				t.TEAMNAME AS  teamName,
+				t.TEAMNAME AS teamName,
 				i.IP_PRICE_FIRST AS priceFirst,
 				i.IP_PRICE_LAST AS priceLast,
 				i.IP_PRICE_FINISH AS priceFinish,
 				e.employeeRealName AS referrerName,
 				i.ip_referrer_id AS referrerId,
-				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
+				DATE_FORMAT(
+					i.IP_CREATE_TIME,
+					'%Y-%m-%d %T'
+				) AS createTime,
 				i.IP_CUSTOMER_PAYMENT AS customerPayment,
 				i.IP_PROVIDER_PAYMENT AS providerPayment
-				
-			FROM INDENT_PROJECT i 
-			LEFT JOIN USERS u on i.ip_customerId=u.id 
+			FROM
+				INDENT_PROJECT i
+			LEFT JOIN USERS u ON i.ip_customerId = u.id
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
 			LEFT JOIN EMPLOYEE e ON i.ip_referrer_id = e.employeeId
-     		WHERE  i.IP_USER_ID=${userId} ORDER BY i.IP_UPDATE_TIME DESC,i.IP_ID DESC
+			WHERE
+				i.IP_USER_ID = ${userId}
+			OR i.ip_id IN (
+				SELECT
+					s.s_project_id
+				FROM
+					SYNERGY s
+				WHERE
+					s_user_id = ${userId}
+			)
+			ORDER BY
+				i.IP_UPDATE_TIME DESC,
+				i.IP_ID DESC
 		]]>
 	</select>
 

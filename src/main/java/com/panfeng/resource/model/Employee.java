@@ -50,10 +50,13 @@ public class Employee extends Customer {
 	public final static String LTYPE_QQ = "qq";
 
 	public final static String LTYPE_WECHAT = "wechat";
+	
+	public final static int DIMISSIONSTATUS_TEST = 2;// 测试
 
 	public final static int DIMISSIONSTATUS_DIMISSION = 1; // 离职
 
 	public final static int DIMISSIONSTATUS_IN_SERVICE = 0;// 在职
+	
 
 	public String getQqUnique() {
 		return qqUnique;

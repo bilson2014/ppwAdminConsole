@@ -82,6 +82,7 @@
 	                <select name="dimissionStatus" class="easyui-combobox" id="dimissionStatus" style="width: 160px;" editable="false" required="true" >
 	               		<option value="0">在职</option>
 	                	<option value="1">离职</option>
+	                	<option value="2">测试</option>
 	                </select>
 	            </div>
 	            <div class="fitem">

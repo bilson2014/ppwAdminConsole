@@ -56,6 +56,8 @@ $().ready(function(){
 								return '<span>在职</span>' ;
 							} else if( value == 1){
 								return '<span>离职</span>' ; 
+							} else if( value == 2){
+								return '<span>测试</span>' ; 
 							} 
 						}
 					}]],
