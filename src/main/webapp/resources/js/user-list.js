@@ -233,7 +233,8 @@ $().ready(function(){
 						$.message('操作成功!');
 					});
 				}else{
-					datagrid.datagrid('beginEdit', index);
+					editing = index;
+					datagrid.datagrid('beginEdit', editing);
 					$.message('用户名已经存在!');
 				}
 			}, getContextPath() + '/portal/user/unique/username',$.toJSON({

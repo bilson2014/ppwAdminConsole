@@ -15,6 +15,7 @@ import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.InvoiceView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.TeamInvoiceService;
+import com.panfeng.util.Constants;
 import com.panfeng.util.ValidateUtil;
 
 @RestController
@@ -51,9 +52,11 @@ public class TeamInvoiceController extends BaseController {
 	
 	@RequestMapping("/invoice/team/update")
 	public long update(final TeamInvoice invoice){
-	
-		final long ret = service.update(invoice);
-		return ret;
+		if(invoice.getInvoiceStatus() != Constants.INVOICE_STATUS_OK){//审核通过的单子不能修改
+			final long ret = service.update(invoice);
+			return ret;
+		}
+		return 0l;
 	}
 	
 	@RequestMapping("/invoice/team/save")

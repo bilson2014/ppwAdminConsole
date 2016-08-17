@@ -15,6 +15,7 @@ import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.InvoiceView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.UserInvoiceService;
+import com.panfeng.util.Constants;
 import com.panfeng.util.ValidateUtil;
 
 @RestController
@@ -49,9 +50,11 @@ public class UserInvoiceController extends BaseController {
 	}
 	@RequestMapping("/invoice/update")
 	public long update(final UserInvoice invoice){
-	
-		final long ret = service.update(invoice);
-		return ret;
+		if(invoice.getInvoiceStatus() != Constants.INVOICE_STATUS_OK){//审核通过的发票不能修改
+			final long ret = service.update(invoice);
+			return ret;
+		}
+		return 0l;
 	}
 	
 	@RequestMapping("/invoice/save")

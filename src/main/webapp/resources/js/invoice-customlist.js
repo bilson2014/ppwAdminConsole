@@ -3,8 +3,6 @@ var flag  ;	  //判断新增和修改方法
 var formUrl;
 var datagrid;
 $().ready(function(){
-	
-	
 	var invoiceCustomelist = {
 			init:function(){
 				//初始化搜索 条件
@@ -70,11 +68,19 @@ $().ready(function(){
 								},{
 									field : 'invoiceStampTime',
 									title : '开票日期',
-									align : 'center'
+									align : 'center',
+									formatter : function(value,row,index){
+										var time = new Date(value); 
+										return time.Format("yyyy-MM-dd"); 
+									}
 								},{
 									field : 'invoiceReceiveTime',
 									title : '管家领取日期',
-									align : 'center'
+									align : 'center',
+									formatter : function(value,row,index){
+										var time = new Date(value); 
+										return time.Format("yyyy-MM-dd"); 
+									}
 								},{
 									field : 'userName',
 									title : '客户名称',
@@ -267,7 +273,6 @@ function save(){
 		}
 	});
 }
-
 // 打开dialog
 function openDialog(id,data){
 	$('#' + id).dialog({
@@ -340,11 +345,15 @@ function openDialog(id,data){
 				}else {
 					$('#invoiceEmployeeId').combobox('setValue','');
 				}
+				if(data.invoiceStatus==1){//审核通过的单子不能修改
+					$("#saveInvoice").hide();
+				}else{
+					$("#saveInvoice").show();
+				}
 			}
 		}
 	}).dialog('open').dialog('center');
 }
-
 //查询
 function searchFun(){
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));

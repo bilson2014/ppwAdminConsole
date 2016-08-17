@@ -78,6 +78,7 @@
             closed="true" buttons="#dlg-buttons" title="发票信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input name="invoiceId" type="hidden" />
+	        	<input name="invoiceStatus" type="hidden" />
 	        	 <div class="fitem">
 	                <label>发票类型:</label>
 	               	<select name="invoiceType" class="easyui-combobox" editable="false" required="true">
@@ -99,15 +100,15 @@
 	            </div>
 	            <div class="fitem">
 	                <label>发票税率:</label>
-	               	<input name="invoiceRadio" class="easyui-numberbox" required="true" precision="2" />
+	               	<input name="invoiceRadio" class="easyui-numberbox" required="true" precision="2"  max="1.00" />(填写对应小数)
 	            </div>
 	            <div class="fitem">
 	                <label>开票时间:</label>
-	                <input name="invoiceStampTime"  required="true" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" required="true" />
+	                <input name="invoiceStampTime"  required="true" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
 	            </div>
 	            <div class="fitem">
 	                <label>视频管家领票时间:</label>
-	                <input name="invoiceReceiveTime"  required="true" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss'})" readonly="readonly" required="true" />
+	                <input name="invoiceReceiveTime"  required="true" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
 	            </div>
 	            <div class="fitem">
 	                <label>项目名称:</label>
@@ -130,7 +131,7 @@
 	    <div id="dlg-buttons">
 	    
 	    	<r:mulparampermission uri2="/portal/invoice/save" uri="/portal/invoice/update">
-		        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="save()" >保存</a>
+		        <a href="javascript:void(0)" id="saveInvoice" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="save()" >保存</a>
 	    	</r:mulparampermission>
 	    	
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
