@@ -229,16 +229,18 @@ public class ProjectController extends BaseController {
 
 	@RequestMapping("/saveInfo")
 	public Boolean saveInfo(final IndentProject indentProject, String user_name, String ratio) {
-		List<Synergy> list = new ArrayList<Synergy>();
-		String[] users = user_name.split(",");
-		String[] ratios = ratio.split(",");
-		for (int i = 0; i < users.length; i++) {
-			Synergy s = new Synergy();
-			s.setRatio(Double.parseDouble(ratios[i]));
-			s.setUserId(Long.parseLong(users[i]));
-			list.add(s);
+		if(null!=user_name && null != ratio){
+			List<Synergy> list = new ArrayList<Synergy>();
+			String[] users = user_name.split(",");
+			String[] ratios = ratio.split(",");
+			for (int i = 0; i < users.length; i++) {
+				Synergy s = new Synergy();
+				s.setRatio(Double.parseDouble(ratios[i]));
+				s.setUserId(Long.parseLong(users[i]));
+				list.add(s);
+			}
+			indentProject.setSynergys(list);
 		}
-		indentProject.setSynergys(list);
 		return indentProjectService.save(indentProject);
 	}
 
