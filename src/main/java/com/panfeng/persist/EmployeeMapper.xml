@@ -134,7 +134,7 @@
 				   		ON er.ROLEID = r.ROLEID
 			WHERE  e.EMPLOYEELOGINNAME = #{loginName}
 			   AND e.EMPLOYEEPASSWORD = #{password}
-			   AND DIMISSIONSTATUS = 0
+			   AND DIMISSIONSTATUS <> 1
 		]]>
 	</select>
 
@@ -267,7 +267,7 @@
 			WHERE e.EMPLOYEEREALNAME LIKE CONCAT('%',#{employeeRealName},'%') 
 			AND e.FLAG =  1
 			AND r.roleName like '视频管家%'
-			AND DIMISSIONSTATUS = 0
+			AND DIMISSIONSTATUS <> 1
 		]]>
 	</select>
 
@@ -285,7 +285,7 @@
 			FROM EMPLOYEE e 
 			WHERE e.EMPLOYEEREALNAME LIKE CONCAT('%',#{employeeRealName},'%') 
 			AND e.FLAG =  1 
-			AND DIMISSIONSTATUS = 0
+			AND DIMISSIONSTATUS <> 1
 		]]>
 	</select>
 
@@ -294,7 +294,7 @@
 			SELECT e.EMPLOYEEID AS employeeId,
 				   e.EMPLOYEEREALNAME AS employeeRealName
 			FROM EMPLOYEE e
-			WHERE e.FLAG = 1 AND DIMISSIONSTATUS = 0
+			WHERE e.FLAG = 1 AND DIMISSIONSTATUS <> 1
 		]]>
 	</select>
 
@@ -319,7 +319,7 @@
 			on r.roleId = inl.roleId
 			WHERE e.FLAG =  1
 			AND r.roleName like '视频管家%'
-			AND DIMISSIONSTATUS = 0
+			AND DIMISSIONSTATUS <> 1
 		]]>
 	</select>
 
@@ -363,7 +363,7 @@
 			WHERE (QQUNIQUE = #{qqUnique}
 				OR wbUnique = #{wbUnique}
 				OR wechatUnique = #{wechatUnique})
-				AND DIMISSIONSTATUS = 0
+				AND DIMISSIONSTATUS <> 1
 		]]>
 	</select>
 
