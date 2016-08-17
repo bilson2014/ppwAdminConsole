@@ -151,7 +151,7 @@
 		</form>
 		</div>
 		<div id="invoicedlg-buttons">
-	    	<r:permission uri="/portal/invoice/user/auditing">
+	    	<r:permission uri="/portal/invoice/team/auditing">
 		        <a href="javascript:void(0)" id="saveInvoice" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveInvoiceReason()" >保存</a>
 	    	</r:permission>
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#invoicedlg').dialog('close')" >取消</a>
