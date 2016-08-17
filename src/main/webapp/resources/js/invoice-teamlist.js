@@ -69,11 +69,19 @@ $().ready(function(){
 								},{
 									field : 'invoiceStampTime',
 									title : '开票日期',
-									align : 'center'
+									align : 'center',
+									formatter : function(value,row,index){
+										var time = new Date(value); 
+										return time.Format("yyyy-MM-dd"); 
+									}
 								},{
 									field : 'invoiceTeamTime',
 									title : '提供发票日期',
-									align : 'center'
+									align : 'center',
+									formatter : function(value,row,index){
+										var time = new Date(value); 
+										return time.Format("yyyy-MM-dd"); 
+									}
 								},{
 									field : 'teamName',
 									title : '供应商名称',
@@ -337,6 +345,11 @@ function openDialog(id,data){
 					$('#invoiceEmployeeId').combobox('setValue',employeeId);
 				}else {
 					$('#invoiceEmployeeId').combobox('setValue','');
+				}
+				if(data.invoiceStatus==1){//审核通过的单子不能修改
+					$("#saveInvoice").hide();
+				}else{
+					$("#saveInvoice").show();
 				}
 			}
 		}
