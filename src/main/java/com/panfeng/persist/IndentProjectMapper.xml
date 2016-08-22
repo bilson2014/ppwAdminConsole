@@ -111,7 +111,7 @@
 				i.IP_SERIAL=#{serial},
 				i.IP_SOURCE=#{source},
 				i.IP_CUSTOMERID=${customerId},
-				i.IP_TEAMID=${teamId},
+				i.IP_TEAMID=#{teamId},
 				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 				]]>
 

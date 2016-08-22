@@ -120,7 +120,7 @@
 	               	<input id="invoiceTeamId" name="invoiceTeamId" class="easyui-combobox" required="true" />
 	            </div>
 	            <div class="fitem">
-	                <label>领取人:</label>
+	                <label>提供人:</label>
 	               	<input id="invoiceEmployeeId" name="invoiceEmployeeId" class="easyui-combobox" required="true" />
 	            </div>
 	            <div class="fitem">
