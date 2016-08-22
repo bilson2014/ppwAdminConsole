@@ -301,8 +301,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		int begin = (int) view.getBegin();
 		int size = (int) view.getLimit();
 		int total = (begin + size) < returnList.size() ? (begin + size) : returnList.size();
-		//int end = (size > (returnList.size()-begin)?returnList.size():size) + size;
-		for(int i=begin;i<total;i++){
+		// int end = (size > (returnList.size()-begin)?returnList.size():size) +
+		// size;
+		for (int i = begin; i < total; i++) {
 			list.add(returnList.get(i));
 		}
 		// modify by wanglc 2016-6-28 19:54:21 end
@@ -477,20 +478,69 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			file.add(fileType.QA);
 			break;
 		case "方案":
+			// 沟通
+			info.add(InfoType.base);
+			info.add(InfoType.time);
+			file.add(fileType.XuQiuWenDang);
+			file.add(fileType.QA);
+			// 方案
 			info.add(InfoType.provider);
 			file.add(fileType.CeHuaFangAn);
 			file.add(fileType.BaoJiaDan);
 			file.add(fileType.PaiQiBiao);
 			break;
 		case "商务":
+			// 沟通
+			info.add(InfoType.base);
+			info.add(InfoType.time);
+			file.add(fileType.XuQiuWenDang);
+			file.add(fileType.QA);
+			// 方案
+			info.add(InfoType.provider);
+			file.add(fileType.CeHuaFangAn);
+			file.add(fileType.BaoJiaDan);
+			file.add(fileType.PaiQiBiao);
+			// 商务
 			info.add(InfoType.customerPayment);
 			info.add(InfoType.priceFinish);
 			pay.add(PayType.payFinish);
 			break;
 		case "制作":
+			// 沟通
+			info.add(InfoType.base);
+			info.add(InfoType.time);
+			file.add(fileType.XuQiuWenDang);
+			file.add(fileType.QA);
+			// 方案
+			info.add(InfoType.provider);
+			file.add(fileType.CeHuaFangAn);
+			file.add(fileType.BaoJiaDan);
+			file.add(fileType.PaiQiBiao);
+			// 商务
+			info.add(InfoType.customerPayment);
+			info.add(InfoType.priceFinish);
+			pay.add(PayType.payFinish);
+			// 制作
 			file.add(fileType.FenJingTouJiaoBen);
 			break;
 		case "交付":
+			// 沟通
+			info.add(InfoType.base);
+			info.add(InfoType.time);
+			file.add(fileType.XuQiuWenDang);
+			file.add(fileType.QA);
+			// 方案
+			info.add(InfoType.provider);
+			file.add(fileType.CeHuaFangAn);
+			file.add(fileType.BaoJiaDan);
+			file.add(fileType.PaiQiBiao);
+			// 商务
+			info.add(InfoType.customerPayment);
+			info.add(InfoType.priceFinish);
+			pay.add(PayType.payFinish);
+			// 制作
+			file.add(fileType.FenJingTouJiaoBen);
+			// 交付
 			info.add(InfoType.providerPayment);
 			break;
 		}
@@ -668,7 +718,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 					break;
 				}
 			}
-		}else{
+		} else {
 			return "必须有一个订单支付完成，请补充！";
 		}
 		return "";
