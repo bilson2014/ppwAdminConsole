@@ -32,6 +32,13 @@
             				<option value="1" >出账</option>
 						</select>
 					</td>
+					<th>交易时间:</th>
+					<td>
+						<input name="beginTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />~
+					</td>
+					<td>
+						<input name="endTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
+					</td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
@@ -65,6 +72,7 @@
             closed="true" buttons="#dlg-buttons" title="人员信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input name="dealId" type="hidden">
+	        	<input type="hidden" class="textbox-value" name="logType1" value="">
 	        	<input id="projectName" name="projectName" type="hidden">
 	        	<input id="userName" name="userName" type="hidden">
 	            <div class="fitem">
@@ -81,10 +89,7 @@
 	            </div>
 	            <div class="fitem">
 	                <label>交易类型:</label>
-	               	<select id="logType" name="logType" class="easyui-combobox" editable="false" required="true" >
-						<option value="0" selected>入账</option>
-           				<option value="1" >出账</option>
-					</select>
+	                <input id="logType" name="logType" class="easyui-combobox" required="true" />
 	            </div>
 	             <div class="fitem">
 	                <label>交易方:</label>
