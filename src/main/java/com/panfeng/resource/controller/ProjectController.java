@@ -66,6 +66,11 @@ public class ProjectController extends BaseController {
 		final List<IndentProject> list = indentProjectService.findProjectList(indentProject);
 		return list;
 	}
+	@RequestMapping("/phone-project")
+	public List<IndentProject> getPhoneProject(@RequestBody final IndentProject indentProject) {
+		final List<IndentProject> list = indentProjectService.findProjectListByPhone(indentProject);
+		return list;
+	}
 
 	@RequestMapping("/get-projectInfo")
 	public IndentProject getProjectInfo(@RequestBody final IndentProject indentProject) {
@@ -80,7 +85,12 @@ public class ProjectController extends BaseController {
 
 	@RequestMapping("/update-indentProject")
 	public boolean updateIndentProject(@RequestBody final IndentProject indentProject) {
-		return indentProjectService.updateIndentProject(indentProject);
+		return indentProjectService.updateIndentProject(indentProject,false);
+	}
+	
+	@RequestMapping("/update-synergyProject")
+	public boolean updateSynergyProject(@RequestBody final IndentProject indentProject) {
+		return indentProjectService.updateIndentProject(indentProject,true);
 	}
 
 	@RequestMapping("/getProjectTags")

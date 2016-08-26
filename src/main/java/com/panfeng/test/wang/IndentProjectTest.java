@@ -54,7 +54,7 @@ public class IndentProjectTest {
 		GenerateExcel ge = new GenerateExcel();
 		IndentProject ip = new IndentProject();
 		ip.setUserType(GlobalConstant.ROLE_EMPLOYEE);
-		ip.setUserId(36);
+		ip.setUserId(36L);
 		List<IndentProject> list = indentProjectMapper.findProjectList(ip);
 		UserTempService userTempService=applicationContext.getBean(UserTempService.class);
 		for (IndentProject indentProject2 : list) {

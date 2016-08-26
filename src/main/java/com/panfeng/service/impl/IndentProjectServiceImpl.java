@@ -154,10 +154,15 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	}
 
 	@Override
-	public boolean updateIndentProject(IndentProject indentProject) {
+	public boolean updateIndentProject(IndentProject indentProject,boolean isUpdateSynergy) {
 		// 更新供应商和用户实际支付金额
 		// update project
-		long l = indentProjectMapper.update(indentProject);
+		long l ;
+		if(isUpdateSynergy){
+			l= indentProjectMapper.updateSynergy(indentProject);
+		}else{
+			l= indentProjectMapper.update(indentProject);
+		}
 		if (l > 0) {
 			List<IndentFlow> listDates = indentFlowMapper.findFlowDateByIndentId(indentProject);
 			List<FlowDate> dates = IndentFlow.getFlowDates(listDates);
@@ -758,4 +763,15 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	}
 
+	@Override
+	public List<IndentProject> findProjectListByPhone(IndentProject indentProject) {
+		List<IndentProject> list = findProjectList(indentProject);
+		for (IndentProject ip : list) {
+			List<ActivitiTask> nodes = indentActivitiService.getNodes(ip);
+			ip.setNodes(nodes);
+			ActivitiTask curr = indentActivitiService.getCurrentTask(ip);
+			ip.setTask(curr);
+		}
+		return list;
+	}
 }

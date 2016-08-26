@@ -32,7 +32,7 @@ public class IndentProject extends BaseObject {
 	// 0 正常 1为取消 2为已完成  3为暂停
 	private Integer state = null;
 	private String userType = "";
-	private long userId = -1; // 视频管家ID
+	private Long userId = null; // 视频管家ID
 
 	// 价格字段
 	private Double priceFirst = null;// 预计起始价格
@@ -192,11 +192,11 @@ public class IndentProject extends BaseObject {
 		this.userType = userType;
 	}
 
-	public long getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(long userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 
@@ -251,6 +251,15 @@ public class IndentProject extends BaseObject {
 	private ActivitiTask task = null;
 	private String tag = "";
 	private UserViewModel userViewModel = null;
+	private List<ActivitiTask> nodes = null;
+	
+	public List<ActivitiTask> getNodes() {
+		return nodes;
+	}
+
+	public void setNodes(List<ActivitiTask> nodes) {
+		this.nodes = nodes;
+	}
 
 	public UserViewModel getUserViewModel() {
 		return userViewModel;

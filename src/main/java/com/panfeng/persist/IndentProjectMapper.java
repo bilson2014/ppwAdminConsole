@@ -12,6 +12,8 @@ public interface IndentProjectMapper {
 	public long save(IndentProject indentProject);
 
 	public long update(IndentProject indentProject);
+	
+	public long updateSynergy(IndentProject indentProject);
 
 	public List<IndentProject> findProjectList(IndentProject indentProject);
 

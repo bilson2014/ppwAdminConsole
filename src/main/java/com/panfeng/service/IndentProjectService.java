@@ -18,12 +18,14 @@ public interface IndentProjectService {
 	public long delete(IndentProject indentProject);
 
 	public List<IndentProject> findProjectList(IndentProject indentProject);
+	
+	public List<IndentProject> findProjectListByPhone(IndentProject indentProject);
 
 	public IndentProject getProjectInfo(IndentProject indentProject);
 
 	public IndentProject getRedundantProject(IndentProject indentProject);
 
-	public boolean updateIndentProject(IndentProject indentProject);
+	public boolean updateIndentProject(IndentProject indentProject,boolean isUpdateSynergy);
 
 	public ActivitiTask getTaskInfo(IndentProject indentProject);
 
