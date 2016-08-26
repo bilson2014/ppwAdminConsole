@@ -39,6 +39,17 @@
 					<td>
 						<input id="search-userId" name="userId" class="easyui-combobox" placeholder="请输入视频管家名称" style="width: 100px;"/>
 					</td>
+					<th>项目阶段:</th>
+					<td>
+						<select id="stage" name="stage" editable="false" class="easyui-combobox" style="width: 100px;">
+							<option value="" >全部</option>
+							<option value="沟通" >沟通</option>
+            				<option value="方案" >方案</option>
+            				<option value="商务" >商务</option>
+            				<option value="制作" >制作</option>
+            				<option value="交付" >交付</option>
+						</select>
+					</td>
 				</tr>
 				<tr>
 					<th>是否协同:</th>

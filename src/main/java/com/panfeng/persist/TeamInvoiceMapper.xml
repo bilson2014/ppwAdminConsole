@@ -40,7 +40,7 @@
 			AND i.INVOICE_PROJECTID = ${invoiceProjectId}
 		</if>
 		<![CDATA[
-			ORDER BY i.INVOICE_ID DESC
+			ORDER BY i.INVOICE_TEAMTIME DESC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>

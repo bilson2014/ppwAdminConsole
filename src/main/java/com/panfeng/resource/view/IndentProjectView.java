@@ -23,6 +23,16 @@ public class IndentProjectView extends Pagination {
 	//添加项目和供应商模糊查询
 	private String projectName;
 	private String teamName;
+	
+	private String stage = null;//项目阶段
+	
+	public String getStage() {
+		return stage;
+	}
+
+	public void setStage(String stage) {
+		this.stage = stage;
+	}
 	public String getProjectName() {
 		return projectName;
 	}

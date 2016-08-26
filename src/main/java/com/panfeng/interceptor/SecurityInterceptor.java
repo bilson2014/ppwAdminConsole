@@ -94,7 +94,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
 					return true;
 				}
 				
-				if(ValidateUtil.hasRight(url, req, sc,right,resp,info)){
+				if(ValidateUtil.hasRight(url, req, sc,right,resp,info)){ 
 					return true;
 				} else {
 					// 没有权限

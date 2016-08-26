@@ -153,7 +153,12 @@ var service = {
 			valueField : 'productName',
 			//valueField : 'productId',
 			//modify by wanglc 2016-7-4 15:13:55 修改为模糊查询 end
-			textField : 'productName'
+			textField : 'productName',
+			filter: function(q, row){
+				if(row.productName == null)
+					return false;
+				return row.productName.indexOf(q) >= 0;
+			}
 		});
 	}
 }

@@ -21,7 +21,6 @@ public class FinanceServiceImpl implements FinanceService {
 	
 	@Override
 	public List<DealLog> listWithPagination(final FinanceView view) {
-		
 		final List<DealLog> list = mapper.listWithPagination(view);
 		return list;
 	}

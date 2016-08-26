@@ -3,7 +3,6 @@ var flag  ;	  //判断新增和修改方法
 var formUrl;
 var datagrid;
 $().ready(function(){
-	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath()+ '/portal/finance-offline/list',
@@ -179,54 +178,40 @@ function save(){
 		}
 	});
 }
-
 // 打开dialog
 function openDialog(id,data){
 	$('#' + id).dialog({
 		modal : true,
 		onOpen : function(event,ui){
+			changeTradeMan();
+			var data1 = [['0', '入账'], ['1', '出账']]; 
+			$('#logType').combobox({
+				data : data1,  
+				textField:1,  
+				valueField:0 ,
+				onSelect : function(record){
+					changeTradeMan();
+				}
+			});
 			$('#projectId').combobox({
 				url : getContextPath() + '/project/all',
 				valueField : 'projectId',
 				textField : 'projectName',
-				onSelect : function(record){
-					$('#projectName').val(record.projectName);
-					var id = $('#projectId').combobox('getValue');
-					loadData(function(flag){
-						var userId = flag.customerId;
-						$('#userId').combobox('setValue',userId);
-						var userName = $('#userId').combobox('getText');
-						$('#userName').val(userName);
-					}, getContextPath() + '/project/get-projectInfo', $.toJSON({
-						id : id
-					}));
-				},
 				filter: function(q, row){
 					if(row.projectName == null)
 						return false;
 					return row.projectName.indexOf(q) >= 0;
 				}
 			});
-			
-			$('#userId').combobox({
-				url : getContextPath() + '/portal/user/all',
-				valueField : 'userId',
-				textField : 'userName',
-				onSelect : function(record){
-					$('#userName').val(record.userName);
-				},
-				filter: function(q, row){
-					// 修改过滤器增加模糊搜索
-					if(row.userName == null)
-						return false;
-					return row.userName.indexOf(q) >= 0;
-				}
-			});
-			
 			if(data != null && data != undefined && data != ''){
 				var userId = data.userId;
 				var projectId = data.projectId;
-				 
+				var logType = data.logType;
+				console.log(0=='')
+				if(logType != null && logType != undefined && logType !== ''){
+					$('#logType').combobox('setValue',logType);
+					changeTradeMan();
+				}
 				if(userId != null && userId != undefined && userId != ''){
 					$('#userId').combobox('setValue',userId);
 					var userName = $('#userId').combobox('getText');
@@ -234,7 +219,6 @@ function openDialog(id,data){
 				}else {
 					$('#userId').combobox('setValue','');
 				}
-				
 				if(projectId != null && projectId != undefined && projectId != ''){
 					$('#projectId').combobox('setValue',projectId);
 				}else {
@@ -244,7 +228,41 @@ function openDialog(id,data){
 		}
 	}).dialog('open').dialog('center');
 }
-
+function changeTradeMan(){
+	var logTypeChoose =  $('#logType').combobox('getValue');
+	if(logTypeChoose == 1){//出账
+		$('#userId').combobox({
+			url :getContextPath() + '/project/getAllTeam',
+			valueField : 'teamId',
+			textField : 'teamName',
+			onSelect : function(record){
+				$('#userName').val(record.teamName);
+				
+			},
+			filter: function(q, row){
+				// 修改过滤器增加模糊搜索
+				if(row.teamName == null)
+					return false;
+				return row.teamName.indexOf(q) >= 0;
+			}
+		});
+	}else{
+		$('#userId').combobox({
+			url :getContextPath() + '/portal/user/all',
+			valueField : 'userId',
+			textField : 'userName',
+			onSelect : function(record){
+				$('#userName').val(record.userName);
+			},
+			filter: function(q, row){
+				// 修改过滤器增加模糊搜索
+				if(row.userName == null)
+					return false;
+				return row.userName.indexOf(q) >= 0;
+			}
+		});
+	}
+}
 //查询
 function searchFun(){
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));

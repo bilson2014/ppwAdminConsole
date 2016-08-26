@@ -60,6 +60,17 @@
             				<option value="1" >是</option>
 						</select>
 					</td>
+					<th>项目阶段:</th>
+					<td>
+						<select id="stage" name="stage" editable="false" class="easyui-combobox" style="width: 100px;">
+							<option value="" >全部</option>
+							<option value="沟通" >沟通</option>
+            				<option value="方案" >方案</option>
+            				<option value="商务" >商务</option>
+            				<option value="制作" >制作</option>
+            				<option value="交付" >交付</option>
+						</select>
+					</td>
 					<th></th>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>

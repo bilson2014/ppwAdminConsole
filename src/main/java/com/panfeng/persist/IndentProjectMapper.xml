@@ -109,7 +109,7 @@
 				i.IP_SERIAL=#{serial},
 				i.IP_SOURCE=#{source},
 				i.IP_CUSTOMERID=${customerId},
-				i.IP_TEAMID=${teamId},
+				i.IP_TEAMID=#{teamId},
 				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 				]]>
 		<if test="userType != null and userType != ''">
@@ -485,6 +485,10 @@
 			ON i.IP_TEAMID=t.teamId
 		LEFT JOIN USERS u 
 			ON i.IP_CUSTOMERID=u.id 
+		LEFT JOIN INDENT_FLOW F 
+			ON F.IF_INDENT_ID = i.IP_ID
+		LEFT JOIN ACT_RU_TASK RES
+			ON F.IF_FLOW_ID = RES.PROC_INST_ID_
 		WHERE 1=1
 		]]>
 		<if test="projectId != null and projectId != ''">
@@ -516,6 +520,9 @@
 		</if>
 		<if test="isSynergy == 1">
 			AND (s.S_USER_ID = ${userId} OR i.IP_USER_ID = ${userId})
+		</if>
+		<if test="stage != null and stage != ''">
+			AND RES.NAME_ LIKE CONCAT('%',#{stage},'%')
 		</if>
 		<![CDATA[
 		)t
@@ -651,7 +658,8 @@
 					i.IP_REFERRER_ID AS referrerId,
 					DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
 					i.IP_CUSTOMER_PAYMENT AS customerPayment,
-					i.IP_PROVIDER_PAYMENT AS providerPayment
+					i.IP_PROVIDER_PAYMENT AS providerPayment,
+					RES.NAME_   AS stage
 				
 			FROM INDENT_PROJECT i 
 			LEFT JOIN USERS u 
@@ -660,6 +668,10 @@
 				ON i.IP_TEAMID=t.teamId
 			LEFT JOIN SYNERGY s
 				ON s.s_project_id=i.ip_id
+			LEFT JOIN INDENT_FLOW F 
+				ON F.IF_INDENT_ID = i.IP_ID
+			LEFT JOIN ACT_RU_TASK RES
+				ON F.IF_FLOW_ID = RES.PROC_INST_ID_
 			WHERE 1 = 1
 			AND s.S_USER_ID = ${userId}
 		]]>
@@ -687,6 +699,9 @@
 		</if>
 		<if test="customerId != null and customerId != '' and customerId != 0">
 			AND u.ID = ${customerId}
+		</if>
+		<if test="stage != null and stage != ''">
+			AND RES.NAME_ LIKE CONCAT('%',#{stage},'%')
 		</if>
 		<![CDATA[
 			ORDER BY i.IP_ID DESC
@@ -717,13 +732,18 @@
 					i.IP_REFERRER_ID AS referrerId,
 					DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
 					i.IP_CUSTOMER_PAYMENT AS customerPayment,
-					i.IP_PROVIDER_PAYMENT AS providerPayment
+					i.IP_PROVIDER_PAYMENT AS providerPayment,
+					RES.NAME_   AS stage
 				
 			FROM INDENT_PROJECT i 
 			LEFT JOIN USERS u 
 				ON i.IP_CUSTOMERID=u.id 
 			LEFT JOIN TEAM t
 				ON i.IP_TEAMID=t.teamId
+			LEFT JOIN INDENT_FLOW F 
+				ON F.IF_INDENT_ID = i.IP_ID
+			LEFT JOIN ACT_RU_TASK RES
+				ON F.IF_FLOW_ID = RES.PROC_INST_ID_
 			WHERE 1 = 1
 		]]>
 
@@ -759,6 +779,9 @@
 		
 		<if test="customerId != null and customerId != '' and customerId != 0">
 			AND u.ID = ${customerId}
+		</if>
+		<if test="stage != null and stage != ''">
+			AND RES.NAME_ LIKE CONCAT('%',#{stage},'%')
 		</if>
 		<![CDATA[
 			ORDER BY i.IP_ID DESC

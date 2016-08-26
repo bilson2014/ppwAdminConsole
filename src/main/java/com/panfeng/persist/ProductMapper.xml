@@ -413,9 +413,12 @@
 				   t.TEAMNAME AS teamName,
 				   t.TEAMDESCRIPTION AS teamDescription,
 				   pro.MASTERWORK AS masterWork,
+				   s.SERVICEPRICE AS servicePrice,
+				   s.SERVICEREALPRICE AS serviceRealPrice,
 				   DATE_FORMAT(IF(creationTime IS NULL ,uploadDate,creationTime),'%Y-%m-%d') AS creationTime
 			FROM PRODUCT pro
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
+			LEFT JOIN SERVICE s ON s.PRODUCTID = pro.PRODUCTID
 			WHERE 1 = 1
 				AND pro.FLAG = 1
 				AND pro.VISIBLE = 0

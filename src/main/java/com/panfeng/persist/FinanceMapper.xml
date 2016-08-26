@@ -57,6 +57,20 @@
 		<if test="dealLogSource != null">
 			AND dl.DL_DEAL_LOG_SOURCE = ${dealLogSource}
 		</if>
+		
+		<if test="beginTime != null and beginTime != '' ">
+			AND DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d') &gt;= #{beginTime}
+		</if>
+		
+		<if test="endTime != null  and endTime != ''">
+			AND DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d') &lt;= #{endTime}
+		</if>
+		
+		
+		<![CDATA[
+			ORDER BY dl.DL_PAYTIME DESC
+			LIMIT ${begin} , ${limit}
+		]]>
 	</select>
 	
 	<select id="maxSize" resultType="Long">
