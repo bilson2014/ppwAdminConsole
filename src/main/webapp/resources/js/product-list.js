@@ -228,6 +228,11 @@ $().ready(function(){
 								return '<span style=color:green; >代表作品</span>' ; 
 							} 
 						}
+					},{
+						field : 'uploadDate' ,
+						title : '上传时间' ,
+						align : 'center' ,
+						width : 100
 					}]] ,
 		pagination: true ,
 		pageSize : 50,
