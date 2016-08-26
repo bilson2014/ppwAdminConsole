@@ -41,6 +41,10 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'stage' ,
+						title : '项目阶段' ,
+						align : 'center'
+					},{
 						field : 'employeeRealName' ,
 						title : '视频管家' ,
 						align : 'center'

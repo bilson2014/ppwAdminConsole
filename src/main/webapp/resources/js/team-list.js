@@ -225,7 +225,12 @@ var team = {
 			//modify by wanglc 团队查询按照teamName like查询 begin
 			valueField : 'teamName',
 			//modify by wanglc end
-			textField : 'teamName'
+			textField : 'teamName',
+			filter: function(q, row){
+				if(row.teamName == null)
+					return false;
+				return row.teamName.indexOf(q) >= 0;
+			}
 		});
 	},
 	initCombox : function(){

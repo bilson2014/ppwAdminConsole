@@ -61,6 +61,16 @@ public class IndentProject extends BaseObject {
 
 	private int clientLevel = 0; // 客户分级
 	
+	private String stage = null;//项目阶段
+	
+	public String getStage() {
+		return stage;
+	}
+
+	public void setStage(String stage) {
+		this.stage = stage;
+	}
+
 	public Double getCustomerPayment() {
 		return customerPayment;
 	}

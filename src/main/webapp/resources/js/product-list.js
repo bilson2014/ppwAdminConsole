@@ -328,7 +328,12 @@ var product = {
 			//modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 begin 
 			valueField : 'teamName',
 			//modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 end
-			textField : 'teamName'
+			textField : 'teamName',
+			filter: function(q, row){
+				if(row.teamName == null)
+					return false;
+				return row.teamName.indexOf(q) >= 0;
+			}
 		});
 	}
 }
