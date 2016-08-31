@@ -221,15 +221,22 @@ var team = {
 	dataInit : function(){ // 初始化控件数据
 		$('#search-teamName').combobox({
 			url : getContextPath() + '/portal/product/init',
-			//valueField : 'teamId',
-			//modify by wanglc 团队查询按照teamName like查询 begin
 			valueField : 'teamName',
-			//modify by wanglc end
 			textField : 'teamName',
 			filter: function(q, row){
 				if(row.teamName == null)
 					return false;
 				return row.teamName.indexOf(q) >= 0;
+			}
+		});
+		$('#search-phoneNumber').combobox({
+			url : getContextPath() + '/portal/product/init',
+			valueField : 'phoneNumber',
+			textField : 'phoneNumber',
+			filter: function(q, row){
+				if(row.phoneNumber == null)
+					return false;
+				return row.phoneNumber.indexOf(q) >= 0;
 			}
 		});
 	},

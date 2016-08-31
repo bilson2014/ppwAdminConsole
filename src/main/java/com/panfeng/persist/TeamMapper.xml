@@ -50,11 +50,12 @@
 		<if test="priceRange != null and priceRange != ''">
 			AND t.PRICERANGE = #{priceRange}
 		</if>
-		<!--add by wanglc 2016-6-30 11:28:08 团队查询按照teamName like查询 begin -->
 		<if test="teamName != null and teamName != ''">
 			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
 		</if>
-		<!--add by wanglc 2016-6-30 11:28:14 end -->
+		<if test="phoneNumber != null and phoneNumber != ''">
+			AND t.PHONENUMBER LIKE CONCAT('%',#{phoneNumber},'%')
+		</if>
 		<if test="business != null and business != ''">
 			<foreach collection="business" item="bus" separator="OR"
 				open="AND (" close=")">
@@ -78,11 +79,9 @@
 		<if test="teamId != null and teamId != ''">
 			AND t.TEAMID = ${teamId}
 		</if>
-		<!--add by wanglc 2016-7-4 15:56:31 团队查询按照teamName like查询 begin -->
 		<if test="teamName != null and teamName != ''">
 			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
 		</if>
-		<!--add by wanglc 2016-7-4 15:56:39 end -->
 		<if test="flag != null and flag != ''">
 			AND t.FLAG = #{flag}
 		</if>
@@ -94,7 +93,9 @@
 		<if test="priceRange != null and priceRange != ''">
 			AND t.PRICERANGE = #{priceRange}
 		</if>
-
+		<if test="phoneNumber != null and phoneNumber != ''">
+			AND t.PHONENUMBER LIKE CONCAT('%',#{phoneNumber},'%')
+		</if>
 		<if test="business != null and business != ''">
 			<foreach collection="business" item="bus" separator="OR"
 				open="AND (" close=")">
@@ -315,7 +316,8 @@
 				   t.DESCRIPTION AS description,
 				   t.EMAIL AS email,
 				   t.ADDRESS AS address,
-				   t.LOGINNAME AS loginName
+				   t.LOGINNAME AS loginName,
+				   t.PHONENUMBER AS phoneNumber
 			FROM TEAM t
 			WHERE 1 = 1
 				AND TEAMNAME != ''
