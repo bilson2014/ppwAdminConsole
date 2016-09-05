@@ -232,7 +232,8 @@ $().ready(function(){
 						field : 'uploadDate' ,
 						title : '上传时间' ,
 						align : 'center' ,
-						width : 100
+						width : 100,
+						sortable : true ,
 					}]] ,
 		pagination: true ,
 		pageSize : 50,

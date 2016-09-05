@@ -137,12 +137,14 @@ $().ready(function(){
 						field : 'updateDate' ,
 						title : '更新时间' ,
 						align : 'center' ,
-						width : 150
+						width : 150,
+						sortable : true ,
 					},{
 						field : 'createDate' ,
 						title : '创建时间' ,
 						align : 'center' ,
-						width : 150
+						width : 150,
+						sortable : true ,
 					},{
 						field : 'recommendation',
 						title : '审核意见',

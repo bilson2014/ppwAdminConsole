@@ -63,8 +63,14 @@
 			</foreach>
 
 		</if>
+		<![CDATA[
+		ORDER BY
+		]]>
+		<if test="sort != null and sort != '' and order != null and order != ''">
+			 ${sort} ${order},
+		</if>
 		<![CDATA[		   
-			ORDER BY t.OD ASC,UPDATEDATE DESC,CREATEDATE DESC
+			t.OD ASC,UPDATEDATE DESC,CREATEDATE DESC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
@@ -581,6 +587,7 @@
 	<select id="getTeamInfo" resultType="Team">
 		<![CDATA[
 			SELECT t.TEAMNAME AS teamName,
+			t.TEAMID AS teamId,
 			p.PROVINCE AS teamProvinceName,
 			c.CITY AS teamCityName,
 			t.TEAMDESCRIPTION AS teamDescription,
