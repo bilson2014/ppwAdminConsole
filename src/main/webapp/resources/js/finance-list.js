@@ -19,22 +19,28 @@ $().ready(function(){
 					{
 						field : 'unOrderId',
 						title : '交易流水号',
+						width : 150,
 						align : 'center'
 					},{
 						field : 'userName' ,
 						title : '交易方' ,
+						width : 150,
 						align : 'center'
 					},{
 						field : 'payTime',
 						title : '支付时间',
-						align : 'center'
+						width : 150,
+						align : 'center',
+						sortable : true ,
 					},{
 						field : 'billNo',
 						title : '订单编号',
+						width : 150,
 						align : 'center'
 					},{
 						field : 'dealLogSource',
 						title : '交易方式',
+						width : 150,
 						align : 'center',
 						formatter : function(value,row,index){
 							if(value == 0){
@@ -47,6 +53,7 @@ $().ready(function(){
 						field : 'logType',
 						title : '交易类型',
 						align : 'center',
+						width : 150,
 						formatter : function(value,row,index){
 							if(value == 0){
 								return '<span style=color:green; >入账</span>' ;
@@ -57,10 +64,12 @@ $().ready(function(){
 					},{
 						field : 'projectName',
 						title : '项目名称',
+						width : 150,
 						align : 'center'
 					},{
 						field : 'payPrice',
 						title : '交易价格',
+						width : 150,
 						align : 'center',
 						formatter : function(value,row,index){
 							return thousandCount(value) + '<span style=color:#999; > 元</span>'; 
@@ -68,6 +77,7 @@ $().ready(function(){
 					},{
 						field : 'description',
 						title : '描述',
+						width : 150,
 						align : 'center'
 					}]],
 			pagination: true ,

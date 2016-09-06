@@ -109,6 +109,12 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'uploadDate' ,
+						title : '上传时间' ,
+						align : 'center' ,
+						width : 100,
+						sortable : true ,
+					},{
 						field : 'tags' ,
 						title : '标签' ,
 						align : 'center' ,
@@ -228,12 +234,6 @@ $().ready(function(){
 								return '<span style=color:green; >代表作品</span>' ; 
 							} 
 						}
-					},{
-						field : 'uploadDate' ,
-						title : '上传时间' ,
-						align : 'center' ,
-						width : 100,
-						sortable : true ,
 					}]] ,
 		pagination: true ,
 		pageSize : 50,
