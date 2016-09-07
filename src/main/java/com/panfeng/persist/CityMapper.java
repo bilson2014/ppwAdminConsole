@@ -8,4 +8,6 @@ import com.panfeng.resource.model.City;
 
 public interface CityMapper {
 	List<City> findCitysByProvinceId(@Param("ProvinceId") String ProvinceId);
+	
+	List<City> getAll();
 }

@@ -12,8 +12,5 @@ public abstract class PoiBaseAdapter<T> {
 	public abstract void getItemView(XSSFSheet sheet,XSSFWorkbook workbook,T entity,int itemId);
 
 	public abstract List<T> getData();
-
-	
-	
 	
 }

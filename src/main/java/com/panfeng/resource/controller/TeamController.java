@@ -440,6 +440,83 @@ public class TeamController extends BaseController {
 
 	}
 
+	
+	@RequestMapping("/team/static/data/registerteamRetId")
+	public Team registerTeamRetId(@RequestBody final Team team, HttpServletRequest request) {
+		if (team != null) {
+			try {
+				// 解码
+				final String teamName = team.getTeamName();
+				final String teamDesc = team.getTeamDescription();
+				final String address = team.getAddress();
+				final String email = team.getEmail();
+				final String linkman = team.getLinkman();
+				final String webchat = team.getWebchat();
+				final String officialSite = team.getOfficialSite();
+				final String scale = team.getScale();
+				final String businessDesc = team.getBusinessDesc();
+				final String demand = team.getDemand();
+				final String description = team.getDescription();
+
+				if (teamName != null && !"".equals(teamName)) {
+					team.setTeamName(URLDecoder.decode(teamName, "UTF-8"));
+				}
+
+				if (teamDesc != null && !"".equals(teamDesc)) {
+					team.setTeamDescription(URLDecoder.decode(teamDesc, "UTF-8"));
+				}
+
+				if (address != null && !"".equals(address)) {
+					team.setAddress(URLDecoder.decode(address, "UTF-8"));
+				}
+
+				if (email != null && !"".equals(email)) {
+					team.setEmail(URLDecoder.decode(email, "UTF-8"));
+				}
+
+				if (linkman != null && !"".equals(linkman)) {
+					team.setLinkman(URLDecoder.decode(linkman, "UTF-8"));
+				}
+
+				if (webchat != null && !"".equals(webchat)) {
+					team.setWebchat(URLDecoder.decode(webchat, "UTF-8"));
+				}
+
+				if (officialSite != null && !"".equals(officialSite)) {
+					team.setOfficialSite(URLDecoder.decode(officialSite, "UTF-8"));
+				}
+
+				if (scale != null && !"".equals(scale)) {
+					team.setScale(URLDecoder.decode(scale, "UTF-8"));
+				}
+
+				if (businessDesc != null && !"".equals(businessDesc)) {
+					team.setBusinessDesc(URLDecoder.decode(businessDesc, "UTF-8"));
+				}
+
+				if (demand != null && !"".equals(demand)) {
+					team.setDemand(URLDecoder.decode(demand, "UTF-8"));
+				}
+
+				if (description != null && !"".equals(description)) {
+					team.setDescription(URLDecoder.decode(description, "UTF-8"));
+				}
+
+				Team dbteam = service.register(team);
+
+				if (dbteam != null && dbteam.getTeamId() > 0) {
+					 initSessionInfo(dbteam, request);
+				}
+				return dbteam;
+			} catch (UnsupportedEncodingException e) {
+				logger.error("Provider Infomation Decode error On Provider updateTeamInformation ...");
+				e.printStackTrace();
+				return null;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * 供应商登录
 	 * 

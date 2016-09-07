@@ -221,6 +221,7 @@
 	            				<option value="1" >网络搜索</option>
 	            				<option value="2" >拍片帮</option>
 	            				<option value="3" >拍片网</option>
+	            				<option value="4" >电销</option>
 	            			</select>
 	            		</td>
 	            	</tr>

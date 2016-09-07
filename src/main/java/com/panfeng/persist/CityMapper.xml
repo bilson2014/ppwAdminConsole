@@ -11,4 +11,14 @@
 			  FROM CITY where father = #{ProvinceId}
 		]]>
 	</select>
+	<select id="getAll" resultType="City">
+		<![CDATA[
+			SELECT 
+				id AS id,
+				cityID AS cityID,
+				city AS city,
+				father AS father
+			  FROM CITY
+		]]>
+	</select>
 </mapper>

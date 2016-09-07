@@ -25,9 +25,9 @@ import com.panfeng.util.ValidateUtil;
 @RequestMapping("/portal")
 @RestController
 public class CityPickerController extends BaseController {
-	
+
 	private static Logger logger = LoggerFactory.getLogger("error");
-	
+
 	@Autowired
 	private ProvinceService provinceService;
 	@Autowired
@@ -46,6 +46,11 @@ public class CityPickerController extends BaseController {
 			logger.error("provinceId is null ...");
 			return new ArrayList<>();
 		}
+	}
+
+	@RequestMapping("/all/citys")
+	public List<City> getCitys() {
+		return cityService.getAll();
 	}
 
 	@RequestMapping("/get/province")

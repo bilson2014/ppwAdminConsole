@@ -154,14 +154,14 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	}
 
 	@Override
-	public boolean updateIndentProject(IndentProject indentProject,boolean isUpdateSynergy) {
+	public boolean updateIndentProject(IndentProject indentProject, boolean isUpdateSynergy) {
 		// 更新供应商和用户实际支付金额
 		// update project
-		long l ;
-		if(isUpdateSynergy){
-			l= indentProjectMapper.updateSynergy(indentProject);
-		}else{
-			l= indentProjectMapper.update(indentProject);
+		long l;
+		if (isUpdateSynergy) {
+			l = indentProjectMapper.updateSynergy(indentProject);
+		} else {
+			l = indentProjectMapper.update(indentProject);
 		}
 		if (l > 0) {
 			List<IndentFlow> listDates = indentFlowMapper.findFlowDateByIndentId(indentProject);
@@ -469,13 +469,110 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		}
 	}
 
+	private static List<String> stepText = new ArrayList<>();
+	static {
+		stepText.add("沟通");
+		stepText.add("方案");
+		stepText.add("商务");
+		stepText.add("制作");
+		stepText.add("交付");
+	}
+
 	@Override
-	public String verifyIntegrity(IndentProject indentProject) {
+	public synchronized String verifyIntegrity(IndentProject indentProject) {
+		String html = "";
+		// 构造查询数据源
+		List<IndentResource> fileList = indentResourceService.findIndentList(indentProject);
+		IndentProject ip = getRedundantProject(indentProject);
+		Map<String, String> pram = new HashMap<>();
+		pram.put("userid", ip.getUserId() + "");
+		pram.put("userType", ip.getUserType());
+		pram.put("projectId", ip.getId() + "");
+		List<DealLog> deals = dealLogService.getDealLogByProject(pram);
+		boolean flag = false;
+		for (int i = (stepText.size() - 1); i > -1; i--) {
+			if (flag) {
+				Map<String, Boolean> r = execute(fileList, ip, deals, stepText.get(i));
+				if (ValidateUtil.isValid(r)) {
+					html += buildHtml(r, 0);
+				}
+			}
+			if (stepText.get(i).equals(indentProject.getTask().getName())) {
+				Map<String, Boolean> r = execute(fileList, ip, deals, stepText.get(i));
+				if (ValidateUtil.isValid(r)) {
+					html += buildHtml(r, 1);
+				}
+				flag = true;
+			}
+		}
+
+		return html;
+	}
+
+	/**
+	 * buildType =1,输出当前阶段全部认证信息 |%%%%%| buildType =2,输出当前阶段错误信息
+	 * 
+	 * @param res
+	 * @param buildType
+	 * @return
+	 */
+	private String buildHtml(Map<String, Boolean> res, int buildType) {
+		StringBuilder stringBuilder = new StringBuilder();
+		switch (buildType) {
+		case 1:
+			int index = 1;
+			boolean iok = true;
+			for (String key : res.keySet()) {
+				stringBuilder.append("<li class ='curr'>");
+				stringBuilder.append("<div class = 'index'>");
+				stringBuilder.append(index);
+				stringBuilder.append("</div>");
+				stringBuilder.append("<div class = 'info'>");
+				stringBuilder.append(key);
+				stringBuilder.append("</div>");
+				if (res.get(key)) {
+					stringBuilder.append("<div class = 'infoimgR'>");
+					stringBuilder.append("√");
+				} else {
+					stringBuilder.append("<div class = 'infoimgG'>");
+					stringBuilder.append("X");
+					iok = false;
+				}
+				stringBuilder.append("</div>");
+				stringBuilder.append("</li>");
+				index++;
+			}
+			if (iok)
+				stringBuilder.delete(0, stringBuilder.length());
+			break;
+		case 2:
+			for (String key : res.keySet()) {
+				if (!res.get(key)) {
+					stringBuilder.append("<li class ='before'>");
+					stringBuilder.append("</div>");
+					stringBuilder.append("<div class = '_info'>");
+					stringBuilder.append(key);
+					stringBuilder.append("</div>");
+					stringBuilder.append("<div class = '_infoimg'>");
+					stringBuilder.append("X");
+					stringBuilder.append("</div>");
+					stringBuilder.append("</li>");
+				}
+			}
+			break;
+		}
+		return stringBuilder.toString();
+	}
+
+	private Map<String, Boolean> execute(List<IndentResource> fileList, IndentProject ip, List<DealLog> deals,
+			String task) {
+		Map<String, Boolean> res = new HashMap<>();
+		// 构造查询条件集合
 		List<fileType> file = new ArrayList<>();
 		List<InfoType> info = new ArrayList<>();
 		List<PayType> pay = new ArrayList<>();
 		// 根据步骤，拼装不同验证组件（调度中心）
-		switch (indentProject.getTask().getName()) {
+		switch (task) {
 		case "沟通":
 			info.add(InfoType.base);
 			info.add(InfoType.time);
@@ -483,11 +580,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			file.add(fileType.QA);
 			break;
 		case "方案":
-			// 沟通
-			info.add(InfoType.base);
-			info.add(InfoType.time);
-			file.add(fileType.XuQiuWenDang);
-			file.add(fileType.QA);
 			// 方案
 			info.add(InfoType.provider);
 			file.add(fileType.CeHuaFangAn);
@@ -495,56 +587,16 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			file.add(fileType.PaiQiBiao);
 			break;
 		case "商务":
-			// 沟通
-			info.add(InfoType.base);
-			info.add(InfoType.time);
-			file.add(fileType.XuQiuWenDang);
-			file.add(fileType.QA);
-			// 方案
-			info.add(InfoType.provider);
-			file.add(fileType.CeHuaFangAn);
-			file.add(fileType.BaoJiaDan);
-			file.add(fileType.PaiQiBiao);
 			// 商务
 			info.add(InfoType.customerPayment);
 			info.add(InfoType.priceFinish);
 			pay.add(PayType.payFinish);
 			break;
 		case "制作":
-			// 沟通
-			info.add(InfoType.base);
-			info.add(InfoType.time);
-			file.add(fileType.XuQiuWenDang);
-			file.add(fileType.QA);
-			// 方案
-			info.add(InfoType.provider);
-			file.add(fileType.CeHuaFangAn);
-			file.add(fileType.BaoJiaDan);
-			file.add(fileType.PaiQiBiao);
-			// 商务
-			info.add(InfoType.customerPayment);
-			info.add(InfoType.priceFinish);
-			pay.add(PayType.payFinish);
 			// 制作
 			file.add(fileType.FenJingTouJiaoBen);
 			break;
 		case "交付":
-			// 沟通
-			info.add(InfoType.base);
-			info.add(InfoType.time);
-			file.add(fileType.XuQiuWenDang);
-			file.add(fileType.QA);
-			// 方案
-			info.add(InfoType.provider);
-			file.add(fileType.CeHuaFangAn);
-			file.add(fileType.BaoJiaDan);
-			file.add(fileType.PaiQiBiao);
-			// 商务
-			info.add(InfoType.customerPayment);
-			info.add(InfoType.priceFinish);
-			pay.add(PayType.payFinish);
-			// 制作
-			file.add(fileType.FenJingTouJiaoBen);
 			// 交付
 			info.add(InfoType.providerPayment);
 			break;
@@ -552,24 +604,24 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 		// 进入业务操作
 		if (ValidateUtil.isValid(file)) {
-			String res = verifyResFile(file, indentProject);
-			if (ValidateUtil.isValid(res)) {
-				return res;
+			Map<String, Boolean> r = verifyResFile(file, fileList);
+			if (ValidateUtil.isValid(r)) {
+				res.putAll(r);
 			}
 		}
 		if (ValidateUtil.isValid(info)) {
-			String res = verifyInfo(info, indentProject);
-			if (ValidateUtil.isValid(res)) {
-				return res;
+			Map<String, Boolean> r = verifyInfo(info, ip);
+			if (ValidateUtil.isValid(r)) {
+				res.putAll(r);
 			}
 		}
 		if (ValidateUtil.isValid(pay)) {
-			String res = verifyPay(pay, indentProject);
-			if (ValidateUtil.isValid(res)) {
-				return res;
+			Map<String, Boolean> r = verifyPay(pay, deals);
+			if (ValidateUtil.isValid(r)) {
+				res.putAll(r);
 			}
 		}
-		return "";
+		return res;
 	}
 
 	/**
@@ -579,9 +631,11 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	 * @param projectId
 	 * @return
 	 */
-	private String verifyResFile(List<fileType> resTypes, IndentProject indentProject) {
-		// 一次性查询项目相关的全部文件，减小数据库压力
-		List<IndentResource> resList = indentResourceService.findIndentList(indentProject);
+	private Map<String, Boolean> verifyResFile(List<fileType> resTypes, List<IndentResource> resList) {
+		/**
+		 * 结果储存 ？？
+		 */
+		Map<String, Boolean> res = new HashMap<>();
 		for (int i = 0; i < resTypes.size(); i++) {
 			String type = resTypes.get(i).getText();
 			boolean isExist = false;
@@ -593,12 +647,12 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				}
 			}
 			if (isExist) {
-				isExist = false;
+				res.put(type, true);
 			} else {
-				return "缺少资源文件\"" + type + "\"请补充！";
+				res.put(type, false);
 			}
 		}
-		return "";
+		return res;
 	}
 
 	/**
@@ -608,90 +662,123 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	 * @param projectId
 	 * @return
 	 */
-	private String verifyInfo(List<InfoType> scope, IndentProject indentProject) {
-		// 完整的项目信息
-		IndentProject ip = getRedundantProject(indentProject);
+	private Map<String, Boolean> verifyInfo(List<InfoType> scope, IndentProject ip) {
+		Map<String, Boolean> res = new HashMap<>();
 		InfoType infoType;
 		for (int i = 0; i < scope.size(); i++) {
 			infoType = scope.get(i);
 			switch (infoType) {
 			case base:
 				if (!ValidateUtil.isValid(ip.getProjectName())) {
-					return "项目名称不正确，请补充！";
+					res.put(infoType.getText(), false);
+				} else {
+					res.put(infoType.getText(), true);
 				}
 
 				if (!ValidateUtil.isValid(ip.getSource())) {
-					return "项目来源信息不完整，请补充！";
+					res.put(infoType.getText(), false);
 				} else if (ip.getSource().equals("个人信息下单") && !(ip.getReferrerId() != null && ip.getReferrerId() > 0)) {
-					return "友情推荐人填写错误，请补充！";
+					res.put(infoType.getText() + ",个人信息下单", false);
+				} else {
+					res.put(infoType.getText(), true);
 				}
 
 				if (ip.getCustomerId() == null || ip.getCustomerId() <= 0) {
-					return "客户信息不完整，请补充！";
-				}
-				if (!ValidateUtil.isValid(ip.getUserName())) {
-					return "客户信息不完整，请补充！";
-				}
-				if (!ValidateUtil.isValid(ip.getUserContact())) {
-					return "客户信息不完整，请补充！";
-				}
-				if (!ValidateUtil.isValid(ip.getUserPhone())) {
-					return "客户信息不完整，请补充！";
+					if (!ValidateUtil.isValid(ip.getUserName())) {
+						if (!ValidateUtil.isValid(ip.getUserContact())) {
+							if (!ValidateUtil.isValid(ip.getUserPhone())) {
+								res.put(infoType.getText(), true);
+							} else {
+								res.put(infoType.getText(), false);
+							}
+						} else {
+							res.put(infoType.getText(), false);
+						}
+					} else {
+						res.put(infoType.getText(), false);
+					}
+				} else {
+					res.put(infoType.getText(), false);
 				}
 
 				if (ip.getPriceFirst() <= 0) {
-					return "价格区间未填写，请补充！";
+					res.put(infoType.getText(), false);
+				} else {
+					res.put(infoType.getText(), true);
 				}
 				if (ip.getPriceLast() <= 0) {
-					return "价格区间未填写，请补充！";
+					res.put(infoType.getText(), false);
+				} else {
+					res.put(infoType.getText(), true);
 				}
 
 				break;
 			case time:
 				Map<String, String> ipTime = ip.getTime();
+				boolean flag = false;
 				for (String val : ipTime.values()) {
-					if (val.equals(""))
-						return "预计时间填写不完整，请补充！";
+					if (val.equals("")) {
+						flag = true;
+						break;
+					} else {
+						flag = false;
+					}
+				}
+				if (flag) {
+					res.put(infoType.getText(), false);
+				} else {
+					res.put(infoType.getText(), true);
 				}
 				break;
 			case provider:
 				if (ip.getTeamId() == null || ip.getTeamId() <= 0) {
-					return "供应商信息不完整，请补充！";
-				}
-				if (!ValidateUtil.isValid(ip.getTeamName())) {
-					return "供应商信息不完整，请补充！";
-				}
-				if (!ValidateUtil.isValid(ip.getTeamContact())) {
-					return "供应商信息不完整，请补充！";
-				}
-				if (!ValidateUtil.isValid(ip.getTeamPhone())) {
-					return "供应商信息不完整，请补充！";
+					if (!ValidateUtil.isValid(ip.getTeamName())) {
+						if (!ValidateUtil.isValid(ip.getTeamContact())) {
+							if (!ValidateUtil.isValid(ip.getTeamContact())) {
+								res.put(infoType.getText(), true);
+							} else {
+								res.put(infoType.getText(), false);
+							}
+						} else {
+							res.put(infoType.getText(), false);
+						}
+					} else {
+						res.put(infoType.getText(), false);
+					}
+				} else {
+					res.put(infoType.getText(), false);
 				}
 				break;
 			case synergy:
-				List<Synergy> synergys = ip.getSynergys();
-				if (!ValidateUtil.isValid(synergys)) {
-					return "协同人信息不完整，请补充！";
-				}
+				// List<Synergy> synergys = ip.getSynergys();
+				// if (!ValidateUtil.isValid(synergys)) {
+				// return "协同人信息不完整，请补充！";
+				// }
 				break;
 			case providerPayment:
 				if (ip.getProviderPayment() == null || ip.getProviderPayment() <= 0) {
-					return "供应商实际支付金额未填写，请补充！";
+					res.put(infoType.getText(), false);
+				} else {
+					res.put(infoType.getText(), true);
 				}
 				break;
 			case customerPayment:
 				if (ip.getCustomerPayment() == null || ip.getCustomerPayment() <= 0) {
-					return "客户实际支付金额未填写，请补充！";
+					res.put(infoType.getText(), false);
+				} else {
+					res.put(infoType.getText(), true);
 				}
 				break;
 			case priceFinish:
 				if (ip.getPriceFirst() == null || ip.getPriceFirst() <= 0) {
-					return "最终价格未填写，请补充！";
+					res.put(infoType.getText(), false);
+				} else {
+					res.put(infoType.getText(), true);
 				}
 				break;
 			}
 		}
-		return "";
+		return res;
 	}
 
 	/**
@@ -701,13 +788,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	 * @param projectId
 	 * @return
 	 */
-	private String verifyPay(List<PayType> scope, IndentProject indentProject) {
-		Map<String, String> pram = new HashMap<>();
-		IndentProject ip = getRedundantProject(indentProject);
-		pram.put("userid", ip.getUserId() + "");
-		pram.put("userType", ip.getUserType());
-		pram.put("projectId", ip.getId() + "");
-		List<DealLog> deals = dealLogService.getDealLogByProject(pram);
+	private Map<String, Boolean> verifyPay(List<PayType> scope, List<DealLog> deals) {
+		Map<String, Boolean> res = new HashMap<>();
 		if (deals.size() > 0) {
 			for (PayType payType : scope) {
 				switch (payType) {
@@ -719,22 +801,55 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 						}
 					}
 					if (!hasPayComplete)
-						return "必须有一个订单支付完成，请补充！";
+						res.put(payType.getText(), false);
+					else
+						res.put(payType.getText(), true);
 					break;
 				}
 			}
 		} else {
-			return "必须有一个订单支付完成，请补充！";
+			res.put(scope.get(0).getText(), false);
 		}
-		return "";
+		return res;
 	}
 
 	enum InfoType {
-		base, time, provider, synergy, providerPayment, customerPayment, priceFinish
+		base("基础信息"), time("预计时间"), provider("供应商信息"), synergy("协同人"), providerPayment("供应商实际支付金额"), customerPayment(
+				"客户实际支付金额"), priceFinish("最终价格");
+
+		private String text;
+
+		InfoType(String text) {
+			this.text = text;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public void setText(String text) {
+			this.text = text;
+		}
+
 	}
 
 	enum PayType {
-		payFinish
+		payFinish("有支付完成订单");
+
+		private String text;
+
+		PayType(String text) {
+			this.text = text;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public void setText(String text) {
+			this.text = text;
+		}
+
 	}
 
 	/*
@@ -765,13 +880,29 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public List<IndentProject> findProjectListByPhone(IndentProject indentProject) {
+		long start = System.currentTimeMillis();
 		List<IndentProject> list = findProjectList(indentProject);
-		for (IndentProject ip : list) {
-			List<ActivitiTask> nodes = indentActivitiService.getNodes(ip);
-			ip.setNodes(nodes);
-			ActivitiTask curr = indentActivitiService.getCurrentTask(ip);
-			ip.setTask(curr);
+		if (ValidateUtil.isValid(list)) {
+			list = indentActivitiService.fullCurrentTask(list);
+			List<ActivitiTask> nodes = indentActivitiService.getNodes(list.get(0));
+			for (int i = 0; i < list.size(); i++) {
+				List<ActivitiTask> node = new ArrayList<>();
+				for (int j = 0; j < nodes.size(); j++) {
+					try {
+						node.add(nodes.get(j).clone());
+					} catch (CloneNotSupportedException e) {
+						e.printStackTrace();
+					}
+				}
+				IndentProject ii2 = list.get(i);
+				ii2.setNodes(node);
+				if ((ii2.getState() == IndentProject.PROJECT_NORMAL || ii2.getState() == IndentProject.PROJECT_CANCEL
+						|| ii2.getState() == IndentProject.PROJECT_SUSPEND) && ii2.getMasterFlowId() != null) {
+					indentActivitiService.updateNodes(ii2);
+				}
+			}
 		}
+		System.out.println(System.currentTimeMillis() - start);
 		return list;
 	}
 }

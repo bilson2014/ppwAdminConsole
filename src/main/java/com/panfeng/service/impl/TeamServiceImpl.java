@@ -315,6 +315,7 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	@Override
+	@Transactional
 	public void setMasterWork(Product product) {
 		// 重置所有代表作初始值
 		mapper.resetMasterWork(product.getTeamId());

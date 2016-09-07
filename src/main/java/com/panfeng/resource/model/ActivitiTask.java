@@ -8,7 +8,7 @@ import org.activiti.engine.task.Task;
 
 import com.panfeng.domain.BaseObject;
 
-public class ActivitiTask extends BaseObject {
+public class ActivitiTask extends BaseObject implements Cloneable {
 
 	private static final long serialVersionUID = 112464574554L;
 
@@ -18,17 +18,15 @@ public class ActivitiTask extends BaseObject {
 	private String name = "";
 	private String processInstanceId = "";
 	private String taskDefinitionKey = "";
-	private String description="";
-	
-	private boolean suspended=false;
+	private String description = "";
+
+	private boolean suspended = false;
 
 	// 每个任务可以拥有自己的预计执行需要用的时间
-	private FlowDate scheduledTime=null;
+	private FlowDate scheduledTime = null;
 
-
-	public ActivitiTask(String owner, String createTime, String id,
-			String name, String processInstanceId, String taskDefinitionKey,
-			String description, boolean suspended, FlowDate scheduledTime) {
+	public ActivitiTask(String owner, String createTime, String id, String name, String processInstanceId,
+			String taskDefinitionKey, String description, boolean suspended, FlowDate scheduledTime) {
 		super();
 		this.owner = owner;
 		this.createTime = createTime;
@@ -63,18 +61,17 @@ public class ActivitiTask extends BaseObject {
 		stringBuffer.append("\nscheduledTime:");
 		stringBuffer.append("\ndescription");
 		stringBuffer.append(this.description);
-		stringBuffer.append(this.scheduledTime == null ? ""
-				: this.scheduledTime);
+		stringBuffer.append(this.scheduledTime == null ? "" : this.scheduledTime);
 		return stringBuffer.toString();
 	}
 
 	public static <T extends HistoricTaskInstance> ActivitiTask TaskToActivitiTask(T task) {
 		ActivitiTask activitiTask = new ActivitiTask();
-		Date date=task.getEndTime();
-		if(date!=null){
-			SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH-ss-mm");
+		Date date = task.getEndTime();
+		if (date != null) {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-ss-mm");
 			activitiTask.setCreateTime(simpleDateFormat.format(task.getEndTime()));
-		}else{
+		} else {
 			activitiTask.setCreateTime("");
 		}
 		activitiTask.setOwner(task.getAssignee());
@@ -86,11 +83,11 @@ public class ActivitiTask extends BaseObject {
 		activitiTask.setSuspended(false);
 		return activitiTask;
 	}
-	
+
 	public static <T extends Task> ActivitiTask TaskToActivitiTask(T task) {
 		ActivitiTask activitiTask = new ActivitiTask();
-		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-MM-dd HH-ss-mm");
-		String date=simpleDateFormat.format(task.getCreateTime());
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-ss-mm");
+		String date = simpleDateFormat.format(task.getCreateTime());
 		activitiTask.setCreateTime(date);
 		activitiTask.setOwner(task.getAssignee());
 		activitiTask.setId(task.getId());
@@ -121,7 +118,7 @@ public class ActivitiTask extends BaseObject {
 	public String getOwner() {
 		return owner;
 	}
-	
+
 	public FlowDate getScheduledTime() {
 		return scheduledTime;
 	}
@@ -158,8 +155,6 @@ public class ActivitiTask extends BaseObject {
 		this.name = name;
 	}
 
-	
-
 	public String getProcessInstanceId() {
 		return processInstanceId;
 	}
@@ -176,4 +171,8 @@ public class ActivitiTask extends BaseObject {
 		this.taskDefinitionKey = taskDefinitionKey;
 	}
 
+	@Override
+	public ActivitiTask clone() throws CloneNotSupportedException {
+		return (ActivitiTask) super.clone();
+	}
 }

@@ -76,6 +76,8 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 
 		IndentResource indentResource;
 		for (int i = 0; i < list.size(); i++) {
+			if(states == null)
+				continue;
 			if (!states.get(i).equals(OnlineDocService.FAIL)
 					&& !states.get(i).equals(OnlineDocService.DELETE)) {
 				indentResource = list.get(i);

@@ -12,7 +12,7 @@ public class IndentProject extends BaseObject {
 	public final static int PROJECT_NORMAL = 0;
 	public final static int PROJECT_CANCEL = 1;
 	public final static int PROJECT_FINISH = 2;
-	public final static int PROJECT_SUSPEND= 3;
+	public final static int PROJECT_SUSPEND = 3;
 
 	private long id = 0l; // 项目流程ID
 	private long projectId = 0l; // 项目ID，冗余字段，以id属性为准
@@ -24,12 +24,10 @@ public class IndentProject extends BaseObject {
 	private String teamContact = "";
 	private String teamPhone = "";
 	private String description = "";
-	
-
 
 	private String serial = "";
 	private String source = "";
-	// 0 正常 1为取消 2为已完成  3为暂停
+	// 0 正常 1为取消 2为已完成 3为暂停
 	private Integer state = null;
 	private String userType = "";
 	private Long userId = null; // 视频管家ID
@@ -40,7 +38,7 @@ public class IndentProject extends BaseObject {
 	private Double priceFinish = null;// 最终价格
 
 	private String employeeRealName = null; // 管家名字
-	
+
 	private Long customerId = null; // 客户ID
 
 	private Long teamId = null; // 供应商ID
@@ -57,12 +55,12 @@ public class IndentProject extends BaseObject {
 
 	private Double providerPayment = null;// 供应商实付金额
 
-	private List<Synergy> synergys = null; //协助人集合
+	private List<Synergy> synergys = null; // 协助人集合
 
 	private int clientLevel = 0; // 客户分级
-	
-	private String stage = null;//项目阶段
-	
+
+	private String stage = null;// 项目阶段
+
 	public String getStage() {
 		return stage;
 	}
@@ -98,6 +96,7 @@ public class IndentProject extends BaseObject {
 	public Long getReferrerId() {
 		return referrerId;
 	}
+
 	public Integer getState() {
 		return state;
 	}
@@ -226,11 +225,6 @@ public class IndentProject extends BaseObject {
 		this.serial = serial;
 	}
 
-	// -----------------------------
-	// 冗余taskdate--------------------------------------
-
-
-
 	public Double getPriceFirst() {
 		return priceFirst;
 	}
@@ -255,20 +249,30 @@ public class IndentProject extends BaseObject {
 		this.priceFinish = priceFinish;
 	}
 
-	
+	// -----------------------------
+	// 冗余taskdate--------------------------------------
 
 	private Map<String, String> time = null;
 	private ActivitiTask task = null;
 	private String tag = "";
 	private UserViewModel userViewModel = null;
 	private List<ActivitiTask> nodes = null;
-	
+	private Long masterFlowId = null;
+
 	public List<ActivitiTask> getNodes() {
 		return nodes;
 	}
 
 	public void setNodes(List<ActivitiTask> nodes) {
 		this.nodes = nodes;
+	}
+
+	public Long getMasterFlowId() {
+		return masterFlowId;
+	}
+
+	public void setMasterFlowId(Long masterFlowId) {
+		this.masterFlowId = masterFlowId;
 	}
 
 	public UserViewModel getUserViewModel() {
@@ -358,5 +362,5 @@ public class IndentProject extends BaseObject {
 	public void setProjectId(long projectId) {
 		this.projectId = projectId;
 	}
-	
+
 }

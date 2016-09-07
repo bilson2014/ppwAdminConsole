@@ -68,6 +68,38 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	}
 
 	@Override
+	public List<IndentProject> fullCurrentTask(final List<IndentProject> ips) {
+		if (!ValidateUtil.isValid(ips))
+			return null;
+		List<String> tIds = new ArrayList<>();
+		for (int i = 0; i < ips.size(); i++) {
+			IndentProject ip = ips.get(i);
+			if (ip.getMasterFlowId() != null) {
+				if (ip.getState() == IndentProject.PROJECT_NORMAL || ip.getState() == IndentProject.PROJECT_CANCEL
+						|| ip.getState() == IndentProject.PROJECT_SUSPEND)
+					tIds.add(ip.getMasterFlowId().toString());
+			}
+		}
+		List<Task> tasks = activitiEngineService.getCurrentTask(processDefinitionKey, tIds);
+		if (tasks != null) {
+			for (int i = 0; i < tasks.size(); i++) {
+				ActivitiTask at = ActivitiTask.TaskToActivitiTask(tasks.get(i));
+				for (int j = 0; j < ips.size(); j++) {
+					String taskKey = at.getProcessInstanceId();
+					IndentProject ip = ips.get(j);
+					if ((ip.getState() == IndentProject.PROJECT_NORMAL || ip.getState() == IndentProject.PROJECT_CANCEL
+							|| ip.getState() == IndentProject.PROJECT_SUSPEND)
+							&& taskKey.equals(ip.getMasterFlowId().toString())) {
+						ip.setTask(at);
+						break;
+					}
+				}
+			}
+		}
+		return ips;
+	}
+
+	@Override
 	public List<ActivitiTask> getAfterTask(IndentProject indentProject) {
 		List<HistoricTaskInstance> listTaskInstances = activitiEngineService.getAfterTask(processDefinitionKey,
 				String.valueOf(indentProject.getId()), getIndentCurrentFlowId(indentProject));
@@ -76,7 +108,6 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		for (HistoricTaskInstance historicTaskInstance : listTaskInstances) {
 			list.add(ActivitiTask.TaskToActivitiTask(historicTaskInstance));
 		}
-
 		return list;
 	}
 
@@ -333,4 +364,44 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		}
 		return jumpTask(indentProject, activityId);
 	}
+
+	@Override
+	public IndentProject updateNodes(IndentProject indentProject) {
+		List<ActivitiTask> listactivitiTask = indentProject.getNodes();
+		System.out.println(indentProject.getId());
+		System.out.println(indentProject.getProjectName());
+		String processInstanceId = indentProject.getTask().getProcessInstanceId();
+		System.out.println(processInstanceId + "processInstanceIdasd");
+		// 查询预计时间
+		List<FlowDate> listDates = flowDateMapper.findFlowDateByFlowId(processInstanceId);
+
+		// 查询实际执行时间
+		List<ActivitiTask> activitiTasks = getAfterTask(indentProject);
+		FlowDate flowDate;
+		ActivitiTask nextTask;
+		for (int i = 0; i < listactivitiTask.size(); i++) {
+			Iterator<FlowDate> iteratorFlow = listDates.iterator();
+			Iterator<ActivitiTask> iteratorTask = activitiTasks.iterator();
+			// 填充预计时间
+			while (iteratorFlow.hasNext()) {
+				flowDate = iteratorFlow.next();
+				if (flowDate.getFdTaskId().equals(listactivitiTask.get(i).getTaskDefinitionKey())) {
+					if (flowDate.getFdStartTime() == null || flowDate.getFdStartTime().equals(IndentFlow.defaultDate)) {
+						flowDate.setFdStartTime("");
+					}
+					listactivitiTask.get(i).setScheduledTime(flowDate);
+					break;
+				}
+			}
+			// 填充实际时间
+			while (iteratorTask.hasNext()) {
+				nextTask = iteratorTask.next();
+				if (nextTask.getTaskDefinitionKey().equals(listactivitiTask.get(i).getTaskDefinitionKey())) {
+					listactivitiTask.get(i).setCreateTime(nextTask.getCreateTime());
+				}
+			}
+		}
+		return indentProject;
+	}
+
 }

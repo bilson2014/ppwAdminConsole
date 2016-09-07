@@ -17,4 +17,9 @@ public class CityServiceImpl implements CityService {
 	public List<City> findCitysByProvinceId(String ProvinceId) {
 		return cityMapper.findCitysByProvinceId(ProvinceId);
 	}
+
+	@Override
+	public List<City> getAll() {
+		return cityMapper.getAll();
+	}
 }

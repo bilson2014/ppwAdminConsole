@@ -13,6 +13,8 @@ public interface IndentActivitiService {
 
 	ActivitiTask getCurrentTask(IndentProject indentProject);
 
+	List<IndentProject> fullCurrentTask(List<IndentProject> ips);
+
 	List<ActivitiTask> getAfterTask(IndentProject indentProject);
 
 	HistoricProcessInstance getHistoryProcess(IndentProject indentProject);
@@ -34,6 +36,8 @@ public interface IndentActivitiService {
 	boolean jumpPrevTask(IndentProject indentProject);
 
 	List<ActivitiTask> getNodes(IndentProject indentProject);
+
+	IndentProject updateNodes(IndentProject indentProject);
 
 	List<IndentFlow> getIndentFlows(IndentProject indentProject);
 

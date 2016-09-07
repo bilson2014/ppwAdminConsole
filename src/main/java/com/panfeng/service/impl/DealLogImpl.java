@@ -118,13 +118,13 @@ public class DealLogImpl implements DealLogService {
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
-								setOrderTimeOut(dealLog); // 设置超时时间
 							} else {
 								// 订单已经过期
 								dealLog.setDealStatus(DealLog.DEAL_STATUS_OFF);
 								dealLogMapper.update(dealLog);
 							}
 						}
+						setOrderTimeOut(dealLog); // 设置超时时间
 						// 否则为其他状态，不添加token
 						// 剔除Id属性
 						dealLog.setDealId(-1L);

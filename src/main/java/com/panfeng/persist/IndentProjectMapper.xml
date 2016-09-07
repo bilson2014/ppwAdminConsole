@@ -113,7 +113,7 @@
 				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 				]]>
 		<if test="userType != null and userType != ''">
-			,i.IP_USER_TYPE=#{userType}		
+			,i.IP_USER_TYPE=#{userType}
 		</if>
 		<if test="userId != null">
 			,i.IP_USER_ID=${userId}
@@ -245,7 +245,7 @@
 			WHERE i.IP_ID = ${id}
 		]]>
 	</update>
-	
+
 	<update id="updateSerialID">
 		<![CDATA[
 			UPDATE INDENT_PROJECT i
@@ -261,56 +261,59 @@
 				WHERE IP_ID = ${projectId}
 		]]>
 	</delete>
-	
+
 	<select id="findProjectList" resultType="IndentProject">
 		<![CDATA[
+		SELECT
+			i.IP_ID AS id,
+			i.IP_PROJECT_NAME AS projectName,
+			i.IP_USER_CONTACT AS userContact,
+			i.IP_USER_PHONE AS userPhone,
+			i.IP_TEAM_CONTACT AS teamContact,
+			i.IP_TEAM_PHONE AS teamPhone,
+			i.IP_USER_TYPE AS userType,
+			i.IP_USER_ID AS userId,
+			i.IP_DESCRIPTION AS description,
+			i.IP_SERIAL AS serial,
+			i.IP_SOURCE AS source,
+			i.IP_STATE AS state,
+			i.IP_CUSTOMERID AS customerId,
+			i.IP_TEAMID AS teamId,
+			u.USERNAME AS userName,
+			u.CLIENTLEVEL AS clientLevel,
+			t.TEAMNAME AS teamName,
+			i.IP_PRICE_FIRST AS priceFirst,
+			i.IP_PRICE_LAST AS priceLast,
+			i.IP_PRICE_FINISH AS priceFinish,
+			e.employeeRealName AS referrerName,
+			i.ip_referrer_id AS referrerId,
+			DATE_FORMAT(
+				i.IP_CREATE_TIME,
+				'%Y-%m-%d %T'
+			) AS createTime,
+			i.IP_CUSTOMER_PAYMENT AS customerPayment,
+			i.IP_PROVIDER_PAYMENT AS providerPayment,
+			iff.if_flow_id AS masterFlowId
+		FROM
+			INDENT_PROJECT i
+		LEFT JOIN USERS u ON i.ip_customerId = u.id
+		LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
+		LEFT JOIN EMPLOYEE e ON i.ip_referrer_id = e.employeeId
+		LEFT JOIN INDENT_FLOW iff ON iff.if_indent_id = i.ip_id
+		WHERE
+			i.IP_USER_ID = ${userId} 
+			AND iff.if_state = 'Y'
+		OR i.ip_id IN (
 			SELECT
-				i.IP_ID AS id,
-				i.IP_PROJECT_NAME AS projectName,
-				i.IP_USER_CONTACT AS userContact,
-				i.IP_USER_PHONE AS userPhone,
-				i.IP_TEAM_CONTACT AS teamContact,
-				i.IP_TEAM_PHONE AS teamPhone,
-				i.IP_USER_TYPE AS userType,
-				i.IP_USER_ID AS userId,
-				i.IP_DESCRIPTION AS description,
-				i.IP_SERIAL AS serial,
-				i.IP_SOURCE AS source,
-				i.IP_STATE AS state,
-				i.IP_CUSTOMERID AS customerId,
-				i.IP_TEAMID AS teamId,
-				u.USERNAME AS userName,
-				u.CLIENTLEVEL AS clientLevel,
-				t.TEAMNAME AS teamName,
-				i.IP_PRICE_FIRST AS priceFirst,
-				i.IP_PRICE_LAST AS priceLast,
-				i.IP_PRICE_FINISH AS priceFinish,
-				e.employeeRealName AS referrerName,
-				i.ip_referrer_id AS referrerId,
-				DATE_FORMAT(
-					i.IP_CREATE_TIME,
-					'%Y-%m-%d %T'
-				) AS createTime,
-				i.IP_CUSTOMER_PAYMENT AS customerPayment,
-				i.IP_PROVIDER_PAYMENT AS providerPayment
+				s.s_project_id
 			FROM
-				INDENT_PROJECT i
-			LEFT JOIN USERS u ON i.ip_customerId = u.id
-			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
-			LEFT JOIN EMPLOYEE e ON i.ip_referrer_id = e.employeeId
+				SYNERGY s
 			WHERE
-				i.IP_USER_ID = ${userId}
-			OR i.ip_id IN (
-				SELECT
-					s.s_project_id
-				FROM
-					SYNERGY s
-				WHERE
-					s_user_id = ${userId}
-			)
-			ORDER BY
-				i.IP_UPDATE_TIME DESC,
-				i.IP_ID DESC
+				s_user_id = ${userId}
+		)
+		ORDER BY
+			i.IP_UPDATE_TIME DESC,
+			i.IP_ID DESC
 		]]>
 	</select>
 
@@ -436,11 +439,11 @@
 		<if test="projectId != null and projectId != ''">
 			AND i.IP_ID = ${projectId}
 		</if>
-		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
+		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询 begin -->
 		<if test="projectName != null and projectName != ''">
-			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
+			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')
 		</if>
-		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询  begin-->
+		<!--add by wanglc 2016-7-4 16:25:51 添加项目名称模糊查询 begin -->
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = ${state}
 		</if>
@@ -453,12 +456,12 @@
 			AND i.IP_USER_ID = ${userId}
 		</if>
 
-		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin  -->
+		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 begin -->
 		<if test="teamName != null and teamName != ''">
-			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
 		</if>
-		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end  -->
-		
+		<!--add by wanglc 2016-7-4 16:25:03 添加供应商模糊查询 end -->
+
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
@@ -466,8 +469,8 @@
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
 		</if>
-		<!--modify by wanglc 2016-7-19 14:57:46修改为id倒序 begin
-		 ORDER BY i.IP_UPDATE_TIME DESC  -->
+		<!--modify by wanglc 2016-7-19 14:57:46修改为id倒序 begin ORDER BY i.IP_UPDATE_TIME 
+			DESC -->
 		<![CDATA[
 			ORDER BY i.IP_ID DESC
 			LIMIT ${begin} , ${limit}
@@ -495,7 +498,7 @@
 			AND i.IP_ID = ${projectId}
 		</if>
 		<if test="projectName != null and projectName != ''">
-			AND IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
+			AND IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')
 		</if>
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = #{state}
@@ -507,7 +510,7 @@
 			AND i.IP_USER_ID = ${userId}
 		</if>
 		<if test="teamName != null and teamName != ''">
-			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
 		</if>
 		<if test="customerId != null and customerId != '' and customerId != 0">
 			AND u.ID = ${customerId}
@@ -679,7 +682,7 @@
 			AND i.IP_ID = ${projectId}
 		</if>
 		<if test="projectName != null and projectName != ''">
-			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
+			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')
 		</if>
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = ${state}
@@ -692,7 +695,7 @@
 			AND i.ip_teamId = ${teamId}
 		</if>
 		<if test="teamName != null and teamName != ''">
-			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
 		</if>
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
@@ -706,7 +709,7 @@
 		<![CDATA[
 			ORDER BY i.IP_ID DESC
 		]]>
-	</select>	
+	</select>
 	<select id="listWithPaginationNoLimit" resultType="IndentProject">
 		<![CDATA[
 			SELECT  i.IP_ID AS id,
@@ -751,7 +754,7 @@
 			AND i.IP_ID = ${projectId}
 		</if>
 		<if test="projectName != null and projectName != ''">
-			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')  
+			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')
 		</if>
 		<if test="state != null and state != ''">
 			AND i.IP_STATE = ${state}
@@ -766,9 +769,9 @@
 		</if>
 
 		<if test="teamName != null and teamName != ''">
-			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%') 
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
 		</if>
-		
+
 		<if test="teamId != null and teamId != ''">
 			AND i.ip_teamId = ${teamId}
 		</if>
@@ -776,7 +779,7 @@
 		<if test="source != null and source != ''">
 			AND i.IP_SOURCE = #{source}
 		</if>
-		
+
 		<if test="customerId != null and customerId != '' and customerId != 0">
 			AND u.ID = ${customerId}
 		</if>
