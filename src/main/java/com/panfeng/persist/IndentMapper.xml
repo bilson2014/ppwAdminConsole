@@ -131,7 +131,13 @@
 			AND ind.SERVICEID = ${serviceId}
 		</if>
 		<![CDATA[
-			ORDER BY ind.ORDERDATE desc
+		ORDER BY 
+		]]>
+		<if test="sort != null and sort != '' and order != null and order != ''">
+			 ${sort} ${order},
+		</if>
+		<![CDATA[
+			 ind.ORDERDATE desc
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>

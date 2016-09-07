@@ -17,9 +17,7 @@ public class TeamView extends Pagination{
 	
 	private String[] business = null; // 业务区间
 	
-	//add by wanglc  like查询 字段 begin
 	private String teamName = null;//团队名称like查询
-	//add by wanglc  like查询 字段 end
 	
 	public String getTeamName() {
 		return teamName;

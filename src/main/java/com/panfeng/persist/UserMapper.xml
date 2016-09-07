@@ -56,9 +56,14 @@
 				AND u.clientLevel = ${clientLevel}
 			</when>
 		</choose>
-		
 		<![CDATA[
-			ORDER BY CREATEDATE,ID DESC
+		ORDER BY
+		]]>
+		<if test="sort != null and sort != '' and order != null and order != ''">
+			 ${sort} ${order},
+		</if>
+		<![CDATA[
+			CREATEDATE,ID DESC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>

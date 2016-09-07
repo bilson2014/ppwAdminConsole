@@ -7,7 +7,6 @@ public class UserView extends Pagination{
 	private String userName;
 	
 	private Integer clientLevel = -1; // 客户分级
-
 	public String getUserName() {
 		return userName;
 	}

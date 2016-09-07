@@ -65,10 +65,15 @@
 		<if test="endTime != null  and endTime != ''">
 			AND DATE_FORMAT(dl.DL_PAYTIME,'%Y-%m-%d') &lt;= #{endTime}
 		</if>
-		
+		<![CDATA[
+		ORDER BY
+		]]>
+		<if test="sort != null and sort != '' and order != null and order != ''">
+			 ${sort} ${order},
+		</if>
 		
 		<![CDATA[
-			ORDER BY dl.DL_PAYTIME DESC
+			  dl.DL_PAYTIME DESC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>

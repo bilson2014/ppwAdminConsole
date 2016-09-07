@@ -167,20 +167,26 @@ public class SolrController extends BaseController {
 	}
 	
 	@RequestMapping("/solr/phone/query")
-	public List<Solr> phoneSearch(@RequestBody final SolrView view){
+	public List<Solr> phoneSearch(@RequestBody final SolrView view,final HttpServletRequest request){
 		
 		try {
+			final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
+			
 			String condition = URLDecoder.decode(view.getCondition(), "UTF-8");
 			//condition = HanlpUtil.segment(condition);
 			
 			final SolrQuery query = new SolrQuery();
-			query.set("defType", "dismax");
+			/*query.set("defType", "dismax");*/
 			query.set("qf", "productName^2 tags^1.5 teamName^1.2 pDescription^1");
-			
-			query.setQuery("productName:" + condition + " tags:" + condition + " teamName:" + condition + " pDescription:" + condition);
+			if("*".equals(condition)){
+				// 查询全部
+				query.setQuery("*:*");
+			}else {
+				query.setQuery("productName:" + condition + " tags:" + condition + " teamName:" + condition + " pDescription:" + condition);
+			}
 			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,pDescription,tags");
 			query.setStart(0);
-			query.setRows(30);
+			query.setRows(9999);
 			// 如果价格区间为空，则设置为全部
 			if(view.getPriceFq() == null || "".equals(view.getPriceFq())){
 				view.setPriceFq("[0 TO *]");
@@ -218,7 +224,7 @@ public class SolrController extends BaseController {
 			query.setHighlightSimplePre("<font color=\"red\">");
 			query.setHighlightSimplePost("</font>");
 			
-			final List<Solr> list = service.queryDocs(GlobalConstant.SOLR_URL, query);
+			final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
 			return list;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();

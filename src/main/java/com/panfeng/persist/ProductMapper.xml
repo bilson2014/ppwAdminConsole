@@ -36,11 +36,16 @@
 		<if test="teamId !=null and teamId != ''">
 			AND pro.TEAMID = ${teamId}
 		</if>
-		<!-- modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 begin  -->
 		<if test="teamName !=null and teamName != ''">
 			AND t.TEAMNAME  LIKE CONCAT(CONCAT('%',#{teamName}),'%')
 		</if>
-		<!-- modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 begin  -->
+		<if test="beginTime != null and beginTime != '' ">
+			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &gt;= #{beginTime}
+		</if>
+		
+		<if test="endTime != null  and endTime != ''">
+			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &lt;= #{endTime}
+		</if>
 		<if test="productType != null and productType != ''">
 			AND pro.PRODUCTTYPE = ${productType}
 		</if>
@@ -71,7 +76,13 @@
 			AND pro.HRET = ''
 		</if>
 		<![CDATA[
-			ORDER BY pro.recommend,pro.supportCount desc
+		ORDER BY
+		]]>
+		<if test="sort != null and sort != '' and order != null and order != ''">
+			 ${sort} ${order},
+		</if>
+		<![CDATA[
+			pro.recommend,pro.supportCount desc
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
@@ -246,6 +257,13 @@
 		<if test="teamName !=null and teamName != ''">
 			AND t.TEAMNAME  LIKE CONCAT(CONCAT('%',#{teamName}),'%')
 		</if>
+		<if test="beginTime != null and beginTime != '' ">
+			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &gt;= #{beginTime}
+		</if>
+		
+		<if test="endTime != null  and endTime != ''">
+			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &lt;= #{endTime}
+		</if>
 		<if test="productType != null and productType != ''">
 			AND pro.PRODUCTTYPE = ${productType}
 		</if>
@@ -260,12 +278,12 @@
 		<if test="flag !=null and flag != ''">
 			AND pro.FLAG = ${flag}
 		</if>
-		<if test="hret == 0">
+		<if test="hret != null and hret != '' and hret == 0">
 			<![CDATA[
 				AND pro.HRET <> ''
 			]]>
 		</if>
-		<if test="hret == 1">
+		<if test="hret != null and hret != '' and hret == 1">
 			AND pro.HRET = ''
 		</if>
 	</select>

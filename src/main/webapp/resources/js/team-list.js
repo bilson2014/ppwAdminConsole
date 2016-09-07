@@ -62,6 +62,18 @@ $().ready(function(){
 						width : 100,
 						align : 'center'
 					},{
+						field : 'updateDate' ,
+						title : '更新时间' ,
+						align : 'center' ,
+						width : 150,
+						sortable : true ,
+					},{
+						field : 'createDate' ,
+						title : '创建时间' ,
+						align : 'center' ,
+						width : 150,
+						sortable : true ,
+					},{
 						field : 'phoneNumber',
 						title : '手机号码',
 						width : 100,
@@ -132,17 +144,6 @@ $().ready(function(){
 								return '<span style=color:red; > >= 10W</span>' ;
 							}
 						}
-						
-					},{
-						field : 'updateDate' ,
-						title : '更新时间' ,
-						align : 'center' ,
-						width : 150
-					},{
-						field : 'createDate' ,
-						title : '创建时间' ,
-						align : 'center' ,
-						width : 150
 					},{
 						field : 'recommendation',
 						title : '审核意见',
