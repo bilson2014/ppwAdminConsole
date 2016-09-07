@@ -683,7 +683,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 					res.put(infoType.getText(), true);
 				}
 
-				if (ip.getCustomerId() == null || ip.getCustomerId() <= 0) {
+				if (ip.getCustomerId() != null && ip.getCustomerId() > 0) {
 					if (!ValidateUtil.isValid(ip.getUserName())) {
 						if (!ValidateUtil.isValid(ip.getUserContact())) {
 							if (!ValidateUtil.isValid(ip.getUserPhone())) {
@@ -731,7 +731,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				}
 				break;
 			case provider:
-				if (ip.getTeamId() == null || ip.getTeamId() <= 0) {
+				if (ip.getTeamId() != null || ip.getTeamId() > 0) {
 					if (!ValidateUtil.isValid(ip.getTeamName())) {
 						if (!ValidateUtil.isValid(ip.getTeamContact())) {
 							if (!ValidateUtil.isValid(ip.getTeamContact())) {
@@ -880,11 +880,15 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public List<IndentProject> findProjectListByPhone(IndentProject indentProject) {
+		List<IndentProject> list  = findProjectList(indentProject);
 		long start = System.currentTimeMillis();
-		List<IndentProject> list = findProjectList(indentProject);
 		if (ValidateUtil.isValid(list)) {
 			list = indentActivitiService.fullCurrentTask(list);
 			List<ActivitiTask> nodes = indentActivitiService.getNodes(list.get(0));
+			for(ActivitiTask activitiTask : nodes){
+				activitiTask.getScheduledTime().setFdStartTime("");
+				activitiTask.setCreateTime("");
+			}
 			for (int i = 0; i < list.size(); i++) {
 				List<ActivitiTask> node = new ArrayList<>();
 				for (int j = 0; j < nodes.size(); j++) {
