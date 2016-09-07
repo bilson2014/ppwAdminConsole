@@ -402,6 +402,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		List<Synergy> sList = indentProject.getSynergys();
 		if (ValidateUtil.isValid(sList)) {
 			for (final Synergy synergy : sList) {
+				Employee employee = employeeService.findEmployerById(synergy.getUserId());
+				synergy.setUserName(employee.getEmployeeRealName());
 				Synergy originalSynergy = map.get(synergy.getSynergyId());
 				if (originalSynergy == null) {
 					synergy.setProjectId(indentProject.getId());
