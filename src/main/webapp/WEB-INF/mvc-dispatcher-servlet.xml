@@ -43,6 +43,11 @@
 			<mvc:mapping path="/portal/solr/query"/>
 			<bean class="com.panfeng.interceptor.SearchResourceInterceptor" />
 		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/portal/solr/suggest/**"/>
+			<bean class="com.panfeng.interceptor.SuggestResourceInterceptor" />
+		</mvc:interceptor>
 	</mvc:interceptors>
 	
 </beans>

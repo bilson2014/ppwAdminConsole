@@ -164,12 +164,14 @@ $().ready(function(){
 								return '<span style=color:blue; >活动</span>' ;
 							case 5:
 								return '<span style=color:blue; >推荐</span>' ;
+							case 6:
+								return '<span style=color:blue; >电销</span>' ;
 							}
 						},
 						editor:{
 							type:'combobox' , 
 							options:{
-								data:[{id:1 , val:'渠道'},{id:2 , val:'推广'},{id:3 , val:'自主开发'},{id:4 , val:'活动'},{id:5 , val:'推荐'}] ,
+								data:[{id:1 , val:'渠道'},{id:2 , val:'推广'},{id:3 , val:'自主开发'},{id:4 , val:'活动'},{id:5 , val:'推荐'},{id:6 , val:'电销'}] ,
 								valueField:'id' , 
 								textField:'val' ,
 								required:true , 

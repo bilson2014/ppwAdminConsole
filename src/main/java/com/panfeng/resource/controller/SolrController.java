@@ -228,16 +228,17 @@ public class SolrController extends BaseController {
 	}
 	
 	@RequestMapping("/solr/suggest/{token}")
-	public List<Solr> suggest(@PathVariable("token") final String token){
+	public List<Solr> suggest(@PathVariable("token") final String token,final HttpServletRequest request){
 		
 		if(token != null && !"".equals(token)){
 			try {
+				final ResourceToken resourceToken = (ResourceToken) request.getAttribute("searchResourceToken"); // 访问资源库令牌
 				final String word = URLDecoder.decode(token, "UTF-8");
 				final SolrQuery query = new SolrQuery();
 				query.set("qt", "/suggest");
 				query.set("q", word);
 				query.set("spellcheck.build", "true");
-				List<String> list = service.suggestDocs(GlobalConstant.SOLR_URL, query);
+				List<String> list = service.suggestDocs(resourceToken.getSolrUrl(), query);
 				final List<Solr> sList = new ArrayList<Solr>();
 				if (list != null){
 					
