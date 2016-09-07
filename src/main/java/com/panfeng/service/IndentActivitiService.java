@@ -25,9 +25,9 @@ public interface IndentActivitiService {
 
 	boolean startProcess(IndentProject indentProject);
 
-	boolean suspendProcess(IndentProject indentProject);
+	boolean suspendProcess(IndentProject indentProject,boolean isBack);
 
-	boolean resumeProcess(IndentProject indentProject);
+	boolean resumeProcess(IndentProject indentProject,boolean isBack);
 
 	boolean removeProcess(IndentProject indentProject);
 

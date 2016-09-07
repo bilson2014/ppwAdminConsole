@@ -153,6 +153,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		return indentProject;
 	}
 
+	/**
+	 * 前端更新项目
+	 */
 	@Override
 	public boolean updateIndentProject(IndentProject indentProject, boolean isUpdateSynergy) {
 		// 更新供应商和用户实际支付金额
@@ -408,7 +411,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				}
 			}
 		}
-		final long ret = indentProjectMapper.update(indentProject);
+		final long ret = indentProjectMapper.updateBack(indentProject);
 		return ret;
 	}
 

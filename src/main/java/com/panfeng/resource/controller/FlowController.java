@@ -60,7 +60,7 @@ public class FlowController extends BaseController {
 	@RequestMapping("/suspendProcess")
 	public boolean suspendProcess(
 			@RequestBody final IndentProject indentProject) {
-		return indentActivitiService.suspendProcess(indentProject);
+		return indentActivitiService.suspendProcess(indentProject,false);
 	}
 	
 	@RequestMapping("/jumpPrevTask")
@@ -71,7 +71,7 @@ public class FlowController extends BaseController {
 	@RequestMapping("/resumeProcess")
 	public boolean resumeProcess(
 			@RequestBody final IndentProject indentProject) {
-		return indentActivitiService.resumeProcess(indentProject);
+		return indentActivitiService.resumeProcess(indentProject,false);
 	}
 	
 //	@RequestMapping("/removeProcess")
