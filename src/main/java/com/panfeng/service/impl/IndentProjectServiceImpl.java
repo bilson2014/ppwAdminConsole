@@ -684,9 +684,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				}
 
 				if (ip.getCustomerId() != null && ip.getCustomerId() > 0) {
-					if (!ValidateUtil.isValid(ip.getUserName())) {
-						if (!ValidateUtil.isValid(ip.getUserContact())) {
-							if (!ValidateUtil.isValid(ip.getUserPhone())) {
+					if (ValidateUtil.isValid(ip.getUserName())) {
+						if (ValidateUtil.isValid(ip.getUserContact())) {
+							if (ValidateUtil.isValid(ip.getUserPhone())) {
 								res.put(infoType.getText(), true);
 							} else {
 								res.put(infoType.getText(), false);
@@ -732,9 +732,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				break;
 			case provider:
 				if (ip.getTeamId() != null || ip.getTeamId() > 0) {
-					if (!ValidateUtil.isValid(ip.getTeamName())) {
-						if (!ValidateUtil.isValid(ip.getTeamContact())) {
-							if (!ValidateUtil.isValid(ip.getTeamContact())) {
+					if (ValidateUtil.isValid(ip.getTeamName())) {
+						if (ValidateUtil.isValid(ip.getTeamContact())) {
+							if (ValidateUtil.isValid(ip.getTeamContact())) {
 								res.put(infoType.getText(), true);
 							} else {
 								res.put(infoType.getText(), false);
