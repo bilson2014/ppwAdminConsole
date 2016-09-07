@@ -115,6 +115,7 @@ $().ready(function(){
 						title : '下单时间',
 						width : 150,
 						align : 'center',
+						sortable : true ,
 						editor : {
 							type : 'datebox' ,
 							options : {

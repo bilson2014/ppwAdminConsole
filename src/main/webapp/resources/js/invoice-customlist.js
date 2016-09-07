@@ -68,6 +68,7 @@ $().ready(function(){
 								},{
 									field : 'invoiceStampTime',
 									title : '开票日期',
+									sortable : true ,
 									align : 'center',
 									formatter : function(value,row,index){
 										var time = new Date(value); 
@@ -76,6 +77,7 @@ $().ready(function(){
 								},{
 									field : 'invoiceReceiveTime',
 									title : '管家领取日期',
+									sortable : true ,
 									align : 'center',
 									formatter : function(value,row,index){
 										var time = new Date(value); 

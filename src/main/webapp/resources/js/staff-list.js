@@ -40,6 +40,7 @@ $().ready(function(){
 					},{
 						field : 'updateDate' ,
 						title : '更新时间',
+						sortable : true ,
 						align : 'center'
 					}]],
 		pagination: true ,
@@ -146,5 +147,5 @@ function searchFun(){
 // 清除
 function cleanFun() {
 	$('#searchForm').form('clear');
-	datagrid.datagrid('load', {});
+	//datagrid.datagrid('load', {});
 }

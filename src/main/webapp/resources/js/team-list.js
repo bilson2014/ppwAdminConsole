@@ -62,6 +62,18 @@ $().ready(function(){
 						width : 100,
 						align : 'center'
 					},{
+						field : 'updateDate' ,
+						title : '更新时间' ,
+						align : 'center' ,
+						width : 150,
+						sortable : true ,
+					},{
+						field : 'createDate' ,
+						title : '创建时间' ,
+						align : 'center' ,
+						width : 150,
+						sortable : true ,
+					},{
 						field : 'phoneNumber',
 						title : '手机号码',
 						width : 100,
@@ -132,17 +144,6 @@ $().ready(function(){
 								return '<span style=color:red; > >= 10W</span>' ;
 							}
 						}
-						
-					},{
-						field : 'updateDate' ,
-						title : '更新时间' ,
-						align : 'center' ,
-						width : 150
-					},{
-						field : 'createDate' ,
-						title : '创建时间' ,
-						align : 'center' ,
-						width : 150
 					},{
 						field : 'recommendation',
 						title : '审核意见',
@@ -221,15 +222,22 @@ var team = {
 	dataInit : function(){ // 初始化控件数据
 		$('#search-teamName').combobox({
 			url : getContextPath() + '/portal/product/init',
-			//valueField : 'teamId',
-			//modify by wanglc 团队查询按照teamName like查询 begin
 			valueField : 'teamName',
-			//modify by wanglc end
 			textField : 'teamName',
 			filter: function(q, row){
 				if(row.teamName == null)
 					return false;
 				return row.teamName.indexOf(q) >= 0;
+			}
+		});
+		$('#search-phoneNumber').combobox({
+			url : getContextPath() + '/portal/product/init',
+			valueField : 'phoneNumber',
+			textField : 'phoneNumber',
+			filter: function(q, row){
+				if(row.phoneNumber == null)
+					return false;
+				return row.phoneNumber.indexOf(q) >= 0;
 			}
 		});
 	},

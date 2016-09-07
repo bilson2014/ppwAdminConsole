@@ -393,7 +393,7 @@ function delSynergy(){
 		if(synergyId != null && synergyId != undefined && synergyId != ''&&synergyId != -1){//代表数据库存在,需要删除
 			loadData(function(){
 				 _this.parent().parent().remove();
-				 datagrid.datagrid('reload');
+				// datagrid.datagrid('reload');
 			}, getContextPath() + '/project/remove/synergy', $.toJSON({
 				name:synergyId
 			}));

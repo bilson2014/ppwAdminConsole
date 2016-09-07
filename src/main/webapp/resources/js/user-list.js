@@ -180,7 +180,8 @@ $().ready(function(){
 						field : 'createDate',
 						title : '注册日期',
 						width : 120,
-						align : 'center'
+						align : 'center',
+						sortable : true ,
 					},{
 						field : 'birthday',
 						title : '出生日期',
