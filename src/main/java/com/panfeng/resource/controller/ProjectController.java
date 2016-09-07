@@ -27,7 +27,6 @@ import com.panfeng.resource.model.Synergy;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.IndentProjectView;
 import com.panfeng.resource.view.PageFilter;
-import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.util.ValidateUtil;
@@ -38,8 +37,8 @@ public class ProjectController extends BaseController {
 	@Autowired
 	private IndentProjectService indentProjectService = null;
 
-	@Autowired
-	private IndentActivitiService activitiService = null;
+//	@Autowired
+//	private IndentActivitiService activitiService = null;
 
 	@Autowired
 	private IndentResourceService resourceService = null;
@@ -205,19 +204,19 @@ public class ProjectController extends BaseController {
 
 		project.setSynergys(list);
 		// add by wanglc,2016-06-23 10:30 end
-		if (project.getState() == 3) { // 暂停动作同时调用工作流引擎暂停
-			activitiService.suspendProcess(project);
-		}
-
-		// 如果之前项目状态为暂停，那么应该启动引擎
-		if (project.getState() == 0) {
-			final IndentProject originalProject = indentProjectService.getProjectInfo(project);
-			if (originalProject != null) {
-				if (originalProject.getState() == 3) { // 之前项目状态为3，那么恢复流程
-					activitiService.resumeProcess(project);
-				}
-			}
-		}
+//		if (project.getState() == 3) { // 暂停动作同时调用工作流引擎暂停
+//			activitiService.suspendProcess(project,true);
+//		}
+//
+//		// 如果之前项目状态为暂停，那么应该启动引擎
+//		if (project.getState() == 0) {
+//			final IndentProject originalProject = indentProjectService.getProjectInfo(project);
+//			if (originalProject != null) {
+//				if (originalProject.getState() == 3) { // 之前项目状态为3，那么恢复流程
+//					activitiService.resumeProcess(project,true);
+//				}
+//			}
+//		}
 
 		final long ret = indentProjectService.update(project);
 		return ret;

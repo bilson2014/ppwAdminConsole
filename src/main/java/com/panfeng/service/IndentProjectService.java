@@ -32,7 +32,7 @@ public interface IndentProjectService {
 	public List<BizBean> getTags();
 
 	public boolean cancelProject(IndentProject indentProject);
-
+	
 	/**
 	 * 生成 indentProject 所属用户的全部报表
 	 * 

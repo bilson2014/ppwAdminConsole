@@ -125,14 +125,14 @@
 	        				<input id="serial" name="serial" class="easyui-textbox" required="true" editable="false" readonly="readonly"/>
 	        			</td>
 	        			
-	        			<th>项目状态</th>
+	        			<!-- <th>项目状态</th>
 	        			<td>
 	        				<select id="state" name="state" class="easyui-combobox" editable="false" style="width: 90%;">
 								<option value="0" selected>正常</option>
 	            				<option value="1" >取消</option>
 	            				<option value="3" >暂停</option>
 							</select>
-	        			</td>
+	        			</td> -->
 	        		</tr>
 	        		
 	        		<tr>

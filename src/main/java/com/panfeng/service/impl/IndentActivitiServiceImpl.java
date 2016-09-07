@@ -195,7 +195,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	}
 
 	@Override
-	public boolean suspendProcess(IndentProject indentProject) {
+	public boolean suspendProcess(IndentProject indentProject, boolean isBack) {
 		boolean isSuspended = activitiEngineService.isSuspended(processDefinitionKey,
 				String.valueOf(indentProject.getId()), getIndentCurrentFlowId(indentProject));
 		if (!isSuspended) {
@@ -204,20 +204,28 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			indentCommentService.createSystemMsg(
 					" 暂停了 " + indentProject.getProjectName() + "项目，原因：" + indentProject.getDescription(),
 					indentProject);
-			indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_SUSPEND,
-					indentProject.getDescription());
+			if (isBack)
+				indentProjectMapper.updateStateBack(indentProject.getId(), IndentProject.PROJECT_SUSPEND,
+						indentProject.getDescription());
+			else
+				indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_SUSPEND,
+						indentProject.getDescription());
 			return res;
 		}
 		return true;
 	}
 
 	@Override
-	public boolean resumeProcess(IndentProject indentProject) {
+	public boolean resumeProcess(IndentProject indentProject, boolean isBack) {
 		boolean res = activitiEngineService.resumeProcess(processDefinitionKey, String.valueOf(indentProject.getId()),
 				getIndentCurrentFlowId(indentProject));
 		indentCommentService.createSystemMsg(" 恢复了 " + indentProject.getProjectName() + "项目", indentProject);
-		indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_NORMAL,
-				indentProject.getDescription());
+		if (isBack)
+			indentProjectMapper.updateStateBack(indentProject.getId(), IndentProject.PROJECT_NORMAL,
+					indentProject.getDescription());
+		else
+			indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_NORMAL,
+					indentProject.getDescription());
 		return res;
 	}
 

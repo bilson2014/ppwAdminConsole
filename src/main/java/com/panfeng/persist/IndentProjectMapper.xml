@@ -160,6 +160,65 @@
 			WHERE i.IP_ID = ${id}
 		]]>
 	</update>
+	<update id="updateBack">
+		<![CDATA[
+			UPDATE INDENT_PROJECT i SET 
+				i.IP_PROJECT_NAME =#{projectName} ,
+				i.IP_USER_CONTACT =#{userContact} ,
+				i.IP_USER_PHONE=#{userPhone} ,
+				i.IP_TEAM_CONTACT =#{teamContact} ,
+				i.IP_TEAM_PHONE =#{teamPhone},
+				i.IP_DESCRIPTION = #{description},
+				i.IP_SERIAL=#{serial},
+				i.IP_SOURCE=#{source},
+				i.IP_CUSTOMERID=${customerId},
+				i.IP_TEAMID=#{teamId}
+				]]>
+		<if test="userType != null and userType != ''">
+			,i.IP_USER_TYPE=#{userType}
+		</if>
+		<if test="userId != null">
+			,i.IP_USER_ID=${userId}
+		</if>
+		<if test="priceFirst != null and priceFirst != ''">
+			,i.IP_PRICE_FIRST=${priceFirst}
+		</if>
+		<if test="priceLast != null and priceLast != ''">
+			,i.IP_PRICE_LAST=${priceLast}
+		</if>
+
+		<if test="priceFinish != null and priceFinish != ''">
+			,i.IP_PRICE_FINISH=${priceFinish}
+		</if>
+
+		<if test="referrerId != null and referrerId != ''">
+			,i.IP_REFERRER_ID = ${referrerId}
+		</if>
+
+		<if test="referrerId == 0">
+			,i.IP_REFERRER_ID = ${referrerId}
+		</if>
+
+		<if test="customerPayment != null and customerPayment != ''">
+			,i.IP_CUSTOMER_PAYMENT = ${customerPayment}
+		</if>
+
+		<if test="customerPayment == 0">
+			,i.IP_CUSTOMER_PAYMENT = 0
+		</if>
+
+		<if test="providerPayment != null and providerPayment != ''">
+			,i.IP_PROVIDER_PAYMENT = ${providerPayment}
+		</if>
+
+		<if test="providerPayment == 0">
+			,i.IP_PROVIDER_PAYMENT = 0
+		</if>
+			
+		<![CDATA[
+			WHERE i.IP_ID = ${id}
+		]]>
+	</update>
 	<update id="updateSynergy">
 		<![CDATA[
 			UPDATE INDENT_PROJECT i SET 
@@ -233,6 +292,19 @@
 	</update>
 
 	<update id="updateState" parameterType="long">
+		<![CDATA[
+			UPDATE INDENT_PROJECT i
+				SET i.IP_STATE=${state},
+					i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
+		]]>
+		<if test="description != null and description != ''  ">
+			,i.IP_DESCRIPTION = #{description}
+		</if>
+		<![CDATA[
+			WHERE i.IP_ID = ${id}
+		]]>
+	</update>
+	<update id="updateStateBack" parameterType="long">
 		<![CDATA[
 			UPDATE INDENT_PROJECT i
 				SET i.IP_STATE=${state},
