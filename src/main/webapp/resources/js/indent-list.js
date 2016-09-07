@@ -8,7 +8,7 @@ $().ready(function(){
 		url : getContextPath() + '/portal/indent/list',
 		idField : 'indentId' ,
 		title : '订单列表' , 
-		fitColumns : true ,
+		// fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -32,7 +32,8 @@ $().ready(function(){
 						field : 'indentId',
 						title : '订单编号',
 						width : 150,
-						align : 'center'
+						align : 'center',
+						sortable : true 
 					},{
 						field : 'indentPrice',
 						title : '订单金额',

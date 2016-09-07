@@ -51,6 +51,7 @@ $().ready(function(){
 						title : '价格',
 						width : 110,
 						align : 'center' ,
+						sortable : true ,
 						editor : {
 							type : 'numberbox' ,
 							options : {

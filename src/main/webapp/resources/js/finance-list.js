@@ -31,7 +31,7 @@ $().ready(function(){
 						title : '支付时间',
 						width : 150,
 						align : 'center',
-						sortable : true ,
+						sortable : true 
 					},{
 						field : 'billNo',
 						title : '订单编号',
@@ -71,6 +71,7 @@ $().ready(function(){
 						title : '交易价格',
 						width : 150,
 						align : 'center',
+						sortable : true ,
 						formatter : function(value,row,index){
 							return thousandCount(value) + '<span style=color:#999; > 元</span>'; 
 						}

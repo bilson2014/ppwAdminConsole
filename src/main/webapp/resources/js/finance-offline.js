@@ -71,6 +71,7 @@ $().ready(function(){
 						title : '交易金额',
 						width : 150,
 						align : 'center',
+						sortable : true ,
 						formatter : function(value,row,index){
 							return thousandCount(value) + '<span style=color:#999; > 元</span>'; 
 						}
@@ -93,7 +94,7 @@ $().ready(function(){
 		pagination: true ,
 		pageSize : 20,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
-		showFooter : true,
+		showFooter : false,
 		toolbar : '#toolbar'
 	});
 		

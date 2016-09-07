@@ -8,7 +8,7 @@
 		   i.INVOICE_CODE AS invoiceCode,
 		   i.INVOICE_TYPE AS invoiceType,
 		   i.INVOICE_CONTENT AS invoiceContent,
-		   i.INVOICE_TOTAL AS invoiceTotal,
+		   FORMAT(i.INVOICE_TOTAL,2) AS invoiceTotal,
 		   i.INVOICE_RADIO AS invoiceRadio,
 		   DATE_FORMAT(i.INVOICE_STAMPTIME,'%Y-%m-%d')AS invoiceStampTime,
 		   DATE_FORMAT( i.INVOICE_RECEIVETIME,'%Y-%m-%d') AS invoiceReceiveTime,
@@ -33,7 +33,7 @@
 		<if test="invoiceType != null and invoiceType !=0 ">
 			AND i.INVOICE_TYPE = ${invoiceType}
 		</if>
-		<if test="invoiceCode != null ">
+		<if test="invoiceCode != null and invoiceCode != '' ">
 			AND i.INVOICE_CODE LIKE CONCAT('%',#{invoiceCode},'%')
 		</if>
 		<if test="invoiceProjectId != null ">
@@ -55,6 +55,12 @@
 		<![CDATA[
 			SELECT COUNT(1)
 				FROM USER_INVOICE i
+			INNER JOIN INDENT_PROJECT p
+				ON i.INVOICE_PROJECTID = p.IP_ID
+			LEFT JOIN USERS u
+				ON i.INVOICE_USERID = u.ID
+			LEFT JOIN EMPLOYEE e
+				 ON i.invoice_employeeId = e.employeeId
 			WHERE 1 = 1
 		]]>
 		
@@ -62,7 +68,7 @@
 			AND i.INVOICE_TYPE = ${invoiceType}
 		</if>
 		
-		<if test="invoiceCode != null ">
+		<if test="invoiceCode != null and invoiceCode != '' ">
 			AND i.INVOICE_CODE LIKE CONCAT('%',#{invoiceCode},'%')
 		</if>
 		

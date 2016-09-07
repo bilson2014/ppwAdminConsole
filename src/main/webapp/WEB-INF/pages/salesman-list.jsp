@@ -20,7 +20,7 @@
 		<form id="searchForm">
 			<table>
 				<tr>
-					<th>所属项目:</th>
+					<th>分销人姓名:</th>
 					<td><input id="search-name" name="salesmanName" class="easyui-textbox" placeholder="分销人名称"/></td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>

@@ -43,7 +43,8 @@ $().ready(function(){
 					},{
 						field : 'updateDate' ,
 						title : '更新时间',
-						align : 'center'
+						align : 'center',
+						sortable : true 
 					}]],
 		pagination: true ,
 		pageSize : 20,

@@ -8,7 +8,7 @@ $().ready(function(){
 		url : getContextPath() + '/portal/user/list',
 		idField : 'id' ,
 		title : '用户列表' , 
-		fitColumns : true ,
+		// fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -45,6 +45,7 @@ $().ready(function(){
 						title : '客户级别',
 						width : 150,
 						align : 'center' ,
+						sortable : true ,
 						formatter : function(value , record , index){
 							if(value == 0){
 								return '<span style=color:red; >A</span>' ;
@@ -115,7 +116,6 @@ $().ready(function(){
 						title : '联系电话' ,
 						align : 'center' ,
 						width : 100,
-						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -152,6 +152,7 @@ $().ready(function(){
 						title : '客户来源' ,
 						align : 'center' ,
 						width : 60,
+						sortable : true ,
 						formatter : function(value , record , index){
 							switch (value) {
 							case 1:
@@ -183,7 +184,7 @@ $().ready(function(){
 						title : '注册日期',
 						width : 120,
 						align : 'center',
-						sortable : true ,
+						sortable : true 
 					},{
 						field : 'birthday',
 						title : '出生日期',

@@ -68,8 +68,15 @@
 			AND p.PRODUCTNAME LIKE CONCAT(CONCAT('%',#{productName}),'%')
 		</if>
 		<!-- add by wanglc 2016-7-4 15:23:31 添加模糊查询 end-->
+		
 		<![CDATA[
-			ORDER BY s.SERVICEOD,SERVICEID
+		ORDER BY
+		]]>
+		<if test="sort != null and sort != '' and order != null and order != ''">
+			 ${sort} ${order},
+		</if>
+		<![CDATA[
+			s.SERVICEOD,SERVICEID
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
