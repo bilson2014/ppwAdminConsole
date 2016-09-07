@@ -49,8 +49,15 @@
 		<if test="jobName != null and jobName != ''">
 			AND j.JOBNAME LIKE CONCAT(CONCAT('%',#{jobName}),'%')
 		</if>
+		
 		<![CDATA[
-			ORDER BY j.JOBID DESC
+			ORDER BY
+		]]>
+		<if test="sort != null and sort != '' and order != null and order != ''">
+			 ${sort} ${order},
+		</if>
+		<![CDATA[
+			j.JOBID DESC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>

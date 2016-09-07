@@ -479,6 +479,7 @@ public class UserController extends BaseController {
 		info.setReqiureId(user.getId());
 		info.setClientLevel(user.getClientLevel()); // 客户级别
 		info.setTelephone(user.getTelephone());
+
 		final Role role = roleService.findRoleById(3l); // 获取用户角色
 		final List<Role> roles = new ArrayList<Role>();
 		roles.add(role);
@@ -491,7 +492,7 @@ public class UserController extends BaseController {
 		info.setSum(user.getRightSum());
 		info.setEmail(user.getEmail());
 		info.setPhoto(user.getImgUrl());
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(GlobalConstant.SESSION_INFO, info);
 		return sessionService.addSession(request, map);

@@ -8,10 +8,6 @@ public class ProductView extends Pagination{
 	
 	private Long productId = null; // 产品编号
 	
-	private String order = null; // 排序规则
-	
-	private String sort = null; // 排序字段
-	
 	private String productName = null; // 产品名称
 	
 	private String productType = null; // 项目类别
@@ -42,14 +38,6 @@ public class ProductView extends Pagination{
 	
 	private String endTime = null;//上传时间搜索 结束时间
 	
-	public String getSort() {
-		return sort;
-	}
-
-	public void setSort(String sort) {
-		this.sort = sort;
-	}
-
 	public String getBeginTime() {
 		return beginTime;
 	}
@@ -72,14 +60,6 @@ public class ProductView extends Pagination{
 
 	public void setTeamName(String teamName) {
 		this.teamName = teamName;
-	}
-
-	public String getOrder() {
-		return order;
-	}
-
-	public void setOrder(String order) {
-		this.order = order;
 	}
 
 	public Long getTeamId() {

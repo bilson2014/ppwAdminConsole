@@ -35,6 +35,7 @@ $().ready(function(){
 						title : '审核状态' ,
 						align : 'center' ,
 						width : 80,
+						sortable : true ,
 						formatter : function(value , record , index){
 							if(value == 0){
 								return '<span style=color:blue; >审核中</span>' ;
@@ -66,13 +67,13 @@ $().ready(function(){
 						title : '更新时间' ,
 						align : 'center' ,
 						width : 150,
-						sortable : true ,
+						sortable : true 
 					},{
 						field : 'createDate' ,
 						title : '创建时间' ,
 						align : 'center' ,
 						width : 150,
-						sortable : true ,
+						sortable : true 
 					},{
 						field : 'phoneNumber',
 						title : '手机号码',

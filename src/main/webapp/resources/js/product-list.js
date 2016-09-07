@@ -77,7 +77,6 @@ $().ready(function(){
 						title : '描述' ,
 						align : 'center' ,
 						width : 200,
-						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -89,7 +88,6 @@ $().ready(function(){
 						title : '视频连接' ,
 						align : 'center' ,
 						width : 180,
-						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -101,7 +99,6 @@ $().ready(function(){
 						title : '外链' ,
 						align : 'center' ,
 						width : 180,
-						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -119,7 +116,6 @@ $().ready(function(){
 						title : '标签' ,
 						align : 'center' ,
 						width : 120,
-						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -131,7 +127,6 @@ $().ready(function(){
 						title : '视频长度' ,
 						align : 'center' ,
 						width : 80,
-						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -167,7 +162,6 @@ $().ready(function(){
 						title : '缩略图' ,
 						align : 'center' ,
 						width : 180,
-						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -179,7 +173,6 @@ $().ready(function(){
 						title : '海报' ,
 						align : 'center' ,
 						width : 180,
-						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -204,7 +197,6 @@ $().ready(function(){
 						align : 'center' ,
 						width : 80,
 						hidden : true ,
-						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -226,7 +218,6 @@ $().ready(function(){
 						title : '代表作' ,
 						align : 'center' ,
 						width : 100,
-						sortable : true ,
 						formatter : function(value , record , index){
 							if(value == 0){
 								return '';

@@ -57,10 +57,12 @@ $().ready(function(){
 								},{
 									field : 'invoiceTotal',
 									title : '价税合计',
-									align : 'center'
+									align : 'center',
+									sortable : true 
 								},{
 									field : 'invoiceRadio',
 									title : '税率',
+									sortable : true ,
 									align : 'center',
 									formatter : function(value,row,index){
 										return '<span style=color:red; >'+ (value * 100) +'%</span>' ;
@@ -103,6 +105,7 @@ $().ready(function(){
 									field : 'invoiceStatus',
 									title : '审批状态',
 									align : 'center',
+									sortable : true ,
 									formatter : function(value,row,index){
 										if(value == 0){
 											return '<span style=color:black; >未审核</span>' ;

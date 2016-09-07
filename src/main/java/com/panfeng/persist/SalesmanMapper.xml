@@ -47,6 +47,7 @@
 		<if test="salesmanName != null and salesmanName != ''">
 			AND sale.SALESMANNAME LIKE CONCAT(CONCAT('%',#{salesmanName}),'%')
 		</if>
+		
 		<![CDATA[
 			ORDER BY sale.SALESMANID DESC
 			LIMIT ${begin} , ${limit}

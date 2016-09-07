@@ -8,7 +8,7 @@ $().ready(function(){
 		url : getContextPath() + '/portal/user/list',
 		idField : 'id' ,
 		title : '用户列表' , 
-		fitColumns : true ,
+		// fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -45,6 +45,7 @@ $().ready(function(){
 						title : '客户级别',
 						width : 150,
 						align : 'center' ,
+						sortable : true ,
 						formatter : function(value , record , index){
 							if(value == 0){
 								return '<span style=color:red; >A</span>' ;
@@ -115,7 +116,6 @@ $().ready(function(){
 						title : '联系电话' ,
 						align : 'center' ,
 						width : 100,
-						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -152,6 +152,7 @@ $().ready(function(){
 						title : '客户来源' ,
 						align : 'center' ,
 						width : 60,
+						sortable : true ,
 						formatter : function(value , record , index){
 							switch (value) {
 							case 1:
@@ -164,12 +165,14 @@ $().ready(function(){
 								return '<span style=color:blue; >活动</span>' ;
 							case 5:
 								return '<span style=color:blue; >推荐</span>' ;
+							case 6:
+								return '<span style=color:blue; >电销</span>' ;
 							}
 						},
 						editor:{
 							type:'combobox' , 
 							options:{
-								data:[{id:1 , val:'渠道'},{id:2 , val:'推广'},{id:3 , val:'自主开发'},{id:4 , val:'活动'},{id:5 , val:'推荐'}] ,
+								data:[{id:1 , val:'渠道'},{id:2 , val:'推广'},{id:3 , val:'自主开发'},{id:4 , val:'活动'},{id:5 , val:'推荐'},{id:6 , val:'电销'}] ,
 								valueField:'id' , 
 								textField:'val' ,
 								required:true , 
@@ -181,7 +184,7 @@ $().ready(function(){
 						title : '注册日期',
 						width : 120,
 						align : 'center',
-						sortable : true ,
+						sortable : true 
 					},{
 						field : 'birthday',
 						title : '出生日期',

@@ -27,7 +27,8 @@
 						<th>发票类型:</th>
 						<td>
 							<select id="search-type"  name="invoiceType" editable="false" class="easyui-combobox" style="width: 120px;">
-								<option value="1" selected>增值税专用发票</option>
+								<option selected>-- 请选择 --</option>
+								<option value="1" >增值税专用发票</option>
 	           					<option value="2" >增值税普通发票</option>
 							</select>
 						</td>
