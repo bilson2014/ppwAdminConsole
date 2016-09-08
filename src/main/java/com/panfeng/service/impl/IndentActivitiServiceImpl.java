@@ -74,11 +74,8 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		List<String> tIds = new ArrayList<>();
 		for (int i = 0; i < ips.size(); i++) {
 			IndentProject ip = ips.get(i);
-			if (ip.getMasterFlowId() != null) {
-				if (ip.getState() == IndentProject.PROJECT_NORMAL || ip.getState() == IndentProject.PROJECT_CANCEL
-						|| ip.getState() == IndentProject.PROJECT_SUSPEND)
-					tIds.add(ip.getMasterFlowId().toString());
-			}
+			if (ip.getMasterFlowId() != null) 
+				tIds.add(ip.getMasterFlowId().toString());
 		}
 		List<Task> tasks = activitiEngineService.getCurrentTask(processDefinitionKey, tIds);
 		if (tasks != null) {
@@ -87,9 +84,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				for (int j = 0; j < ips.size(); j++) {
 					String taskKey = at.getProcessInstanceId();
 					IndentProject ip = ips.get(j);
-					if ((ip.getState() == IndentProject.PROJECT_NORMAL || ip.getState() == IndentProject.PROJECT_CANCEL
-							|| ip.getState() == IndentProject.PROJECT_SUSPEND)
-							&& taskKey.equals(ip.getMasterFlowId().toString())) {
+					if (taskKey.equals(ip.getMasterFlowId().toString())) {
 						ip.setTask(at);
 						break;
 					}
@@ -376,10 +371,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	@Override
 	public IndentProject updateNodes(IndentProject indentProject) {
 		List<ActivitiTask> listactivitiTask = indentProject.getNodes();
-		System.out.println(indentProject.getId());
-		System.out.println(indentProject.getProjectName());
-		String processInstanceId = indentProject.getTask().getProcessInstanceId();
-		System.out.println(processInstanceId + "processInstanceIdasd");
+		String processInstanceId = indentProject.getMasterFlowId().toString();
 		// 查询预计时间
 		List<FlowDate> listDates = flowDateMapper.findFlowDateByFlowId(processInstanceId);
 

@@ -48,6 +48,8 @@ public interface ActivitiEngineService {
 
 	boolean isFinish(String processDefinitionKey, String processInstanceBusinessKey, String processInstanceId);
 
+	List<HistoricProcessInstance> isFinishs(String processDefinitionKey, Set<String> ids);
+
 	// ---------------------------------phone------------------------------
 
 }

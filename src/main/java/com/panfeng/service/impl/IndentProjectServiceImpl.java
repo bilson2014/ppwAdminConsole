@@ -885,12 +885,12 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public List<IndentProject> findProjectListByPhone(IndentProject indentProject) {
-		List<IndentProject> list  = findProjectList(indentProject);
+		List<IndentProject> list = findProjectList(indentProject);
 		long start = System.currentTimeMillis();
 		if (ValidateUtil.isValid(list)) {
 			list = indentActivitiService.fullCurrentTask(list);
 			List<ActivitiTask> nodes = indentActivitiService.getNodes(list.get(0));
-			for(ActivitiTask activitiTask : nodes){
+			for (ActivitiTask activitiTask : nodes) {
 				activitiTask.getScheduledTime().setFdStartTime("");
 				activitiTask.setCreateTime("");
 			}
@@ -905,8 +905,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				}
 				IndentProject ii2 = list.get(i);
 				ii2.setNodes(node);
-				if ((ii2.getState() == IndentProject.PROJECT_NORMAL || ii2.getState() == IndentProject.PROJECT_CANCEL
-						|| ii2.getState() == IndentProject.PROJECT_SUSPEND) && ii2.getMasterFlowId() != null) {
+				if (ii2.getMasterFlowId() != null) {
 					indentActivitiService.updateNodes(ii2);
 				}
 			}

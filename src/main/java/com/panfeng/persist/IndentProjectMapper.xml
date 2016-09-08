@@ -453,13 +453,14 @@
 				i.IP_REFERRER_ID AS referrerId,
 				DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
 				i.IP_CUSTOMER_PAYMENT AS customerPayment,
-				i.IP_PROVIDER_PAYMENT AS providerPayment
-				
+				i.IP_PROVIDER_PAYMENT AS providerPayment,
+				iff.if_flow_id AS masterFlowId
 			FROM INDENT_PROJECT i 
 			LEFT JOIN USERS u on i.ip_customerId=u.id 
 			LEFT JOIN TEAM t ON i.ip_teamId = t.teamId
 			LEFT JOIN EMPLOYEE e ON i.ip_referrer_id = e.employeeId
-     		WHERE 1=1	
+			LEFT JOIN INDENT_FLOW iff ON iff.if_indent_id = i.ip_id
+     		WHERE 1=1 AND iff.if_state = 'Y'
 		]]>
 		<if test="customerId != null and customerId != ''  ">
 			AND i.IP_CUSTOMERID = ${customerId}

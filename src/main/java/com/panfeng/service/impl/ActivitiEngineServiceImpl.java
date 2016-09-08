@@ -191,4 +191,12 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return runtimeService.createProcessInstanceQuery().processInstanceIds(processInstanceIds).list();
 	}
 
+	@Override
+	public List<HistoricProcessInstance> isFinishs(String processDefinitionKey, Set<String> ids) {
+		List<HistoricProcessInstance> historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
+				.processDefinitionKey(processDefinitionKey).processInstanceIds(ids).finished().list();
+		// 任务已经完成了
+		return historicProcessInstance;
+	}
+
 }
