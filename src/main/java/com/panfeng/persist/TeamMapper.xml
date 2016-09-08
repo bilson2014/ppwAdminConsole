@@ -592,7 +592,8 @@
 			c.CITY AS teamCityName,
 			t.TEAMDESCRIPTION AS teamDescription,
 			t.BUSINESS AS business,
-			t.TEAMPHOTOURL AS teamPhotoUrl
+			t.TEAMPHOTOURL AS teamPhotoUrl,
+			t.FLAG AS flag
 			FROM TEAM t 
 				LEFT JOIN  PROVINCE p ON t.TEAMPROVINCE = p.provinceID 
 				LEFT JOIN CITY c on t.TEAMCITY = c.cityID
