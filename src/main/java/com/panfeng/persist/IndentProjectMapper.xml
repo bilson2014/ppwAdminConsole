@@ -109,9 +109,11 @@
 				i.IP_SERIAL=#{serial},
 				i.IP_SOURCE=#{source},
 				i.IP_CUSTOMERID=${customerId},
-				i.IP_TEAMID=#{teamId},
 				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 				]]>
+		<if test="teamId != null ">
+			,i.IP_TEAMID=${teamId}
+		</if>
 		<if test="userType != null and userType != ''">
 			,i.IP_USER_TYPE=#{userType}
 		</if>
@@ -171,9 +173,12 @@
 				i.IP_DESCRIPTION = #{description},
 				i.IP_SERIAL=#{serial},
 				i.IP_SOURCE=#{source},
-				i.IP_CUSTOMERID=${customerId},
-				i.IP_TEAMID=#{teamId}
+				i.IP_CUSTOMERID=${customerId}
 				]]>
+				
+		<if test="teamId != null ">
+			,i.IP_TEAMID=${teamId}
+		</if>
 		<if test="userType != null and userType != ''">
 			,i.IP_USER_TYPE=#{userType}
 		</if>
@@ -231,9 +236,12 @@
 				i.IP_SERIAL=#{serial},
 				i.IP_SOURCE=#{source},
 				i.IP_CUSTOMERID=${customerId},
-				i.IP_TEAMID=${teamId},
+				
 				i.IP_UPDATE_TIME=CURRENT_TIMESTAMP
 				]]>
+		<if test="teamId != null ">
+			,i.IP_TEAMID=${teamId}
+		</if>
 		<if test="state != null ">
 			,i.IP_STATE=${state}
 		</if>
