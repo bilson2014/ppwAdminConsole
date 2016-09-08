@@ -541,7 +541,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				} else {
 					stringBuilder.append("<div class = 'infoimgG'>");
 					stringBuilder.append("X");
-					iok = false;
+					iok = false; 
 				}
 				stringBuilder.append("</div>");
 				stringBuilder.append("</li>");
