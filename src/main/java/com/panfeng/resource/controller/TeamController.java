@@ -754,7 +754,7 @@ public class TeamController extends BaseController {
 		info.setLoginName(team.getLoginName());
 		info.setRealName(team.getTeamName());
 		info.setSessionType(GlobalConstant.ROLE_PROVIDER);
-		info.setSuperAdmin(false);
+		//info.setSuperAdmin(false);
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(team.getTeamId());
 		info.setPhoto(team.getTeamPhotoUrl());
@@ -772,7 +772,7 @@ public class TeamController extends BaseController {
 		team.calculateRightSum();
 		info.setSum(team.getRightSum());
 		info.setEmail(team.getEmail());
-
+		info.setSuperAdmin(team.isSuperAdmin()); // 判断是否是超级管理员
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(GlobalConstant.SESSION_INFO, info);
 		return sessionService.addSession(request, map);

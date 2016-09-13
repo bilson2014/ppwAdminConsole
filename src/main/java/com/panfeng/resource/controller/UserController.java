@@ -474,7 +474,7 @@ public class UserController extends BaseController {
 		info.setLoginName(user.getLoginName());
 		info.setRealName(user.getRealName());
 		info.setSessionType(GlobalConstant.ROLE_CUSTOMER);
-		info.setSuperAdmin(false);
+		//info.setSuperAdmin(false);
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(user.getId());
 		info.setClientLevel(user.getClientLevel()); // 客户级别
@@ -492,6 +492,7 @@ public class UserController extends BaseController {
 		info.setSum(user.getRightSum());
 		info.setEmail(user.getEmail());
 		info.setPhoto(user.getImgUrl());
+		info.setSuperAdmin(user.isSuperAdmin()); // 判断是否是超级管理员
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(GlobalConstant.SESSION_INFO, info);
