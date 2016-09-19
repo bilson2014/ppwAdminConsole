@@ -45,6 +45,16 @@ $().ready(function(){
 						title : '项目阶段' ,
 						align : 'center'
 					},{
+						field : 'createTime' ,
+						title : '创建时间' ,
+						align : 'center',
+						sortable : true 
+					},{
+						field : 'updateTime' ,
+						title : '更新时间' ,
+						align : 'center',
+						sortable : true 
+					},{
 						field : 'employeeRealName' ,
 						title : '视频管家' ,
 						align : 'center'
@@ -553,6 +563,9 @@ function searchFun(){
 	return false;
 	}
 	//add by wanglc 2016-7-11 13:25:46 只有选择视频管家才能选择是否协同,之前让协同disable兼容性有问题,改在这里提示 end
+	//清空点击表的排序操作,例如按时间排序等
+	$('#gride').datagrid('options').sortName = null;
+	$('#gride').datagrid('options').sortOrder = null;
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
 

@@ -253,11 +253,20 @@ public class IndentProject extends BaseObject {
 	// 冗余taskdate--------------------------------------
 
 	private Map<String, String> time = null;
+	private String fdStartTime = null;
 	private ActivitiTask task = null;
 	private String tag = "";
 	private UserViewModel userViewModel = null;
 	private List<ActivitiTask> nodes = null;
 	private Long masterFlowId = null;
+
+	public String getFdStartTime() {
+		return fdStartTime;
+	}
+
+	public void setFdStartTime(String fdStartTime) {
+		this.fdStartTime = fdStartTime;
+	}
 
 	public List<ActivitiTask> getNodes() {
 		return nodes;

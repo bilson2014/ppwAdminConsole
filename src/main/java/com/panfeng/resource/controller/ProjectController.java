@@ -309,7 +309,11 @@ public class ProjectController extends BaseController {
 			view.setBegin(0);
 			view.setLimit(999999999l);
 			List<IndentProject> list = indentProjectService.listWithPagination(view);
-			indentProjectService.getReport(list, outputStream);
+			//indentProjectService.getReport(list, outputStream);
+			//modify by wanglc 2016-9-19 15:46:08 begin
+			//-->修改导出方法,加快导出速度 
+			indentProjectService.getReportForExport(list, outputStream);
+			//modify by wanglc 2016-9-19 15:46:08 end
 			if (outputStream != null) {
 				outputStream.flush();
 				outputStream.close();
