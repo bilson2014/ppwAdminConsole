@@ -56,7 +56,6 @@
 	    </div>
 	    
 	    <div id="tip"></div>
-	    
 	    </form>
 	</div>
 </body>

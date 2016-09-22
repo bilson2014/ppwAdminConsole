@@ -43,7 +43,7 @@ $().ready(function(){
 					},{
 						field : 'clientLevel',
 						title : '客户级别',
-						width : 150,
+						width : 80,
 						align : 'center' ,
 						sortable : true ,
 						formatter : function(value , record , index){
@@ -63,6 +63,33 @@ $().ready(function(){
 							type:'combobox' , 
 							options:{
 								data:[{id:3 , val:'S'},{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'}] ,
+								valueField:'id' , 
+								textField:'val' ,
+								required:false , 
+								editable : false
+							}
+						}
+					},{
+						field : 'preference',
+						title : '客户意向度',
+						width : 80,
+						align : 'center' ,
+						sortable : true ,
+						formatter : function(value , record , index){
+							if(value == 0){
+								return '<span style=color:red; >A</span>' ;
+							} else if( value == 1){
+								return '<span style=color:blue; >B</span>' ; 
+							} else if( value == 2){
+								return '<span style=color:green; >C</span>' ;
+							} else if( value == 3){
+								return '<span style=color:black; >D</span>' ;
+							}
+						},
+						editor:{
+							type:'combobox' , 
+							options:{
+								data:[{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'},{id:3 , val:'D'}] ,
 								valueField:'id' , 
 								textField:'val' ,
 								required:false , 
@@ -148,6 +175,18 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'weChat',
+						title : '微信',
+						width : 80,
+						align : 'center',
+						editor : {
+							type : 'validatebox' ,
+							options : {
+								required : false ,
+								missingMessage : '请填写微信号!'
+							}
+						}
+					},{
 						field : 'customerSource' ,
 						title : '客户来源' ,
 						align : 'center' ,
@@ -180,8 +219,27 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'followTime',
+						title : '跟进日期',
+						width : 120,
+						align : 'center',
+						sortable : true,
+						editor : {
+							type : 'datebox' ,
+							options:{
+									required:true , 
+									missingMessage : '请填写跟进日期!'
+								}
+						}
+					},{
 						field : 'createDate',
 						title : '注册日期',
+						width : 120,
+						align : 'center',
+						sortable : true 
+					},{
+						field : 'updateTime',
+						title : '更新日期',
 						width : 120,
 						align : 'center',
 						sortable : true 
@@ -190,6 +248,7 @@ $().ready(function(){
 						title : '出生日期',
 						width : 120,
 						align : 'center' ,
+						hidden : true,
 						editor : {
 							type : 'datebox' ,
 							options : {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,7 +48,8 @@ public class LoginController extends BaseController {
 	private final SessionInfoService sessionService = null;
 	
 	@RequestMapping("/doLogin")
-	public Result doLogin(final Employee employee,final HttpServletRequest request){
+	public Result doLogin(final Employee employee,final HttpServletRequest request,
+			final HttpServletResponse response){
 		
 		final String loginName = employee.getEmployeeLoginName();
 		String password = employee.getEmployeePassword();
@@ -98,6 +100,7 @@ public class LoginController extends BaseController {
 			map.put(GlobalConstant.SESSION_INFO, info);
 			final boolean ret = sessionService.addSession(request, map);
 			
+			addCookies(request,response);
 			result.setRet(ret);
 			result.setMessage("您当前已登录，如要切换账号，请登出后再进行登陆操作!");
 			return result;
@@ -109,11 +112,11 @@ public class LoginController extends BaseController {
 	}
 	
 	@RequestMapping("/logout")
-	public boolean logout(final HttpServletRequest request){
+	public boolean logout(final HttpServletRequest request,final HttpServletResponse response){
 		
 		//HttpSession session = request.getSession();
 		//session.setAttribute(GlobalConstant.SESSION_INFO, null);
-		
+		logOutCookie(request,response);
 		// 删除
 		sessionService.removeSession(request);
 		return true;

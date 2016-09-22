@@ -67,7 +67,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public long update(final User user) {
-
 		final long ret = mapper.update(user);
 		return ret;
 	}
