@@ -817,7 +817,8 @@ public class TeamController extends BaseController {
 		info.setSuperAdmin(team.isSuperAdmin()); // 判断是否是超级管理员
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(GlobalConstant.SESSION_INFO, info);
-		return sessionService.addSession(request, map);
+		//return sessionService.addSession(request, map);
+		return sessionService.addSessionSeveralTime(request, map, 60*60*24*7);
 	}
 
 	@RequestMapping("/team/static/data/add/account")

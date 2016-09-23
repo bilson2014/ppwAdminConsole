@@ -395,10 +395,12 @@ function cancelFuc(){ // 注册 取消按钮
 	datagrid.datagrid('rejectChanges');
 	editing = undefined;
 }
+
+// 添加用户名重复验证
 $.extend($.fn.validatebox.defaults.rules, {  
     vLoginName : {
         validator : function(value, param) {
-        	var url = '/portal/team/static/checkIsExist';
+        	var url = getContextPath() + '/portal/team/static/checkIsExist';
 			var isok = false;
         	if(isadd){
         		// 验证登录名
@@ -424,10 +426,12 @@ $.extend($.fn.validatebox.defaults.rules, {
         message : '用户名已经重复！'  
     }  
 });
-$.extend($.fn.validatebox.defaults.rules, {  
+
+// 添加手机重复验证
+$.extend($.fn.validatebox.defaults.rules, {
     vPhoneNumber : {
         validator : function(value, param) {
-        	var url = '/portal/team/static/checkIsExist';
+        	var url = getContextPath() + '/portal/team/static/checkIsExist';
 			var isok = false;
         	if(isadd){
         		// 验证登录名
@@ -453,6 +457,7 @@ $.extend($.fn.validatebox.defaults.rules, {
         message : '手机号已经重复！'  
     }  
 });
+
 function saveFuc(){ // 注册 保存按钮
 	
 	progressLoad();

@@ -164,7 +164,9 @@ $().ready(function(){
 							type : 'validatebox' ,
 							options : {
 								required : false ,
-								missingMessage : '请填写电子邮件!'
+								missingMessage : '请填写电子邮件!',
+								validType:'email',
+								invalidMessage : '邮箱格式不正确'
 							}
 						}
 					},{
@@ -407,39 +409,11 @@ function cleanFun() {
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {clientLevel:-1});
 }
-//$.extend($.fn.validatebox.defaults.rules, {  
-//    vuLoginName : {
-//        validator : function(value, param) {
-//        	var url = '/portal/user/unique/username';
-//			var isok = false;
-//        	if(isadd){
-//        		// 验证登录名
-//    			syncLoadData(function (res) {
-//    				isok = res;
-//    			}, url, $.toJSON({
-//    				loginName : $('#loginName').val()
-//    			}));
-//    			return isok;
-//        	}else{
-//        		if(value != originalLoginName){
-//        			// 验证登录名
-//        			syncLoadData(function (res) {
-//        				isok = res;
-//        			}, url, $.toJSON({
-//        				loginName : $('#loginName').val()
-//        			}));
-//        			return isok;
-//        		}
-//        	}
-//        	return true;
-//        },
-//        message : '用户名已经重复！'  
-//    }  
-//});
-$.extend($.fn.validatebox.defaults.rules, {  
+
+$.extend($.fn.validatebox.defaults.rules, {
     vuPhoneNumber : {
         validator : function(value, param) {
-        	var url = '/portal/user/valication/phone/'+value;
+        	var url = getContextPath() + '/portal/user/valication/phone/'+value;
 			var isok = false;
         	if(isadd){
         		// 验证登录名
