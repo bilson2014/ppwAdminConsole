@@ -13,8 +13,6 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +37,7 @@ import com.panfeng.service.UserService;
 import com.panfeng.util.Constants.loginType;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.DateUtils;
+import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
 /**
@@ -63,7 +62,7 @@ public class UserController extends BaseController {
 	@Autowired
 	private final RightService rightService = null;
 
-	private static Logger logger = LoggerFactory.getLogger("error");
+//	private static Logger logger = LoggerFactory.getLogger("error");
 
 	private static String INIT_PASSWORD;
 	public UserController() {
@@ -74,7 +73,7 @@ public class UserController extends BaseController {
 				propertis.load(is);
 				INIT_PASSWORD = propertis.getProperty("initPassw0rd");
 			} catch (IOException e) {
-				logger.error("load Properties fail ...");
+				Log.error("load Properties fail ...",null);
 				e.printStackTrace();
 			}
 		}
@@ -103,31 +102,38 @@ public class UserController extends BaseController {
 	}
 
 	@RequestMapping(value = "/user/update", method = RequestMethod.POST, produces = "application/json; chartset=UTF-8")
-	public long update(final User user) {
+	public long update(final User user,HttpServletRequest request) {
 
 		final long ret = userService.update(user);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("user update ...",sessionInfo);
 		return ret;
 	}
 
 	@RequestMapping(value = "/user/delete", method = RequestMethod.POST)
-	public long delete(final long[] ids) {
+	public long delete(final long[] ids,HttpServletRequest request) {
 
 		if (ids.length > 0) {
 
 			final long ret = userService.delete(ids);
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("delete user...",sessionInfo);
 			return ret;
 		} else {
-			logger.error("Delete User error ...");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("Delete User error ...",sessionInfo);
 			throw new RuntimeException("Delete User error ...");
 		}
 	}
 
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
-	public long save(final User user) {
+	public long save(final User user,HttpServletRequest request) {
 
 		user.setPassword(DataUtil.md5(INIT_PASSWORD));
 		user.setUpdateTime(DateUtils.nowTime());
 		final long ret = userService.save(user);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("save user...",sessionInfo);
 		return ret;
 	}
 
@@ -237,6 +243,8 @@ public class UserController extends BaseController {
 
 			// 清空当前session
 			sessionService.removeSession(request);
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("save user...",sessionInfo);
 			// 新增session
 			return initSessionInfo(result, request);
 		}
@@ -294,7 +302,8 @@ public class UserController extends BaseController {
 			}
 
 		} catch (UnsupportedEncodingException e) {
-			logger.error("User modify information decode error ...");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("User modify information decode error ...",sessionInfo);
 			e.printStackTrace();
 		}
 
@@ -305,13 +314,14 @@ public class UserController extends BaseController {
 	 * 用户信息-登录名，密码
 	 */
 	@RequestMapping("/user/modify/loginName")
-	public boolean modifyLoginName(@RequestBody final User user) {
+	public boolean modifyLoginName(@RequestBody final User user,HttpServletRequest request) {
 		if (user != null) {
 			if (user.getId() != 0)
 				return userService.modifyUserLoginName(user) > 0 ? true : false;
 
 		} else {
-			logger.error("User is null ..");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("User is null ..",sessionInfo);
 		}
 		return false;
 	}

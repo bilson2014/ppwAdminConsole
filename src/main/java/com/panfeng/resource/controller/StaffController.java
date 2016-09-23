@@ -17,12 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.domain.GlobalConstant;
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Staff;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.StaffView;
 import com.panfeng.service.StaffService;
 import com.panfeng.util.FileUtils;
+import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
 @RestController
@@ -63,7 +65,8 @@ public class StaffController extends BaseController {
 		response.setContentType("text/html;charset=UTF-8");
 		
 		service.save(staff);
-		
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("save staff ...",sessionInfo);
 		processFile(staffImage,staff);
 		
 	}
@@ -82,12 +85,13 @@ public class StaffController extends BaseController {
 		}
 		
 		service.update(staff);
-		
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("update staff ...",sessionInfo);
 		processFile(staffImage, staff);
 	}
 	
 	@RequestMapping("/staff/delete")
-	public long delete(final long[] ids){
+	public long delete(final long[] ids,HttpServletRequest request){
 		
 		if(ids != null && ids.length > 1){
 			List<Staff> list = service.findStaffsByArray(ids);
@@ -102,6 +106,8 @@ public class StaffController extends BaseController {
 		}
 		
 		final long ret = service.deleteByArray(ids);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("delete staff ... ids:"+ids.toString(),sessionInfo);
 		return ret;
 	}
 	

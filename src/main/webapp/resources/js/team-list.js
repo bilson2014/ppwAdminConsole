@@ -2,6 +2,10 @@ var editing ; //判断用户是否处于编辑状态
 var flag  ;	  //判断新增和修改方法
 var formUrl;
 var datagrid;
+// 验证
+var isadd = false;
+var originalLoginName = '';
+var originalPhoneNumber = '';
 
 var list = new Array();
 var idList = new Array();
@@ -273,6 +277,7 @@ var team = {
 
 function addFuc(){ // 注册 增加按钮
 	$('#fm').form('clear');
+	isadd = true;
 	$('#teamProvince').combobox({
 		url : getContextPath() + '/portal/get/provinces',
 		valueField : 'provinceID',
@@ -302,8 +307,13 @@ function addFuc(){ // 注册 增加按钮
 
 function editFuc(){ // 注册 修改 按钮
 	var rows = datagrid.datagrid('getSelections');
+	isadd = false;
 	if(rows.length == 1){
 		$('#fm').form('clear');
+		originalLoginName = '';
+		originalPhoneNumber = '';
+		originalLoginName = rows[0].loginName;
+		originalPhoneNumber = rows[0].phoneNumber;
 		$('#fm').form('load',rows[0]);
 		// 数据回显 -- 业务范围
 		var business = rows[0].business;
@@ -385,7 +395,64 @@ function cancelFuc(){ // 注册 取消按钮
 	datagrid.datagrid('rejectChanges');
 	editing = undefined;
 }
-
+$.extend($.fn.validatebox.defaults.rules, {  
+    vLoginName : {
+        validator : function(value, param) {
+        	var url = '/portal/team/static/checkIsExist';
+			var isok = false;
+        	if(isadd){
+        		// 验证登录名
+    			syncLoadData(function (res) {
+    				isok = res;
+    			}, url, $.toJSON({
+    				loginName : $('#loginName').val()
+    			}));
+    			return isok;
+        	}else{
+        		if(value != originalLoginName){
+        			// 验证登录名
+        			syncLoadData(function (res) {
+        				isok = res;
+        			}, url, $.toJSON({
+        				loginName : $('#loginName').val()
+        			}));
+        			return isok;
+        		}
+        	}
+        	return true;
+        },
+        message : '用户名已经重复！'  
+    }  
+});
+$.extend($.fn.validatebox.defaults.rules, {  
+    vPhoneNumber : {
+        validator : function(value, param) {
+        	var url = '/portal/team/static/checkIsExist';
+			var isok = false;
+        	if(isadd){
+        		// 验证登录名
+    			syncLoadData(function (res) {
+    				isok = res;
+    			}, url, $.toJSON({
+    				phoneNumber : $('#phoneNumber').val()
+    			}));
+    			return isok;
+        	}else{
+        		if(value != originalPhoneNumber){
+        			// 验证手机
+        			syncLoadData(function (res) {
+        				isok = res;
+        			}, url, $.toJSON({
+        				loginName : $('#loginName').val()
+        			}));
+        			return isok;
+        		}
+        	}
+        	return true;
+        },
+        message : '手机号已经重复！'  
+    }  
+});
 function saveFuc(){ // 注册 保存按钮
 	
 	progressLoad();
@@ -396,7 +463,6 @@ function saveFuc(){ // 注册 保存按钮
 			if(!flag){
 				progressClose();
 			}
-			
 			return flag;
 		},
 		success : function(result) {
@@ -404,7 +470,8 @@ function saveFuc(){ // 注册 保存按钮
 			datagrid.datagrid('clearSelections');
 			datagrid.datagrid('reload');
 			progressClose();
-			$.message('操作成功!');
+			var obj = $.parseJSON(result);
+			$.message(obj.errorMsg);
 		}
 	});
 }

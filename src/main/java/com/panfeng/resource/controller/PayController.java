@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.panfeng.domain.BaseMsg;
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.DealLog;
 import com.panfeng.resource.model.PayWebHook;
 import com.panfeng.service.DealLogService;
 import com.panfeng.service.PayWebHookService;
+import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
 @RestController
@@ -92,7 +95,7 @@ public class PayController extends BaseController {
 	}
 
 	@RequestMapping(value = "/sendpay", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public BaseMsg sendPay(@RequestBody DealLog dealLog) {
+	public BaseMsg sendPay(@RequestBody DealLog dealLog,HttpServletRequest request) {
 		BaseMsg baseMsg;
 		try {
 			baseMsg = dealLogService.sendPay(dealLog);
@@ -100,6 +103,8 @@ public class PayController extends BaseController {
 					|| dealLog.getUserName() == null || dealLog.getPayPrice() == null) {
 				return new BaseMsg(BaseMsg.ERROR, "发起失败", null);
 			} else {
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("add online pay ...", sessionInfo);
 				return baseMsg;
 			}
 		} catch (Exception e) {

@@ -16,8 +16,6 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +41,7 @@ import com.panfeng.service.SessionInfoService;
 import com.panfeng.service.TeamService;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.FileUtils;
+import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
 /**
@@ -54,7 +53,7 @@ import com.panfeng.util.ValidateUtil;
 @RequestMapping("/portal")
 public class TeamController extends BaseController {
 
-	private static Logger logger = LoggerFactory.getLogger("error");
+	// private static Logger logger = LoggerFactory.getLogger("error");
 
 	private static String INIT_PASSWORD;
 
@@ -72,7 +71,7 @@ public class TeamController extends BaseController {
 				FILE_PROFIX = propertis.getProperty("file.prefix");
 				TEAM_IMAGE_PATH = propertis.getProperty("upload.server.team.image");
 			} catch (IOException e) {
-				logger.error("load Properties fail ...");
+				Log.error("load Properties fail ...", null);
 				e.printStackTrace();
 			}
 		}
@@ -120,8 +119,9 @@ public class TeamController extends BaseController {
 	}
 
 	@RequestMapping(value = "/team/save", method = RequestMethod.POST)
-	public void save(final HttpServletRequest request, final HttpServletResponse response,
+	public BaseMsg save(final HttpServletRequest request, final HttpServletResponse response,
 			@RequestParam("file") final MultipartFile file, final Team team) {
+		BaseMsg baseMsg = new BaseMsg();
 		response.setContentType("text/html;charset=UTF-8");
 		// 先保存获取ID，然后更新
 		team.setPassword(DataUtil.md5(INIT_PASSWORD));
@@ -162,16 +162,24 @@ public class TeamController extends BaseController {
 				service.saveTeamPhotoUrl(team);
 			}
 		} catch (IOException e) {
-			logger.error("TeamController method:save() upload team logo error ...");
+			baseMsg.setErrorCode(BaseMsg.ERROR);
+			baseMsg.setErrorMsg("更新logo失败！");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("TeamController method:save() upload team logo error ...", sessionInfo);
 			e.printStackTrace();
 			throw new RuntimeException("Team Image upload error ...", e);
 		}
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("save team ...",sessionInfo);
+		baseMsg.setErrorCode(BaseMsg.NORMAL);
+		baseMsg.setErrorMsg("保存成功！");
+		return baseMsg;
 	}
 
 	@RequestMapping(value = "/team/update", method = RequestMethod.POST)
-	public void update(final HttpServletRequest request, final HttpServletResponse response,
+	public BaseMsg update(final HttpServletRequest request, final HttpServletResponse response,
 			@RequestParam("file") final MultipartFile file, final Team team) throws Exception {
-
+		BaseMsg baseMsg = new BaseMsg();
 		response.setContentType("text/html;charset=UTF-8");
 
 		// 如果上传文件不为空时，更新 url;反之亦然
@@ -215,11 +223,21 @@ public class TeamController extends BaseController {
 			service.saveTeamPhotoUrl(team);
 		}
 
-		service.update(team);
+		long ret = service.update(team);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("update team ...",sessionInfo);
+		if(ret>0){
+			baseMsg.setErrorCode(BaseMsg.NORMAL);
+			baseMsg.setErrorMsg("更新成功！");
+		}else{
+			baseMsg.setErrorCode(BaseMsg.ERROR);
+			baseMsg.setErrorMsg("更新失败！");
+		}
+		return baseMsg;
 	}
 
 	@RequestMapping(value = "/team/delete", method = RequestMethod.POST)
-	public long delete(final long[] ids) {
+	public long delete(final long[] ids,HttpServletRequest request) {
 
 		if (ids.length > 0) {
 			final List<Team> list = service.delete(ids);
@@ -237,9 +255,12 @@ public class TeamController extends BaseController {
 			}
 			return 0l;
 		} else {
-			logger.error("Team ids is null");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("Team ids is null ...", sessionInfo);
 			new RuntimeException("Team ids is null");
 		}
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("delete teams ... ids"+ids.toString(),sessionInfo);
 		return 0l;
 	}
 
@@ -268,13 +289,16 @@ public class TeamController extends BaseController {
 	 * @return 是否更新成功
 	 */
 	@RequestMapping("/team/static/data/updateTeamPhotoPath")
-	public boolean updateTeamPhotoPath(@RequestBody final Team team) {
+	public boolean updateTeamPhotoPath(@RequestBody final Team team,HttpServletRequest request) {
 
 		final long ret = service.saveTeamPhotoUrl(team);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("update team ...",sessionInfo);
 		if (ret > 0)
 			return true;
 		else
 			return false;
+		
 	}
 
 	/**
@@ -285,7 +309,7 @@ public class TeamController extends BaseController {
 	 * @return 结果
 	 */
 	@RequestMapping("/team/static/data/updateTeamInformation")
-	public boolean updateTeamInformation(@RequestBody final Team team) {
+	public boolean updateTeamInformation(@RequestBody final Team team, HttpServletRequest request) {
 		if (team != null) {
 			try {
 				// 解码
@@ -346,14 +370,18 @@ public class TeamController extends BaseController {
 				}
 
 				final long ret = service.updateTeamInfomation(team);
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("update team ...",sessionInfo);
 				if (ret == 1) {
 					return true;
 				}
 			} catch (UnsupportedEncodingException e) {
-				logger.error("Provider Infomation Decode error On Provider updateTeamInformation ...");
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("Provider Infomation Decode error On Provider updateTeamInformation ...", sessionInfo);
 				e.printStackTrace();
 			}
 		}
+		
 		return false;
 
 	}
@@ -427,12 +455,14 @@ public class TeamController extends BaseController {
 				}
 
 				Team dbteam = service.register(team);
-
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("save team ...",sessionInfo);
 				if (dbteam != null && dbteam.getTeamId() > 0) {
 					return initSessionInfo(dbteam, request);
 				}
 			} catch (UnsupportedEncodingException e) {
-				logger.error("Provider Infomation Decode error On Provider updateTeamInformation ...");
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("Provider Infomation Decode error On Provider updateTeamInformation ...", sessionInfo);
 				e.printStackTrace();
 			}
 		}
@@ -440,7 +470,6 @@ public class TeamController extends BaseController {
 
 	}
 
-	
 	@RequestMapping("/team/static/data/registerteamRetId")
 	public Team registerTeamRetId(@RequestBody final Team team, HttpServletRequest request) {
 		if (team != null) {
@@ -503,13 +532,15 @@ public class TeamController extends BaseController {
 				}
 
 				Team dbteam = service.register(team);
-
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("save team ...",sessionInfo);
 				if (dbteam != null && dbteam.getTeamId() > 0) {
-					 initSessionInfo(dbteam, request);
+					initSessionInfo(dbteam, request);
 				}
 				return dbteam;
 			} catch (UnsupportedEncodingException e) {
-				logger.error("Provider Infomation Decode error On Provider updateTeamInformation ...");
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("Provider Infomation Decode error On Provider updateTeamInformation ...", sessionInfo);
 				e.printStackTrace();
 				return null;
 			}
@@ -555,8 +586,8 @@ public class TeamController extends BaseController {
 
 			}
 		} catch (UnsupportedEncodingException e) {
-
-			logger.error("Decoder LoginName Or Password Error On Provider Login...");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("Decoder LoginName Or Password Error On Provider Login...", sessionInfo);
 			e.printStackTrace();
 		}
 		return false;
@@ -570,7 +601,7 @@ public class TeamController extends BaseController {
 	 * @return 如果唯一则返回 true ；反之则返回 false
 	 */
 	@RequestMapping("/team/static/checkIsExist")
-	public boolean checkExist(@RequestBody final Team team) {
+	public boolean checkExist(@RequestBody final Team team, HttpServletRequest request) {
 
 		try {
 			if (team.getLoginName() != null && !"".equals(team.getLoginName())) {
@@ -584,8 +615,8 @@ public class TeamController extends BaseController {
 				return true;
 
 		} catch (UnsupportedEncodingException e) {
-
-			logger.error("Decoder LoginName Error On Provider CheckIsExist ...");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("Decoder LoginName Error On Provider CheckIsExist ...", sessionInfo);
 			e.printStackTrace();
 		}
 		return false;
@@ -621,6 +652,8 @@ public class TeamController extends BaseController {
 	public boolean register(@RequestBody final Team original, final HttpServletRequest request) {
 		if (original != null) {
 			final Team team = service.register(original);
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("save team ...",sessionInfo);
 			return initSessionInfo(team, request);
 		}
 		return false;
@@ -634,7 +667,7 @@ public class TeamController extends BaseController {
 	 * @return 成功返回 true; 失败返回false
 	 */
 	@RequestMapping("/team/static/recoverPassword")
-	public boolean recoverPassword(@RequestBody final Team team) {
+	public boolean recoverPassword(@RequestBody final Team team, HttpServletRequest request) {
 
 		try {
 			// 转码
@@ -644,18 +677,19 @@ public class TeamController extends BaseController {
 			if (ret == 1) {
 				return true;
 			} else {
-				logger.error("Recover Provider Password error ...,LoginName=" + team.getLoginName());
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("Recover Provider Password error ...,LoginName=" + team.getLoginName(), sessionInfo);
 			}
 		} catch (UnsupportedEncodingException e) {
-
-			logger.error("Decoder Password Error On Provider RecoverPassword ...");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("Decoder Password Error On Provider RecoverPassword ...", sessionInfo);
 			e.printStackTrace();
 		}
 		return false;
 	}
 
 	@RequestMapping("/team/static/updatePasswordByLoginName")
-	public boolean recoverPasswordByLoginName(@RequestBody final Team team) {
+	public boolean recoverPasswordByLoginName(@RequestBody final Team team, HttpServletRequest request) {
 		if (team != null && team.getLoginName() != null && !"".equals(team.getLoginName()) && team.getPassword() != null
 				&& !"".equals(team.getPassword())) {
 			// 转码
@@ -665,15 +699,20 @@ public class TeamController extends BaseController {
 				team.setLoginName(loginName);
 				team.setPassword(password);
 				final long ret = service.updatePasswordByLoginName(team);
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("update team ...",sessionInfo);
 				if (ret > 0)
 					return true;
 				else {
-					logger.info(
-							"Update Password By LoginName On Provider recoverPasswordByLoginName ,result=0 infected ...");
+					Log.error(
+							"Update Password By LoginName On Provider recoverPasswordByLoginName ,result=0 infected ...",
+							sessionInfo);
 					return false;
 				}
 			} catch (UnsupportedEncodingException e) {
-				logger.error("Decoder Password And LoginName Error On Provider recoverPasswordByLoginName ...");
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("Decoder Password And LoginName Error On Provider recoverPasswordByLoginName ...",
+						sessionInfo);
 				e.printStackTrace();
 			}
 		}
@@ -687,14 +726,17 @@ public class TeamController extends BaseController {
 	 *            包含供应商唯一编号
 	 */
 	@RequestMapping("/team/static/data/updateStatus")
-	public boolean updateStatus(@RequestBody final Team team) {
+	public boolean updateStatus(@RequestBody final Team team,HttpServletRequest request) {
 
 		if (team != null) {
 			final Long id = team.getTeamId();
 			if (id != null && !"".equals(id)) {
 				final long ret = service.updateTeamStatus(id);
-				if (ret == 1)
+				if (ret == 1){
+					SessionInfo sessionInfo = getCurrentInfo(request);
+					Log.error("update team ...",sessionInfo);
 					return true;
+					}
 			}
 		}
 		return false;
@@ -754,7 +796,7 @@ public class TeamController extends BaseController {
 		info.setLoginName(team.getLoginName());
 		info.setRealName(team.getTeamName());
 		info.setSessionType(GlobalConstant.ROLE_PROVIDER);
-		//info.setSuperAdmin(false);
+		// info.setSuperAdmin(false);
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(team.getTeamId());
 		info.setPhoto(team.getTeamPhotoUrl());
@@ -830,24 +872,28 @@ public class TeamController extends BaseController {
 	}
 
 	@RequestMapping("/team/info/{teamId}")
-	public Team getTeamInfo(@PathVariable("teamId") Long teamId) {
+	public Team getTeamInfo(@PathVariable("teamId") Long teamId, HttpServletRequest request) {
 		if (teamId == null || teamId <= 0) {
-			logger.error("teamId is null ...");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("teamId is null ...", sessionInfo);
 			return null;
 		}
 		Team team = service.getTeamInfo(teamId);
-		if (team == null)
-			logger.error("team is null ...");
+		if (team == null) {
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("team is null ...", sessionInfo);
+		}
 		return team;
 	}
-	
+
 	@RequestMapping("/team/tags")
-	public List<String> getTags(@RequestBody List<Integer> ids){
-		if(ValidateUtil.isValid(ids)){
+	public List<String> getTags(@RequestBody List<Integer> ids,HttpServletRequest request) {
+		if (ValidateUtil.isValid(ids)) {
 			List<String> tags = service.getTags(ids);
 			return tags;
-		}else{
-			logger.error("ids is null ...");
+		} else {
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("ids is null ...",sessionInfo);
 		}
 		return null;
 	}

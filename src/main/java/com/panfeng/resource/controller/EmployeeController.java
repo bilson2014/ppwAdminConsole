@@ -31,6 +31,7 @@ import com.panfeng.service.SessionInfoService;
 import com.panfeng.util.AESUtil;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.FileUtils;
+import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
 
@@ -84,6 +85,7 @@ public class EmployeeController extends BaseController{
 							final String nps = AESUtil.Decrypt(pwd, GlobalConstant.UNIQUE_KEY);
 							employee.setEmployeePassword(DataUtil.md5(nps));
 							service.editPasswordById(employee);
+							Log.error("update Employee password ...", info);
 							return true;
 						}
 					}
@@ -145,7 +147,8 @@ public class EmployeeController extends BaseController{
 		}
 				
 		service.updateWidthRelation(employee);
-		
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("update Employee info ...", sessionInfo);
 		processFile(employeeImage, employee);
 		
 	}
@@ -183,15 +186,17 @@ public class EmployeeController extends BaseController{
 	 * 删除一个权限用户 -- 超级管理员
 	 */
 	@RequestMapping("/employee/delete")
-	public long delete(final long[] ids){
+	public long delete(final long[] ids,HttpServletRequest request){
 		
 		// 删除文件
 		for (final long id : ids) {
 			final Employee e = service.findEmployerById(id);
 			FileUtils.deleteFile(GlobalConstant.FILE_PROFIX + File.separator + e.getEmployeeImg());
 		}
-
+		
 		final long ret = service.delete(ids);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("delete employee ...  ids:"+ids.toString(), sessionInfo);
 		return ret;
 	}
 	
