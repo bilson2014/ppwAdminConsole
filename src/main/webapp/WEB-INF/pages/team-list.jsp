@@ -116,10 +116,10 @@
 	            	</tr>
 	            	<tr>
 	            		<th >登录名</th>
-	            		<td><input name="loginName" class="easyui-textbox" required="true"></td>
+	            		<td><input name="loginName" validtype="vLoginName" class="easyui-validatebox textbox" id="loginName" required="true"></td>
 	            		<th>审核状态</th>
 	            		<td>
-	            			<select id="flag" name="flag" class="easyui-combobox" style="width: 150px;height:28px;line-height: 28px;" editable="false">
+	            			<select id="flag" name="flag" class="easyui-combobox" style="width: 150px;height:28px;line-height: 28px;" required="true" editable="false">
 								<option value="0">审核中</option>
 								<option value="1" >审核通过</option>
 								<option value="2">未通过审核</option>
@@ -131,7 +131,7 @@
 	            		<th>联系人姓名</th>
 	            		<td><input name="linkman" class="easyui-textbox" required="true"/></td>
 	            		<th>手机号码</th>
-	            		<td><input class="easyui-validatebox textbox" validtype="mobile" name="phoneNumber" required="true" /></td>
+	            		<td><input class="easyui-validatebox textbox" data-options="validType:['mobile','vPhoneNumber']"  name="phoneNumber" id="phoneNumber" required="true" /></td>
 	            	</tr>
 	            	
 	            	<tr>
@@ -163,13 +163,13 @@
 	            	<tr>
 	            	<th >所在省</th>
 	            		<td>
-	            			<select name="teamProvince" id="teamProvince" class="easyui-combobox" editable="false" style="width:90%;">
+	            			<select name="teamProvince" id="teamProvince" class="easyui-combobox" required="true" editable="false" style="width:90%;">
 	            				
 	            			</select>
 	            		</td>
             		<th >所在城市</th>
 	            		<td>
-	            			<select name="teamCity" id="teamCity" class="easyui-combobox" editable="false" style="width:90%;">
+	            			<select name="teamCity" id="teamCity" class="easyui-combobox" required="true" editable="false" style="width:90%;">
 	            				
 	            			</select>
 	            		</td>
@@ -203,7 +203,7 @@
 	            	<tr>
 	            		<th>价格区间</th>
 	            		<td>
-	            			<select name="priceRange" class="easyui-combobox" editable="false">
+	            			<select name="priceRange" class="easyui-combobox" editable="false" required="true">
 	            				<option value="0" selected>看情况</option>
 	            				<option value="1" >1万元及以上</option>
 	            				<option value="2" >2万元及以上</option>
@@ -215,7 +215,7 @@
 	            		
 	            		<th>信息来源</th>
 	            		<td>
-	            			<select name="infoResource" class="easyui-combobox" editable="false">
+	            			<select name="infoResource" class="easyui-combobox" editable="false" required="true">
 	            				<option value="0" selected>友情推荐</option>
 	            				<option value="1" >网络搜索</option>
 	            				<option value="2" >拍片帮</option>

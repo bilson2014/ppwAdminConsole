@@ -16,8 +16,6 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.dao.PortalVideoDao;
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Service;
 import com.panfeng.resource.model.Team;
@@ -43,6 +42,7 @@ import com.panfeng.service.SolrService;
 import com.panfeng.service.TeamService;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.FileUtils;
+import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
 /**
@@ -54,7 +54,7 @@ import com.panfeng.util.ValidateUtil;
 @RequestMapping("/portal")
 public class ProductController extends BaseController {
 
-	private static Logger logger = LoggerFactory.getLogger("error");
+	//private static Logger logger = LoggerFactory.getLogger("error");
 
 	@Autowired
 	private final ProductService proService = null;
@@ -161,7 +161,7 @@ public class ProductController extends BaseController {
 	 *            product id array
 	 */
 	@RequestMapping(value = "/product/delete", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public long delete(final long[] ids) {
+	public long delete(final long[] ids,HttpServletRequest request) {
 
 		if (ids.length > 0) {
 			final List<Product> list = proService.delete(ids);
@@ -192,6 +192,8 @@ public class ProductController extends BaseController {
 			} else {
 				throw new RuntimeException("Product ids is null");
 			}
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("delete products ... ids:"+ids.toString(),sessionInfo);
 		}
 		return 0l;
 	}
@@ -267,8 +269,12 @@ public class ProductController extends BaseController {
 			product.setPicLDUrl(pathList.get(2));
 			// 保存路径
 			proService.saveFileUrl(product);
+			
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("add product ... ",sessionInfo);
 		} catch (Exception e) {
-			logger.error("ProductController method:save() -- save product error ...");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("ProductController method:save() -- save product error ...",sessionInfo);
 			e.printStackTrace();
 		}
 	}
@@ -385,17 +391,22 @@ public class ProductController extends BaseController {
 			}
 
 		} catch (IOException e) {
-			logger.error("ProductController method:update() upload files error ...");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("ProductController method:update() upload files error ...",sessionInfo);
 			e.printStackTrace();
 			throw new RuntimeException("Product update error ...", e);
 		}
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("update product ... ",sessionInfo);
 
 	}
 
 	// add by wliming, 2016/02/24 18:53 begin
 	// -> 增加信息模板的更新方法
 	@RequestMapping(value = "/product/saveVideoDescription", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public long saveVideoDescription(@RequestBody final Product product) {
+	public long saveVideoDescription(@RequestBody final Product product,HttpServletRequest request) {
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("update product ... ",sessionInfo);
 		proService.updateVideoDescription(product);
 		return 1l;
 	}
@@ -525,7 +536,7 @@ public class ProductController extends BaseController {
 	 *            视频唯一编号
 	 */
 	@RequestMapping("/product/static/data/deleteProduct/{productId}")
-	public boolean deleteProductByProvider(@PathVariable("productId") final long productId) {
+	public boolean deleteProductByProvider(@PathVariable("productId") final long productId,HttpServletRequest request) {
 
 		long[] ids = new long[1];
 		ids[0] = productId;
@@ -555,6 +566,8 @@ public class ProductController extends BaseController {
 		} else {
 			throw new RuntimeException("Product ids is null");
 		}
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("delete product ... ",sessionInfo);
 		return true;
 	}
 
@@ -583,7 +596,7 @@ public class ProductController extends BaseController {
 	 * @return 服务ID
 	 */
 	@RequestMapping("/product/static/data/update/info")
-	public long updateProductInfo(@RequestBody final Product product) {
+	public long updateProductInfo(@RequestBody final Product product,HttpServletRequest request) {
 
 		// 解码
 		try {
@@ -599,7 +612,8 @@ public class ProductController extends BaseController {
 			e.printStackTrace();
 		}
 		proService.updateProductInfo(product); // 更新视频信息
-
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("update product ... ",sessionInfo);
 		final Service service = new Service();
 		if (product.getServiceId() != 0) { // 数据库中有此服务数据
 			service.setServiceId(product.getServiceId());
@@ -637,7 +651,7 @@ public class ProductController extends BaseController {
 	 * @return 保存后视频ID
 	 */
 	@RequestMapping("/product/static/data/save/info")
-	public long saveProductInfo(@RequestBody final Product product) {
+	public long saveProductInfo(@RequestBody final Product product,HttpServletRequest request) {
 		try {
 			// 解码
 			product.setpDescription(URLDecoder.decode(product.getpDescription(), "UTF-8"));
@@ -663,6 +677,8 @@ public class ProductController extends BaseController {
 		service.setServiceRealPrice(servicePrice);
 		service.setMcoms(Long.parseLong(product.getVideoLength()));
 		serService.save(service);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("save product ... ",sessionInfo);
 		return product.getProductId();
 	}
 
@@ -674,7 +690,6 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping("/product/static/data/updateFilePath")
 	public long updateFilePath(@RequestBody final Product product) {
-
 		return proService.saveFileUrl(product);
 	}
 
@@ -714,9 +729,10 @@ public class ProductController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/get/masterWork/{teamId}")
-	public Product getMasterWork(@PathVariable("teamId")Long teamId) {
+	public Product getMasterWork(@PathVariable("teamId")Long teamId,HttpServletRequest request) {
 		if (teamId == null || teamId <= 0) {
-			logger.error("productId is null ...");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("productId is null ...",sessionInfo);
 			return null;
 		}
 		Product product = proService.getMasterWork(teamId);
@@ -725,9 +741,12 @@ public class ProductController extends BaseController {
 			if(ValidateUtil.isValid(products)){
 				product = products.get(0);
 			}else{
-				logger.error("product is null ...");
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("product is null ...",sessionInfo);
 			}
 		}
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("set masterWork ... ",sessionInfo);
 		return product;
 	}
 }

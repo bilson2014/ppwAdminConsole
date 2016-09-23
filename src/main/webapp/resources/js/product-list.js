@@ -458,7 +458,6 @@ function cancelFuc(){
 
 // 确认事件
 function save(){
-	
 	progressLoad();
 	$.base64.utf8encode = true;
 	var videoDescription= $.base64.btoa(editor.html());
@@ -481,7 +480,6 @@ function save(){
 			$.message('操作成功!');
 		}
 	});
-	
 }
 
 function openDialog(data){

@@ -18,6 +18,8 @@ public interface SessionInfoDao {
 	 */
 	public String getSessionWithField(final HttpServletRequest request,final String field);
 	
+	public String getSessionWithSessionId(final String sessionId,final String field);
+	
 	public void removeSession(final HttpServletRequest request);
 	
 	/**

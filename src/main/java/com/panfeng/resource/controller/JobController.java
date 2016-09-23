@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Job;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.JobView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.JobService;
+import com.panfeng.util.Log;
 
 @RestController
 @RequestMapping("/portal")
@@ -49,23 +51,29 @@ public class JobController extends BaseController {
 	}
 	
 	@RequestMapping("/job/update")
-	public long update(final Job job){
+	public long update(final Job job,HttpServletRequest request){
 		
 		final long ret = service.update(job);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("update job ...", sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping("/job/save")
-	public long save(final Job job){
+	public long save(final Job job,HttpServletRequest request){
 		
 		final long ret = service.save(job);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("add job ...", sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping("/job/delete")
-	public long delete(final long[] ids){
+	public long delete(final long[] ids,HttpServletRequest request){
 		
 		final long ret = service.delete(ids);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("delete items ...  ids:"+ids.toString(), sessionInfo);
 		return ret;
 	}
 	

@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.TeamInvoice;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.InvoiceView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.TeamInvoiceService;
 import com.panfeng.util.Constants;
+import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
 @RestController
@@ -51,25 +53,31 @@ public class TeamInvoiceController extends BaseController {
 	}
 	
 	@RequestMapping("/invoice/team/update")
-	public long update(final TeamInvoice invoice){
+	public long update(final TeamInvoice invoice,HttpServletRequest request){
 		if(invoice.getInvoiceStatus() != Constants.INVOICE_STATUS_OK){//审核通过的单子不能修改
 			final long ret = service.update(invoice);
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("update  TeamInvoice ...",sessionInfo);
 			return ret;
 		}
 		return 0l;
 	}
 	
 	@RequestMapping("/invoice/team/save")
-	public long save(final TeamInvoice invoice){
+	public long save(final TeamInvoice invoice,HttpServletRequest request){
 
 		final long ret = service.save(invoice);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("save  TeamInvoice ...",sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping("/invoice/team/delete")
-	public long delete(final long[] ids){
+	public long delete(final long[] ids,HttpServletRequest request){
 		if(ValidateUtil.isValid(ids)){
 			final long ret = service.deleteByIds(ids);
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("delete  TeamInvoice ... ids:"+ids.toString(),sessionInfo);
 			return ret;
 		}
 		return 0l;	

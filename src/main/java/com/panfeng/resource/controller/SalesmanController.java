@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Salesman;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
@@ -25,6 +26,7 @@ import com.panfeng.service.SalesmanService;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.HttpUtil;
 import com.panfeng.util.JsonUtil;
+import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
 @RequestMapping("/portal")
@@ -75,25 +77,31 @@ public class SalesmanController extends BaseController {
 	}
 	
 	@RequestMapping("/salesman/update")
-	public long update(final Salesman salesman){
+	public long update(final Salesman salesman,HttpServletRequest request){
 		
 		final long ret = service.update(salesman);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("update Salesman ...",sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping("/salesman/save")
-	public long save(final Salesman salesman){
+	public long save(final Salesman salesman,HttpServletRequest request){
 		
 		final String uniqueId = DataUtil.getUuid();
 		salesman.setUniqueId(uniqueId);
 		final long ret = service.save(salesman);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("save Salesman ...",sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping("/salesman/delete")
-	public long delete(final long[] ids){
+	public long delete(final long[] ids,HttpServletRequest request){
 		
 		final long ret = service.delete(ids);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("delete Salesmans ... ids:"+ids.toString(),sessionInfo);
 		return ret;
 	}
 	
