@@ -1,11 +1,8 @@
 package com.panfeng.service.impl;
 
 import java.io.OutputStream;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -223,13 +220,16 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public List<BizBean> getTags() {
-		String[] tags = new String[6];
+		String[] tags = new String[8];
 		tags[0] = "电话下单";
 		tags[1] = "个人信息下单";
-		tags[2] = "系统下单";
-		tags[3] = "重复下单";
+		tags[2] = "网站下单";
+		tags[3] = "复购下单";
 		tags[4] = "活动下单";
 		tags[5] = "渠道优惠";
+		tags[6] = "电销";
+		tags[7] = "自主开发";
+		
 
 		final List<BizBean> list = new ArrayList<BizBean>();
 		for (String str : tags) {
