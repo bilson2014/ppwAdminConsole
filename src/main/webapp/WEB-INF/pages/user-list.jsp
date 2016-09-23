@@ -26,7 +26,7 @@
 					<td><input name="userName" placeholder="请输入用户名称"/></td>
 					<th>客户分级:</th>
 					<td>
-						<select name="clientLevel" class="easyui-combobox" editable="false">
+						<select name="clientLevel" id="clientLevel" class="easyui-combobox" editable="false">
 							<option value="-1" selected>-- 请选择 --</option>
 							<option value="">未分级</option>
 							<option value="3">S</option>

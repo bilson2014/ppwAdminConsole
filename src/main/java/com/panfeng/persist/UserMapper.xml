@@ -41,6 +41,7 @@
 				   NOTE AS note,
 				   u.CUSTOMERSOURCE AS customerSource,
 				   u.WECHAT AS weChat,
+				   u.KINDLY_SEND AS kindlySend,
 				   u.PREFERENCE AS preference,
 				   DATE_FORMAT(u.UPDATE_TIME,'%Y-%m-%d %T') AS updateTime,
 				   DATE_FORMAT(u.FOLLOW_TIME,'%Y-%m-%d') AS followTime
@@ -141,6 +142,7 @@
 				NOTE,
 				CUSTOMERSOURCE,
 				WECHAT,
+				KINDLY_SEND,
 				FOLLOW_TIME,
 				UPDATE_TIME
 		]]>
@@ -166,6 +168,7 @@
 				#{note},
 				#{customerSource},
 				#{weChat},
+				#{kindlySend},
 				#{followTime},
 				CURRENT_TIMESTAMP
 				
@@ -230,9 +233,6 @@
 		<if test="wechatUnique != null and wechatUnique != ''">
 			 WECHATUNIQUE = #{wechatUnique},
 		</if>
-		<if test="weChat != null and weChat != ''">
-			 WECHAT = #{weChat},
-		</if>
 		<if test="preference != null">
 			 PREFERENCE = ${preference},
 		</if>
@@ -244,10 +244,12 @@
 			
 		</if>
 		<![CDATA[
+		 			KINDLY_SEND = #{kindlySend},
 				   IMGURL = #{imgUrl},
 				   SEX = ${sex},
 				   REALNAME = #{realName},
 				   QQ = #{qq},
+				   WECHAT = #{weChat},
 				   USERCOMPANY = #{userCompany},
 				   NOTE = #{note},
 				   CUSTOMERSOURCE = ${customerSource}

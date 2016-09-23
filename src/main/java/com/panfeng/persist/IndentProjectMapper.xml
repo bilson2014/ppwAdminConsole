@@ -570,10 +570,20 @@
 		LEFT JOIN USERS u 
 			ON i.IP_CUSTOMERID=u.id 
 		LEFT JOIN INDENT_FLOW F 
-			ON F.IF_INDENT_ID = i.IP_ID
-		LEFT JOIN ACT_RU_TASK RES
-			ON F.IF_FLOW_ID = RES.PROC_INST_ID_
-		WHERE 1=1
+		ON F.IF_INDENT_ID = i.IP_ID
+		LEFT JOIN ACT_HI_TASKINST t1 
+			ON F.IF_FLOW_ID = t1.PROC_INST_ID_
+		LEFT JOIN  FLOW_DATE fd
+			ON F.IF_FLOW_ID=fd.FD_FLOW_ID 	
+		WHERE 1=1 AND fd.FD_TASK_ID = 'jf' AND 1 > (
+			SELECT
+				COUNT(*)
+			FROM
+				ACT_HI_TASKINST t2
+			WHERE
+				t1.PROC_INST_ID_ = t2.PROC_INST_ID_
+			AND (t2.ID_ + 0) > (t1.ID_ + 0)
+		)
 		]]>
 		<if test="projectId != null and projectId != ''">
 			AND i.IP_ID = ${projectId}
@@ -606,7 +616,7 @@
 			AND (s.S_USER_ID = ${userId} OR i.IP_USER_ID = ${userId})
 		</if>
 		<if test="stage != null and stage != ''">
-			AND RES.NAME_ LIKE CONCAT('%',#{stage},'%')
+			AND t1.NAME_ LIKE CONCAT('%',#{stage},'%')
 		</if>
 		<![CDATA[
 		)t
@@ -965,7 +975,7 @@
 			AND u.ID = ${customerId}
 		</if>
 		<if test="stage != null and stage != ''">
-			AND RES.NAME_ LIKE CONCAT('%',#{stage},'%')
+			AND t1.NAME_ LIKE CONCAT('%',#{stage},'%')
 		</if>
 		<![CDATA[
 			ORDER BY 
@@ -1070,7 +1080,7 @@
 			AND u.ID = ${customerId}
 		</if>
 		<if test="stage != null and stage != ''">
-			AND RES.NAME_ LIKE CONCAT('%',#{stage},'%')
+			AND t1.NAME_ LIKE CONCAT('%',#{stage},'%')
 		</if>
 		<![CDATA[
 			union
@@ -1158,7 +1168,7 @@
 			AND u.ID = ${customerId}
 		</if>
 		<if test="stage != null and stage != ''">
-			AND RES.NAME_ LIKE CONCAT('%',#{stage},'%')
+			AND t1.NAME_ LIKE CONCAT('%',#{stage},'%')
 		</if>
 		<if test="sort != null and sort != '' and order != null and order != ''">
 			order by  ${sort} ${order}

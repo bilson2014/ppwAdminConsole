@@ -237,6 +237,28 @@ $().ready(function(){
 								}
 						}
 					},{
+						field : 'kindlySend',
+						title : '是否推送',
+						width : 80,
+						align : 'center',
+						formatter : function(value , record , index){
+							if(value){
+								return '<span style=color:blue; >推送</span>' ;
+							}else{
+								return '<span style=color:red; >不推送</span>' ;
+							}
+						},
+						editor:{
+							type:'combobox' , 
+							options:{
+								data:[{id:1 , val:'推送'},{id:0 , val:'不推送'}] ,
+								valueField:'id' , 
+								textField:'val' ,
+								required:true , 
+								editable : false
+							}
+						}
+					},{
 						field : 'createDate',
 						title : '注册日期',
 						width : 120,
@@ -405,6 +427,7 @@ function searchFun(){
 //清除
 function cleanFun() {
 	$('#searchForm').form('clear');
+	$('#clientLevel').combobox('setValue',-1);
 	datagrid.datagrid('load', {clientLevel:-1});
 }
 //$.extend($.fn.validatebox.defaults.rules, {  
