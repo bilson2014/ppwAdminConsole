@@ -514,7 +514,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			if (flag) {
 				Map<String, Boolean> r = execute(fileList, ip, deals, stepText.get(i));
 				if (ValidateUtil.isValid(r)) {
-					html += buildHtml(r, 0);
+					html += buildHtml(r, 2);
 				}
 			}
 			if (stepText.get(i).equals(indentProject.getTask().getName())) {
