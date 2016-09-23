@@ -31,4 +31,10 @@ public interface SessionInfoDao {
 	 * 判断session是否存在
 	 */
 	public boolean exitSession(final HttpServletRequest request);
+
+	public boolean addSessionSeveralTime(HttpServletRequest request, Map<String, String> destMap, int time);
+
+	public String getSessionWithToken(HttpServletRequest request, String token);
+
+	public void removeSessionByToken(HttpServletRequest request, String token);
 }

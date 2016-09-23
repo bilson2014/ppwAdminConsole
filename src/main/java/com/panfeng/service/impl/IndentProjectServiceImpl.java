@@ -1,8 +1,11 @@
 package com.panfeng.service.impl;
 
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -259,9 +262,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 		getReport(list, outputStream);
 	}
-
 	public void getReport(List<IndentProject> list, OutputStream outputStream) {
-
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
 		for (IndentProject indentProject2 : list) {
@@ -289,6 +290,12 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		}
 		ge.generate(projectPoiAdapter, outputStream);
 	}
+	public void getReportForExport(List<IndentProject> list, OutputStream outputStream) {
+		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
+		GenerateExcel ge = new GenerateExcel();
+		projectPoiAdapter.setData(list);
+		ge.generate(projectPoiAdapter, outputStream);
+	}
 
 	public List<IndentProject> listWithPagination(final IndentProjectView view) {
 
@@ -297,7 +304,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 		// modify by wanglc 2016-6-28 19:54:21
 		// 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 begin
-		List<IndentProject> returnList = new ArrayList<IndentProject>();
+		/*
+	 	List<IndentProject> returnList = new ArrayList<IndentProject>();
 		if (null == view.getIsSynergy() || view.getIsSynergy() == 0) {
 			returnList = indentProjectMapper.listWithPaginationNoLimit(view);
 		} else {
@@ -314,7 +322,14 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		for (int i = begin; i < total; i++) {
 			list.add(returnList.get(i));
 		}
-		// modify by wanglc 2016-6-28 19:54:21 end
+		// modify by wanglc 2016-6-28 19:54:21 end 
+		 */
+		List<IndentProject> list = new ArrayList<IndentProject>();
+		if (null == view.getIsSynergy() || view.getIsSynergy() == 0) {
+			list = indentProjectMapper.listWithPaginationAll(view);
+		} else {
+			list = indentProjectMapper.listWithPaginationAllAndSynergy(view);
+		}
 		Map<Long, Employee> eMap = employeeService.getEmployeeMap();
 		Map<Long, List<Synergy>> sMap = synergyService.findSynergyMap();
 		for (final IndentProject pro : list) {

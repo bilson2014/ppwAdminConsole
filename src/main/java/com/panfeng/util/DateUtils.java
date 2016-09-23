@@ -155,6 +155,15 @@ public class DateUtils {
 	        return null; 
 	    } 
 	}
+	/**
+	 *取得当前时间 格式yyyy-MM-dd hh:mm:ss
+	 */
+	public static String nowTime() {
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(new Date().getTime());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return dateFormat.format(c.getTime());
+	}
 	
 	public static void main(String[] args) {
 		Date date1=getDateByFormat("2016-05-11","yyyy-MM-dd");

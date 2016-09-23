@@ -39,14 +39,24 @@
 				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
 				   DATE_FORMAT(u.CREATEDATE,'%Y-%m-%d %T') AS createDate,
 				   NOTE AS note,
-				   u.CUSTOMERSOURCE AS customerSource
+				   u.CUSTOMERSOURCE AS customerSource,
+				   u.WECHAT AS weChat,
+				   u.PREFERENCE AS preference,
+				   DATE_FORMAT(u.UPDATE_TIME,'%Y-%m-%d %T') AS updateTime,
+				   DATE_FORMAT(u.FOLLOW_TIME,'%Y-%m-%d') AS followTime
 			FROM USERS u
 			WHERE 1 = 1
 		]]>
 		<if test="userName != null and userName != ''">
 			AND u.USERNAME LIKE CONCAT(CONCAT('%',#{userName}),'%')
 		</if>
+		<if test="beginTime != null and beginTime != '' ">
+			AND DATE_FORMAT(u.FOLLOW_TIME,'%Y-%m-%d') &gt;= #{beginTime}
+		</if>
 		
+		<if test="endTime != null  and endTime != ''">
+			AND DATE_FORMAT(u.FOLLOW_TIME,'%Y-%m-%d') &lt;= #{endTime}
+		</if>
 		<choose>
 			<when test="clientLevel == null">
 				AND u.clientLevel IS NULL
@@ -99,6 +109,7 @@
 				   u.IMGURL AS imgUrl,
 				   u.SEX AS sex,
 				   u.QQ AS qq,
+				   u.WECHAT AS weChat,
 				   u.REALNAME as realName,
 				   u.USERCOMPANY AS userCompany,
 				   u.CLIENTLEVEL AS clientLevel,
@@ -128,10 +139,16 @@
 				QQ,
 				USERCOMPANY,
 				NOTE,
-				CUSTOMERSOURCE
+				CUSTOMERSOURCE,
+				WECHAT,
+				FOLLOW_TIME,
+				UPDATE_TIME
 		]]>
 				<if test="clientLevel != null">
 					,CLIENTLEVEL
+				</if>
+				<if test="preference != null">
+					,PREFERENCE
 				</if>
 				
 		<![CDATA[
@@ -147,11 +164,18 @@
 				#{qq},
 				#{userCompany},
 				#{note},
-				#{customerSource}
+				#{customerSource},
+				#{weChat},
+				#{followTime},
+				CURRENT_TIMESTAMP
+				
 		]]>
 		
 		<if test="clientLevel != null">
 			,${clientLevel}
+		</if>
+		<if test="preference != null">
+			,${preference}
 		</if>
 		
 		<![CDATA[
@@ -205,6 +229,19 @@
 		
 		<if test="wechatUnique != null and wechatUnique != ''">
 			 WECHATUNIQUE = #{wechatUnique},
+		</if>
+		<if test="weChat != null and weChat != ''">
+			 WECHAT = #{weChat},
+		</if>
+		<if test="preference != null">
+			 PREFERENCE = ${preference},
+		</if>
+		<if test="followTime != null and followTime != ''">
+			 FOLLOW_TIME = DATE_FORMAT(#{followTime},'%Y-%m-%d'),
+		</if>
+		<if test="updateTime != null and updateTime != ''">
+			 UPDATE_TIME = CURRENT_TIMESTAMP,
+			
 		</if>
 		<![CDATA[
 				   IMGURL = #{imgUrl},
@@ -285,6 +322,8 @@
 					REALNAME = #{realName},
 					email = #{email},
 					qq = #{qq},
+					WECHAT = #{weChat},
+					UPDATE_TIME = CURRENT_TIMESTAMP,
 					USERCOMPANY = #{userCompany},
 					customerSource = #{customerSource}
 			WHERE id = ${id}
@@ -294,7 +333,8 @@
 	<update id="modifyUserPassword">
 		<![CDATA[
 			UPDATE USERS
-				SET PASSWORD = #{password}
+				SET PASSWORD = #{password},
+					UPDATE_TIME = CURRENT_TIMESTAMP
 			WHERE id = ${id}
 		]]>
 	</update>
@@ -302,7 +342,8 @@
 	<update id="modifyUserPhone">
 		<![CDATA[
 			UPDATE USERS
-				SET TELEPHONE = #{telephone}
+				SET TELEPHONE = #{telephone},
+				UPDATE_TIME = CURRENT_TIMESTAMP
 			WHERE id = ${id}
 		]]>
 	</update>
@@ -310,7 +351,8 @@
 	<update id="modifyUserPhoto">
 		<![CDATA[
 			UPDATE USERS
-				SET IMGURL = #{imgUrl}
+				SET IMGURL = #{imgUrl},
+				UPDATE_TIME = CURRENT_TIMESTAMP
 			WHERE id = ${id}
 		]]>
 	</update>

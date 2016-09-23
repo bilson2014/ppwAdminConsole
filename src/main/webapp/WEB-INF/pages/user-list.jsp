@@ -3,6 +3,7 @@
 <%@ taglib prefix="r" uri="/mytaglib" %>
 
 <spring:url value="/resources/css/user-list.css" var="userListCss"/>
+<spring:url value="/resources/lib/My97DatePicker/WdatePicker.js" var="WdatePickerJs" />
 <spring:url value="/resources/js/user-list.js" var="userListJs"/>
 
 <!DOCTYPE html>
@@ -13,6 +14,7 @@
 <head>
 	<jsp:include page="common.jsp" />
 	<link rel="stylesheet" href="${userListCss }">
+	<script src="${WdatePickerJs }"></script>
 	<script src="${userListJs }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
@@ -32,6 +34,13 @@
 							<option value="1">B</option>
 							<option value="2">C</option>
 						</select>
+					</td>
+					<th>跟进时间:</th>
+					<td>
+						<input name="beginTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />~
+					</td>
+					<td>
+						<input name="endTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
 					</td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>

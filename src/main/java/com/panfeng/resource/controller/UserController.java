@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -35,6 +36,7 @@ import com.panfeng.service.SessionInfoService;
 import com.panfeng.service.UserService;
 import com.panfeng.util.Constants.loginType;
 import com.panfeng.util.DataUtil;
+import com.panfeng.util.DateUtils;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
@@ -63,7 +65,6 @@ public class UserController extends BaseController {
 //	private static Logger logger = LoggerFactory.getLogger("error");
 
 	private static String INIT_PASSWORD;
-
 	public UserController() {
 		if (INIT_PASSWORD == null || "".equals(INIT_PASSWORD)) {
 			final InputStream is = this.getClass().getClassLoader().getResourceAsStream("jdbc.properties");
@@ -129,6 +130,7 @@ public class UserController extends BaseController {
 	public long save(final User user,HttpServletRequest request) {
 
 		user.setPassword(DataUtil.md5(INIT_PASSWORD));
+		user.setUpdateTime(DateUtils.nowTime());
 		final long ret = userService.save(user);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save user...",sessionInfo);
@@ -154,8 +156,8 @@ public class UserController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/user/encipherment")
-	public boolean encryption(@RequestBody final User user, final HttpServletRequest request) {
-
+	public boolean encryption(@RequestBody final User user, final HttpServletRequest request,
+			final HttpServletResponse response) {
 		User orignUser = null;
 		if (user != null) {
 			// modify by wanglc 2016-7-13 14:36:39 添加用户名密码登录begin
@@ -175,7 +177,6 @@ public class UserController extends BaseController {
 		}
 		return false;
 	}
-
 	@RequestMapping("/user/checkPwd")
 	public boolean chcekLoginNameAndPwd(@RequestBody final User user) {
 		if (user == null)
@@ -281,6 +282,7 @@ public class UserController extends BaseController {
 			if (user != null) {
 				user.setEmail(URLDecoder.decode(user.getEmail(), "UTF-8"));
 				user.setQq(URLDecoder.decode(user.getQq(), "UTF-8"));
+				user.setWeChat(URLDecoder.decode(user.getWeChat(), "UTF-8"));
 				user.setRealName(URLDecoder.decode(user.getRealName(), "UTF-8"));
 				user.setUserName(URLDecoder.decode(user.getUserName(), "UTF-8"));
 
@@ -506,7 +508,7 @@ public class UserController extends BaseController {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(GlobalConstant.SESSION_INFO, info);
-		return sessionService.addSession(request, map);
+		return sessionService.addSessionSeveralTime(request, map,60*60*24*7);//登陆用户存放七天
 	}
 
 	// add by wanglc 2016-7-6 15:13:47 第三方登录绑定页面验证手机号码 begin

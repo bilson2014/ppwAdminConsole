@@ -1,8 +1,11 @@
 package com.panfeng.interceptor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -73,8 +76,10 @@ public class SecurityInterceptor implements HandlerInterceptor {
 		}
 		
 		final Right right = dao.getRightFromRedis(uri);
-		final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(req, GlobalConstant.SESSION_INFO); // 获取session
-		
+		SessionInfo info = (SessionInfo) sessionService.getSessionWithField(req, GlobalConstant.SESSION_INFO); // 获取session
+		if(null == info){
+			info = checkAutoLogin(req);
+		}
 		// 首先验证是否是公共资源
 		if(ValidateUtil.hasRight(uri, req, sc,right,resp,info)){
 			// 公共资源
@@ -106,6 +111,32 @@ public class SecurityInterceptor implements HandlerInterceptor {
 			}
 		}
 		
+	}
+
+	private SessionInfo checkAutoLogin(HttpServletRequest request) {
+		SessionInfo info = null;
+		String token = null;
+		Cookie[] cookie = request.getCookies();
+		if(cookie!=null){
+			if(cookie.length>0){
+				for (Cookie c : cookie) {
+					if ("token".equals(c.getName())) {
+						token = c.getValue();
+					}
+				}
+				if(null!=token){
+					info = (SessionInfo) sessionService.getSessionInfoWithToken(request,token);
+					if(info != null){
+						//将info重新放入session redis键改为当前sessionId
+						info.setToken(com.panfeng.util.DataUtil.md5(request.getSession().getId()));
+						Map<String, Object> map = new HashMap<String, Object>();
+						map.put(GlobalConstant.SESSION_INFO, info);
+						sessionService.addSessionSeveralTime(request, map,60*60*24*7);//登陆用户存放七天
+					}
+				}
+			}
+		}
+		return info;
 	}
 	
 }
