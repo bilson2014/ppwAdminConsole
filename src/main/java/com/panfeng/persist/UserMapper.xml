@@ -51,11 +51,15 @@
 			AND u.USERNAME LIKE CONCAT(CONCAT('%',#{userName}),'%')
 		</if>
 		<if test="beginTime != null and beginTime != '' ">
-			AND DATE_FORMAT(u.FOLLOW_TIME,'%Y-%m-%d') &gt;= #{beginTime}
+			<![CDATA[
+				AND DATE_FORMAT(u.FOLLOW_TIME,'%Y-%m-%d') >= #{beginTime}
+			]]>
 		</if>
 		
 		<if test="endTime != null  and endTime != ''">
-			AND DATE_FORMAT(u.FOLLOW_TIME,'%Y-%m-%d') &lt;= #{endTime}
+			<![CDATA[
+				AND DATE_FORMAT(u.FOLLOW_TIME,'%Y-%m-%d') <= #{endTime}
+			]]>
 		</if>
 		<choose>
 			<when test="clientLevel == null">
