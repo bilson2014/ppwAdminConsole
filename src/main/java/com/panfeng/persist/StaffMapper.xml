@@ -16,7 +16,7 @@
 					AND s.STAFFID = ${staffId}
 		]]>
 	</select>
-	
+
 	<select id="getAll" resultType="Staff">
 		<![CDATA[
 			SELECT s.STAFFID AS staffId,
@@ -28,10 +28,10 @@
 			FROM STAFF s 
 			WHERE 1 = 1
 			
-			ORDER BY s.STAFFID ASC
+			ORDER BY s.OD ASC
 		]]>
 	</select>
-	
+
 	<select id="findStaffsByArray" resultType="Staff">
 		<![CDATA[
 			SELECT s.STAFFID AS staffId,
@@ -45,8 +45,9 @@
 			WHERE 1 = 1
 		]]>
 		<if test="ids != null and ids != ''">
-			AND STAFFID IN 
-			<foreach collection="ids" open="(" close=")" item="id" separator=",">
+			AND STAFFID IN
+			<foreach collection="ids" open="(" close=")" item="id"
+				separator=",">
 				${id}
 			</foreach>
 		</if>
@@ -55,7 +56,7 @@
 			ORDER BY s.STAFFID ASC
 		]]>
 	</select>
-	
+
 	<select id="listWithPagination" resultType="Staff">
 		<![CDATA[
 			SELECT s.STAFFID AS staffId,
@@ -64,7 +65,8 @@
 				   s.STAFFEDUCATION AS staffEducation,
 				   s.STAFFDESCRIPTION AS staffDescription,
 				   s.STAFFIMAGEURL AS staffImageUrl,
-				   DATE_FORMAT(s.UPDATEDATE,'%Y-%m-%d %T') AS updateDate
+				   DATE_FORMAT(s.UPDATEDATE,'%Y-%m-%d %T') AS updateDate,
+				   s.OD AS od
 			FROM STAFF s 
 			WHERE 1 = 1
 		]]>
@@ -75,14 +77,14 @@
 		ORDER BY
 		]]>
 		<if test="sort != null and sort != '' and order != null and order != ''">
-			 ${sort} ${order},
+			${sort} ${order},
 		</if>
 		<![CDATA[
-			 s.STAFFID ASC
+			 s.OD ASC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
-	
+
 	<select id="maxSize" resultType="java.lang.Long">
 		<![CDATA[
 			SELECT COUNT(1)
@@ -111,7 +113,7 @@
 			)
 		]]>
 	</insert>
-	
+
 	<update id="update">
 		<![CDATA[
 			UPDATE STAFF
@@ -124,7 +126,7 @@
 			WHERE STAFFID = ${staffId}
 		]]>
 	</update>
-	
+
 	<update id="updateImagePath">
 		<![CDATA[
 			UPDATE STAFF
@@ -132,25 +134,26 @@
 			WHERE STAFFID = ${staffId}
 		]]>
 	</update>
-	
+
 	<delete id="delete">
 		<![CDATA[
 			DELETE FROM STAFF
 				WHERE STAFFID = ${staffId}
 		]]>
 	</delete>
-	
+
 	<delete id="deleteByArray">
 		<![CDATA[
 			DELETE FROM STAFF
 				WHERE STAFFID = 0
 		]]>
 		<if test="ids != null and ids != ''">
-			OR STAFFID IN 
-			<foreach collection="ids" open="(" close=")" item="id" separator=",">
+			OR STAFFID IN
+			<foreach collection="ids" open="(" close=")" item="id"
+				separator=",">
 				${id}
 			</foreach>
 		</if>
 	</delete>
-	
+
 </mapper>

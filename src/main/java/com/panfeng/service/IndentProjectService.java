@@ -109,5 +109,7 @@ public interface IndentProjectService {
 
 	public BaseMsg verifyProjectInfo(long projectId);
 	
-	public String verifyIntegrity(IndentProject indentProject); 
+	public String verifyIntegrity(IndentProject indentProject);
+
+	public void getReportForExport(List<IndentProject> list, OutputStream outputStream); 
 }

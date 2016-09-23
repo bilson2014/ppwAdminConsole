@@ -6,7 +6,6 @@ var editor;
 $.base64.utf8encode = true;
 editorBeReady("videoDescription");
 $().ready(function(){
-	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/product/list',
@@ -213,6 +212,15 @@ $().ready(function(){
 						title : '作品创作时间' ,
 						align : 'center' ,
 						width : 100
+					},{
+						field : 'productId' ,
+						title : '作品链接' ,
+						align : 'center' ,
+						width : 280,
+						formatter : function(value , record , index){
+							//http://www.apaipian.com/play/16_659.html
+							return 'http://www.apaipian.com/play/'+record.teamId + '_' + record.productId+'.html';
+						}
 					},{
 						field : 'masterWork' ,
 						title : '代表作' ,
@@ -450,7 +458,6 @@ function cancelFuc(){
 
 // 确认事件
 function save(){
-	
 	progressLoad();
 	$.base64.utf8encode = true;
 	var videoDescription= $.base64.btoa(editor.html());
@@ -473,7 +480,6 @@ function save(){
 			$.message('操作成功!');
 		}
 	});
-	
 }
 
 function openDialog(data){
@@ -517,6 +523,9 @@ function openDialog(data){
 
 //查询
 function searchFun(){
+	//清空点击表的排序操作,例如按时间排序等
+	$('#gride').datagrid('options').sortName = null;
+	$('#gride').datagrid('options').sortOrder = null;
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
 

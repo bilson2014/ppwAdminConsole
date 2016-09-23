@@ -871,4 +871,300 @@
 			ORDER BY i.IP_ID DESC
 		]]>
 	</select>
+	<!-- IF(i.IP_STATE = '2',) AS fdStartTime,这句话表示如果是完成项目,交付时间是流程结束时间,否则是项目信息中的交付时间 -->
+	<select id="listWithPaginationAll" resultType="IndentProject">
+		<![CDATA[
+			SELECT  i.IP_ID AS id,
+					i.IP_PROJECT_NAME AS projectName,
+					u.USERNAME AS userName,
+					u.CLIENTLEVEL AS clientLevel,
+					i.IP_USER_CONTACT AS userContact,
+					i.IP_USER_PHONE AS userPhone,
+					t.TEAMNAME AS teamName,
+					i.IP_TEAM_CONTACT AS teamContact,
+					i.IP_TEAM_PHONE AS teamPhone,
+					i.IP_USER_TYPE AS userType,
+					i.IP_USER_ID AS userId,
+					i.IP_DESCRIPTION AS description,
+					i.IP_SERIAL AS serial,
+					i.IP_SOURCE AS source,
+					i.IP_STATE AS state,
+					i.IP_CUSTOMERID	AS customerId,
+					i.ip_teamId AS teamId,
+					i.IP_PRICE_FIRST AS priceFirst,
+					i.IP_PRICE_LAST AS priceLast,
+					i.IP_PRICE_FINISH AS priceFinish,
+					i.IP_REFERRER_ID AS referrerId,
+					DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
+					DATE_FORMAT(i.IP_UPDATE_TIME,'%Y-%m-%d %T') AS updateTime,
+					i.IP_CUSTOMER_PAYMENT AS customerPayment,
+					i.IP_PROVIDER_PAYMENT AS providerPayment,
+					t1.NAME_   AS stage,	
+					IF(i.IP_STATE = '2',DATE_FORMAT(t1.END_TIME_, '%Y-%m-%d'),
+								IF(
+								DATE_FORMAT(fd.FD_STARTTIME, '%Y-%m-%d') > DATE_FORMAT('1970-01-01', '%Y-%m-%d'),
+								DATE_FORMAT(fd.FD_STARTTIME, '%Y-%m-%d'),
+								''
+								)
+					) AS fdStartTime,
+					fd.FD_TASK_ID  AS fdTaskId
+				
+			FROM INDENT_PROJECT i 
+			LEFT JOIN USERS u 
+				ON i.IP_CUSTOMERID=u.id 
+			LEFT JOIN TEAM t
+				ON i.IP_TEAMID=t.teamId
+			LEFT JOIN INDENT_FLOW F 
+				ON F.IF_INDENT_ID = i.IP_ID
+			LEFT JOIN ACT_HI_TASKINST t1 
+				ON F.IF_FLOW_ID = t1.PROC_INST_ID_
+			LEFT JOIN  FLOW_DATE fd
+				ON F.IF_FLOW_ID=fd.FD_FLOW_ID 	
+			WHERE 1 = 1 AND fd.FD_TASK_ID = 'jf' AND 1 > (
+					SELECT
+						COUNT(*)
+					FROM
+						ACT_HI_TASKINST t2
+					WHERE
+						t1.PROC_INST_ID_ = t2.PROC_INST_ID_
+					AND (t2.ID_ + 0) > (t1.ID_ + 0)
+				)
+		]]>
+
+		<if test="projectId != null and projectId != ''">
+			AND i.IP_ID = ${projectId}
+		</if>
+		<if test="projectName != null and projectName != ''">
+			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')
+		</if>
+		<if test="state != null and state != ''">
+			AND i.IP_STATE = ${state}
+		</if>
+
+		<if test="state == 0">
+			AND i.IP_STATE = ${state}
+		</if>
+
+		<if test="userId != null and userId != ''">
+			AND i.IP_USER_ID = ${userId}
+		</if>
+
+		<if test="teamName != null and teamName != ''">
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
+		</if>
+
+		<if test="teamId != null and teamId != ''">
+			AND i.ip_teamId = ${teamId}
+		</if>
+
+		<if test="source != null and source != ''">
+			AND i.IP_SOURCE = #{source}
+		</if>
+
+		<if test="customerId != null and customerId != '' and customerId != 0">
+			AND u.ID = ${customerId}
+		</if>
+		<if test="stage != null and stage != ''">
+			AND RES.NAME_ LIKE CONCAT('%',#{stage},'%')
+		</if>
+		<![CDATA[
+			ORDER BY 
+		]]>
+		<if test="sort != null and sort != '' and order != null and order != ''">
+			 ${sort} ${order},
+		</if>
+		<![CDATA[
+			 i.IP_ID DESC
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+	<!-- IF(i.IP_STATE = '2',) AS fdStartTime,这句话表示如果是完成项目,交付时间是流程结束时间,否则是项目信息中的交付时间 -->
+	<select id="listWithPaginationAllAndSynergy" resultType="IndentProject">
+		<![CDATA[
+			SELECT  i.IP_ID AS id,
+					i.IP_PROJECT_NAME AS projectName,
+					u.USERNAME AS userName,
+					u.CLIENTLEVEL AS clientLevel,
+					i.IP_USER_CONTACT AS userContact,
+					i.IP_USER_PHONE AS userPhone,
+					t.TEAMNAME AS teamName,
+					i.IP_TEAM_CONTACT AS teamContact,
+					i.IP_TEAM_PHONE AS teamPhone,
+					i.IP_USER_TYPE AS userType,
+					i.IP_USER_ID AS userId,
+					i.IP_DESCRIPTION AS description,
+					i.IP_SERIAL AS serial,
+					i.IP_SOURCE AS source,
+					i.IP_STATE AS state,
+					i.IP_CUSTOMERID	AS customerId,
+					i.ip_teamId AS teamId,
+					i.IP_PRICE_FIRST AS priceFirst,
+					i.IP_PRICE_LAST AS priceLast,
+					i.IP_PRICE_FINISH AS priceFinish,
+					i.IP_REFERRER_ID AS referrerId,
+					DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
+					DATE_FORMAT(i.IP_UPDATE_TIME,'%Y-%m-%d %T') AS updateTime,
+					i.IP_CUSTOMER_PAYMENT AS customerPayment,
+					i.IP_PROVIDER_PAYMENT AS providerPayment,
+					t1.NAME_   AS stage,
+					IF(i.IP_STATE = '2',DATE_FORMAT(t1.END_TIME_, '%Y-%m-%d'),
+								IF(
+								DATE_FORMAT(fd.FD_STARTTIME, '%Y-%m-%d') > DATE_FORMAT('1970-01-01', '%Y-%m-%d'),
+								DATE_FORMAT(fd.FD_STARTTIME, '%Y-%m-%d'),
+								''
+								)
+					) AS fdStartTime,
+					fd.FD_TASK_ID  AS fdTaskId	
+				
+			FROM INDENT_PROJECT i 
+			LEFT JOIN USERS u 
+				ON i.IP_CUSTOMERID=u.id 
+			LEFT JOIN TEAM t
+				ON i.IP_TEAMID=t.teamId
+			LEFT JOIN INDENT_FLOW F 
+				ON F.IF_INDENT_ID = i.IP_ID
+			LEFT JOIN ACT_HI_TASKINST t1 
+				ON F.IF_FLOW_ID = t1.PROC_INST_ID_
+			LEFT JOIN  FLOW_DATE fd ON F.IF_FLOW_ID=fd.FD_FLOW_ID 	
+			WHERE 1 = 1 AND fd.FD_TASK_ID = 'jf' AND 1 > (
+				SELECT
+					COUNT(*)
+				FROM
+					ACT_HI_TASKINST t2
+				WHERE
+					t1.PROC_INST_ID_ = t2.PROC_INST_ID_
+				AND (t2.ID_ + 0) > (t1.ID_ + 0)
+			)
+		]]>
+		<if test="projectId != null and projectId != ''">
+			AND i.IP_ID = ${projectId}
+		</if>
+		<if test="projectName != null and projectName != ''">
+			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')
+		</if>
+		<if test="state != null and state != ''">
+			AND i.IP_STATE = ${state}
+		</if>
+
+		<if test="state == 0">
+			AND i.IP_STATE = ${state}
+		</if>
+
+		<if test="userId != null and userId != ''">
+			AND i.IP_USER_ID = ${userId}
+		</if>
+
+		<if test="teamName != null and teamName != ''">
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
+		</if>
+
+		<if test="teamId != null and teamId != ''">
+			AND i.ip_teamId = ${teamId}
+		</if>
+
+		<if test="source != null and source != ''">
+			AND i.IP_SOURCE = #{source}
+		</if>
+
+		<if test="customerId != null and customerId != '' and customerId != 0">
+			AND u.ID = ${customerId}
+		</if>
+		<if test="stage != null and stage != ''">
+			AND RES.NAME_ LIKE CONCAT('%',#{stage},'%')
+		</if>
+		<![CDATA[
+			union
+			SELECT  i.IP_ID AS id,
+					i.IP_PROJECT_NAME AS projectName,
+					u.USERNAME AS userName,
+					u.CLIENTLEVEL AS clientLevel,
+					i.IP_USER_CONTACT AS userContact,
+					i.IP_USER_PHONE AS userPhone,
+					t.TEAMNAME AS teamName,
+					i.IP_TEAM_CONTACT AS teamContact,
+					i.IP_TEAM_PHONE AS teamPhone,
+					i.IP_USER_TYPE AS userType,
+					i.IP_USER_ID AS userId,
+					i.IP_DESCRIPTION AS description,
+					i.IP_SERIAL AS serial,
+					i.IP_SOURCE AS source,
+					i.IP_STATE AS state,
+					i.IP_CUSTOMERID	AS customerId,
+					i.ip_teamId AS teamId,
+					i.IP_PRICE_FIRST AS priceFirst,
+					i.IP_PRICE_LAST AS priceLast,
+					i.IP_PRICE_FINISH AS priceFinish,
+					i.IP_REFERRER_ID AS referrerId,
+					DATE_FORMAT(i.IP_CREATE_TIME,'%Y-%m-%d %T') AS createTime,
+					DATE_FORMAT(i.IP_UPDATE_TIME,'%Y-%m-%d %T') AS updateTime,
+					i.IP_CUSTOMER_PAYMENT AS customerPayment,
+					i.IP_PROVIDER_PAYMENT AS providerPayment,
+					t1.NAME_   AS stage,
+					IF(i.IP_STATE = '2',DATE_FORMAT(t1.END_TIME_, '%Y-%m-%d'),
+								IF(
+								DATE_FORMAT(fd.FD_STARTTIME, '%Y-%m-%d') > DATE_FORMAT('1970-01-01', '%Y-%m-%d'),
+								DATE_FORMAT(fd.FD_STARTTIME, '%Y-%m-%d'),
+								''
+								)
+					) AS fdStartTime,
+					fd.FD_TASK_ID  AS fdTaskId
+			FROM INDENT_PROJECT i 
+			LEFT JOIN USERS u 
+				ON i.IP_CUSTOMERID=u.id 
+			LEFT JOIN TEAM t
+				ON i.IP_TEAMID=t.teamId
+			LEFT JOIN SYNERGY s
+				ON s.s_project_id=i.ip_id
+			LEFT JOIN INDENT_FLOW F 
+				ON F.IF_INDENT_ID = i.IP_ID
+			LEFT JOIN ACT_HI_TASKINST t1 
+				ON F.IF_FLOW_ID = t1.PROC_INST_ID_
+			LEFT JOIN  FLOW_DATE fd
+				ON F.IF_FLOW_ID=fd.FD_FLOW_ID 	
+			WHERE 1 = 1 AND fd.FD_TASK_ID = 'jf' AND 1 > (
+					SELECT
+						COUNT(*)
+					FROM
+						ACT_HI_TASKINST t2
+					WHERE
+						t1.PROC_INST_ID_ = t2.PROC_INST_ID_
+					AND (t2.ID_ + 0) > (t1.ID_ + 0)
+				)
+			AND s.S_USER_ID = ${userId}
+		]]>
+		<if test="projectId != null and projectId != ''">
+			AND i.IP_ID = ${projectId}
+		</if>
+		<if test="projectName != null and projectName != ''">
+			AND i.IP_PROJECT_NAME LIKE CONCAT('%',#{projectName},'%')
+		</if>
+		<if test="state != null and state != ''">
+			AND i.IP_STATE = ${state}
+		</if>
+
+		<if test="state == 0">
+			AND i.IP_STATE = ${state}
+		</if>
+		<if test="teamId != null and teamId != ''">
+			AND i.ip_teamId = ${teamId}
+		</if>
+		<if test="teamName != null and teamName != ''">
+			AND t.TEAMNAME LIKE CONCAT('%',#{teamName},'%')
+		</if>
+		<if test="source != null and source != ''">
+			AND i.IP_SOURCE = #{source}
+		</if>
+		<if test="customerId != null and customerId != '' and customerId != 0">
+			AND u.ID = ${customerId}
+		</if>
+		<if test="stage != null and stage != ''">
+			AND RES.NAME_ LIKE CONCAT('%',#{stage},'%')
+		</if>
+		<if test="sort != null and sort != '' and order != null and order != ''">
+			order by  ${sort} ${order}
+		</if>
+		<![CDATA[
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
 </mapper>

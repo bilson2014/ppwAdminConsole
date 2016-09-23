@@ -21,7 +21,7 @@
 			<table>
 				<tr>
 					<th>订单编号:</th>
-					<td><input id="search-indentNum" name="indentId" placeholder="请输入订单编号"/></td>
+					<td><input id="search-indentNum" name="indentId"  placeholder="请输入订单编号"/></td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 					</td>

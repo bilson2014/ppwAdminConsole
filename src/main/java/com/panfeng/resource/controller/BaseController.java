@@ -1,16 +1,18 @@
 package com.panfeng.resource.controller;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.User;
 import com.panfeng.service.SessionInfoService;
+import com.panfeng.util.Constants;
+import com.panfeng.util.Log;
 
 /**
  * 资源基类
@@ -20,7 +22,7 @@ import com.panfeng.service.SessionInfoService;
  */
 public abstract class BaseController {
 
-	private static Logger logger = LoggerFactory.getLogger("error");
+	//private static Logger logger = LoggerFactory.getLogger("error");
 	@Autowired
 	final SessionInfoService sessionService = null;
 	// get current user
@@ -31,7 +33,7 @@ public abstract class BaseController {
 			HttpSession session = request.getSession();
 			user = (User) session.getAttribute("username");
 		} catch (Exception e) {
-			logger.error("Retrieve username error ...",e);
+			Log.error("Retrieve username error ...",null,e);
 			e.printStackTrace();
 		}
 		if(user == null){
@@ -46,5 +48,30 @@ public abstract class BaseController {
 		final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
 		return info;
 	}
-	
+	protected void addCookies(HttpServletRequest request, HttpServletResponse response) {
+		Cookie cookieUsername = new Cookie("token", request.getSession().getId());
+		cookieUsername.setPath("/");
+		cookieUsername.setDomain(Constants.COOKIES_SCOPE);
+		cookieUsername.setMaxAge(60 * 60 * 24 * 7); /* 设置cookie的有效期为 7 天 */
+		response.addCookie(cookieUsername);
+	}
+	//退出时删除redis 删除cookie
+		protected void logOutCookie(HttpServletRequest request,HttpServletResponse response) {
+			Cookie[] cookie = request.getCookies();
+			if(cookie!=null){
+				if(cookie.length>0){
+					for (Cookie c : cookie) {
+						if ("token".equals(c.getName())) {
+							sessionService.removeSessionByToken(request, c.getValue());
+							Cookie cookieUsername = new Cookie("token", null);
+							cookieUsername.setPath("/");
+							cookieUsername.setDomain(Constants.COOKIES_SCOPE);
+							cookieUsername.setMaxAge(0);
+							response.addCookie(cookieUsername);
+							
+						}
+					}
+				}
+			}
+		}
 }

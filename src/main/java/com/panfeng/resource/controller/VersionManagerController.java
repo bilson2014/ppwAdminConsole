@@ -7,8 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +23,7 @@ import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
 import com.panfeng.service.SessionInfoService;
 import com.panfeng.util.DataUtil;
+import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
 /**
@@ -38,7 +37,7 @@ import com.panfeng.util.ValidateUtil;
 @RequestMapping("/portal")
 public class VersionManagerController extends BaseController {
 
-	private static Logger logger = LoggerFactory.getLogger("error");
+	// private static Logger logger = LoggerFactory.getLogger("error");
 
 	@Autowired
 	private final EmployeeService service = null;
@@ -225,8 +224,10 @@ public class VersionManagerController extends BaseController {
 						if (ret > 0)
 							return true;
 					} else {
-						logger.error(
-								"VersionManagerController method:editPassword() error,becase phoneNumber is not unique ...");
+						SessionInfo sessionInfo = getCurrentInfo(request);
+						Log.error(
+								"VersionManagerController method:editPassword() error,becase phoneNumber is not unique ...",
+								sessionInfo);
 					}
 				}
 			}
@@ -244,7 +245,7 @@ public class VersionManagerController extends BaseController {
 		info.setLoginName(e.getEmployeeLoginName());
 		info.setRealName(e.getEmployeeRealName());
 		info.setSessionType(GlobalConstant.ROLE_EMPLOYEE);
-		info.setSuperAdmin(false);
+		// info.setSuperAdmin(false);
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(e.getEmployeeId());
 		info.setPhoto(e.getEmployeeImg());
@@ -276,9 +277,10 @@ public class VersionManagerController extends BaseController {
 		e.calculateRightSum();
 		long[] sum = e.getRightSum();
 		info.setSum(sum);
-
+		info.setSuperAdmin(e.isSuperAdmin()); // 判断是否是超级管理员
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(GlobalConstant.SESSION_INFO, info);
-		return infoService.addSession(request, map);
+		//return infoService.addSession(request, map);
+		return infoService.addSessionSeveralTime(request, map, 60*60*24*7);
 	}
 }

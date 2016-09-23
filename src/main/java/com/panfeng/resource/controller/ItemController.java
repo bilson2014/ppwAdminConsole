@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Item;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.ItemView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.ItemService;
+import com.panfeng.util.Log;
 
 /**
  * 类别相关
@@ -29,7 +29,7 @@ import com.panfeng.service.ItemService;
 @RequestMapping("/portal")
 public class ItemController extends BaseController {
 
-	private static final Logger logger = LoggerFactory.getLogger("error");
+	//private static final Logger logger = LoggerFactory.getLogger("error");
 	
 	@Autowired
 	private final ItemService service = null;
@@ -66,26 +66,33 @@ public class ItemController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/item/save",method = RequestMethod.POST)
-	public long save(final Item item){
+	public long save(final Item item,HttpServletRequest request){
 		
 		final long ret = service.save(item);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("add item ...", sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping(value = "/item/update",method = RequestMethod.POST)
-	public long update(final Item item){
+	public long update(final Item item,HttpServletRequest request){
 		
 		final long ret = service.update(item);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("update item ...", sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping(value = "/item/delete",method = RequestMethod.POST)
-	public long delete(final long[] ids){
+	public long delete(final long[] ids,HttpServletRequest request){
 		
 		if(ids.length > 0){
 			service.delete(ids);
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("delete items ... ids:"+ids.toString(), sessionInfo);
 		}else{
-			logger.error("Item Delete Error ...");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("Item Delete Error ...",sessionInfo);
 			throw new RuntimeException("Item Delete Error ...");
 		}
 		

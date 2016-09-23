@@ -18,6 +18,7 @@ public final class Constants {
 	public static String PROJECT_DOC;
 	public static String PDF2HTML;
 	public static String OFFICEHOME;
+	public static String COOKIES_SCOPE;
 	static Constants CONSTANTS = new Constants();
 
 	// state Constants
@@ -71,6 +72,7 @@ public final class Constants {
 		PROJECT_DOC = properties.getProperty("project.doc");
 		PDF2HTML = properties.getProperty("pdf2html");
 		OFFICEHOME = properties.getProperty("officehome");
+		COOKIES_SCOPE = properties.getProperty("cookies_scope");
 	}
 	/**
 	 * 登录方式

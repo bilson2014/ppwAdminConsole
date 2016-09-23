@@ -48,8 +48,7 @@ $().ready(function(){
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
 		toolbar : '#toolbar'
-	});
-		
+	});	
 });
 
 
@@ -141,6 +140,9 @@ function openDialog(id,data){
 
 //查询
 function searchFun(){
+	//清空点击表的排序操作,例如按时间排序等
+	$('#gride').datagrid('options').sortName = null;
+	$('#gride').datagrid('options').sortOrder = null;
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
 

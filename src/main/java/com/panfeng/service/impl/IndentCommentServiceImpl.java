@@ -12,6 +12,7 @@ import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.UserViewModel;
 import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.UserTempService;
+import com.panfeng.util.Log;
 
 @Service
 public class IndentCommentServiceImpl implements IndentCommentService {
@@ -63,6 +64,7 @@ public class IndentCommentServiceImpl implements IndentCommentService {
 		indentComment.setIcContent(userViewModel.getUserName() + "，" + msg);
 		indentComment.setIcIndentId(indentProject.getId());
 		indent_CommentMapper.save(indentComment);
+		Log.error(indentComment.getIcContent(), null);
 	}
 
 }

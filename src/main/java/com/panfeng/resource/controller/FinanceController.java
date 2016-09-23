@@ -2,8 +2,8 @@ package com.panfeng.resource.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,19 +12,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.domain.GlobalConstant;
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.DealLog;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.FinanceView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.DealLogService;
 import com.panfeng.service.FinanceService;
+import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
 @RestController
 @RequestMapping("/portal")
 public class FinanceController extends BaseController{
 
-	private static final Logger logger = LoggerFactory.getLogger("error");
+	//private static final Logger logger = LoggerFactory.getLogger("error");
 
 	@Autowired
 	private final FinanceService service = null;
@@ -84,7 +86,7 @@ public class FinanceController extends BaseController{
 	}
 	
 	@RequestMapping(value = "/finance/save", method = RequestMethod.POST)
-	public long save(final DealLog dealLog){
+	public long save(final DealLog dealLog,HttpServletRequest request){
 		dealLog.setDealLogSource(1); // 线下支付
 		dealLog.setDealStatus(1); // 线下支付默认支付成功
 		dealLog.setUserType(GlobalConstant.ROLE_CUSTOMER);
@@ -97,27 +99,32 @@ public class FinanceController extends BaseController{
 		}
 		
 		final long ret = service.save(dealLog);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("finance save :"+ dealLog.toString(), sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping(value = "/finance/update", method = RequestMethod.POST)
-	public long update(final DealLog dealLog){
+	public long update(final DealLog dealLog,HttpServletRequest request){
 		
 		dealLog.setDealLogSource(1); // 线下支付
 		dealLog.setDealStatus(1); // 线下支付默认支付成功
 		dealLog.setUserType(GlobalConstant.ROLE_CUSTOMER);
 		
 		final long ret = service.update(dealLog);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("finance update :"+ dealLog.toString(), sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping(value = "/finance/delete", method = RequestMethod.POST)
-	public long delete(final long[] ids){
-		
+	public long delete(final long[] ids,HttpServletRequest request){
+		SessionInfo sessionInfo = getCurrentInfo(request);
 		if(ValidateUtil.isValid(ids)){
+			Log.error("finance delete ids:"+ ids.toString() , sessionInfo);
 			return service.deleteByArray(ids);
 		} else {
-			logger.error("finance Delete Error ...");
+			Log.error("finance Delete Error ...",sessionInfo);
 			throw new RuntimeException("finance Delete Error ...");
 		}
 	}

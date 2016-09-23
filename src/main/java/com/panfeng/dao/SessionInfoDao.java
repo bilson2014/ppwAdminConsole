@@ -18,6 +18,8 @@ public interface SessionInfoDao {
 	 */
 	public String getSessionWithField(final HttpServletRequest request,final String field);
 	
+	public String getSessionWithSessionId(final String sessionId,final String field);
+	
 	public void removeSession(final HttpServletRequest request);
 	
 	/**
@@ -29,4 +31,10 @@ public interface SessionInfoDao {
 	 * 判断session是否存在
 	 */
 	public boolean exitSession(final HttpServletRequest request);
+
+	public boolean addSessionSeveralTime(HttpServletRequest request, Map<String, String> destMap, int time);
+
+	public String getSessionWithToken(HttpServletRequest request, String token);
+
+	public void removeSessionByToken(HttpServletRequest request, String token);
 }

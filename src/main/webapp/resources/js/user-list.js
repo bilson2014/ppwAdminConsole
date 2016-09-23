@@ -1,6 +1,10 @@
 var editing ; //判断用户是否处于编辑状态 
 var flag  ;	  //判断新增和修改方法
 var datagrid;
+//验证
+var isadd = false;
+var originalLoginName = '';
+var originalPhoneNumber = '';
 $().ready(function(){
 
 	// 初始化DataGrid
@@ -25,7 +29,7 @@ $().ready(function(){
 							type : 'validatebox' ,
 							options : {
 								required : true , 
-								missingMessage : '请填写昵称!',
+								missingMessage : '请填写昵称!'
 							},
 						}
 					},{
@@ -43,7 +47,7 @@ $().ready(function(){
 					},{
 						field : 'clientLevel',
 						title : '客户级别',
-						width : 150,
+						width : 80,
 						align : 'center' ,
 						sortable : true ,
 						formatter : function(value , record , index){
@@ -63,6 +67,33 @@ $().ready(function(){
 							type:'combobox' , 
 							options:{
 								data:[{id:3 , val:'S'},{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'}] ,
+								valueField:'id' , 
+								textField:'val' ,
+								required:true , 
+								editable : false
+							}
+						}
+					},{
+						field : 'preference',
+						title : '客户意向度',
+						width : 80,
+						align : 'center' ,
+						sortable : true ,
+						formatter : function(value , record , index){
+							if(value == 0){
+								return '<span style=color:red; >A</span>' ;
+							} else if( value == 1){
+								return '<span style=color:blue; >B</span>' ; 
+							} else if( value == 2){
+								return '<span style=color:green; >C</span>' ;
+							} else if( value == 3){
+								return '<span style=color:black; >D</span>' ;
+							}
+						},
+						editor:{
+							type:'combobox' , 
+							options:{
+								data:[{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'},{id:3 , val:'D'}] ,
 								valueField:'id' , 
 								textField:'val' ,
 								required:false , 
@@ -120,7 +151,8 @@ $().ready(function(){
 							type : 'validatebox' ,
 							options : {
 								required:true ,
-								missingMessage : '请填写联系电话!'
+								missingMessage : '请填写联系电话!',
+								validType:['mobile','vuPhoneNumber']
 							}
 						}
 					},{
@@ -145,6 +177,18 @@ $().ready(function(){
 							options : {
 								required : false ,
 								missingMessage : '请填写QQ号码!'
+							}
+						}
+					},{
+						field : 'weChat',
+						title : '微信',
+						width : 80,
+						align : 'center',
+						editor : {
+							type : 'validatebox' ,
+							options : {
+								required : false ,
+								missingMessage : '请填写微信号!'
 							}
 						}
 					},{
@@ -180,8 +224,27 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'followTime',
+						title : '跟进日期',
+						width : 120,
+						align : 'center',
+						sortable : true,
+						editor : {
+							type : 'datebox' ,
+							options:{
+									required:true , 
+									missingMessage : '请填写跟进日期!'
+								}
+						}
+					},{
 						field : 'createDate',
 						title : '注册日期',
+						width : 120,
+						align : 'center',
+						sortable : true 
+					},{
+						field : 'updateTime',
+						title : '更新日期',
 						width : 120,
 						align : 'center',
 						sortable : true 
@@ -190,6 +253,7 @@ $().ready(function(){
 						title : '出生日期',
 						width : 120,
 						align : 'center' ,
+						hidden : true,
 						editor : {
 							type : 'datebox' ,
 							options : {
@@ -231,6 +295,7 @@ $().ready(function(){
 			//modify by wanglc 添加用户名唯一性 验证 begin
 			loadData(function(data){
 				if(data){
+					// /user/valication/phone/18801376524
 					$.post(flag =='add' ? getContextPath() + '/portal/user/save' : getContextPath() + '/portal/user/update', record , function(result){
 						datagrid.datagrid('clearSelections');
 						datagrid.datagrid('reload');
@@ -254,6 +319,7 @@ $().ready(function(){
 //增加
 function addFuc(){
 	if(editing == undefined){
+		isadd = true;
 		flag = 'add';
 		//1 先取消所有的选中状态
 		datagrid.datagrid('unselectAll');
@@ -269,10 +335,12 @@ function addFuc(){
 //修改
 function editFuc(){
 	var arr = datagrid.datagrid('getSelections');
+	isadd = false;
 	if(arr.length != 1){
 		$.message('只能选择一条记录进行修改!');
 	} else {
 		if(editing == undefined){
+			originalPhoneNumber = arr[0].telephone;
 			flag = 'edit';
 			//根据行记录对象获取该行的索引位置
 			editing = datagrid.datagrid('getRowIndex' , arr[0]);
@@ -328,6 +396,9 @@ function cancelFuc(){
 
 // 查询
 function searchFun(){
+	//清空点击表的排序操作,例如按时间排序等
+	$('#gride').datagrid('options').sortName = null;
+	$('#gride').datagrid('options').sortOrder = null;
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
 
@@ -336,3 +407,57 @@ function cleanFun() {
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {clientLevel:-1});
 }
+//$.extend($.fn.validatebox.defaults.rules, {  
+//    vuLoginName : {
+//        validator : function(value, param) {
+//        	var url = '/portal/user/unique/username';
+//			var isok = false;
+//        	if(isadd){
+//        		// 验证登录名
+//    			syncLoadData(function (res) {
+//    				isok = res;
+//    			}, url, $.toJSON({
+//    				loginName : $('#loginName').val()
+//    			}));
+//    			return isok;
+//        	}else{
+//        		if(value != originalLoginName){
+//        			// 验证登录名
+//        			syncLoadData(function (res) {
+//        				isok = res;
+//        			}, url, $.toJSON({
+//        				loginName : $('#loginName').val()
+//        			}));
+//        			return isok;
+//        		}
+//        	}
+//        	return true;
+//        },
+//        message : '用户名已经重复！'  
+//    }  
+//});
+$.extend($.fn.validatebox.defaults.rules, {  
+    vuPhoneNumber : {
+        validator : function(value, param) {
+        	var url = '/portal/user/valication/phone/'+value;
+			var isok = false;
+        	if(isadd){
+        		// 验证登录名
+    			syncLoadData(function (res) {
+    				isok = !res;
+    			}, url, null);
+    			return isok;
+        	}else{
+        		if(value != originalPhoneNumber){
+        			// 验证手机
+        			syncLoadData(function (res) {
+        				isok = !res;
+        			}, url, null);
+        			return isok;
+        		}
+        	}
+        	return true;
+        },
+        message : '手机号已经重复！'  
+    }  
+});
