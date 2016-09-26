@@ -220,18 +220,17 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public List<BizBean> getTags() {
-		String[] tags = new String[8];
+		String[] tags = new String[7];
 		tags[0] = "电话下单";
 		tags[1] = "个人信息下单";
 		tags[2] = "网站下单";
 		tags[3] = "复购下单";
 		tags[4] = "活动下单";
-		tags[5] = "渠道优惠";
-		tags[6] = "电销";
-		tags[7] = "自主开发";
+		tags[5] = "电销";
+		tags[6] = "自主开发";
 		
-
 		final List<BizBean> list = new ArrayList<BizBean>();
+		
 		for (String str : tags) {
 			final BizBean bean = new BizBean();
 			bean.setName(str);
@@ -751,7 +750,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				}
 				break;
 			case provider:
-				if (ip.getTeamId() != null || ip.getTeamId() > 0) {
+				if (ip.getTeamId() != null &&  ip.getTeamId() > 0) {
 					if (ValidateUtil.isValid(ip.getTeamName())) {
 						if (ValidateUtil.isValid(ip.getTeamContact())) {
 							if (ValidateUtil.isValid(ip.getTeamContact())) {
