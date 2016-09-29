@@ -52,6 +52,11 @@ $().ready(function(){
 							} 
 						}
 					},{
+						field : 'recommendation',
+						title : '审核意见',
+						width : 200,
+						align : 'center'
+					},{
 						field : 'teamProvinceName',
 						title : '所在省',
 						width : 100,
@@ -447,7 +452,7 @@ $.extend($.fn.validatebox.defaults.rules, {
         			syncLoadData(function (res) {
         				isok = res;
         			}, url, $.toJSON({
-        				loginName : $('#loginName').val()
+        				phoneNumber : $('#phoneNumber').val()
         			}));
         			return isok;
         		}
