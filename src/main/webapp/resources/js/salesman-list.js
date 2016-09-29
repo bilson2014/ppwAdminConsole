@@ -51,7 +51,7 @@ $().ready(function(){
 				title : '分销产品地址' ,
 				align : 'center',
 				formatter : function(value,row,index){
-					return '<span style=color:orange; >'+ getServerName() + '/phone/salesman/' + row.uniqueId +'</span>' ;
+					return '<span style=color:orange; >'+ getServerName() + '/salesman/' + row.uniqueId +'</span>' ;
 				}
 			},{
 				field : 'orderAction' ,
@@ -69,7 +69,7 @@ $().ready(function(){
 				title : '分销下单地址' ,
 				align : 'center',
 				formatter : function(value,row,index){
-					return '<span style=color:black; >'+ getServerName() + '/phone/salesman/order/' + row.uniqueId +'</span>' ;
+					return '<span style=color:black; >'+ getServerName() + '/salesman/order/' + row.uniqueId +'</span>' ;
 				}
 			},{
 				field : 'action' ,
@@ -204,7 +204,7 @@ function getServerName(){
 
 // 查看直接下单二维码
 function view(uniqueId){
-	var url = 'http://qr.liantu.com/api.php?text=' + getServerName() + '/phone/salesman/order/' + uniqueId;
+	var url = 'http://qr.liantu.com/api.php?text=' + getServerName() + '/salesman/order/' + uniqueId;
 	$('#qrCode').attr('src',url);
 	$('#qrCode').removeClass('hide');
 	$('#qrCode-condition').removeClass('hide');
@@ -225,7 +225,7 @@ function downLoad(uniqueId,salesmanName){
 
 // 查看产品页二维码
 function orderView(uniqueId){
-	var url = 'http://qr.liantu.com/api.php?text=' + getServerName() + '/phone/salesman/' + uniqueId;
+	var url = 'http://qr.liantu.com/api.php?text=' + getServerName() + '/salesman/' + uniqueId;
 	$('#qrCode').attr('src',url);
 	$('#qrCode').removeClass('hide');
 	$('#qrCode-condition').removeClass('hide');
