@@ -226,9 +226,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		tags[2] = "网站下单";
 		tags[3] = "复购下单";
 		tags[4] = "活动下单";
-		tags[5] = "渠道优惠";
-		tags[6] = "电销";
-		tags[7] = "自主开发";
+		tags[5] = "电销";
+		tags[6] = "自主开发";
 		
 
 		final List<BizBean> list = new ArrayList<BizBean>();
