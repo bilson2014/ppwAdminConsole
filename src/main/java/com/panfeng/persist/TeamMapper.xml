@@ -453,7 +453,7 @@
 				   t.TEAMNAME AS teamName,
 				   t.PHONENUMBER AS phoneNumber,
 				   t.LINKMAN AS loginName
-			 FROM TEAM t WHERE 1=1
+			 FROM TEAM t WHERE FLAG = 1 
 		]]>
 
 		<if test="teamName != null and teamName != ''">
