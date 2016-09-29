@@ -42,6 +42,10 @@
 					<td>
 						<input name="endTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
 					</td>
+					<th>联系电话:</th>
+					<td>
+						<input name="telephone"   placeholder="请输入联系电话"/>
+					</td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 					</td>

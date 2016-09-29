@@ -220,7 +220,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Override
 	public List<BizBean> getTags() {
-		String[] tags = new String[8];
+		String[] tags = new String[7];
 		tags[0] = "电话下单";
 		tags[1] = "个人信息下单";
 		tags[2] = "网站下单";
@@ -228,9 +228,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		tags[4] = "活动下单";
 		tags[5] = "电销";
 		tags[6] = "自主开发";
-		
 
 		final List<BizBean> list = new ArrayList<BizBean>();
+
 		for (String str : tags) {
 			final BizBean bean = new BizBean();
 			bean.setName(str);
@@ -261,6 +261,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 		getReport(list, outputStream);
 	}
+
 	public void getReport(List<IndentProject> list, OutputStream outputStream) {
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
@@ -289,6 +290,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		}
 		ge.generate(projectPoiAdapter, outputStream);
 	}
+
 	public void getReportForExport(List<IndentProject> list, OutputStream outputStream) {
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
@@ -304,24 +306,20 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		// modify by wanglc 2016-6-28 19:54:21
 		// 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 begin
 		/*
-	 	List<IndentProject> returnList = new ArrayList<IndentProject>();
-		if (null == view.getIsSynergy() || view.getIsSynergy() == 0) {
-			returnList = indentProjectMapper.listWithPaginationNoLimit(view);
-		} else {
-			returnList = indentProjectMapper.listWithPaginationNoLimit(view);
-			List<IndentProject> list2 = indentProjectMapper.listWithPaginationAddSynergy(view);
-			returnList.addAll(list2);
-		}
-		List<IndentProject> list = new ArrayList<IndentProject>();
-		int begin = (int) view.getBegin();
-		int size = (int) view.getLimit();
-		int total = (begin + size) < returnList.size() ? (begin + size) : returnList.size();
-		// int end = (size > (returnList.size()-begin)?returnList.size():size) +
-		// size;
-		for (int i = begin; i < total; i++) {
-			list.add(returnList.get(i));
-		}
-		// modify by wanglc 2016-6-28 19:54:21 end 
+		 * List<IndentProject> returnList = new ArrayList<IndentProject>(); if
+		 * (null == view.getIsSynergy() || view.getIsSynergy() == 0) {
+		 * returnList = indentProjectMapper.listWithPaginationNoLimit(view); }
+		 * else { returnList =
+		 * indentProjectMapper.listWithPaginationNoLimit(view);
+		 * List<IndentProject> list2 =
+		 * indentProjectMapper.listWithPaginationAddSynergy(view);
+		 * returnList.addAll(list2); } List<IndentProject> list = new
+		 * ArrayList<IndentProject>(); int begin = (int) view.getBegin(); int
+		 * size = (int) view.getLimit(); int total = (begin + size) <
+		 * returnList.size() ? (begin + size) : returnList.size(); // int end =
+		 * (size > (returnList.size()-begin)?returnList.size():size) + // size;
+		 * for (int i = begin; i < total; i++) { list.add(returnList.get(i)); }
+		 * // modify by wanglc 2016-6-28 19:54:21 end
 		 */
 		List<IndentProject> list = new ArrayList<IndentProject>();
 		if (null == view.getIsSynergy() || view.getIsSynergy() == 0) {
@@ -555,7 +553,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				} else {
 					stringBuilder.append("<div class = 'infoimgG'>");
 					stringBuilder.append("X");
-					iok = false; 
+					iok = false;
 				}
 				stringBuilder.append("</div>");
 				stringBuilder.append("</li>");
@@ -750,7 +748,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				}
 				break;
 			case provider:
-				if (ip.getTeamId() != null || ip.getTeamId() > 0) {
+				if (ip.getTeamId() != null && ip.getTeamId() > 0) {
 					if (ValidateUtil.isValid(ip.getTeamName())) {
 						if (ValidateUtil.isValid(ip.getTeamContact())) {
 							if (ValidateUtil.isValid(ip.getTeamContact())) {
@@ -789,7 +787,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				}
 				break;
 			case priceFinish:
-				if (ip.getPriceFirst() == null || ip.getPriceFirst() <= 0) {
+				if (ip.getPriceFinish() == null || ip.getPriceFinish() <= 0) {
 					res.put(infoType.getText(), false);
 				} else {
 					res.put(infoType.getText(), true);
