@@ -3,6 +3,7 @@ package com.panfeng.service;
 import java.util.List;
 import java.util.Map;
 
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.resource.model.ThirdBind;
 import com.panfeng.resource.model.User;
 import com.panfeng.resource.view.UserView;
@@ -138,5 +139,12 @@ public interface UserService {
 	 * false 不可用
 	 */
 	public boolean uniqueUserName(User user);
+
+	/**
+	 * 验证手机号是否存在,不存在就可以去更新
+	 * @param user
+	 * @return
+	 */
+	public BaseMsg updateNewphone(User user);
 
 }

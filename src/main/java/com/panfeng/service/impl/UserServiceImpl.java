@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.UserMapper;
 import com.panfeng.resource.model.ThirdBind;
@@ -343,5 +344,12 @@ public class UserServiceImpl implements UserService {
 			}
 			return false;
 		}return false;
+	}
+
+	@Override
+	public BaseMsg updateNewphone(User user) {
+		//验证手机号是否存在
+		
+		return null;
 	}
 }

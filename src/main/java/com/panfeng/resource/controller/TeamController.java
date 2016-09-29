@@ -897,5 +897,19 @@ public class TeamController extends BaseController {
 		}
 		return null;
 	}
+	
+	@RequestMapping("/team/update/newphone")
+	public BaseMsg updateNewphone(@RequestBody Team team,HttpServletRequest request) {
+		
+		final long count = service.checkExist(team);
+		if (count > 0){
+			return new BaseMsg(3,"手机号码已被占用");
+		}
+		final long ret = service.modifyTeamPhone(team);
+		if (ret > 0) {
+			return new BaseMsg(2,"success");
+		}
+		return  new BaseMsg(0,"error");
+	}
 
 }

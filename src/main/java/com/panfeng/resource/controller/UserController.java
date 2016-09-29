@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Role;
@@ -590,5 +591,22 @@ public class UserController extends BaseController {
 	@RequestMapping(value="/user/unique/username",method = RequestMethod.POST)
 	public boolean uniqueUserName(@RequestBody final User user, HttpServletRequest request) {
 		return userService.uniqueUserName(user);
+	}
+	/**
+	 * 验证手机号是否存在,不存在就更新
+	 */
+	@RequestMapping(value="/user/update/newphone",method = RequestMethod.POST)
+	public BaseMsg updateNewphone(@RequestBody final User user, HttpServletRequest request) {
+		//验证是否存在
+		final int count = userService.validationPhone(user.getTelephone(), null);
+		if (count > 0) {
+			return new BaseMsg(2,"手机号被占用");
+		}
+		//修改手机号
+		final long ret = userService.modifyUserPhone(user);
+		if (ret > 0) {
+			return new BaseMsg(3,"success");
+		}
+		return new BaseMsg(0,"error");
 	}
 }
