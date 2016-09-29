@@ -66,7 +66,7 @@ $().ready(function(){
 						editor:{
 							type:'combobox' , 
 							options:{
-								data:[{id:3 , val:'S'},{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'}] ,
+								data:[{id:'-1' , val:'未分级'},{id:3 , val:'S'},{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'}] ,
 								valueField:'id' , 
 								textField:'val' ,
 								required:true , 

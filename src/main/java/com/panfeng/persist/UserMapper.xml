@@ -51,6 +51,9 @@
 		<if test="userName != null and userName != ''">
 			AND u.USERNAME LIKE CONCAT(CONCAT('%',#{userName}),'%')
 		</if>
+		<if test="telephone != null and telephone != ''">
+			AND u.TELEPHONE LIKE CONCAT(CONCAT('%',#{telephone}),'%')
+		</if>
 		<if test="beginTime != null and beginTime != '' ">
 			<![CDATA[
 				AND DATE_FORMAT(u.FOLLOW_TIME,'%Y-%m-%d') >= #{beginTime}
@@ -92,7 +95,9 @@
 		<if test="userName != null and userName != ''">
 			AND u.USERNAME LIKE CONCAT(CONCAT('%',#{userName}),'%')
 		</if>
-		
+		<if test="telephone != null and telephone != ''">
+			AND u.TELEPHONE LIKE CONCAT(CONCAT('%',#{telephone}),'%')
+		</if>
 		<choose>
 			<when test="clientLevel == null">
 				AND u.clientLevel IS NULL
@@ -225,7 +230,9 @@
 		<if test="clientLevel != null">
 			 CLIENTLEVEL = ${clientLevel},
 		</if>
-		
+		<if test="clientLevel == -1">
+			 CLIENTLEVEL = NULL,
+		</if>
 		<if test="qqUnique != null and qqUnique != ''">
 			 QQUNIQUE = #{qqUnique},
 		</if>

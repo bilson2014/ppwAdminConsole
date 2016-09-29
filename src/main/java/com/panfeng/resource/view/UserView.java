@@ -8,7 +8,16 @@ public class UserView extends Pagination{
 	private Integer clientLevel = -1; // 客户分级
 	private String beginTime = null;
 	private String endTime = null;
+	private String telephone = null;
 	
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
 	public String getBeginTime() {
 		return beginTime;
 	}
