@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.MailMapper">
+	<select id="listWithPagination" resultType="Mail">
+		<![CDATA[
+			SELECT 
+				m.ID,m.SUBJECT,m.CONTENT,m.TYPE,m.CREATE_TIME,m.UPDATE_TIME
+			FROM MAIL m
+			WHERE 1 = 1
+		]]>
+		<![CDATA[
+			ORDER BY m.ID desc
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+	<select id="maxSize" resultType="long">
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM MAIL m
+			WHERE 1 = 1
+		]]>
+	</select>
+	
+	<insert id="save">
+		<![CDATA[
+			INSERT INTO ITEM(
+				ITEMNAME,
+				ITEMDESCRIPTION,
+				OD,
+				ISACTIVE
+			) VALUES(
+				#{itemName},
+				#{itemDescription},
+				${od},
+				${isActive}
+			)
+		]]>
+	</insert>
+	
+	<update id="update">
+		<![CDATA[
+			UPDATE ITEM
+				SET ITEMNAME = #{itemName},
+					ITEMDESCRIPTION = #{itemDescription},
+					OD = ${od},
+					ISACTIVE = ${isActive},
+					UPDATEDATE = CURRENT_TIMESTAMP
+			WHERE ITEMID = ${itemId}
+		]]>
+	</update>
+	
+	<delete id="delete">
+		<![CDATA[
+			DELETE FROM ITEM
+				WHERE ITEMID = ${itemId}
+		]]>
+	</delete>
+	
+	
+</mapper>
