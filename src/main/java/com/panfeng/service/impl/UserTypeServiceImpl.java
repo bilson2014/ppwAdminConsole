@@ -40,9 +40,9 @@ public class UserTypeServiceImpl implements UserTempService {
 					String filename = imgUrl.substring(imgUrl.lastIndexOf('/'), imgUrl.length());
 					userViewModel.setImgUrl("/employee/img" + filename);
 				} else
-					userViewModel.setImgUrl("/resources/img/flow/guanhead.png");
+					userViewModel.setImgUrl("/resources/images/flow/guanhead.png");
 			} else
-				userViewModel.setImgUrl("/resources/img/flow/guanhead.png");
+				userViewModel.setImgUrl("/resources/images/flow/guanhead.png");
 			// modify by wanglc 2016-7-18 13:59:19 视频管家为空 end
 			userViewModel.setUserType("内部员工");
 			userViewModel.setOrgName("");
@@ -57,7 +57,7 @@ public class UserTypeServiceImpl implements UserTempService {
 				String filename = teamimageUrl.substring(teamimageUrl.lastIndexOf('/'), teamimageUrl.length());
 				userViewModel.setImgUrl("/team/img/" + filename);
 			} else {
-				userViewModel.setImgUrl("/resources/img/flow/gonghead.png");
+				userViewModel.setImgUrl("/resources/images/flow/gonghead.png");
 			}
 			userViewModel.setUserType("供应商");
 			userViewModel.setOrgName(team.getTeamName());
@@ -73,12 +73,12 @@ public class UserTypeServiceImpl implements UserTempService {
 				String filename = userImageUrl.substring(userImageUrl.lastIndexOf('/'), userImageUrl.length());
 				userViewModel.setImgUrl("/user/img/" + filename);
 			} else {
-				userViewModel.setImgUrl("/resources/img/flow/kehead.png");
+				userViewModel.setImgUrl("/resources/images/flow/kehead.png");
 			}
 			userViewModel.setOrgName(user.getUserName());
 			break;
 		case GlobalConstant.ROLE_SYSTEM:
-			userViewModel.setImgUrl("/resources/img/flow/xitong.png");
+			userViewModel.setImgUrl("/resources/images/flow/xitong.png");
 			userViewModel.setUserName("系统");
 			userViewModel.setUserType("系统");
 			userViewModel.setOrgName("");
