@@ -126,4 +126,5 @@ public interface ProductService {
 
 	public Product getMasterWork(long teamId);
 
+	public List<Product> loadActivityProducts();
 }

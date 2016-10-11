@@ -749,4 +749,10 @@ public class ProductController extends BaseController {
 		Log.error("set masterWork ... ",sessionInfo);
 		return product;
 	}
+	// 活动页面作品列表
+	@RequestMapping(value = "/activity")
+	public List<Product> loadActivityProducts(){
+		return proService.loadActivityProducts();
+	}
+	
 }
