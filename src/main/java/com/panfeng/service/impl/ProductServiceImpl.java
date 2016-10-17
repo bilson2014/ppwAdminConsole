@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.panfeng.dao.PortalVideoDao;
+import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.ProductMapper;
 import com.panfeng.persist.ServiceMapper;
 import com.panfeng.persist.TeamMapper;
@@ -247,6 +248,16 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Product getMasterWork(long teamId) {
 		return mapper.getMasterWork(teamId);
+	}
+
+	public List<Product> loadActivityProducts() {
+		String product_ids = GlobalConstant.ACTIVITY_PRODUCT_IDS;
+		String[] ids = product_ids.split("\\|");
+		long[] lids = new long[ids.length];
+		for (int i = 0; i < ids.length; i++) {
+			lids[i] = Long.parseLong(ids[i]);
+		}
+		return mapper.findProductByIds(lids);
 	}
 
 }
