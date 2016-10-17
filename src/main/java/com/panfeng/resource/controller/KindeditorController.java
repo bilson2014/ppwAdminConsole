@@ -40,6 +40,9 @@ public class KindeditorController extends BaseController {
 		return kindeditorService.createMsg(result, Constants.MSG_SUCCESS);
 	}
 	
+	
+	
+	
 	@RequestMapping(value = "/kindeditor/delete/{sessionId}")
 	public boolean delete(@PathVariable("sessionId") final String sessionid) {
 		if (sessionid != null &&!"".equals(sessionid))

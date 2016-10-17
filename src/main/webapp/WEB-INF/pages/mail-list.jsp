@@ -2,12 +2,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="r" uri="/mytaglib" %>
 
-<%-- <spring:url value="/resources/css/product-list.css" var="productListCss" /> --%>
 <spring:url value="/resources/lib/kindeditor/themes/default/default.css" var="defaultCss" />
 <spring:url value="/resources/lib/kindeditor/plugins/code/prettify.css" var="prettifyCss" />
 <%-- import JS --%>
 <spring:url value="/resources/lib/jquery/jquery.base64.js" var="jquerybase64Js" />
-<%-- <spring:url value="/resources/js/youku-player.js" var="youkuJs" /> --%>
 <spring:url value="/resources/js/mail-list.js" var="mailListJs" />
 <spring:url value="/resources/lib/kindeditor/kindeditor-all-min.js" var="kindeditorJs" />
 <spring:url value="/resources/lib/kindeditor/plugins/code/prettify.js" var="prettifyJs" />
@@ -24,13 +22,10 @@
 <jsp:include page="common.jsp" />
 <link rel="stylesheet" href="${defaultCss }">
 <link rel="stylesheet" href="${prettifyCss }">
-<%-- <link rel="stylesheet" href="${productListCss }"> --%>
-<!-- <script type="text/javascript" src="http://player.youku.com/jsapi"></script> -->
 <script src="${jquerybase64Js }"></script>
 <script src="${kindeditorJs }"></script>
 <script src="${prettifyJs }"></script>
 <script src="${kindeditorzhJs }"></script>
-<%-- <script src="${youkuJs }"></script> --%>
 <script src="${mailListJs }"></script>
 <script src="${WdatePickerJs }" ></script>
 </head>
@@ -39,7 +34,7 @@
 	<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
 		<form id="searchForm">
 			<table>
-				<tr>
+				<!-- <tr>
 					<th>上传时间:</th>
 					<td>
 						<input name="beginTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />~
@@ -50,7 +45,7 @@
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 					</td>
-				</tr>
+				</tr> -->
 			</table>
 		</form>
 	</div>
@@ -84,141 +79,34 @@
 		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 500px;"
             closed="true" buttons="#dlg-buttons" title="作品信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
-	        	<input id="productId" name="productId" type="hidden">
-	        	<input id="sessionId" name="sessionId" type="hidden">
-	        	
+	        	<input id="mailId" name="id" type="hidden">
 	            <div class="online">
-					<div class="lable l-width">项目名称</div>
+					<div class="lable l-width">邮件标题</div>
 					<div class="d-float f-width">
-						<input id="productName" name="productName" class="easyui-textbox" required="true" />
+						<input id="subject" name="subject" class="easyui-textbox" required="true" />
 					</div>
 				</div>
-				
 				<div class="online">
-					<div class="lable l-width">项目类型</div>
-					<div class="d-float f-width1">
-						<input id="productType" name="productType" class="p-textbox-small" style="width: 144px;height: 30px;"/>
-					</div>
-					<div class="lable-right l-width">所属团队</div>
-					<div class="d-float f-width1">
-						<input id="teamId" name="teamId" class="p-textbox-small" style="width: 144px;height: 30px;"/>
+					<div class="lable l-width">邮件类型</div>
+					<div class="d-float f-width">
+						<input id="mailType" name="mailType" class="easyui-textbox" required="true" />
 					</div>
 				</div>
-				
 				<div class="textarea-position">
-					<div class="lable l-width">项目描述</div>
-					<textarea class="easyui-textbox" id="pDescription" name="pDescription" multiline="true" style="height: 50px;"></textarea>
-				</div>
-				
-				<div class="online">
-					<div class="lable l-width">展示图文</div>
-					<div class="d-float f-width1">
-						<select name="showType" class="easyui-combobox" editable="false">
-							<option value="1" selected>展示</option>
-							<option value="0">不展示</option>
-						</select>
-					</div>
-					<div class="lable-right l-width">视频长度</div>
-					<div class="d-float f-width1">
-						<input id="videoLength" name="videoLength" class="easyui-numberbox" required="true" precision="0"/>
-					</div>
-				</div>
-				
-				<div class="online">
-					<div class="lable l-width">推荐值</div>
-					<div class="d-float f-width1">
-						<input id="recommend" name="recommend" class="easyui-numberbox" style="width: 141px" required="true" precision="0" />
-					</div>
-					<div class="lable-right l-width">创作时间</div>
-					<div class="d-float f-width1">
-						<input class="textbox" name="creationTime" id = "creationTime" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly"/>
-					</div>
-				</div>
-				
-				<div class="online">
-					<div class="lable l-width">视频文件</div>
-					<div class="d-float f-width">
-						<input type="file" id="videoFile" name="uploadFiles" class="p-file" />
-					</div>
-				</div>
-				
-				
-				<div class="online">
-					<div class="lable l-width">缩略图</div>
-					<div class="d-float f-width">
-						<input type="file" id="picHDFile" name="uploadFiles" class="p-file" />
-					</div>
-				</div>
-				
-				<div class="online">
-					<div class="lable l-width">封面图片</div>
-					<div class="d-float f-width">
-						<input type="file" id="picLDFile" name="uploadFiles" class="p-file" />
-					</div>
-				</div>
-				
-				<div class="online">
-					<div class="lable l-width">标签</div>
-					<div class="d-float f-width1">
-						<input type="text" id="tags" name="tags" class="easyui-textbox" />
-					</div>
-					
-					<div class="lable-right l-width">赞值</div>
-					<div class="d-float f-width1">
-						<input id="supportCount" name="supportCount" class="easyui-numberbox" required="true" precision="0" />
-					</div>
-				</div>
-				
-				<div class="online">
-					<div class="lable l-width">外链</div>
-					<div class="d-float f-width">
-						<input type="text" id="hret" name="hret" class="easyui-textbox" />
-					</div>
-				</div>
-				
-				<div class="online">
-					<div class="lable l-width">审核状态</div>
-					<div class="d-float f-width">
-						<select id="flag" name="flag" class="easyui-combobox" editable="false" required="true">
-							<option value="0">审核中</option>
-							<option value="1" selected>审核通过</option>
-							<option value="2">未通过审核</option>
-						</select>
-					</div>
-				</div>
-				
-				<div class="textarea-position">
-					<div class="lable l-width">视频描述</div>
-					<!-- <textarea class="ta-content" id="videoDescription" name="videoDescription" ></textarea> -->
-					<input name="videoDescription" class="ta-content" />
+					<div class="lable l-width">邮件内容</div>
+					<input name="content" class="ta-content" required="true" />
 				</div>
 	            
 	        </form>
 	    </div>
 	    <div id="dlg-buttons">
 	    
-	    	<r:mulparampermission uri2="/portal/product/save" uri="/portal/product/update">
+	    	<r:mulparampermission uri2="/portal/mail/save" uri="/portal/mail/update">
 		        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="save()" >保存</a>
 	    	</r:mulparampermission>
 	    	
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
 	    
-	    <!-- image/video show content begin-->
-		<div id="picture-condition" class="picture-condition hide">
-			<div class="picture-modalDialog">
-				<div class="picture-condition-body">
-					<div class="operation-panel">
-						<img id="productPicture" src="" style="height: 360px;width: 640px;" class="hide" >
-						<video style="height: 360px;width: 640px" id="productVideo" class="hide" controls="controls" src=""></video>
-						<div id="youku-player" style="height: 360px;width: 640px;display: none;"></div>
-						<div class="p-label">
-							<a href="#" class="button p-submit" id="p-cancel">取消</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- image/video show content end-->
 </body>
 </html>

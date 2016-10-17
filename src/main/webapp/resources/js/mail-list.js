@@ -4,7 +4,7 @@ var datagrid;
 var sessionId;
 var editor;
 $.base64.utf8encode = true;
-editorBeReady("videoDescription");
+editorBeReady("content");
 $().ready(function(){
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -25,9 +25,9 @@ $().ready(function(){
 						width : 150,
 						align : 'center' ,
 					},{
-						field : 'type',
+						field : 'mailType',
 						title : '邮件类型',
-						width : 60,
+						width : 150,
 						align : 'center' ,
 					},{
 						field : 'createTime' ,
@@ -47,7 +47,6 @@ $().ready(function(){
 		showFooter : false,
 		toolbar : '#toolbar',
 	});
-	product.initData();
 });
 function editorBeReady(valueName){
 	var name='input[name="'+valueName+'"]';
@@ -76,35 +75,25 @@ function createEditor(name){
 	var iframe = editor.edit.iframe.get(); //此时为iframe对象
 	var iframe_body = iframe.contentWindow.document.body;
 	KindEditor.ctrl(iframe_body, 'S', function() {
-		var productId=$('#productId').val().trim();
+		var mailId=$('#mailId').val().trim();
 		$.base64.utf8encode = true;
-		
-		var videoDescription= $.base64.btoa(editor.html());
-		loadData(function(){
+		var content= $.base64.btoa(editor.html());
+		/*loadData(function(){
 			ls = datagrid.datagrid('getSelections');
-			ls[0].videoDescription = videoDescription;
-		}, getContextPath() + '/portal/product/saveVideoDescription', $.toJSON({
-			'productId' : productId,
-			'videoDescription' : videoDescription
-		}));
+			ls[0].content = content;
+		}, getContextPath() + '/portal/product/saveContent', $.toJSON({
+			'mailId' : mailId,
+			'content' : content	
+		}));*/
 	});
 }
 
 //增加
 function addFuc(){
 	$('#fm').form('clear');
-	formUrl = getContextPath() + '/portal/product/save';
-	// 新增时，首先获取SESSIONID
-	loadData(function(pData){
-		
-		sessionId = pData.sessionId;
-		$('input[name="sessionId"]').val(sessionId);
-		
-		openDialog(null);
-		
-	}, getContextPath() + '/portal/product/sessionId', null);
-	
-	$('input[name="productId"]').val(0);
+	formUrl = getContextPath() + '/portal/mail/save';
+	openDialog(null);
+	$('#mailId').val(0);
 }
 
 // 修改
@@ -115,13 +104,10 @@ function editFuc(){
 		$('#fm').form('load',rows[0]);
 		// 回显编辑器
 		$.base64.utf8encode = true;
-		var html=$.trim($.base64.atob($.trim(rows[0].videoDescription),true));
+		var html=$.trim($.base64.atob($.trim(rows[0].content),true));
 		editor.html(html);
-		
-		formUrl = getContextPath() + '/portal/product/update';
-		
+		formUrl = getContextPath() + '/portal/mail/update';
 		openDialog(rows[0]);
-		
 	} else {
 		$.message('只能选择一条记录进行修改!');
 	}
@@ -137,10 +123,10 @@ function delFuc(){
 			if(r){
 				var ids = '';
 				for(var i = 0 ; i < arr.length ; i++){
-					ids += arr[i].productId + ',';
+					ids += arr[i].id + ',';
 				}
 				ids = ids.substring(0,ids.length-1);
-				$.post(getContextPath() + '/portal/product/delete', {ids:ids},function(result){
+				$.post(getContextPath() + '/portal/mail/delete', {ids:ids},function(result){
 					
 					// 刷新数据
 					datagrid.datagrid('clearSelections');
@@ -165,9 +151,8 @@ function cancelFuc(){
 function save(){
 	progressLoad();
 	$.base64.utf8encode = true;
-	var videoDescription= $.base64.btoa(editor.html());
-	$('input[name="videoDescription"]').val(videoDescription);
-	
+	var content= $.base64.btoa(editor.html());
+	$('input[name="content"]').val(content);
 	$('#fm').form('submit',{
 		url : formUrl,
 		onSubmit : function() {
@@ -189,39 +174,18 @@ function save(){
 
 function openDialog(data){
 	$('#dlg').dialog({
-		title : '作品信息',
+		title : '邮件信息',
 		modal : true,
 		width : 520,
 		height : 500,
 		onOpen : function(event, ui) {
-			
-			$('#teamId').combobox({
-				url : getContextPath() + '/portal/product/init',
-				valueField : 'teamId',
-				textField : 'teamName'
-			});
-			
-			$('#productType').combobox({
-				url : getContextPath() + '/portal/item/itemSelect',
-				valueField : 'itemId',
-				textField : 'itemName'
-			});
-			
-			if(data == null){
-				$('#productType').combobox('setValue','');
-				$('#teamId').combobox('setValue','');
-			}else {
-				$('#productType').combobox('setValue',data.productType);
-				$('#teamId').combobox('setValue',data.teamId);
-			}
-			
-			KindEditor.remove('input[name="videoDescription"]');
+			KindEditor.remove('input[name="content"]');
 			// 打开Dialog后创建编辑器
-			createEditor('input[name="videoDescription"]');
+			createEditor('input[name="content"]');
 		},
 		onBeforeClose: function (event, ui) {
 			// 关闭Dialog前移除编辑器
-			KindEditor.remove('input[name="videoDescription"]');
+			KindEditor.remove('input[name="content"]');
 		}
 	}).dialog('open').dialog('center');
 }
