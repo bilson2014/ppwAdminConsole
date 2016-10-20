@@ -28,6 +28,7 @@ import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
 import com.panfeng.resource.model.Synergy;
+import com.panfeng.resource.model.User;
 import com.panfeng.resource.model.UserViewModel;
 import com.panfeng.resource.view.IndentProjectView;
 import com.panfeng.service.DealLogService;
@@ -37,6 +38,7 @@ import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.SynergyService;
+import com.panfeng.service.UserService;
 import com.panfeng.service.UserTempService;
 import com.panfeng.util.PathFormatUtils;
 import com.panfeng.util.ValidateUtil;
@@ -67,10 +69,15 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Autowired
 	final EmployeeService employeeService = null;
+
 	@Autowired
 	DealLogService dealLogService;
+
 	@Autowired
 	IndentResourceService indentResourceService;
+
+	@Autowired
+	UserService userService;
 
 	@Override
 	public boolean save(IndentProject indentProject) {
@@ -501,23 +508,29 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		// 构造查询数据源
 		List<IndentResource> fileList = indentResourceService.findIndentList(indentProject);
 		IndentProject ip = getRedundantProject(indentProject);
+		Boolean skipay = indentProject.getSkipPay();
+		ip.setTask(indentProject.getTask());
+		if (skipay != null) {
+			ip.setSkipPay(skipay);
+		}
 		Map<String, String> pram = new HashMap<>();
 		pram.put("userid", ip.getUserId() + "");
 		pram.put("userType", ip.getUserType());
 		pram.put("projectId", ip.getId() + "");
 		List<DealLog> deals = dealLogService.getDealLogByProject(pram);
 		boolean flag = false;
+		boolean isSUser = isSLevel(ip);
 		for (int i = (stepText.size() - 1); i > -1; i--) {
 			if (flag) {
 				Map<String, Boolean> r = execute(fileList, ip, deals, stepText.get(i));
 				if (ValidateUtil.isValid(r)) {
-					html += buildHtml(r, 2);
+					html += buildHtml(r, 2, isSUser, indentProject);
 				}
 			}
 			if (stepText.get(i).equals(indentProject.getTask().getName())) {
 				Map<String, Boolean> r = execute(fileList, ip, deals, stepText.get(i));
 				if (ValidateUtil.isValid(r)) {
-					html += buildHtml(r, 1);
+					html += buildHtml(r, 1, isSUser, indentProject);
 				}
 				flag = true;
 			}
@@ -533,7 +546,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	 * @param buildType
 	 * @return
 	 */
-	private String buildHtml(Map<String, Boolean> res, int buildType) {
+	private String buildHtml(Map<String, Boolean> res, int buildType, boolean isSuser, IndentProject indentProject) {
 		StringBuilder stringBuilder = new StringBuilder();
 		switch (buildType) {
 		case 1:
@@ -552,14 +565,27 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 					stringBuilder.append("√");
 				} else {
 					stringBuilder.append("<div class = 'infoimgG'>");
-					stringBuilder.append("X");
-					iok = false;
+					if (stepText.get(2).equals(indentProject.getTask().getName()) && key.equals("有支付完成订单")) {
+						if (isSuser) {
+							if (indentProject.getSkipPay() != null ? indentProject.getSkipPay() : false) {
+							} else {
+								stringBuilder.append("<a onclick='nextFlow2()'><div>延迟付款</div></a>");
+								iok = false;
+							}
+						} else {
+							stringBuilder.append("X");
+							iok = false;
+						}
+					} else {
+						stringBuilder.append("X");
+						iok = false;
+					}
 				}
 				stringBuilder.append("</div>");
 				stringBuilder.append("</li>");
 				index++;
 			}
-			if (iok)
+			if (iok) // 如果全数通过，则返回""
 				stringBuilder.delete(0, stringBuilder.length());
 			break;
 		case 2:
@@ -604,10 +630,32 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			file.add(fileType.PaiQiBiao);
 			break;
 		case "商务":
-			// 商务
+			String shangwu = stepText.get(2);
+			// 查询用户级别
+
+			if (isSLevel(ip)) {
+				// S级别用户特殊对待
+				if (ip.getTask().getName().equals(shangwu)) {
+					// 身为s用户有权利跳过（只在商务阶段检测 延迟付款 ）
+					if (ip.getSkipPay() != null ? ip.getSkipPay() : false) {
+						info.add(InfoType.customerPayment);
+						info.add(InfoType.priceFinish);
+					} else {
+						pay.add(PayType.payFinish);
+						info.add(InfoType.customerPayment);
+						info.add(InfoType.priceFinish);
+					}
+				} else {
+					// 不是商务步骤，不检测S级别客户的支付情况
+					info.add(InfoType.customerPayment);
+					info.add(InfoType.priceFinish);
+				}
+				break;
+			}
+			// 苦逼的小白
+			pay.add(PayType.payFinish);
 			info.add(InfoType.customerPayment);
 			info.add(InfoType.priceFinish);
-			pay.add(PayType.payFinish);
 			break;
 		case "制作":
 			// 制作
@@ -639,6 +687,13 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			}
 		}
 		return res;
+	}
+
+	private boolean isSLevel(IndentProject indentProject) {
+		Long userId = indentProject.getCustomerId();
+		User user = userService.findUserById(userId);
+		int userClientLevel = user.getClientLevel();
+		return userClientLevel == User.S;
 	}
 
 	/**

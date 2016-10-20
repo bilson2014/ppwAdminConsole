@@ -259,6 +259,7 @@ public class IndentProject extends BaseObject {
 	private UserViewModel userViewModel = null;
 	private List<ActivitiTask> nodes = null;
 	private Long masterFlowId = null;
+	private Boolean skipPay = null;
 
 	public String getFdStartTime() {
 		return fdStartTime;
@@ -372,4 +373,12 @@ public class IndentProject extends BaseObject {
 		this.projectId = projectId;
 	}
 
+	public Boolean getSkipPay() {
+		return skipPay;
+	}
+
+	public void setSkipPay(Boolean skipPay) {
+		this.skipPay = skipPay;
+	}
+	
 }
