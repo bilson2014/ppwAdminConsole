@@ -91,6 +91,8 @@ public class Team extends Customer {
 	private String teamProvinceName = null;// 省名
 	
 	private String teamCityName = null; // 城市名
+	//是否需要再次审核
+	private Boolean auditing = false;
 	
 	
 	public String getTeamProvinceName() {
@@ -139,6 +141,13 @@ public class Team extends Customer {
 
 	public void setTeamName(String teamName) {
 		this.teamName = teamName;
+	}
+	public Boolean getAuditing() {
+		return auditing;
+	}
+
+	public void setAuditing(Boolean auditing) {
+		this.auditing = auditing;
 	}
 
 	public String getTeamPhotoUrl() {

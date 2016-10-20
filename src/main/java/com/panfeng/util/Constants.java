@@ -2,6 +2,8 @@ package com.panfeng.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -33,7 +35,12 @@ public final class Constants {
 	
 	public final static int INVOICE_STATUS_OK = 1;
 	public final static int INVOICE_STATUS_NO = 2;
-
+	//价格区间
+	public  static  Map<String,String> PRICE_RANGE_MAP ;
+	//获知渠道
+	public  static  Map<String,String> INFO_RESOURCE_MAP ;
+	//业务范围
+	public  static  Map<String,String> BUSINESS_MAP ;
 	private Constants() {
 		load();
 	}
@@ -73,7 +80,52 @@ public final class Constants {
 		PDF2HTML = properties.getProperty("pdf2html");
 		OFFICEHOME = properties.getProperty("officehome");
 		COOKIES_SCOPE = properties.getProperty("cookies_scope");
+		
+		PRICE_RANGE_MAP =  new LinkedHashMap<String,String>();
+		//获知渠道
+		INFO_RESOURCE_MAP =  new LinkedHashMap<String,String>();
+		//业务范围
+		BUSINESS_MAP =  new LinkedHashMap<String,String>();
+		
+		PRICE_RANGE_MAP.put("0", "看情况");
+		PRICE_RANGE_MAP.put("1", "1万元及以上");
+		PRICE_RANGE_MAP.put("2", "2万元及以上");
+		PRICE_RANGE_MAP.put("3", "3万元及以上");
+		PRICE_RANGE_MAP.put("4", "5万元及以上");
+		PRICE_RANGE_MAP.put("5", "10万元及以上");
+		
+		
+		INFO_RESOURCE_MAP.put("0", "友情推荐");
+		INFO_RESOURCE_MAP.put("1", "网络搜索");
+		INFO_RESOURCE_MAP.put("2", "拍片帮");
+		INFO_RESOURCE_MAP.put("3", "拍片网");
+		INFO_RESOURCE_MAP.put("4", "电销");
+		
+		BUSINESS_MAP.put("0", "广告");
+		BUSINESS_MAP.put("1", "宣传片");
+		BUSINESS_MAP.put("2", "真人秀");
+		BUSINESS_MAP.put("3", "纪录片");
+		BUSINESS_MAP.put("4", "病毒视频");
+		BUSINESS_MAP.put("5", "电视栏目");
+		BUSINESS_MAP.put("6", "三维动画");
+		BUSINESS_MAP.put("7", "MG动画");
+		BUSINESS_MAP.put("8", "体育赛事");
+		BUSINESS_MAP.put("9", "专题片");
+		BUSINESS_MAP.put("10", "VR拍摄");
+		BUSINESS_MAP.put("11", "产品拍摄");
+		BUSINESS_MAP.put("12", "微电影");
+		BUSINESS_MAP.put("13", "航拍");
+		BUSINESS_MAP.put("14", "活动视频");
+		BUSINESS_MAP.put("15", "后期制作");
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 登录方式
 	 */
@@ -107,5 +159,6 @@ public final class Constants {
 		}
 	}
 
+	
 
 }

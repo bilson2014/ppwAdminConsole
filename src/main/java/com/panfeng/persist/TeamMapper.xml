@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panfeng.persist.TeamMapper">
 
-	<cache />
+	<!-- <cache /> -->
 
 	<select id="listWithPagination" resultType="Team">
 		<![CDATA[
@@ -293,8 +293,12 @@
 				   t.ADDRESS AS address,
 				   t.LOGINNAME AS loginName,
 				   t.TEAMCITY AS teamCity,
-				   t.TEAMPROVINCE AS teamProvince
+				   t.TEAMPROVINCE AS teamProvince,
+				   p.PROVINCE AS teamProvinceName,
+				   c.CITY AS teamCityName 
 			FROM TEAM t
+			LEFT JOIN  PROVINCE p ON t.TEAMPROVINCE = p.provinceID 
+			LEFT JOIN CITY c ON t.TEAMCITY = c.cityID	 
 			WHERE TEAMID = ${teamId}
 		]]>
 	</select>
@@ -600,6 +604,38 @@
 			WHERE TEAMID = ${teamId}
 		]]>
 	</select>
-	
-	
+	<update id="updateTeamDescription">
+		UPDATE TEAM SET description = #{description} WHERE TEAMID = ${teamId}
+	</update>
+	<select id="getLatestTmpByTeamId" resultType="Team">
+		<![CDATA[
+			SELECT 
+				tt.id,	
+				tt.TEAM_ID teamId,
+				tt.TEAM_NAME teamName,
+				tt.LINKMAN linkMan,
+				tt.WEBCHAT webchat,
+				tt.QQ qq,
+				tt.EMAIL email,
+				tt.ADDRESS address,
+				tt.TEAM_PROVINCE teamProvince,
+				tt.TEAM_CITY teamCity,
+				tt.PRICE_RANGE priceRange,
+				tt.INFO_RESOURCE infoResource,
+				tt.BUSINESS business,
+				tt.TEAM_DESCRIPTION teamDescription,
+				tt.SCALE scale ,
+				tt.DEMAND demand,
+				tt.ESTABLISHDATE establishDate,
+				tt.OFFICIALSITE officialSite,
+				tt.BUSINESS_DESCRIPTION businessDesc,
+				t.TEAMPHOTOURL teamPhotoUrl,
+				t.PHONENUMBER phoneNumber,
+				t.RECOMMENDATION recommendation,
+				t.DESCRIPTION description
+			 FROM TEAM_TMP tt
+			 LEFT JOIN TEAM t ON tt.TEAM_ID = t.TEAMID
+			 WHERE TEAM_ID = ${teamId} AND STATUS = 1
+		]]>
+	</select>
 </mapper>

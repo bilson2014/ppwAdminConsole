@@ -911,5 +911,44 @@ public class TeamController extends BaseController {
 		}
 		return  new BaseMsg(0,"error");
 	}
-
+	/**
+	 * 处理team临时表,更新team备注
+	 * @param team
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/team/deal/teamTmpAndTeamDesc")
+	public boolean dealTeamTmpAndUpdateTeamDesc(@RequestBody Team team,HttpServletRequest request) {
+		try {
+			if(null != team){
+				String description = null == team.getDescription()?"":team.getDescription();
+				team.setDescription(description);
+				//更新备注信息
+				service.updateTeamDescription(team);
+				service.dealTeamTmp(team);
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * 根据 团队ID 获取团队信息
+	 * 
+	 * @param teamId
+	 *            团队唯一编号
+	 * @return 团队信息
+	 */
+	@RequestMapping("/team/static/latest/{teamId}")
+	public Team loadLatestData(@PathVariable("teamId") final Long teamId) {
+		final Team team = service.findLatestTeamById(teamId);
+		team.setPassword(null);
+		return team;
+	}
+	
+	
 }
