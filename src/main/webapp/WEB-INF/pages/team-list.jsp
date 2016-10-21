@@ -116,7 +116,7 @@
 	            	</tr>
 	            	<tr>
 	            		<th >登录名</th>
-	            		<td><input name="loginName" validtype="vLoginName" class="easyui-validatebox textbox" id="loginName" required="true"></td>
+	            		<td><input name="loginName" validtype="vLoginName" class="easyui-validatebox textbox" id="loginName"></td>
 	            		<th>审核状态</th>
 	            		<td>
 	            			<select id="flag" name="flag" class="easyui-combobox" style="width: 150px;height:28px;line-height: 28px;" required="true" editable="false">

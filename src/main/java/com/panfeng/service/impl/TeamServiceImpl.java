@@ -467,7 +467,6 @@ public class TeamServiceImpl implements TeamService {
 		if(null != list && list.size() > 0){
 			//返回供应商最新信息
 			Team team = mapper.getLatestTmpByTeamId(teamId);
-			team.setAuditing(true);
 			return team;
 		}else{
 			//返回team信息
