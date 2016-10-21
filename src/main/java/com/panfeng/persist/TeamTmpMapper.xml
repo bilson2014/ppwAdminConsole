@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.TeamTmpMapper">
+
+
+
+
+
+
+	<select id="listWithPagination" resultType="TeamTmp">
+		<![CDATA[
+			SELECT tt.ID,tt.TEAM_ID teamId,
+		           tt.TEAM_NAME teamName,tt.LINKMAN linkMan,
+		           tt.WEBCHAT webchat,tt.QQ qq,tt.EMAIL email,
+		           tt.ADDRESS address,tt.TEAM_PROVINCE teamProvince,
+		           tt.TEAM_CITY teamCity,tt.PRICE_RANGE  priceRange,
+		           tt.INFO_RESOURCE infoResource,tt.BUSINESS business,
+		           tt.TEAM_DESCRIPTION teamDescription,tt.SCALE scale,
+		           tt.DEMAND demand,tt.CREATE_TIME createTime,tt.STATUS `status`,
+		           tt.CHECK_STATUS checkStatus,tt.CHECK_DETAILS checkDetails,
+		           tt.ESTABLISHDATE establishDate,tt.OFFICIALSITE officialSite,
+		           tt.BUSINESS_DESCRIPTION businessDescription,
+		           p.PROVINCE AS teamProvinceName,
+		           c.CITY AS teamCityName 
+			FROM TEAM_TMP tt
+			LEFT JOIN  PROVINCE p ON tt.TEAM_PROVINCE = p.provinceID 
+			LEFT JOIN CITY c on tt.TEAM_CITY = c.cityID
+			WHERE 1 = 1 AND tt.STATUS = 1 AND tt.CHECK_STATUS <> 1
+		]]>
+		<![CDATA[
+			ORDER BY tt.ID desc
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+	<select id="maxSize" resultType="long">
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM TEAM_TMP tt
+			WHERE 1 = 1  AND tt.STATUS = 1 AND tt.CHECK_STATUS <> 1
+		]]>
+	</select>
+
+
+	<update id="delTeamMapperByTeamId">
+		<![CDATA[
+			UPDATE TEAM_TMP SET STATUS = 0 WHERE TEAM_ID = #{teamId}
+		]]>
+	</update>
+
+	<insert id="addTeamTmp" useGeneratedKeys="true" keyProperty="id"
+		parameterType="TeamTmp">
+		<![CDATA[
+			INSERT INTO TEAM_TMP (
+				TEAM_ID ,
+				TEAM_NAME ,
+				LINKMAN ,
+				WEBCHAT,
+				QQ,
+				EMAIL,
+				ADDRESS,
+				TEAM_PROVINCE,
+				TEAM_CITY,
+				PRICE_RANGE,
+				INFO_RESOURCE,
+				BUSINESS,
+				TEAM_DESCRIPTION,
+				SCALE,
+				DEMAND,
+				CREATE_TIME,
+				STATUS,
+				CHECK_STATUS,
+				CHECK_DETAILS,
+				ESTABLISHDATE,
+				OFFICIALSITE,
+				BUSINESS_DESCRIPTION
+			) VALUES (
+				${teamId},
+				#{teamName},
+				#{linkMan},
+				#{webchat},
+				#{qq},
+				#{email},
+				#{address},
+				#{teamProvince},
+				#{teamCity},
+				#{priceRange},
+				#{infoResource},
+				#{business},
+				#{teamDescription},
+				#{scale},
+				#{demand},
+				CURRENT_TIMESTAMP,
+				#{status},
+				#{checkStatus},
+				#{checkDetails},
+				#{establishDate},
+				#{officialSite},
+				#{businessDescription}
+			)
+		]]>
+	</insert>
+	
+	<select id="getTeamTmpById" resultType="TeamTmp">
+		<![CDATA[
+			SELECT 
+				id,
+				TEAM_ID teamId,
+				TEAM_NAME teamName,
+				LINKMAN linkMan,
+				WEBCHAT webchat,
+				QQ qq,
+				EMAIL email,
+				ADDRESS address,
+				TEAM_PROVINCE teamProvince,
+				TEAM_CITY teamCity,
+				PRICE_RANGE priceRange,
+				INFO_RESOURCE infoResource,
+				BUSINESS business,
+				TEAM_DESCRIPTION teamDescription,
+				SCALE scale ,
+				DEMAND demand,
+				CREATE_TIME createTime,
+				`STATUS` `status`,
+				CHECK_STATUS checkStatus ,
+				CHECK_DETAILS checkDetails,
+				ESTABLISHDATE establishDate,
+				OFFICIALSITE officialSite,
+				BUSINESS_DESCRIPTION businessDescription
+			 FROM TEAM_TMP
+			 WHERE id = ${id}
+		]]>
+	</select>
+	<select id="getTeamTmpByTeamId" resultType="TeamTmp">
+		<![CDATA[
+			SELECT 
+				tt.id,
+				TEAM_ID teamId,
+				TEAM_NAME teamName,
+				LINKMAN linkMan,
+				WEBCHAT webchat,
+				QQ qq,
+				EMAIL email,
+				ADDRESS address,
+				TEAM_PROVINCE teamProvince,
+				TEAM_CITY teamCity,
+				PRICE_RANGE priceRange,
+				INFO_RESOURCE infoResource,
+				BUSINESS business,
+				TEAM_DESCRIPTION teamDescription,
+				SCALE scale ,
+				DEMAND demand,
+				CREATE_TIME createTime,
+				`STATUS` `status`,
+				CHECK_STATUS checkStatus ,
+				CHECK_DETAILS checkDetails,
+				ESTABLISHDATE establishDate,
+				OFFICIALSITE officialSite,
+				BUSINESS_DESCRIPTION businessDescription,
+				p.PROVINCE AS teamProvinceName,
+				c.CITY AS teamCityName 
+			 FROM TEAM_TMP tt
+			 LEFT JOIN  PROVINCE p ON tt.TEAM_PROVINCE = p.provinceID 
+			LEFT JOIN CITY c ON tt.TEAM_CITY = c.cityID
+			 WHERE TEAM_ID = ${teamId} AND STATUS = 1
+			 ORDER BY id desc
+		]]>
+	</select>
+	<select id="doesHaveLatestEnableTmpByTeamId" resultType="TeamTmp">
+		<![CDATA[
+			SELECT 
+				tt.id,
+				TEAM_ID teamId,
+				TEAM_NAME teamName,
+				LINKMAN linkMan,
+				WEBCHAT webchat,
+				QQ qq,
+				EMAIL email,
+				ADDRESS address,
+				TEAM_PROVINCE teamProvince,
+				TEAM_CITY teamCity,
+				PRICE_RANGE priceRange,
+				INFO_RESOURCE infoResource,
+				BUSINESS business,
+				TEAM_DESCRIPTION teamDescription,
+				SCALE scale ,
+				DEMAND demand,
+				CREATE_TIME createTime,
+				`STATUS` `status`,
+				CHECK_STATUS checkStatus ,
+				CHECK_DETAILS checkDetails,
+				ESTABLISHDATE establishDate,
+				OFFICIALSITE officialSite,
+				BUSINESS_DESCRIPTION businessDescription
+			 FROM TEAM_TMP tt
+			 WHERE TEAM_ID = ${teamId} AND STATUS = 1 AND CHECK_STATUS = 0
+			 ORDER BY id desc
+		]]>
+	</select>
+	<update id="updateTeamTmpCheck">
+		<![CDATA[
+			UPDATE TEAM_TMP SET
+				CHECK_STATUS = ${checkStatus},
+				CHECK_DETAILS = #{checkDetails}
+			WHERE ID = ${id}
+		]]>
+	</update>
+</mapper>

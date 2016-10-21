@@ -167,4 +167,13 @@ public interface TeamService {
 	
 	public List<String> getTags(List<Integer> ids);
 
+	/**
+	 * 更新供应商备注信息
+	 */
+	public long updateTeamDescription(Team team);
+
+	public void dealTeamTmp(Team team);
+
+	public Team findLatestTeamById(Long teamId);
+
 }

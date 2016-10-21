@@ -124,4 +124,10 @@ public interface TeamMapper {
 	 * @return
 	 */
 	public Team getTeamInfo(@Param("teamId") long teamId);
+
+	public long updateTeamDescription(Team team);
+	/**
+	 * 查询供应商最新信息(未审核);
+	 */
+	public Team getLatestTmpByTeamId(@Param("teamId") long teamId);
 }
