@@ -192,7 +192,7 @@
 				OFFICIALSITE officialSite,
 				BUSINESS_DESCRIPTION businessDescription
 			 FROM TEAM_TMP tt
-			 WHERE TEAM_ID = ${teamId} AND STATUS = 1 AND CHECK_STATUS = 0
+			 WHERE TEAM_ID = ${teamId} AND STATUS = 1 AND CHECK_STATUS <> 1
 			 ORDER BY id desc
 		]]>
 	</select>

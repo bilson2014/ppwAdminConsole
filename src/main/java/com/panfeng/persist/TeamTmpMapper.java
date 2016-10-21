@@ -24,7 +24,7 @@ public interface TeamTmpMapper {
 	List<TeamTmp> getTeamTmpByTeamId(@Param("teamId") final Integer teamId);
 
 	/**
-	 * 是否含有供应商最新审核信息
+	 * 是否含有供应商最新审核信息,包含未审核和审核不通过
 	 */
 	List<TeamTmp> doesHaveLatestEnableTmpByTeamId(@Param("teamId") final Long teamId);
 	

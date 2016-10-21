@@ -629,9 +629,12 @@
 				tt.ESTABLISHDATE establishDate,
 				tt.OFFICIALSITE officialSite,
 				tt.BUSINESS_DESCRIPTION businessDesc,
+				tt.CHECK_STATUS checkStatus,
+				tt.CHECK_DETAILS checkDetails,
 				t.TEAMPHOTOURL teamPhotoUrl,
 				t.PHONENUMBER phoneNumber,
 				t.RECOMMENDATION recommendation,
+				t.FLAG flag,
 				t.DESCRIPTION description
 			 FROM TEAM_TMP tt
 			 LEFT JOIN TEAM t ON tt.TEAM_ID = t.TEAMID
