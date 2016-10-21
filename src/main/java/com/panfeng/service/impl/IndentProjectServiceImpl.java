@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -566,7 +567,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				} else {
 					stringBuilder.append("<div class = 'infoimgG'>");
 					if (stepText.get(2).equals(indentProject.getTask().getName()) && key.equals("有支付完成订单")) {
-						if (isSuser) {
+						if (isSuser && iok) {
 							if (indentProject.getSkipPay() != null ? indentProject.getSkipPay() : false) {
 							} else {
 								stringBuilder.append("<a onclick='nextFlow2()'><div>延迟付款</div></a>");
@@ -609,7 +610,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	private Map<String, Boolean> execute(List<IndentResource> fileList, IndentProject ip, List<DealLog> deals,
 			String task) {
-		Map<String, Boolean> res = new HashMap<>();
+		Map<String, Boolean> res = new LinkedHashMap<>();
 		// 构造查询条件集合
 		List<fileType> file = new ArrayList<>();
 		List<InfoType> info = new ArrayList<>();
@@ -641,9 +642,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 						info.add(InfoType.customerPayment);
 						info.add(InfoType.priceFinish);
 					} else {
-						pay.add(PayType.payFinish);
 						info.add(InfoType.customerPayment);
 						info.add(InfoType.priceFinish);
+						pay.add(PayType.payFinish);
 					}
 				} else {
 					// 不是商务步骤，不检测S级别客户的支付情况
@@ -653,9 +654,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				break;
 			}
 			// 苦逼的小白
-			pay.add(PayType.payFinish);
 			info.add(InfoType.customerPayment);
 			info.add(InfoType.priceFinish);
+			pay.add(PayType.payFinish);
 			break;
 		case "制作":
 			// 制作
