@@ -38,7 +38,7 @@ public class FlowController extends BaseController {
 		return indentActivitiService.startProcess(indentProject);
 	}
 
-	@RequestMapping(value = "getCurrectTask", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/getCurrectTask", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public ActivitiTask getCurrectTask(
 			@RequestBody final IndentProject indentProject) {
 		return indentActivitiService.getCurrentTask(indentProject);
