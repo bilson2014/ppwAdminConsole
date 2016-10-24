@@ -693,8 +693,11 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	private boolean isSLevel(IndentProject indentProject) {
 		Long userId = indentProject.getCustomerId();
 		User user = userService.findUserById(userId);
-		int userClientLevel = user.getClientLevel();
-		return userClientLevel == User.S;
+		if (user.getClientLevel() != null) {
+			int userClientLevel = user.getClientLevel();
+			return userClientLevel == User.S;
+		}
+		return false;
 	}
 
 	/**
