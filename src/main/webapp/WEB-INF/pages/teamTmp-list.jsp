@@ -39,7 +39,7 @@
 		</div>
 
 		<div id="toolbar" style="display: none;">
-			<r:permission uri="/portal/mail/update">
+			<r:permission uri="/portal/teamTmp/update">
 				<a onclick="editFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">修改</a>
 				<script type="text/javascript">
 					$.canUpdate = true;
