@@ -81,6 +81,8 @@ public final class GlobalConstant extends BaseObject {
 
 	// activity.product.ids
 	public static String ACTIVITY_PRODUCT_IDS;
+	
+	public static String UPLOAD_PATH;
 
 	private static GlobalConstant GLOBALCONSTANT = new GlobalConstant();
 
@@ -114,6 +116,8 @@ public final class GlobalConstant extends BaseObject {
 
 				// activity.product.ids
 				ACTIVITY_PRODUCT_IDS = propertis.getProperty("activity.product.ids");
+				
+				UPLOAD_PATH = propertis.getProperty("upload.path");
 			} catch (Exception e) {
 
 			} finally {

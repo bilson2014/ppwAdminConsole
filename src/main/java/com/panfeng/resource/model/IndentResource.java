@@ -17,6 +17,7 @@ public class IndentResource extends BaseObject {
 	private String irOriginalName;
 	// 可以生成 下载链接
 	private String irFormatName;
+	private String irViewName;
 	private String irCreateDate;
 	private long irIndentId;
 	private String irProcessInstanceId;
@@ -40,6 +41,14 @@ public class IndentResource extends BaseObject {
 
 	public void setIrtype(String irtype) {
 		this.irtype = irtype;
+	}
+
+	public String getIrViewName() {
+		return irViewName;
+	}
+
+	public void setIrViewName(String irViewName) {
+		this.irViewName = irViewName;
 	}
 
 	public String getIrOriginalName() {

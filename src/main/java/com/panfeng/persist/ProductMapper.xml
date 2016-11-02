@@ -110,6 +110,17 @@
 				SHOWTYPE,
 				SESSIONID,
 				CREATIONTIME
+			]]>
+			<if test="videoUrl != null and videoUrl != ''">
+			,VIDEOURL
+			</if>
+			<if test="picHDUrl != null and picHDUrl != ''">
+			,picHDUrl
+			</if>
+			<if test="picLDUrl != null and picLDUrl != ''">
+			,picLDUrl
+			</if>
+			<![CDATA[
 			) VALUES(
 				#{videoDescription},
 				#{pDescription},
@@ -126,6 +137,17 @@
 				${showType},
 				#{sessionId},
 				DATE_FORMAT(#{creationTime},'%Y-%m-%d')
+			]]>
+			<if test="videoUrl != null and videoUrl != ''">
+			,#{videoUrl}
+			</if>
+			<if test="picHDUrl != null and picHDUrl != ''">
+			,#{picHDUrl}
+			</if>
+			<if test="picLDUrl != null and picLDUrl != ''">
+			,#{picLDUrl}
+			</if>
+		<![CDATA[
 			)
 		]]>
 	</insert>

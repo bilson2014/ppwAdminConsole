@@ -543,8 +543,12 @@ public class UserController extends BaseController {
 
 	// add by wanglc 2016-7-6 17:48:22 第三方 绑定 begin
 	/**
-	 * 三方用户不存在 code:0 1.手机号没注册过 phoneStatus 2.手机号注册过,但是未绑定第三方 thirdStatus
-	 * 3.手机号注册过,且绑定了第三方 三方用户已经存在 code:1,但是未绑定手机 4.手机号没注册过 5.手机号注册过,但是未绑定第三方
+	 * 三方用户不存在 code:0 
+	 * 1.手机号没注册过 phoneStatus 
+	 * 2.手机号注册过,但是未绑定第三方 thirdStatus
+	 * 3.手机号注册过,且绑定了第三方 三方用户已经存在 code:1,但是未绑定手机 
+	 * 4.手机号没注册过 
+	 * 5.手机号注册过,但是未绑定第三方
 	 * 6.手机号注册了,也绑定了第三方
 	 */
 	@RequestMapping("/user/bindthird")

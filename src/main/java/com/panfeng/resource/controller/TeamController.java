@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,12 +33,12 @@ import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.TeamView;
+import com.panfeng.service.FDFSService;
 import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
 import com.panfeng.service.SessionInfoService;
 import com.panfeng.service.TeamService;
 import com.panfeng.util.DataUtil;
-import com.panfeng.util.FileUtils;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
@@ -59,7 +57,7 @@ public class TeamController extends BaseController {
 
 	private static String FILE_PROFIX = null; // 文件前缀
 
-	private static String TEAM_IMAGE_PATH = null; // 产品图片路径
+//	private static String TEAM_IMAGE_PATH = null; // 产品图片路径
 
 	public TeamController() {
 		if (INIT_PASSWORD == null || "".equals(INIT_PASSWORD)) {
@@ -69,7 +67,7 @@ public class TeamController extends BaseController {
 				propertis.load(is);
 				INIT_PASSWORD = propertis.getProperty("initPassw0rd");
 				FILE_PROFIX = propertis.getProperty("file.prefix");
-				TEAM_IMAGE_PATH = propertis.getProperty("upload.server.team.image");
+//				TEAM_IMAGE_PATH = propertis.getProperty("upload.server.team.image");
 			} catch (IOException e) {
 				Log.error("load Properties fail ...", null);
 				e.printStackTrace();
@@ -88,6 +86,9 @@ public class TeamController extends BaseController {
 
 	@Autowired
 	private final SessionInfoService sessionService = null;
+	
+	@Autowired
+	private final FDFSService fdfsService = null;
 
 	@RequestMapping("team-list")
 	public ModelAndView view(final HttpServletRequest request, final ModelMap model) {
@@ -128,14 +129,14 @@ public class TeamController extends BaseController {
 		final long id = service.save(team);
 
 		// 团队logo全路径
-		final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
+		//final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
 
 		// save file
-		File imageDir = new File(imagePath);
+		/*File imageDir = new File(imagePath);
 		if (!imageDir.exists())
-			imageDir.mkdir();
+			imageDir.mkdir();*/
 		try {
-			StringBuffer fileName = new StringBuffer();
+			/*StringBuffer fileName = new StringBuffer();
 			if (!file.isEmpty()) {
 				final String extName = FileUtils.getExtName(file.getOriginalFilename(), ".");
 				fileName.append("team" + id);
@@ -156,12 +157,14 @@ public class TeamController extends BaseController {
 				final String path = TEAM_IMAGE_PATH + "/" + fileName.toString();
 				File imageFile = new File(FILE_PROFIX + path);
 				file.transferTo(imageFile);
-
+				}*/
+				//修改为DFS上传begin
+				String path = fdfsService.upload(file);
+				//修改为DFS上传end
 				team.setTeamPhotoUrl(path);
 				// save photo path
 				service.saveTeamPhotoUrl(team);
-			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			baseMsg.setErrorCode(BaseMsg.ERROR);
 			baseMsg.setErrorMsg("更新logo失败！");
 			SessionInfo sessionInfo = getCurrentInfo(request);
@@ -185,10 +188,10 @@ public class TeamController extends BaseController {
 		// 如果上传文件不为空时，更新 url;反之亦然
 		if (!file.isEmpty()) {
 			// 团队logo全路径
-			final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
+			//final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
 
 			// save file
-			File imageDir = new File(imagePath);
+			/*File imageDir = new File(imagePath);
 			if (!imageDir.exists())
 				imageDir.mkdir();
 			StringBuffer fileName = new StringBuffer();
@@ -210,13 +213,16 @@ public class TeamController extends BaseController {
 			// get file path
 			final String path = TEAM_IMAGE_PATH + "/" + fileName;
 			File imageFile = new File(FILE_PROFIX + path);
-			file.transferTo(imageFile);
+			file.transferTo(imageFile);*/
+			
+			String path = fdfsService.upload(file);
 
 			// 删除 原文件
 			final Team originalTeam = service.findTeamById(team.getTeamId());
 			if (originalTeam != null) {
 				final String originalPath = originalTeam.getTeamPhotoUrl();
-				FileUtils.deleteFile(FILE_PROFIX + originalPath);
+				//FileUtils.deleteFile(FILE_PROFIX + originalPath);
+				fdfsService.delete(originalPath);
 			}
 			team.setTeamPhotoUrl(path);
 			// save photo path

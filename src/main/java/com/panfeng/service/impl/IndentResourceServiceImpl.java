@@ -1,11 +1,11 @@
 package com.panfeng.service.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +15,7 @@ import com.panfeng.persist.IndentResourceMapper;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
+import com.panfeng.service.FDFSService;
 import com.panfeng.service.FileStatusService;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentCommentService;
@@ -22,7 +23,6 @@ import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.OnlineDocService;
 import com.panfeng.service.UserTempService;
 import com.panfeng.util.Constants;
-import com.panfeng.util.FileUtils;
 import com.panfeng.util.RedisUtils;
 import com.panfeng.util.ResourcesType;
 
@@ -54,6 +54,8 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	private static ResourcesType resourcesIndentMedia = ResourcesType.INDENT_MEDIA;
 	@Autowired
 	private FileStatusService fileStatusService;
+	@Autowired
+	private FDFSService fdfsService;
 
 	@Override
 	public List<IndentResource> findIndentList(IndentProject indentProject) {
@@ -96,16 +98,18 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	@Override
 	public boolean addResource(IndentProject indentProject,
 			MultipartFile multipartFile) {
-		try {
-			InputStream inputStream = multipartFile.getInputStream();
-			String filename = resourcesIndentMedia.getName()
+			//注释原因,修改为dfs路径
+			/*InputStream inputStream = multipartFile.getInputStream();
+			  String filename = resourcesIndentMedia.getName()
 					+ "."
 					+ FileUtils.getExtName(multipartFile.getOriginalFilename(),
 							".");
 			String filepath = formatPath(indentProject, resourcesIndentMedia);
+			
 			boolean write = localResourceImpl.writeFile(inputStream, filepath,
-					filename);
-			if (write) {
+					filename);*/
+			String fileId = fdfsService.upload(multipartFile);
+			if (StringUtils.isNotBlank(fileId)) {
 				// 添加系统评论
 				indentCommentService.createSystemMsg(
 						"上传了文件：" + multipartFile.getOriginalFilename(),
@@ -114,7 +118,9 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 				// 添加资源信息
 				IndentResource resource = new IndentResource();
 				resource.setIrOriginalName(multipartFile.getOriginalFilename());
-				resource.setIrFormatName(filename);
+				//修改为dfs路径
+				//resource.setIrFormatName(filename);
+				resource.setIrFormatName(fileId);
 				resource.setIrIndentId(indentProject.getId());
 				resource.setIrtype(indentProject.getTag());
 				resource.setIrUserType(indentProject.getUserType());
@@ -130,10 +136,6 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 				onlineDocService.convertFile(resource);
 			}
 			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 
 	@Override

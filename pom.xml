@@ -257,7 +257,10 @@
 			<version>1.6</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.paipianwang.fastdfs-client</groupId>
+			<artifactId>FastDFS-Client</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
-
-	
 </project>

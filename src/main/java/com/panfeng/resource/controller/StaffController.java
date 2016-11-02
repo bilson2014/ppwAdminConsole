@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ctc.wstx.dtd.DFAState;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Staff;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.StaffView;
+import com.panfeng.service.FDFSService;
 import com.panfeng.service.StaffService;
 import com.panfeng.util.FileUtils;
 import com.panfeng.util.Log;
@@ -33,6 +35,8 @@ public class StaffController extends BaseController {
 
 	@Autowired
 	private final StaffService service = null;
+	@Autowired
+	private final FDFSService fdfsService = null;
 	
 	@RequestMapping("/staff-list")
 	public ModelAndView view(){
@@ -81,9 +85,10 @@ public class StaffController extends BaseController {
 		final Staff s = service.findStaffById(staff.getStaffId());
 		final String imagePath = s.getStaffImageUrl();
 		if(ValidateUtil.isValid(imagePath)){
-			FileUtils.deleteFile(imagePath);
+			//dfs删除文件
+			fdfsService.delete(imagePath);
+			//FileUtils.deleteFile(imagePath);
 		}
-		
 		service.update(staff);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update staff ...",sessionInfo);
@@ -113,7 +118,12 @@ public class StaffController extends BaseController {
 	
 	public void processFile(final MultipartFile staffImage,final Staff staff){
 		if(!staffImage.isEmpty()){
-			final String imagePath = GlobalConstant.FILE_PROFIX + GlobalConstant.STAFF_IMAGE_PATH;
+			//修改为DFS上传
+			String path = fdfsService.upload(staffImage);
+			staff.setStaffImageUrl(path);
+			service.updateImagePath(staff);
+			
+			/*final String imagePath = GlobalConstant.FILE_PROFIX + GlobalConstant.STAFF_IMAGE_PATH;
 			
 			File image = new File(imagePath);
 			if(!image.exists())
@@ -146,7 +156,7 @@ public class StaffController extends BaseController {
 				service.updateImagePath(staff);
 			} catch (IllegalStateException | IOException e) {
 				e.printStackTrace();
-			}
+			}*/
 		}
 	}
 	

@@ -40,8 +40,11 @@
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="uploadTempDir" value="${upload.path}" />
 	</bean>
-	
-	
+	<bean class="com.panfeng.util.FastDFSClient" init-method="init">
+		<property name="minPoolSize" value="${minPoolSize}" />  
+        <property name="maxPoolSize" value="${maxPoolSize}" />  
+        <property name="waitTimes" value="${waitTimes}" />
+	</bean>
 	<bean id="emailTemplate" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="defaultEncoding" value="utf-8" />
         <property name="host" value="${mail.host}" />
