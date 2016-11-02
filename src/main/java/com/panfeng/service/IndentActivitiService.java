@@ -5,6 +5,7 @@ import java.util.List;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
@@ -44,5 +45,7 @@ public interface IndentActivitiService {
 	HistoricProcessInstance getHistoricProcessInstance(IndentFlow indentFlow);
 
 	List<HistoricTaskInstance> getHistoryProcessTask_O(IndentProject indentProject);
+	
+	BaseMsg verifyIntegrity(IndentProject indentProject);
 
 }

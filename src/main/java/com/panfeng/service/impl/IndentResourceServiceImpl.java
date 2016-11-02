@@ -57,8 +57,7 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 
 	@Override
 	public List<IndentResource> findIndentList(IndentProject indentProject) {
-		List<IndentResource> list = indent_ResourceMapper
-				.findResourcetListByIndentId(indentProject);
+		List<IndentResource> list = indent_ResourceMapper.findResourcetListByIndentId(indentProject);
 		// 获取多例的服务
 		List<String> key = new ArrayList<>();
 		// 获取所有资源文件ID集合
@@ -68,23 +67,20 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 		// 获取redis 内文件状态集合 -->System.arraycopy();
 
 		String[] keyarray = key.toArray(new String[key.size()]);
-		List<String> states = fileStatusService.find(
-				RedisUtils.getRedisKey(indentProject), keyarray);
+		List<String> states = fileStatusService.find(RedisUtils.getRedisKey(indentProject), keyarray);
 		// modify by laowang 2016/5/17 12.20 begin
 		// --->增加状态过虑,过滤转换失败和状态为删除的文件
 		List<IndentResource> filterList = new ArrayList<>();
 
 		IndentResource indentResource;
 		for (int i = 0; i < list.size(); i++) {
-			if(states == null)
+			if (states == null)
 				continue;
-			if (!states.get(i).equals(OnlineDocService.FAIL)
-					&& !states.get(i).equals(OnlineDocService.DELETE)) {
+			if (!states.get(i).equals(OnlineDocService.FAIL) && !states.get(i).equals(OnlineDocService.DELETE)) {
 				indentResource = list.get(i);
 				// 添加用户信息
-				indentResource.setUserViewModel(userTempService.getInfo(
-						indentResource.getIrUserType(),
-						indentResource.getIrUserId()));
+				indentResource.setUserViewModel(
+						userTempService.getInfo(indentResource.getIrUserType(), indentResource.getIrUserId()));
 				indentResource.setState(states.get(i));
 				filterList.add(indentResource);
 			}
@@ -94,22 +90,16 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	};
 
 	@Override
-	public boolean addResource(IndentProject indentProject,
-			MultipartFile multipartFile) {
+	public boolean addResource(IndentProject indentProject, MultipartFile multipartFile) {
 		try {
 			InputStream inputStream = multipartFile.getInputStream();
-			String filename = resourcesIndentMedia.getName()
-					+ "."
-					+ FileUtils.getExtName(multipartFile.getOriginalFilename(),
-							".");
+			String filename = resourcesIndentMedia.getName() + "."
+					+ FileUtils.getExtName(multipartFile.getOriginalFilename(), ".");
 			String filepath = formatPath(indentProject, resourcesIndentMedia);
-			boolean write = localResourceImpl.writeFile(inputStream, filepath,
-					filename);
+			boolean write = localResourceImpl.writeFile(inputStream, filepath, filename);
 			if (write) {
 				// 添加系统评论
-				indentCommentService.createSystemMsg(
-						"上传了文件：" + multipartFile.getOriginalFilename(),
-						indentProject);
+				indentCommentService.createSystemMsg("上传了文件：" + multipartFile.getOriginalFilename(), indentProject);
 
 				// 添加资源信息
 				IndentResource resource = new IndentResource();
@@ -119,8 +109,7 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 				resource.setIrtype(indentProject.getTag());
 				resource.setIrUserType(indentProject.getUserType());
 				resource.setIrUserId(indentProject.getUserId());
-				ActivitiTask at = indentActivitiService
-						.getCurrentTask(indentProject);
+				ActivitiTask at = indentActivitiService.getCurrentTask(indentProject);
 				resource.setIrTaskId(at.getTaskDefinitionKey());
 				resource.setIrProcessInstanceId(at.getProcessInstanceId());
 
@@ -140,8 +129,7 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	public void removeIndentResource(IndentProject indentProject) {
 		long l = indent_ResourceMapper.deleteIndentResourceList(indentProject);
 		if (l > 0) {
-			localResourceImpl.removeDir(
-					formatPath(indentProject, resourcesIndentMedia), true);
+			localResourceImpl.removeDir(formatPath(indentProject, resourcesIndentMedia), true);
 		}
 	}
 
@@ -161,36 +149,30 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	}
 
 	// ///////////////////////////////////////////////////////////////////
-	private String formatPath(IndentProject indentProject,
-			ResourcesType resourcesType) {
+	private String formatPath(IndentProject indentProject, ResourcesType resourcesType) {
 		return resourcesType.getPath() + indentProject.getId() + File.separator;
 	}
 
-	private String formatPath(IndentResource indentResource,
-			ResourcesType resourcesType) {
-		return resourcesType.getPath() + indentResource.getIrIndentId()
-				+ File.separator;
+	private String formatPath(IndentResource indentResource, ResourcesType resourcesType) {
+		return resourcesType.getPath() + indentResource.getIrIndentId() + File.separator;
 	}
 
 	@Override
 	public byte[] getBytes(IndentResource indent_Resource) {
 		String filepath = formatPath(indent_Resource, resourcesIndentMedia);
-		return localResourceImpl.getBytes(filepath,
-				indent_Resource.getIrFormatName());
+		return localResourceImpl.getBytes(filepath, indent_Resource.getIrFormatName());
 	}
 
 	@Override
 	public InputStream getInputStream(IndentResource indent_Resource) {
 		String filepath = formatPath(indent_Resource, resourcesIndentMedia);
-		return localResourceImpl.getInputStream(filepath,
-				indent_Resource.getIrFormatName());
+		return localResourceImpl.getInputStream(filepath, indent_Resource.getIrFormatName());
 	}
 
 	@Override
 	public File getFile(IndentResource indent_Resource) {
 		String filepath = formatPath(indent_Resource, resourcesIndentMedia);
-		return localResourceImpl.getFile(filepath,
-				indent_Resource.getIrFormatName());
+		return localResourceImpl.getFile(filepath, indent_Resource.getIrFormatName());
 	}
 
 	@Override
@@ -232,10 +214,8 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	/**
 	 * 更改redis内文件状态
 	 */
-	public void saveResourceState(IndentResource indentResource,
-			final String state) {
-		fileStatusService.save(RedisUtils.getRedisKey(indentResource),
-				String.valueOf(indentResource.getIrId()), state);
+	public void saveResourceState(IndentResource indentResource, final String state) {
+		fileStatusService.save(RedisUtils.getRedisKey(indentResource), String.valueOf(indentResource.getIrId()), state);
 	}
 	// add by laowang 2016.5.17 12.20 end
 }

@@ -170,7 +170,7 @@ public class TeamController extends BaseController {
 			throw new RuntimeException("Team Image upload error ...", e);
 		}
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("save team ...",sessionInfo);
+		Log.error("save team ...", sessionInfo);
 		baseMsg.setErrorCode(BaseMsg.NORMAL);
 		baseMsg.setErrorMsg("保存成功！");
 		return baseMsg;
@@ -225,11 +225,11 @@ public class TeamController extends BaseController {
 
 		long ret = service.update(team);
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update team ...",sessionInfo);
-		if(ret>0){
+		Log.error("update team ...", sessionInfo);
+		if (ret > 0) {
 			baseMsg.setErrorCode(BaseMsg.NORMAL);
 			baseMsg.setErrorMsg("更新成功！");
-		}else{
+		} else {
 			baseMsg.setErrorCode(BaseMsg.ERROR);
 			baseMsg.setErrorMsg("更新失败！");
 		}
@@ -237,7 +237,7 @@ public class TeamController extends BaseController {
 	}
 
 	@RequestMapping(value = "/team/delete", method = RequestMethod.POST)
-	public long delete(final long[] ids,HttpServletRequest request) {
+	public long delete(final long[] ids, HttpServletRequest request) {
 
 		if (ids.length > 0) {
 			final List<Team> list = service.delete(ids);
@@ -260,7 +260,7 @@ public class TeamController extends BaseController {
 			new RuntimeException("Team ids is null");
 		}
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("delete teams ... ids"+ids.toString(),sessionInfo);
+		Log.error("delete teams ... ids" + ids.toString(), sessionInfo);
 		return 0l;
 	}
 
@@ -289,16 +289,16 @@ public class TeamController extends BaseController {
 	 * @return 是否更新成功
 	 */
 	@RequestMapping("/team/static/data/updateTeamPhotoPath")
-	public boolean updateTeamPhotoPath(@RequestBody final Team team,HttpServletRequest request) {
+	public boolean updateTeamPhotoPath(@RequestBody final Team team, HttpServletRequest request) {
 
 		final long ret = service.saveTeamPhotoUrl(team);
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update team ...",sessionInfo);
+		Log.error("update team ...", sessionInfo);
 		if (ret > 0)
 			return true;
 		else
 			return false;
-		
+
 	}
 
 	/**
@@ -371,7 +371,7 @@ public class TeamController extends BaseController {
 
 				final long ret = service.updateTeamInfomation(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("update team ...",sessionInfo);
+				Log.error("update team ...", sessionInfo);
 				if (ret == 1) {
 					return true;
 				}
@@ -381,7 +381,7 @@ public class TeamController extends BaseController {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return false;
 
 	}
@@ -456,7 +456,7 @@ public class TeamController extends BaseController {
 
 				Team dbteam = service.register(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("save team ...",sessionInfo);
+				Log.error("save team ...", sessionInfo);
 				if (dbteam != null && dbteam.getTeamId() > 0) {
 					return initSessionInfo(dbteam, request);
 				}
@@ -533,7 +533,7 @@ public class TeamController extends BaseController {
 
 				Team dbteam = service.register(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("save team ...",sessionInfo);
+				Log.error("save team ...", sessionInfo);
 				if (dbteam != null && dbteam.getTeamId() > 0) {
 					initSessionInfo(dbteam, request);
 				}
@@ -653,7 +653,7 @@ public class TeamController extends BaseController {
 		if (original != null) {
 			final Team team = service.register(original);
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("save team ...",sessionInfo);
+			Log.error("save team ...", sessionInfo);
 			return initSessionInfo(team, request);
 		}
 		return false;
@@ -700,7 +700,7 @@ public class TeamController extends BaseController {
 				team.setPassword(password);
 				final long ret = service.updatePasswordByLoginName(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("update team ...",sessionInfo);
+				Log.error("update team ...", sessionInfo);
 				if (ret > 0)
 					return true;
 				else {
@@ -726,17 +726,17 @@ public class TeamController extends BaseController {
 	 *            包含供应商唯一编号
 	 */
 	@RequestMapping("/team/static/data/updateStatus")
-	public boolean updateStatus(@RequestBody final Team team,HttpServletRequest request) {
+	public boolean updateStatus(@RequestBody final Team team, HttpServletRequest request) {
 
 		if (team != null) {
 			final Long id = team.getTeamId();
 			if (id != null && !"".equals(id)) {
 				final long ret = service.updateTeamStatus(id);
-				if (ret == 1){
+				if (ret == 1) {
 					SessionInfo sessionInfo = getCurrentInfo(request);
-					Log.error("update team ...",sessionInfo);
+					Log.error("update team ...", sessionInfo);
 					return true;
-					}
+				}
 			}
 		}
 		return false;
@@ -817,8 +817,8 @@ public class TeamController extends BaseController {
 		info.setSuperAdmin(team.isSuperAdmin()); // 判断是否是超级管理员
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(GlobalConstant.SESSION_INFO, info);
-		//return sessionService.addSession(request, map);
-		return sessionService.addSessionSeveralTime(request, map, 60*60*24*7);
+		// return sessionService.addSession(request, map);
+		return sessionService.addSessionSeveralTime(request, map, 60 * 60 * 24 * 7);
 	}
 
 	@RequestMapping("/team/static/data/add/account")
@@ -887,43 +887,45 @@ public class TeamController extends BaseController {
 	}
 
 	@RequestMapping("/team/tags")
-	public List<String> getTags(@RequestBody List<Integer> ids,HttpServletRequest request) {
+	public List<String> getTags(@RequestBody List<Integer> ids, HttpServletRequest request) {
 		if (ValidateUtil.isValid(ids)) {
 			List<String> tags = service.getTags(ids);
 			return tags;
 		} else {
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("ids is null ...",sessionInfo);
+			Log.error("ids is null ...", sessionInfo);
 		}
 		return null;
 	}
-	
+
 	@RequestMapping("/team/update/newphone")
-	public BaseMsg updateNewphone(@RequestBody Team team,HttpServletRequest request) {
-		
+	public BaseMsg updateNewphone(@RequestBody Team team, HttpServletRequest request) {
+
 		final long count = service.checkExist(team);
-		if (count > 0){
-			return new BaseMsg(3,"手机号码已被占用");
+		if (count > 0) {
+			return new BaseMsg(3, "手机号码已被占用");
 		}
 		final long ret = service.modifyTeamPhone(team);
 		if (ret > 0) {
-			return new BaseMsg(2,"success");
+			return new BaseMsg(2, "success");
 		}
-		return  new BaseMsg(0,"error");
+		return new BaseMsg(0, "error");
 	}
+
 	/**
 	 * 处理team临时表,更新team备注
+	 * 
 	 * @param team
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping("/team/deal/teamTmpAndTeamDesc")
-	public boolean dealTeamTmpAndUpdateTeamDesc(@RequestBody Team team,HttpServletRequest request) {
+	public boolean dealTeamTmpAndUpdateTeamDesc(@RequestBody Team team, HttpServletRequest request) {
 		try {
-			if(null != team){
-				String description = null == team.getDescription()?"":team.getDescription();
+			if (null != team) {
+				String description = null == team.getDescription() ? "" : team.getDescription();
 				team.setDescription(description);
-				//更新备注信息
+				// 更新备注信息
 				service.updateTeamDescription(team);
 				service.dealTeamTmp(team);
 				return true;
@@ -934,8 +936,7 @@ public class TeamController extends BaseController {
 		}
 		return false;
 	}
-	
-	
+
 	/**
 	 * 根据 团队ID 获取团队信息
 	 * 
@@ -949,6 +950,5 @@ public class TeamController extends BaseController {
 		team.setPassword(null);
 		return team;
 	}
-	
-	
+
 }

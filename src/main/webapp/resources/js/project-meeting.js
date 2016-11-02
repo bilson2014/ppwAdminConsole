@@ -98,6 +98,11 @@ $().ready(function(){
 						title : '项目来源人',
 						align : 'center'
 					},{
+						field : 'teamName',
+						title : '供应商',
+						align : 'center'
+					},
+					{
 						field : 'price',
 						title : '项目预算额度',
 						align : 'center',

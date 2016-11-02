@@ -44,8 +44,8 @@ public class HttpUtil {
 		// addCookie("JSESSIONID", request.getSession().getId(),
 		// GlobalConstant.COOKIES_SCOPE, "/");
 		// 配置超时时间（连接服务端超时1秒，请求数据返回超时2秒）
-		requestConfig = RequestConfig.custom().setConnectTimeout(120000).setSocketTimeout(60000)
-				.setConnectionRequestTimeout(60000).build();
+		requestConfig = RequestConfig.custom().setConnectTimeout(1000*60*60).setSocketTimeout(1000*60*60)
+				.setConnectionRequestTimeout(1000*60*60).build();
 		// 设置默认跳转以及存储cookie
 		CloseableHttpClient client = HttpClientBuilder.create()
 				.setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())

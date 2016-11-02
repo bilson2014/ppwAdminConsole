@@ -246,5 +246,12 @@
 				WHERE DL_ID = ${dealId}
 		]]>
 	</delete>
+	
+	<delete id="deleteDealByProjectId">
+		<![CDATA[
+			DELETE FROM DEAL_LOG
+				WHERE DL_PROJECT_ID = ${projectId}
+		]]>
+	</delete>
 
 </mapper>
