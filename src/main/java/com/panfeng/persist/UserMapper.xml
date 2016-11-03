@@ -119,6 +119,8 @@
 				   u.IMGURL AS imgUrl,
 				   u.SEX AS sex,
 				   u.QQ AS qq,
+				   u.PREFERENCE AS preference,
+				   u.KINDLY_SEND AS kindly_send,
 				   u.WECHAT AS weChat,
 				   u.REALNAME as realName,
 				   u.USERCOMPANY AS userCompany,
@@ -254,23 +256,28 @@
 			 UPDATE_TIME = CURRENT_TIMESTAMP,
 			
 		</if>
+		<if test="customerSource != null">
+			 CUSTOMERSOURCE = ${customerSource},
+			
+		</if>
+		<if test="kindlySend != null  and kindlySend != ''">
+			  KINDLY_SEND = #{kindlySend},
+		</if>
 		<![CDATA[
-		 			KINDLY_SEND = #{kindlySend},
 				   IMGURL = #{imgUrl},
 				   SEX = ${sex},
 				   REALNAME = #{realName},
 				   QQ = #{qq},
 				   WECHAT = #{weChat},
 				   USERCOMPANY = #{userCompany},
-				   NOTE = #{note},
-				   CUSTOMERSOURCE = ${customerSource}
+				   NOTE = #{note}
 			WHERE ID = ${id}
 		]]>
 	</update>
 	
 	<select id="findUserByAttr" resultType="User">
 		<![CDATA[
-			SELECT u.ID AS id,
+		   SELECT u.ID AS id,
 		   u.USERNAME AS userName,
 		   u.PASSWORD AS PASSWORD,
 		   u.TELEPHONE AS telephone,
@@ -285,6 +292,8 @@
 		   u.REALNAME AS realName,
 		   u.USERCOMPANY AS userCompany,
 		   u.CLIENTLEVEL AS clientLevel,
+		   u.CUSTOMERSOURCE AS customerSource, 
+		   u.KINDLY_SEND AS  kindlySend,
 		   u.LOGINNAME AS loginName
 			FROM USERS u
 			WHERE 1=1
@@ -376,6 +385,13 @@
 				   u.USERNAME AS userName,
 				   u.TELEPHONE AS telephone,
 				   u.EMAIL AS email,
+				   DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d') AS birthday,
+				   u.REALNAME AS realName,
+				   u.USERCOMPANY AS userCompany,
+				   u.LOGINNAME AS loginName,
+				   u.CUSTOMERSOURCE AS customerSource,
+				   u.PREFERENCE AS preference,
+				   u.KINDLY_SEND AS kindly_send,
 				   u.IMGURL AS imgUrl,
 				   u.SEX AS sex,
 				   u.QQ AS qq,
@@ -400,8 +416,7 @@
 				TELEPHONE,
 				QQUNIQUE,
 				WBUNIQUE,
-				WECHATUNIQUE,
-				CUSTOMERSOURCE
+				WECHATUNIQUE
 			) VALUES(
 				#{userName},
 				#{imgUrl},
@@ -409,8 +424,7 @@
 				#{telephone},
 				#{qqUnique},
 				#{wbUnique},
-				#{wechatUnique},
-				${customerSource}
+				#{wechatUnique}
 			)
 		]]>
 	</insert>
@@ -455,6 +469,10 @@
 				   u.TELEPHONE AS telephone,
 				   u.EMAIL AS email,
 				   u.IMGURL AS imgUrl,
+				   u.LOGINNAME AS loginName,
+				   u.CUSTOMERSOURCE AS customerSource,
+				   u.PREFERENCE AS preference,
+				   u.KINDLY_SEND AS kindly_send,
 				   u.SEX AS sex,
 				   u.QQ AS qq,
 				   u.QQUNIQUE AS qqUnique,

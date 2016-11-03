@@ -107,6 +107,31 @@ public class HttpUtil {
 	}
 	// modify by laowang 2016.5.17 12:15 end
 
+	public static InputStream httpPostFileForm(String url, MultipartEntityBuilder multipartEntityBuilder) {
+
+		CloseableHttpClient client = getClient(null);
+		HttpPost httpPost = new HttpPost(url);
+		CloseableHttpResponse response = null;
+
+		try {
+			httpPost.setEntity(multipartEntityBuilder.build());
+			response = client.execute(httpPost, context);
+			
+			
+			// add 检测http返回状态判断转换是否完成
+			// *****等待添加转服服务器返回转换状态识别
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				InputStream inputStream = response.getEntity().getContent();
+				return inputStream;
+			} else {
+				return null;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	
+	}
 	public static void saveTo(InputStream in, OutputStream out) throws Exception {
 		byte[] data = new byte[1024];
 		int index = 0;
@@ -150,5 +175,4 @@ public class HttpUtil {
 		}
 		return objArray;
 	}
-
 }

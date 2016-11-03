@@ -63,4 +63,12 @@ public class ResourceController extends BaseController {
 	public List<String> getTags(){
 		return indentResourceService.getTags();
 	}
+	@RequestMapping("/getIndentResource/{id}")
+	public IndentResource getIndentResource(@PathVariable final long id,
+			final HttpServletResponse response) {
+		IndentResource indentResource=new IndentResource();
+		indentResource.setIrId(id);
+		indentResource=indentResourceService.findIndentResource(indentResource);
+		return indentResource;
+	} 
 }

@@ -1,14 +1,11 @@
 package com.panfeng.resource.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -35,6 +32,7 @@ import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.ProductView;
+import com.panfeng.service.FDFSService;
 import com.panfeng.service.KindeditorService;
 import com.panfeng.service.ProductService;
 import com.panfeng.service.ServiceService;
@@ -73,16 +71,19 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private final PortalVideoDao videoDao = null;
+	
+	@Autowired
+	private final FDFSService fdfsService = null;
 
 	private static String FILE_PROFIX = null; // 文件前缀
 
 	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
 
-	private static String PRODUCT_IMAGE_PATH = null; // 产品图片路径
+	//private static String PRODUCT_IMAGE_PATH = null; // 产品图片路径
 
-	private static String ALLOW_IMAGE_TYPE = null;
+	//private static String ALLOW_IMAGE_TYPE = null;
 
-	private static String ALLOW_VIDEO_TYPE = null;
+	//private static String ALLOW_VIDEO_TYPE = null;
 
 	private static String SOLR_URL = null;
 
@@ -94,9 +95,9 @@ public class ProductController extends BaseController {
 				propertis.load(is);
 				FILE_PROFIX = propertis.getProperty("file.prefix");
 				PRODUCT_VIDEO_PATH = propertis.getProperty("upload.server.product.video");
-				PRODUCT_IMAGE_PATH = propertis.getProperty("upload.server.product.image");
-				ALLOW_VIDEO_TYPE = propertis.getProperty("videoType");
-				ALLOW_IMAGE_TYPE = propertis.getProperty("imageType");
+	//			PRODUCT_IMAGE_PATH = propertis.getProperty("upload.server.product.image");
+	//			ALLOW_VIDEO_TYPE = propertis.getProperty("videoType");
+	//			ALLOW_IMAGE_TYPE = propertis.getProperty("imageType");
 				SOLR_URL = propertis.getProperty("solr.url");
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -204,21 +205,21 @@ public class ProductController extends BaseController {
 		response.setContentType("text/html;charset=UTF-8");
 
 		// 保存 product
-		final long productId = proService.save(product);
+		proService.save(product);
 
 		// 视频文件全路径
-		final String videoPath = FILE_PROFIX + PRODUCT_VIDEO_PATH;
+		//final String videoPath = FILE_PROFIX + PRODUCT_VIDEO_PATH;
 
 		// 图片文件全路径
-		final String imagePath = FILE_PROFIX + PRODUCT_IMAGE_PATH;
-
-		try {
+	//	final String imagePath = FILE_PROFIX + PRODUCT_IMAGE_PATH;
+	//		try {
+		/*
 			File videoDir = new File(videoPath);
 			File imageDir = new File(imagePath);
 			if (!videoDir.exists())
 				videoDir.mkdir();
 			if (!imageDir.exists())
-				imageDir.mkdir();
+				imageDir.mkdir();*/
 
 			// 路径接收
 			final List<String> pathList = new ArrayList<String>();
@@ -227,7 +228,7 @@ public class ProductController extends BaseController {
 				final MultipartFile multipartFile = uploadFiles[i];
 				if (!multipartFile.isEmpty()) {
 					// 分组保存video、image
-					final String multipartFileName = multipartFile.getOriginalFilename();
+					/*final String multipartFileName = multipartFile.getOriginalFilename();
 					final String extName = FileUtils.getExtName(multipartFileName, ".");
 					final short fileType = FileUtils.divideIntoGroup(extName, ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE);
 					final StringBuffer fileName = new StringBuffer();
@@ -258,7 +259,8 @@ public class ProductController extends BaseController {
 						throw new RuntimeException("file type error ...");
 					}
 					File destFile = new File(FILE_PROFIX + path);
-					multipartFile.transferTo(destFile);
+					multipartFile.transferTo(destFile);*/
+					String path = fdfsService.upload(multipartFile);
 					pathList.add(path);
 				} else {
 					pathList.add("");
@@ -272,11 +274,11 @@ public class ProductController extends BaseController {
 			
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("add product ... ",sessionInfo);
-		} catch (Exception e) {
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("ProductController method:save() -- save product error ...",sessionInfo);
-			e.printStackTrace();
-		}
+	//	} catch (Exception e) {
+	//		SessionInfo sessionInfo = getCurrentInfo(request);
+	//		Log.error("ProductController method:save() -- save product error ...",sessionInfo);
+	//		e.printStackTrace();
+	//	}
 	}
 
 	@RequestMapping(value = "/product/update", method = RequestMethod.POST)
@@ -302,24 +304,24 @@ public class ProductController extends BaseController {
 
 		try {
 			// 视频文件全路径
-			final String videoPath = FILE_PROFIX + PRODUCT_VIDEO_PATH;
+			//final String videoPath = FILE_PROFIX + PRODUCT_VIDEO_PATH;
 
 			// 图片文件全路径
-			final String imagePath = FILE_PROFIX + PRODUCT_IMAGE_PATH;
+			//final String imagePath = FILE_PROFIX + PRODUCT_IMAGE_PATH;
 
-			File videoDir = new File(videoPath);
+			/*File videoDir = new File(videoPath);
 			File imageDir = new File(imagePath);
 			if (!videoDir.exists())
 				videoDir.mkdir();
 			if (!imageDir.exists())
-				imageDir.mkdir();
+				imageDir.mkdir();*/
 
 			for (int i = 0; i < uploadFiles.length; i++) {
 				final MultipartFile multipartFile = uploadFiles[i];
 				if (!multipartFile.isEmpty()) {
 					// file字段 如果不为空,说明 更改了上传文件
 					// 分组保存video、image
-					final String multipartFileName = multipartFile.getOriginalFilename();
+					/*final String multipartFileName = multipartFile.getOriginalFilename();
 					final String extName = FileUtils.getExtName(multipartFileName, ".");
 					final short fileType = FileUtils.divideIntoGroup(extName, ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE);
 					final StringBuffer fileName = new StringBuffer();
@@ -350,7 +352,8 @@ public class ProductController extends BaseController {
 						throw new RuntimeException("file type error ...");
 					}
 					File destFile = new File(FILE_PROFIX + path);
-					multipartFile.transferTo(destFile);
+					multipartFile.transferTo(destFile);*/
+					String path = fdfsService.upload(multipartFile);
 					pathList.add(path);
 				} else {
 					// file字段 如果为空,说明 未上传新文件
@@ -384,13 +387,13 @@ public class ProductController extends BaseController {
 							continue;
 						}
 						if (path != null && !"".equals(path)) {
-							FileUtils.deleteFile(FILE_PROFIX + path);
+							fdfsService.delete(path);
+							//FileUtils.deleteFile(FILE_PROFIX + path);
 						}
 					}
 				}
 			}
-
-		} catch (IOException e) {
+		} catch (Exception e) {
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("ProductController method:update() upload files error ...",sessionInfo);
 			e.printStackTrace();
