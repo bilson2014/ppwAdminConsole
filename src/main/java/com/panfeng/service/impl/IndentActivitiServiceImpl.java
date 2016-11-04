@@ -240,9 +240,9 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	@Override
 	public boolean removeProcess(IndentProject indentProject) {
 		IndentFlow indentFlow = flowMapper.findFlowByIndent(indentProject);
-		flowMapper.deleteByflowId(indentProject, indentFlow.getFdFlowId());
+		flowMapper.deleteByflowId(indentProject.getId(), indentFlow.getIfFlowId());
 		return activitiEngineService.removeProcess(processDefinitionKey, String.valueOf(indentProject.getId()),
-				indentFlow.getFdFlowId());
+				indentFlow.getIfFlowId());
 	}
 
 	@Override
