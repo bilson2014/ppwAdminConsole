@@ -65,11 +65,11 @@
 			0,
 		</if>
 
-		<if test="priceFinish != null and priceFinish != '' ">
+		<if test="priceFinish != null  ">
 			${priceFinish},
 		</if>
-		<if test="priceFinish == null or priceFinish == '' ">
-			0,
+		<if test="priceFinish == null ">
+			NULL,
 		</if>
 
 		<if test="referrerId != null and referrerId != '' ">
@@ -79,18 +79,18 @@
 			0,
 		</if>
 
-		<if test="customerPayment != null and customerPayment != '' ">
+		<if test="customerPayment != null ">
 			${customerPayment},
 		</if>
-		<if test="customerPayment == null or customerPayment == '' ">
-			0,
+		<if test="customerPayment == null ">
+			NULL,
 		</if>
 
-		<if test="providerPayment != null and providerPayment != '' ">
+		<if test="providerPayment != null ">
 			${providerPayment}
 		</if>
-		<if test="providerPayment == null or providerPayment == '' ">
-			0
+		<if test="providerPayment == null ">
+			NULL
 		</if>
 			<![CDATA[
 		);
@@ -252,10 +252,6 @@
 			,i.IP_PRICE_LAST=${priceLast}
 		</if>
 
-		<if test="priceFinish != null and priceFinish != ''">
-			,i.IP_PRICE_FINISH=${priceFinish}
-		</if>
-
 		<if test="referrerId != null and referrerId != ''">
 			,i.IP_REFERRER_ID = ${referrerId}
 		</if>
@@ -264,22 +260,29 @@
 			,i.IP_REFERRER_ID = ${referrerId}
 		</if>
 
-		<if test="customerPayment != null and customerPayment != ''">
+		<if test="customerPayment != null ">
 			,i.IP_CUSTOMER_PAYMENT = ${customerPayment}
 		</if>
 
-		<if test="customerPayment == 0">
-			,i.IP_CUSTOMER_PAYMENT = 0
+		<if test="customerPayment == null">
+			,i.IP_CUSTOMER_PAYMENT = NULL
 		</if>
 
-		<if test="providerPayment != null and providerPayment != ''">
+		<if test="providerPayment != null ">
 			,i.IP_PROVIDER_PAYMENT = ${providerPayment}
 		</if>
 
-		<if test="providerPayment == 0">
-			,i.IP_PROVIDER_PAYMENT = 0
+		<if test="providerPayment == null">
+			,i.IP_PROVIDER_PAYMENT = NULL
 		</if>
-			
+		
+		<if test="priceFinish != null">
+			,i.IP_PRICE_FINISH=${priceFinish}
+		</if>
+		
+		<if test="priceFinish == null">
+			,i.IP_PRICE_FINISH=NULL
+		</if>
 		<![CDATA[
 			WHERE i.IP_ID = ${id}
 		]]>

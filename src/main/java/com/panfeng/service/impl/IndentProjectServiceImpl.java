@@ -859,7 +859,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				}
 				break;
 			case priceFinish:
-				if (ip.getPriceFinish() == null || ip.getPriceFinish() <= 0) {
+				if (ip.getPriceFinish() == null) {
 					res.put(infoType.getText(), false);
 				} else {
 					res.put(infoType.getText(), true);
