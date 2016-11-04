@@ -39,6 +39,12 @@ public class User extends Customer {
 	private String followTime = null;//再次跟进时间
 	private String updateTime = null;//更新时间
 	private Boolean kindlySend = null;//是否推送
+
+	// clientLevel 
+	public final static int S = 3;
+	public final static int A = 0;
+	public final static int B = 1;
+	public final static int C = 2;
 	
 	public Boolean getKindlySend() {
 		return kindlySend;

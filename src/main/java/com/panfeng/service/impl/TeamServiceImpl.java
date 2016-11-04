@@ -13,8 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.persist.TeamMapper;
+import com.panfeng.persist.TeamTmpMapper;
 import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Team;
+import com.panfeng.resource.model.TeamTmp;
 import com.panfeng.resource.view.TeamView;
 import com.panfeng.service.TeamService;
 import com.panfeng.util.TeamBusiness;
@@ -25,6 +27,8 @@ public class TeamServiceImpl implements TeamService {
 	private static Logger logger = LoggerFactory.getLogger("error");
 	@Autowired
 	private final TeamMapper mapper = null;
+	@Autowired
+	private final TeamTmpMapper teamTmpMapper = null;
 
 	public List<Team> listWithPagination(final TeamView view) {
 
@@ -391,4 +395,82 @@ public class TeamServiceImpl implements TeamService {
 		return tags;
 	}
 
+	@Override
+	public long updateTeamDescription(Team team) {
+		return  mapper.updateTeamDescription(team);
+	}
+
+	@Override
+	public void dealTeamTmp(Team team) {
+		TeamTmp tmp = new TeamTmp();
+		tmp.setCheckStatus(0);
+		if(null != team.getAddress()){
+			tmp.setAddress(team.getAddress());
+		}
+		if(null != team.getBusiness()){
+			tmp.setBusiness(team.getBusiness());
+		}
+		if(null != team.getBusinessDesc()){
+			tmp.setBusinessDescription(team.getBusinessDesc());
+		}
+		if(null != team.getEmail()){
+			tmp.setEmail(team.getEmail());
+		}
+		if(null != team.getEstablishDate()){
+			tmp.setEstablishDate(team.getEstablishDate());
+		}
+		tmp.setInfoResource(team.getInfoResource());
+		if(null != team.getLinkman()){
+			tmp.setLinkMan(team.getLinkman());
+		}
+		if(null != team.getOfficialSite()){
+			tmp.setOfficialSite(team.getOfficialSite());
+		}
+		tmp.setPriceRange(team.getPriceRange());
+		
+		if(null != team.getQq()){
+			tmp.setQq(team.getQq());
+		}
+		if(null != team.getScale()){
+			tmp.setScale(team.getScale());
+		}
+		tmp.setStatus(true);
+		if(null != team.getTeamCity()){
+			tmp.setTeamCity(team.getTeamCity());
+		}
+		if(null != team.getTeamDescription()){
+			tmp.setTeamDescription(team.getTeamDescription());
+		}
+		tmp.setTeamId(team.getTeamId());
+		if(null != team.getTeamName()){
+			tmp.setTeamName(team.getTeamName());
+		}
+		if(null != team.getTeamProvince()){
+			tmp.setTeamProvince(team.getTeamProvince());
+		}
+		if(null != team.getWebchat()){
+			tmp.setWebchat(team.getWebchat());
+		}
+		if(null != team.getDemand()){
+			tmp.setDemand(team.getDemand());
+		}
+		//删除其他tmp
+		teamTmpMapper.delTeamMapperByTeamId(tmp);
+		//增加一条记录
+		teamTmpMapper.addTeamTmp(tmp);
+	}
+
+	@Override
+	public Team findLatestTeamById(Long teamId) {
+		//查询是否有待审核的供应商
+		List<TeamTmp> list = teamTmpMapper.doesHaveLatestEnableTmpByTeamId(teamId);
+		if(null != list && list.size() > 0){
+			//返回供应商最新信息
+			Team team = mapper.getLatestTmpByTeamId(teamId);
+			return team;
+		}else{
+			//返回team信息
+			return mapper.findTeamById(teamId);
+		}
+	}
 }

@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
+import com.panfeng.persist.DealLogMapper;
 import com.panfeng.persist.FlowDateMapper;
 import com.panfeng.persist.IndentFlowMapper;
 import com.panfeng.persist.IndentProjectMapper;
@@ -28,6 +30,7 @@ import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
 import com.panfeng.resource.model.Synergy;
+import com.panfeng.resource.model.User;
 import com.panfeng.resource.model.UserViewModel;
 import com.panfeng.resource.view.IndentProjectView;
 import com.panfeng.service.DealLogService;
@@ -37,6 +40,7 @@ import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.SynergyService;
+import com.panfeng.service.UserService;
 import com.panfeng.service.UserTempService;
 import com.panfeng.util.PathFormatUtils;
 import com.panfeng.util.ValidateUtil;
@@ -67,10 +71,18 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Autowired
 	final EmployeeService employeeService = null;
+
 	@Autowired
 	DealLogService dealLogService;
+
 	@Autowired
 	IndentResourceService indentResourceService;
+
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	DealLogMapper dealLogMapper;
 
 	@Override
 	public boolean save(IndentProject indentProject) {
@@ -496,34 +508,45 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	}
 
 	@Override
-	public synchronized String verifyIntegrity(IndentProject indentProject) {
+	public BaseMsg verifyIntegrity(IndentProject indentProject) {
+		BuildRes buildRes = new BuildRes();
 		String html = "";
 		// 构造查询数据源
 		List<IndentResource> fileList = indentResourceService.findIndentList(indentProject);
 		IndentProject ip = getRedundantProject(indentProject);
+		Boolean skipay = indentProject.getSkipPay();
+		ip.setTask(indentProject.getTask());
+		if (skipay != null) {
+			ip.setSkipPay(skipay);
+		}
 		Map<String, String> pram = new HashMap<>();
 		pram.put("userid", ip.getUserId() + "");
 		pram.put("userType", ip.getUserType());
 		pram.put("projectId", ip.getId() + "");
 		List<DealLog> deals = dealLogService.getDealLogByProject(pram);
 		boolean flag = false;
+		boolean isSUser = isSLevel(ip);
+
 		for (int i = (stepText.size() - 1); i > -1; i--) {
 			if (flag) {
 				Map<String, Boolean> r = execute(fileList, ip, deals, stepText.get(i));
 				if (ValidateUtil.isValid(r)) {
-					html += buildHtml(r, 2);
+					BuildRes br = buildHtml(r, 2, isSUser, indentProject);
+					html += br.getHtml();
 				}
 			}
 			if (stepText.get(i).equals(indentProject.getTask().getName())) {
+				flag = true;
 				Map<String, Boolean> r = execute(fileList, ip, deals, stepText.get(i));
 				if (ValidateUtil.isValid(r)) {
-					html += buildHtml(r, 1);
+					BuildRes br = buildHtml(r, 1, isSUser, indentProject);
+					buildRes.setIsok(br.isIsok());
+					html += br.getHtml();
 				}
-				flag = true;
 			}
 		}
-
-		return html;
+		buildRes.setHtml(html);
+		return new BaseMsg(BaseMsg.NORMAL, "", buildRes);
 	}
 
 	/**
@@ -533,12 +556,13 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	 * @param buildType
 	 * @return
 	 */
-	private String buildHtml(Map<String, Boolean> res, int buildType) {
+	private BuildRes buildHtml(Map<String, Boolean> res, int buildType, boolean isSuser, IndentProject indentProject) {
 		StringBuilder stringBuilder = new StringBuilder();
+		BuildRes br = new BuildRes();
+		boolean iok = true;
 		switch (buildType) {
 		case 1:
 			int index = 1;
-			boolean iok = true;
 			for (String key : res.keySet()) {
 				stringBuilder.append("<li class ='curr'>");
 				stringBuilder.append("<div class = 'index'>");
@@ -552,15 +576,27 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 					stringBuilder.append("√");
 				} else {
 					stringBuilder.append("<div class = 'infoimgG'>");
-					stringBuilder.append("X");
-					iok = false;
+					if (stepText.get(2).equals(indentProject.getTask().getName()) && key.equals("有支付完成订单")) {
+						if (isSuser && iok) {
+							if (indentProject.getSkipPay() != null ? indentProject.getSkipPay() : false) {
+							} else {
+								stringBuilder.append("<a onclick='nextFlow2()'><div>延迟付款</div></a>");
+								iok = false;
+							}
+						} else {
+							stringBuilder.append("X");
+							iok = false;
+						}
+					} else {
+						stringBuilder.append("X");
+						iok = false;
+					}
 				}
 				stringBuilder.append("</div>");
 				stringBuilder.append("</li>");
 				index++;
 			}
-			if (iok)
-				stringBuilder.delete(0, stringBuilder.length());
+			br.setIsok(iok);
 			break;
 		case 2:
 			for (String key : res.keySet()) {
@@ -578,12 +614,13 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			}
 			break;
 		}
-		return stringBuilder.toString();
+		br.setHtml(stringBuilder.toString());
+		return br;
 	}
 
 	private Map<String, Boolean> execute(List<IndentResource> fileList, IndentProject ip, List<DealLog> deals,
 			String task) {
-		Map<String, Boolean> res = new HashMap<>();
+		Map<String, Boolean> res = new LinkedHashMap<>();
 		// 构造查询条件集合
 		List<fileType> file = new ArrayList<>();
 		List<InfoType> info = new ArrayList<>();
@@ -598,13 +635,37 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			break;
 		case "方案":
 			// 方案
-			info.add(InfoType.provider);
 			file.add(fileType.CeHuaFangAn);
 			file.add(fileType.BaoJiaDan);
 			file.add(fileType.PaiQiBiao);
 			break;
 		case "商务":
-			// 商务
+			String shangwu = stepText.get(2);
+			// 查询用户级别
+			if (isSLevel(ip)) {
+				// S级别用户特殊对待
+				if (ip.getTask().getName().equals(shangwu)) {
+					// 身为s用户有权利跳过（只在商务阶段检测 延迟付款 ）
+					if (ip.getSkipPay() != null ? ip.getSkipPay() : false) {
+						info.add(InfoType.provider);
+						info.add(InfoType.customerPayment);
+						info.add(InfoType.priceFinish);
+					} else {
+						info.add(InfoType.provider);
+						info.add(InfoType.customerPayment);
+						info.add(InfoType.priceFinish);
+						pay.add(PayType.payFinish);
+					}
+				} else {
+					// 不是商务步骤，不检测S级别客户的支付情况
+					info.add(InfoType.provider);
+					info.add(InfoType.customerPayment);
+					info.add(InfoType.priceFinish);
+				}
+				break;
+			}
+			// 苦逼的小白
+			info.add(InfoType.provider);
 			info.add(InfoType.customerPayment);
 			info.add(InfoType.priceFinish);
 			pay.add(PayType.payFinish);
@@ -641,6 +702,16 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		return res;
 	}
 
+	private boolean isSLevel(IndentProject indentProject) {
+		Long userId = indentProject.getCustomerId();
+		User user = userService.findUserById(userId);
+		if (user.getClientLevel() != null) {
+			int userClientLevel = user.getClientLevel();
+			return userClientLevel == User.S;
+		}
+		return false;
+	}
+
 	/**
 	 * 验证资源文件
 	 * 
@@ -659,6 +730,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			for (int j = 0; j < resList.size(); j++) {
 				IndentResource indentResource = resList.get(j);
 				String resType = indentResource.getIrtype();
+				resType = resType.replaceAll("&amp;", "&");
 				if (resType.equals(type)) {
 					isExist = true;
 				}
@@ -773,21 +845,21 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				// }
 				break;
 			case providerPayment:
-				if (ip.getProviderPayment() == null || ip.getProviderPayment() <= 0) {
+				if (ip.getProviderPayment() == null) {
 					res.put(infoType.getText(), false);
 				} else {
 					res.put(infoType.getText(), true);
 				}
 				break;
 			case customerPayment:
-				if (ip.getCustomerPayment() == null || ip.getCustomerPayment() <= 0) {
+				if (ip.getCustomerPayment() == null) {
 					res.put(infoType.getText(), false);
 				} else {
 					res.put(infoType.getText(), true);
 				}
 				break;
 			case priceFinish:
-				if (ip.getPriceFinish() == null || ip.getPriceFinish() <= 0) {
+				if (ip.getPriceFinish() == null) {
 					res.put(infoType.getText(), false);
 				} else {
 					res.put(infoType.getText(), true);
@@ -924,5 +996,42 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		}
 		System.out.println(System.currentTimeMillis() - start);
 		return list;
+	}
+
+	public void deleteProject(IndentProject indentProject) {
+		// IndentProject ip =
+		// indentProjectMapper.findProjectInfo(indentProject);
+		// 删除支付记录
+		dealLogMapper.deleteDealByProjectId(indentProject.getId());
+		// 删除文件
+		indentResourceService.removeIndentResource(indentProject);
+		// 删除评论
+		indentCommentService.removeIndentCommentList(indentProject);
+		// 删除流程
+		indentActivitiService.removeProcess(indentProject);
+		// 删除本身
+		indentProjectMapper.deleteById(indentProject.getId());
+
+	}
+
+	class BuildRes {
+		private boolean isok;
+		private String html;
+
+		public boolean isIsok() {
+			return isok;
+		}
+
+		public void setIsok(boolean isok) {
+			this.isok = isok;
+		}
+
+		public String getHtml() {
+			return html;
+		}
+
+		public void setHtml(String html) {
+			this.html = html;
+		}
 	}
 }

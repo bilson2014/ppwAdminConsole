@@ -247,10 +247,12 @@ $().ready(function(){
 				$('#productPicture').addClass('hide');
 				$('#youku-player').hide();
 				$('#productVideo').show('fast');
-				
-				var videoName = getFileName(value);
-				var videoPath = getHostName() + '/product/video/' + videoName;
-				
+				//modify by wlc 2016-11-4 10:58:08
+				//修改为dfs路径 begin
+				//var videoName = getFileName(value);
+				//var videoPath = getHostName() + '/product/video/' + videoName;
+				var videoPath = getDfsHostName() +  value;
+				//修改为dfs路径end
 				destroyPlayer('youku-player');// 销毁优酷播放器
 				$('#productVideo').attr('src',videoPath);
 				
@@ -268,9 +270,12 @@ $().ready(function(){
 				$('#youku-player').hide('fast');
 				$('#productVideo').hide('fast');
 				
-				var imgName = getFileName(value);
-				var imgPath = getHostName() + '/product/img/' + imgName;
-				
+				//modify by wlc 2016-11-4 16:59:20
+				//修改为fdfs路径 begin
+				//var imgName = getFileName(value);
+				//var imgPath = getHostName() + '/product/img/' + imgName;
+				var imgPath = getDfsHostName() + value;
+				//修改为fdfs路径 end
 				destroyPlayer('youku-player');// 销毁优酷播放器
 				$('#productPicture').attr('src',imgPath);
 				
@@ -287,10 +292,12 @@ $().ready(function(){
 				$('#productVideo').addClass('hide');
 				$('#youku-player').hide('fast');
 				$('#productVideo').hide('fast');
-				
-				var imgName = getFileName(value);
-				var imgPath = getHostName() + '/product/img/' + imgName;
-				
+				//modify by wlc 2016-11-4 16:59:20
+				//修改为fdfs路径 begin
+				//var imgName = getFileName(value);
+				//var imgPath = getHostName() + '/product/img/' + imgName;
+				var imgPath = getDfsHostName() + value;
+				//修改为fdfs路径 end
 				destroyPlayer('youku-player');// 销毁优酷播放器
 				$('#productPicture').attr('src',imgPath);
 				

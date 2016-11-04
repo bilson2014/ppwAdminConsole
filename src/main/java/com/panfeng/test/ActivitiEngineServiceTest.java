@@ -23,6 +23,9 @@ public class ActivitiEngineServiceTest {
 	@Autowired
 	private RuntimeService runtimeService;
 
+//	@Autowired
+//	private final RightDao dao = null;
+	
 	@Autowired
 	ActivitiEngineService aes;
 
@@ -31,25 +34,22 @@ public class ActivitiEngineServiceTest {
 
 	@Test
 	public void create() {
-		String b = aes.startProcess(processDefinitionKey,
-				processInstanceBusinessKey);
+		String b = aes.startProcess(processDefinitionKey, processInstanceBusinessKey);
 		System.out.println(b);
 	}
 
 	@Test
 	public void completeTask() {
-		boolean b = aes.completeTask(processDefinitionKey,
-				processInstanceBusinessKey,  "2501");
+		boolean b = aes.completeTask(processDefinitionKey, processInstanceBusinessKey, "2501");
 		System.out.println(b);
 	}
 
 	@Test
 	public void tttt() {
 
-		List<ProcessInstance> list = runtimeService
-				.createProcessInstanceQuery()
-				.processDefinitionKey(processDefinitionKey)
-				.processInstanceBusinessKey(processInstanceBusinessKey).list();
+		List<ProcessInstance> list = runtimeService.createProcessInstanceQuery()
+				.processDefinitionKey(processDefinitionKey).processInstanceBusinessKey(processInstanceBusinessKey)
+				.list();
 
 		for (ProcessInstance processInstance : list) {
 			System.out.println(processInstance.getName());
@@ -74,29 +74,25 @@ public class ActivitiEngineServiceTest {
 
 	@Test
 	public void jumpTask() {
-		System.out.println(aes.jumpTask(processDefinitionKey,
-				processInstanceBusinessKey, "fa", "2501"));
+		System.out.println(aes.jumpTask(processDefinitionKey, processInstanceBusinessKey, "fa", "2501"));
 	}
 
 	@Test
 	public void getNodes() {
-		List<ActivityImpl> list = aes.getNodes(processDefinitionKey,
-				processInstanceBusinessKey, "2501");
+		List<ActivityImpl> list = aes.getNodes(processDefinitionKey, processInstanceBusinessKey, "2501");
 		for (ActivityImpl activityImpl : list) {
 			System.out.println(activityImpl.getId());
 			System.out.println(activityImpl.getProperty("name"));
-			TaskDefinition td = (TaskDefinition) activityImpl
-					.getProperty("taskDefinition");
+			TaskDefinition td = (TaskDefinition) activityImpl.getProperty("taskDefinition");
 			if (td != null)
-				System.out.println(td.getAssigneeExpression() == null ? "" : td
-						.getAssigneeExpression().getExpressionText());
+				System.out.println(
+						td.getAssigneeExpression() == null ? "" : td.getAssigneeExpression().getExpressionText());
 		}
 	}
 
 	@Test
 	public void getCurrentTask() {
-		Task task = aes.getCurrentTask(processDefinitionKey,
-				processInstanceBusinessKey, "2501");
+		Task task = aes.getCurrentTask(processDefinitionKey, processInstanceBusinessKey, "2501");
 		System.out.println(task.getName());
 		System.out.println(task.getId());
 		System.out.println(task.getTaskDefinitionKey());
@@ -104,17 +100,16 @@ public class ActivitiEngineServiceTest {
 
 	@Test
 	public void getHistoryProcess() {
-		HistoricProcessInstance hpi = aes.getHistoryProcess(
-				processDefinitionKey, processInstanceBusinessKey, "");
+		HistoricProcessInstance hpi = aes.getHistoryProcess(processDefinitionKey, processInstanceBusinessKey, "");
 		System.out.println(hpi.getStartTime());
 		System.out.println(hpi.getEndTime());
 	}
 
 	@Test
 	public void getHistoryProcessTask() {
-		List<HistoricTaskInstance> list = aes.getHistoryProcessTask(
-				processDefinitionKey, processInstanceBusinessKey, "2501");
-		
+		List<HistoricTaskInstance> list = aes.getHistoryProcessTask(processDefinitionKey, processInstanceBusinessKey,
+				"2501");
+
 		for (HistoricTaskInstance historicTaskInstance : list) {
 			System.out.println(historicTaskInstance.getAssignee());
 			System.out.println(historicTaskInstance.getStartTime());

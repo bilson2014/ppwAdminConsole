@@ -37,23 +37,27 @@
 			AND pro.TEAMID = ${teamId}
 		</if>
 		<if test="teamName !=null and teamName != ''">
-			AND t.TEAMNAME  LIKE CONCAT(CONCAT('%',#{teamName}),'%')
+			AND t.TEAMNAME LIKE CONCAT(CONCAT('%',#{teamName}),'%')
 		</if>
 		<if test="beginTime != null and beginTime != '' ">
-			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &gt;= #{beginTime}
+			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &gt;=
+			#{beginTime}
 		</if>
-		
+
 		<if test="endTime != null  and endTime != ''">
-			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &lt;= #{endTime}
+			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &lt;=
+			#{endTime}
 		</if>
 		<if test="productType != null and productType != ''">
 			AND pro.PRODUCTTYPE = ${productType}
 		</if>
 		<if test="productName != null and productName != ''">
-			AND pro.PRODUCTNAME LIKE CONCAT(CONCAT('%',#{productName}),'%')
+			AND pro.PRODUCTNAME LIKE
+			CONCAT(CONCAT('%',#{productName}),'%')
 		</if>
 		<if test="uploadDate != null and uploadDate != ''">
-			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d %T') = #{uploadDate}
+			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d %T') =
+			#{uploadDate}
 		</if>
 		<if test="recommend != null and recommend != ''">
 			AND pro.RECOMMEND = ${recommend}
@@ -79,7 +83,7 @@
 		ORDER BY
 		]]>
 		<if test="sort != null and sort != '' and order != null and order != ''">
-			 ${sort} ${order},
+			${sort} ${order},
 		</if>
 		<![CDATA[
 			pro.recommend,pro.supportCount desc
@@ -106,6 +110,17 @@
 				SHOWTYPE,
 				SESSIONID,
 				CREATIONTIME
+			]]>
+			<if test="videoUrl != null and videoUrl != ''">
+			,VIDEOURL
+			</if>
+			<if test="picHDUrl != null and picHDUrl != ''">
+			,picHDUrl
+			</if>
+			<if test="picLDUrl != null and picLDUrl != ''">
+			,picLDUrl
+			</if>
+			<![CDATA[
 			) VALUES(
 				#{videoDescription},
 				#{pDescription},
@@ -122,6 +137,17 @@
 				${showType},
 				#{sessionId},
 				DATE_FORMAT(#{creationTime},'%Y-%m-%d')
+			]]>
+			<if test="videoUrl != null and videoUrl != ''">
+			,#{videoUrl}
+			</if>
+			<if test="picHDUrl != null and picHDUrl != ''">
+			,#{picHDUrl}
+			</if>
+			<if test="picLDUrl != null and picLDUrl != ''">
+			,#{picLDUrl}
+			</if>
+		<![CDATA[
 			)
 		]]>
 	</insert>
@@ -153,13 +179,13 @@
 				SUPPORTCOUNT = ${supportCount}
 		]]>
 		<if test="videoUrl != null and videoUrl != ''">
-			,VIDEOURL = #{videoUrl} 
+			,VIDEOURL = #{videoUrl}
 		</if>
 		<if test="picHDUrl != null and picHDUrl != ''">
-			,PICHDURL = #{picHDUrl} 
+			,PICHDURL = #{picHDUrl}
 		</if>
 		<if test="picLDUrl != null and picLDUrl != ''">
-			,PICLDURL = #{picLDUrl} 
+			,PICLDURL = #{picLDUrl}
 		</if>
 		<if test="creationTime != null and creationTime != ''">
 			,CREATIONTIME = DATE_FORMAT(#{creationTime},'%Y-%m-%d')
@@ -168,7 +194,7 @@
 			WHERE PRODUCTID = ${productId}
 		]]>
 	</update>
-	
+
 	<update id="updateFileUrl">
 		<![CDATA[
 			UPDATE PRODUCT
@@ -243,6 +269,45 @@
 		</if>
 	</select>
 
+	<select id="findProductByIds" resultType="Product">
+        <![CDATA[
+                SELECT pro.PRODUCTID AS productId,
+                   pro.VIDEOURL AS videoUrl,
+                   pro.PDESCRIPTION AS pDescription,
+                   pro.PRODUCTNAME AS productName,
+                   pro.PICHDURL AS picHDUrl,
+                   pro.PICLDURL AS picLDUrl,
+                   pro.VISIBLE AS visible,
+                   t.TEAMPHOTOURL AS teamPhotoUrl,
+                   pro.VIDEOLENGTH AS videoLength,
+                   pro.TEAMID AS teamId,
+                   pro.HRET AS hret,
+                   pro.TAGS AS tags,
+                   pro.SESSIONID AS sessionId,
+                   pro.SHOWTYPE AS showType,
+                   t.TEAMNAME AS teamName,
+                   t.TEAMDESCRIPTION AS teamDescription,
+                   pro.MASTERWORK AS masterWork,
+                   s.SERVICEPRICE AS servicePrice,
+                   s.SERVICEREALPRICE AS serviceRealPrice,
+                   DATE_FORMAT(IF(creationTime IS NULL ,uploadDate,creationTime),'%Y-%m-%d') AS creationTime
+            FROM PRODUCT pro
+            LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
+            LEFT JOIN SERVICE s ON s.PRODUCTID = pro.PRODUCTID
+            WHERE 1 = 1
+        ]]>
+		<if test="ids != null and ids != ''">
+			AND pro.PRODUCTID IN
+			<foreach collection="ids" open="(" close=")" item="id"
+				separator=",">
+				${id}
+			</foreach>
+		</if>
+		 <![CDATA[
+		ORDER BY s.servicePrice asc
+		  ]]>
+	</select>
+
 	<select id="maxSize" resultType="java.lang.Long">
 		<![CDATA[
 			SELECT COUNT(1)
@@ -255,14 +320,16 @@
 			AND pro.TEAMID = ${teamId}
 		</if>
 		<if test="teamName !=null and teamName != ''">
-			AND t.TEAMNAME  LIKE CONCAT(CONCAT('%',#{teamName}),'%')
+			AND t.TEAMNAME LIKE CONCAT(CONCAT('%',#{teamName}),'%')
 		</if>
 		<if test="beginTime != null and beginTime != '' ">
-			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &gt;= #{beginTime}
+			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &gt;=
+			#{beginTime}
 		</if>
-		
+
 		<if test="endTime != null  and endTime != ''">
-			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &lt;= #{endTime}
+			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &lt;=
+			#{endTime}
 		</if>
 		<if test="productType != null and productType != ''">
 			AND pro.PRODUCTTYPE = ${productType}
@@ -271,7 +338,7 @@
 			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d %T') =
 			#{uploadDate}
 		</if>
-		
+
 		<if test="videoLength != null and videoLength != ''">
 			AND pro.VIDEOLENGTH = #{videoLength}
 		</if>
@@ -287,7 +354,7 @@
 			AND pro.HRET = ''
 		</if>
 	</select>
-	
+
 	<select id="all" resultType="Product">
 		<![CDATA[
 			SELECT pro.PRODUCTID AS productId,
@@ -295,7 +362,7 @@
 			FROM PRODUCT pro
 		]]>
 	</select>
-	
+
 	<select id="listWithCondition" resultType="Product" useCache="false">
 		<![CDATA[
 			SELECT pro.PRODUCTID AS productId,
@@ -339,18 +406,20 @@
 			AND i.ISACTIVE = 0
 		</if>
 		<if test="lengthBegin >= 0 and lengthEnd > 0">
-			AND pro.VIDEOLENGTH BETWEEN ${lengthBegin} AND ${lengthEnd}
+			AND pro.VIDEOLENGTH BETWEEN ${lengthBegin} AND
+			${lengthEnd}
 		</if>
-		
+
 		<if test="priceBegin >= 0 and priceEnd > 0">
-			AND ser.SERVICEREALPRICE BETWEEN ${priceBegin} AND ${priceEnd}
+			AND ser.SERVICEREALPRICE BETWEEN ${priceBegin} AND
+			${priceEnd}
 		</if>
 		
 		<![CDATA[
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
-	
+
 	<select id="loadProduct" resultType="Product">
 		<![CDATA[
 			SELECT pro.PRODUCTID AS productId,
@@ -376,7 +445,7 @@
 			AND pro.PRODUCTID = ${productId}
 		]]>
 	</select>
-	
+
 	<select id="loadProductByTeam" resultType="Product">
 		<![CDATA[
 			SELECT pro.PRODUCTID AS productId,
@@ -410,7 +479,7 @@
 				AND t.TEAMID = ${teamId} 
 		]]>
 	</select>
-	
+
 	<select id="loadProductByTeamOrder" resultType="Product">
 		<![CDATA[
 			SELECT pro.PRODUCTID AS productId,
@@ -445,7 +514,7 @@
 			ORDER BY creationTime DESC
 		]]>
 	</select>
-	
+
 	<select id="loadData" resultType="Product">
 		<![CDATA[
 			SELECT pro.PRODUCTID AS productId,
@@ -479,14 +548,14 @@
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
-	
+
 	<delete id="deleteByTeamId">
 		<![CDATA[
 			DELETE FROM TEAM
 				WHERE TEAMID = ${teamId}
 		]]>
 	</delete>
-	
+
 	<select id="conditionSize" resultType="java.lang.Long">
 		<![CDATA[
 			SELECT COUNT(1)
@@ -508,13 +577,15 @@
 			AND i.ISACTIVE = 0
 		</if>
 		<if test="lengthBegin >= 0 and lengthEnd > 0">
-			AND pro.VIDEOLENGTH BETWEEN ${lengthBegin} AND ${lengthEnd}
+			AND pro.VIDEOLENGTH BETWEEN ${lengthBegin} AND
+			${lengthEnd}
 		</if>
 		<if test="priceBegin >= 0 and priceEnd > 0">
-			AND ser.SERVICEREALPRICE BETWEEN ${priceBegin} AND ${priceEnd}
+			AND ser.SERVICEREALPRICE BETWEEN ${priceBegin} AND
+			${priceEnd}
 		</if>
 	</select>
-	
+
 	<update id="updateProductInfo">
 		<![CDATA[
 			UPDATE PRODUCT
@@ -529,13 +600,13 @@
 				SESSIONID = #{sessionId}
 		]]>
 		<if test="videoUrl != null and videoUrl != ''">
-			,VIDEOURL = #{videoUrl} 
+			,VIDEOURL = #{videoUrl}
 		</if>
 		<if test="picHDUrl != null and picHDUrl != ''">
-			,PICHDURL = #{picHDUrl} 
+			,PICHDURL = #{picHDUrl}
 		</if>
 		<if test="picLDUrl != null and picLDUrl != ''">
-			,PICLDURL = #{picLDUrl} 
+			,PICLDURL = #{picLDUrl}
 		</if>
 		<if test="creationTime != null and creationTime != ''">
 			,CREATIONTIME = DATE_FORMAT(#{creationTime},'%Y-%m-%d')
@@ -544,7 +615,7 @@
 			WHERE PRODUCTID = ${productId}
 		]]>
 	</update>
-	
+
 	<select id="loadSingleProduct" resultType="Product">
 		<![CDATA[
 			SELECT pro.PRODUCTID AS productId,
@@ -576,7 +647,7 @@
 			LIMIT 0 , 1
 		]]>
 	</select>
-	
+
 	<select id="loadProductByProviderId" resultType="Product">
 		<![CDATA[
 			SELECT pro.PRODUCTID AS productId,
@@ -607,7 +678,7 @@
 				AND t.TEAMID = ${teamId}
 		]]>
 	</select>
-	
+
 	<select id="loadProductByCommend" resultType="Product">
 		<![CDATA[
 			SELECT DISTINCT pro.PRODUCTID AS productId,
@@ -641,7 +712,7 @@
 			ORDER BY pro.RECOMMEND ASC,pro.SUPPORTCOUNT DESC,ser.SERVICEREALPRICE ASC
 		]]>
 	</select>
-	
+
 	<update id="updateVideoDescription">
 		<![CDATA[
 			UPDATE PRODUCT p SET
@@ -650,30 +721,35 @@
 				p.PRODUCTID = ${productId}
 		]]>
 	</update>
-	
+
 	<select id="loadSalesProduct" resultType="Product">
-		SELECT pro.PRODUCTID AS productId,
-			   pro.VIDEOURL AS videoUrl,
-			   pro.PDESCRIPTION AS pDescription,
-			   pro.PRODUCTNAME AS productName,
-			   pro.PICHDURL AS picHDUrl,
-			   pro.PICLDURL AS picLDUrl,
-			   pro.VISIBLE AS visible,
-			   i.ITEMNAME AS productTypeName,
-			   pro.VIDEOLENGTH AS videoLength,
-			   pro.HRET AS hret,
-			   pro.TAGS AS tags
-			FROM PRODUCT pro
-			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
-			INNER JOIN TEAM t ON t.TEAMID = pro.TEAMID
-			WHERE 1 = 1
-				AND t.flag = 4
-				AND t.loginName = 'bd'
-				AND pro.FLAG = 1 
-				AND pro.visible = 0
+		SELECT pro.PRODUCTID AS
+		productId,
+		pro.VIDEOURL AS videoUrl,
+		pro.PDESCRIPTION AS pDescription,
+		pro.PRODUCTNAME AS productName,
+		pro.PICHDURL AS picHDUrl,
+		pro.PICLDURL
+		AS picLDUrl,
+		pro.VISIBLE AS visible,
+		i.ITEMNAME AS productTypeName,
+		pro.VIDEOLENGTH AS videoLength,
+		pro.HRET AS hret,
+		pro.TAGS AS tags
+		FROM
+		PRODUCT pro
+		LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
+		INNER JOIN
+		TEAM t ON t.TEAMID = pro.TEAMID
+		WHERE 1 = 1
+		AND t.flag = 4
+		AND
+		t.loginName = 'bd'
+		AND pro.FLAG = 1
+		AND pro.visible = 0
 	</select>
-	
-	<select id="getProductByRecommend" resultType="Product" >
+
+	<select id="getProductByRecommend" resultType="Product">
 		<![CDATA[
 			SELECT DISTINCT pro.PRODUCTID AS productId,
 				   pro.PRODUCTNAME AS productName,
@@ -690,7 +766,7 @@
 			AND t.FLAG = 1
 		]]>
 	</select>
-	
+
 	<select id="getMasterWork" resultType="Product"> 
 		<![CDATA[
 			SELECT * FROM PRODUCT 
@@ -698,5 +774,5 @@
 			AND masterWork = 1
 		]]>
 	</select>
-	
+
 </mapper>

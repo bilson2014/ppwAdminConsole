@@ -91,7 +91,9 @@ public class Team extends Customer {
 	private String teamProvinceName = null;// 省名
 	
 	private String teamCityName = null; // 城市名
-	
+	//再次审核 状态
+	private Integer checkStatus; //再次审核状态   tmp表冗余字段 0未审核 1审核通过 2审核失败
+	private String checkDetails;//再次审核详情
 	
 	public String getTeamProvinceName() {
 		return teamProvinceName;
@@ -139,6 +141,20 @@ public class Team extends Customer {
 
 	public void setTeamName(String teamName) {
 		this.teamName = teamName;
+	}
+	public Integer getCheckStatus() {
+		return checkStatus;
+	}
+
+	public void setCheckStatus(Integer checkStatus) {
+		this.checkStatus = checkStatus;
+	}
+	public String getCheckDetails() {
+		return checkDetails;
+	}
+
+	public void setCheckDetails(String checkDetails) {
+		this.checkDetails = checkDetails;
 	}
 
 	public String getTeamPhotoUrl() {

@@ -38,12 +38,18 @@ public class FlowController extends BaseController {
 		return indentActivitiService.startProcess(indentProject);
 	}
 
-	@RequestMapping(value = "getCurrectTask", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/getCurrectTask", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public ActivitiTask getCurrectTask(
 			@RequestBody final IndentProject indentProject) {
 		return indentActivitiService.getCurrentTask(indentProject);
 	}
 
+	@RequestMapping(value = "/verifyIntegrity" ,method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public BaseMsg verifyIntegrity(@RequestBody final IndentProject indentProject) {
+		
+		return indentActivitiService.verifyIntegrity(indentProject);
+	}
+	
 	@RequestMapping(value = "/completeTask" ,method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public BaseMsg completeTask(@RequestBody final IndentProject indentProject) {
 		String res =  indentActivitiService.completeTask(indentProject);

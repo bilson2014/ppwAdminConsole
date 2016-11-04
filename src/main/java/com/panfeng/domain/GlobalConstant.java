@@ -17,7 +17,7 @@ public final class GlobalConstant extends BaseObject {
 	private static final long serialVersionUID = -7702371618133614803L;
 
 	public static final String CONTEXT_RIGHT_MAP = "context_right_map"; // 权限集合
-	
+
 	public static final String CONTEXT_PORTAL_VIDEO_MAP = "context_portal_video_map"; // 首页视频集合
 
 	public static final String SESSION_INFO = "sessionInfo"; // 当前用户
@@ -48,13 +48,13 @@ public final class GlobalConstant extends BaseObject {
 	public static String COOKIES_SCOPE = null;
 
 	public static String SOLR_URL; // 通过审核的供应商及分级的客户 SOLR URL 入口
-	
+
 	public static String SOLR_EMPLOYEE_URL; // 内部员工SOLR URL 入口
-	
+
 	public static String SOLR_PORTAL_URL; // 未审核的供应商及未分级的客户的SOLR URL 入口
-	
+
 	public static String FILE_PROFIX; // 文件前缀
-	
+
 	public static String EMPLOYEE_IMAGE_PATH; // 内部人员图片路径
 
 	public static String STAFF_IMAGE_PATH; // 人员图片路径
@@ -78,6 +78,11 @@ public final class GlobalConstant extends BaseObject {
 	public static String KEY_STORE_TYPE_P12;
 
 	public static String KEY_STORE_PASSWORD;
+
+	// activity.product.ids
+	public static String ACTIVITY_PRODUCT_IDS;
+	
+	public static String UPLOAD_PATH;
 
 	private static GlobalConstant GLOBALCONSTANT = new GlobalConstant();
 
@@ -106,9 +111,13 @@ public final class GlobalConstant extends BaseObject {
 				KEY_STORE_CLIENT_PATH = propertis.getProperty("key.store.client.path");
 				KEY_STORE_TYPE_P12 = propertis.getProperty("key.store.type.p12");
 				KEY_STORE_PASSWORD = propertis.getProperty("key.store.password");
-				//cookie
+				// cookie
 				COOKIES_SCOPE = propertis.getProperty("cookies.scope");
 
+				// activity.product.ids
+				ACTIVITY_PRODUCT_IDS = propertis.getProperty("activity.product.ids");
+				
+				UPLOAD_PATH = propertis.getProperty("upload.path");
 			} catch (Exception e) {
 
 			} finally {

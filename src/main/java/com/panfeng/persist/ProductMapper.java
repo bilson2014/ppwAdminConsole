@@ -27,6 +27,8 @@ public interface ProductMapper {
 	 * @return team列表
 	 */
 	public List<Product> findProductByArray(@Param("ids") final long[] ids);
+	
+	public List<Product> findProductByIds(@Param("ids") final long[] ids);
 
 	public Product findProductById(@Param("productId") final long productId);
 

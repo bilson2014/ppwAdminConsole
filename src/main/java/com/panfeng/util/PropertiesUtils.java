@@ -1,4 +1,4 @@
-package com.panfeng.util.mail;
+package com.panfeng.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

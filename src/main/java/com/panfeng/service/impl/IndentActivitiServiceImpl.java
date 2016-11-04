@@ -14,6 +14,7 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.persist.FlowDateMapper;
 import com.panfeng.persist.IndentFlowMapper;
 import com.panfeng.persist.IndentProjectMapper;
@@ -74,7 +75,7 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		List<String> tIds = new ArrayList<>();
 		for (int i = 0; i < ips.size(); i++) {
 			IndentProject ip = ips.get(i);
-			if (ip.getMasterFlowId() != null) 
+			if (ip.getMasterFlowId() != null)
 				tIds.add(ip.getMasterFlowId().toString());
 		}
 		List<Task> tasks = activitiEngineService.getCurrentTask(processDefinitionKey, tIds);
@@ -130,16 +131,25 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 				getIndentCurrentFlowId(indentProject));
 	}
 
-	@Override
-	public synchronized String completeTask(IndentProject indentProject) {
-
+	public BaseMsg verifyIntegrity(IndentProject indentProject) {
 		// 完整性认证
 		ActivitiTask activitiTask = getCurrentTask(indentProject);
 		indentProject.setTask(activitiTask);
-		String verifyRes = indentProjectService.verifyIntegrity(indentProject);
-		if (ValidateUtil.isValid(verifyRes)) {
-			return verifyRes;
-		}
+		BaseMsg verifyRes = indentProjectService.verifyIntegrity(indentProject);
+		return verifyRes;
+	}
+
+	@Override
+	public synchronized String completeTask(IndentProject indentProject) {
+		
+//		ActivitiTask activitiTask = getCurrentTask(indentProject);
+//		indentProject.setTask(activitiTask);
+//		String verifyRes = indentProjectService.verifyIntegrity(indentProject);
+//		if (ValidateUtil.isValid(verifyRes)) {
+//			return verifyRes;
+//		}
+		
+		ActivitiTask activitiTask = getCurrentTask(indentProject);
 		boolean res = false;
 		indentCommentService.createSystemMsg("完成了\"" + activitiTask.getName() + "\"任务", indentProject);
 		res = activitiEngineService.completeTask(processDefinitionKey, String.valueOf(indentProject.getId()),

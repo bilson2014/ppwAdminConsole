@@ -40,5 +40,7 @@ public interface DealLogMapper {
 	 * @return
 	 */
 	long notPayNumberByProjectId(@Param("projectId") long projectId);
+	
+	long deleteDealByProjectId(@Param("projectId") long projectId);
 
 }

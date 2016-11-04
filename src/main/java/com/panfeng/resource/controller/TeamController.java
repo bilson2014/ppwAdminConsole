@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,12 +33,12 @@ import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.TeamView;
+import com.panfeng.service.FDFSService;
 import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
 import com.panfeng.service.SessionInfoService;
 import com.panfeng.service.TeamService;
 import com.panfeng.util.DataUtil;
-import com.panfeng.util.FileUtils;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
@@ -59,7 +57,7 @@ public class TeamController extends BaseController {
 
 	private static String FILE_PROFIX = null; // 文件前缀
 
-	private static String TEAM_IMAGE_PATH = null; // 产品图片路径
+//	private static String TEAM_IMAGE_PATH = null; // 产品图片路径
 
 	public TeamController() {
 		if (INIT_PASSWORD == null || "".equals(INIT_PASSWORD)) {
@@ -69,7 +67,7 @@ public class TeamController extends BaseController {
 				propertis.load(is);
 				INIT_PASSWORD = propertis.getProperty("initPassw0rd");
 				FILE_PROFIX = propertis.getProperty("file.prefix");
-				TEAM_IMAGE_PATH = propertis.getProperty("upload.server.team.image");
+//				TEAM_IMAGE_PATH = propertis.getProperty("upload.server.team.image");
 			} catch (IOException e) {
 				Log.error("load Properties fail ...", null);
 				e.printStackTrace();
@@ -88,6 +86,9 @@ public class TeamController extends BaseController {
 
 	@Autowired
 	private final SessionInfoService sessionService = null;
+	
+	@Autowired
+	private final FDFSService fdfsService = null;
 
 	@RequestMapping("team-list")
 	public ModelAndView view(final HttpServletRequest request, final ModelMap model) {
@@ -128,14 +129,14 @@ public class TeamController extends BaseController {
 		final long id = service.save(team);
 
 		// 团队logo全路径
-		final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
+		//final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
 
 		// save file
-		File imageDir = new File(imagePath);
+		/*File imageDir = new File(imagePath);
 		if (!imageDir.exists())
-			imageDir.mkdir();
+			imageDir.mkdir();*/
 		try {
-			StringBuffer fileName = new StringBuffer();
+			/*StringBuffer fileName = new StringBuffer();
 			if (!file.isEmpty()) {
 				final String extName = FileUtils.getExtName(file.getOriginalFilename(), ".");
 				fileName.append("team" + id);
@@ -156,12 +157,14 @@ public class TeamController extends BaseController {
 				final String path = TEAM_IMAGE_PATH + "/" + fileName.toString();
 				File imageFile = new File(FILE_PROFIX + path);
 				file.transferTo(imageFile);
-
+				}*/
+				//修改为DFS上传begin
+				String path = fdfsService.upload(file);
+				//修改为DFS上传end
 				team.setTeamPhotoUrl(path);
 				// save photo path
 				service.saveTeamPhotoUrl(team);
-			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			baseMsg.setErrorCode(BaseMsg.ERROR);
 			baseMsg.setErrorMsg("更新logo失败！");
 			SessionInfo sessionInfo = getCurrentInfo(request);
@@ -170,7 +173,7 @@ public class TeamController extends BaseController {
 			throw new RuntimeException("Team Image upload error ...", e);
 		}
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("save team ...",sessionInfo);
+		Log.error("save team ...", sessionInfo);
 		baseMsg.setErrorCode(BaseMsg.NORMAL);
 		baseMsg.setErrorMsg("保存成功！");
 		return baseMsg;
@@ -185,10 +188,10 @@ public class TeamController extends BaseController {
 		// 如果上传文件不为空时，更新 url;反之亦然
 		if (!file.isEmpty()) {
 			// 团队logo全路径
-			final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
+			//final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
 
 			// save file
-			File imageDir = new File(imagePath);
+			/*File imageDir = new File(imagePath);
 			if (!imageDir.exists())
 				imageDir.mkdir();
 			StringBuffer fileName = new StringBuffer();
@@ -210,13 +213,16 @@ public class TeamController extends BaseController {
 			// get file path
 			final String path = TEAM_IMAGE_PATH + "/" + fileName;
 			File imageFile = new File(FILE_PROFIX + path);
-			file.transferTo(imageFile);
+			file.transferTo(imageFile);*/
+			
+			String path = fdfsService.upload(file);
 
 			// 删除 原文件
 			final Team originalTeam = service.findTeamById(team.getTeamId());
 			if (originalTeam != null) {
 				final String originalPath = originalTeam.getTeamPhotoUrl();
-				FileUtils.deleteFile(FILE_PROFIX + originalPath);
+				//FileUtils.deleteFile(FILE_PROFIX + originalPath);
+				fdfsService.delete(originalPath);
 			}
 			team.setTeamPhotoUrl(path);
 			// save photo path
@@ -225,11 +231,11 @@ public class TeamController extends BaseController {
 
 		long ret = service.update(team);
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update team ...",sessionInfo);
-		if(ret>0){
+		Log.error("update team ...", sessionInfo);
+		if (ret > 0) {
 			baseMsg.setErrorCode(BaseMsg.NORMAL);
 			baseMsg.setErrorMsg("更新成功！");
-		}else{
+		} else {
 			baseMsg.setErrorCode(BaseMsg.ERROR);
 			baseMsg.setErrorMsg("更新失败！");
 		}
@@ -237,7 +243,7 @@ public class TeamController extends BaseController {
 	}
 
 	@RequestMapping(value = "/team/delete", method = RequestMethod.POST)
-	public long delete(final long[] ids,HttpServletRequest request) {
+	public long delete(final long[] ids, HttpServletRequest request) {
 
 		if (ids.length > 0) {
 			final List<Team> list = service.delete(ids);
@@ -260,7 +266,7 @@ public class TeamController extends BaseController {
 			new RuntimeException("Team ids is null");
 		}
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("delete teams ... ids"+ids.toString(),sessionInfo);
+		Log.error("delete teams ... ids" + ids.toString(), sessionInfo);
 		return 0l;
 	}
 
@@ -289,16 +295,16 @@ public class TeamController extends BaseController {
 	 * @return 是否更新成功
 	 */
 	@RequestMapping("/team/static/data/updateTeamPhotoPath")
-	public boolean updateTeamPhotoPath(@RequestBody final Team team,HttpServletRequest request) {
+	public boolean updateTeamPhotoPath(@RequestBody final Team team, HttpServletRequest request) {
 
 		final long ret = service.saveTeamPhotoUrl(team);
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update team ...",sessionInfo);
+		Log.error("update team ...", sessionInfo);
 		if (ret > 0)
 			return true;
 		else
 			return false;
-		
+
 	}
 
 	/**
@@ -371,7 +377,7 @@ public class TeamController extends BaseController {
 
 				final long ret = service.updateTeamInfomation(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("update team ...",sessionInfo);
+				Log.error("update team ...", sessionInfo);
 				if (ret == 1) {
 					return true;
 				}
@@ -381,7 +387,7 @@ public class TeamController extends BaseController {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return false;
 
 	}
@@ -456,7 +462,7 @@ public class TeamController extends BaseController {
 
 				Team dbteam = service.register(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("save team ...",sessionInfo);
+				Log.error("save team ...", sessionInfo);
 				if (dbteam != null && dbteam.getTeamId() > 0) {
 					return initSessionInfo(dbteam, request);
 				}
@@ -533,7 +539,7 @@ public class TeamController extends BaseController {
 
 				Team dbteam = service.register(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("save team ...",sessionInfo);
+				Log.error("save team ...", sessionInfo);
 				if (dbteam != null && dbteam.getTeamId() > 0) {
 					initSessionInfo(dbteam, request);
 				}
@@ -653,7 +659,7 @@ public class TeamController extends BaseController {
 		if (original != null) {
 			final Team team = service.register(original);
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("save team ...",sessionInfo);
+			Log.error("save team ...", sessionInfo);
 			return initSessionInfo(team, request);
 		}
 		return false;
@@ -700,7 +706,7 @@ public class TeamController extends BaseController {
 				team.setPassword(password);
 				final long ret = service.updatePasswordByLoginName(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("update team ...",sessionInfo);
+				Log.error("update team ...", sessionInfo);
 				if (ret > 0)
 					return true;
 				else {
@@ -726,17 +732,17 @@ public class TeamController extends BaseController {
 	 *            包含供应商唯一编号
 	 */
 	@RequestMapping("/team/static/data/updateStatus")
-	public boolean updateStatus(@RequestBody final Team team,HttpServletRequest request) {
+	public boolean updateStatus(@RequestBody final Team team, HttpServletRequest request) {
 
 		if (team != null) {
 			final Long id = team.getTeamId();
 			if (id != null && !"".equals(id)) {
 				final long ret = service.updateTeamStatus(id);
-				if (ret == 1){
+				if (ret == 1) {
 					SessionInfo sessionInfo = getCurrentInfo(request);
-					Log.error("update team ...",sessionInfo);
+					Log.error("update team ...", sessionInfo);
 					return true;
-					}
+				}
 			}
 		}
 		return false;
@@ -817,8 +823,8 @@ public class TeamController extends BaseController {
 		info.setSuperAdmin(team.isSuperAdmin()); // 判断是否是超级管理员
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(GlobalConstant.SESSION_INFO, info);
-		//return sessionService.addSession(request, map);
-		return sessionService.addSessionSeveralTime(request, map, 60*60*24*7);
+		// return sessionService.addSession(request, map);
+		return sessionService.addSessionSeveralTime(request, map, 60 * 60 * 24 * 7);
 	}
 
 	@RequestMapping("/team/static/data/add/account")
@@ -887,29 +893,68 @@ public class TeamController extends BaseController {
 	}
 
 	@RequestMapping("/team/tags")
-	public List<String> getTags(@RequestBody List<Integer> ids,HttpServletRequest request) {
+	public List<String> getTags(@RequestBody List<Integer> ids, HttpServletRequest request) {
 		if (ValidateUtil.isValid(ids)) {
 			List<String> tags = service.getTags(ids);
 			return tags;
 		} else {
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("ids is null ...",sessionInfo);
+			Log.error("ids is null ...", sessionInfo);
 		}
 		return null;
 	}
-	
+
 	@RequestMapping("/team/update/newphone")
-	public BaseMsg updateNewphone(@RequestBody Team team,HttpServletRequest request) {
-		
+	public BaseMsg updateNewphone(@RequestBody Team team, HttpServletRequest request) {
+
 		final long count = service.checkExist(team);
-		if (count > 0){
-			return new BaseMsg(3,"手机号码已被占用");
+		if (count > 0) {
+			return new BaseMsg(3, "手机号码已被占用");
 		}
 		final long ret = service.modifyTeamPhone(team);
 		if (ret > 0) {
-			return new BaseMsg(2,"success");
+			return new BaseMsg(2, "success");
 		}
-		return  new BaseMsg(0,"error");
+		return new BaseMsg(0, "error");
+	}
+
+	/**
+	 * 处理team临时表,更新team备注
+	 * 
+	 * @param team
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/team/deal/teamTmpAndTeamDesc")
+	public boolean dealTeamTmpAndUpdateTeamDesc(@RequestBody Team team, HttpServletRequest request) {
+		try {
+			if (null != team) {
+				String description = null == team.getDescription() ? "" : team.getDescription();
+				team.setDescription(description);
+				// 更新备注信息
+				service.updateTeamDescription(team);
+				service.dealTeamTmp(team);
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return false;
+	}
+
+	/**
+	 * 根据 团队ID 获取团队信息
+	 * 
+	 * @param teamId
+	 *            团队唯一编号
+	 * @return 团队信息
+	 */
+	@RequestMapping("/team/static/latest/{teamId}")
+	public Team loadLatestData(@PathVariable("teamId") final Long teamId) {
+		final Team team = service.findLatestTeamById(teamId);
+		team.setPassword(null);
+		return team;
 	}
 
 }

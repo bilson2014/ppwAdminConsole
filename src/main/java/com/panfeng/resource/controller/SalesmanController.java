@@ -161,7 +161,7 @@ public class SalesmanController extends BaseController {
 		if(ValidateUtil.isValid(json)){
 			
 			sale = JsonUtil.toBean(json, Salesman.class);
-		}
+		}				
 		
 		final StringBuffer url = new StringBuffer();
 		url.append("http://qr.liantu.com/api.php?text=");
