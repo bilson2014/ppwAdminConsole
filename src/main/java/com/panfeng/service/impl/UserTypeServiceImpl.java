@@ -12,6 +12,7 @@ import com.panfeng.resource.model.User;
 import com.panfeng.resource.model.UserViewModel;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.UserTempService;
+import com.panfeng.util.Constants;
 
 @Service
 public class UserTypeServiceImpl implements UserTempService {
@@ -37,8 +38,12 @@ public class UserTypeServiceImpl implements UserTempService {
 								? "内部员工" : employee.getEmployeeRealName());
 				String imgUrl = employee.getEmployeeImg();
 				if (imgUrl != null && !"".equals(imgUrl)) {
-					String filename = imgUrl.substring(imgUrl.lastIndexOf('/'), imgUrl.length());
-					userViewModel.setImgUrl("/employee/img" + filename);
+					//modify wlc 2016-11-4 16:36:42
+					//修改为fdfs路径begin
+					//String filename = imgUrl.substring(imgUrl.lastIndexOf('/'), imgUrl.length());
+					//userViewModel.setImgUrl("/employee/img" + filename);
+					userViewModel.setImgUrl(Constants.DFS_PATH + imgUrl);
+					//修改为fdfs路径end
 				} else
 					userViewModel.setImgUrl("/resources/images/flow/guanhead.png");
 			} else
@@ -54,8 +59,12 @@ public class UserTypeServiceImpl implements UserTempService {
 					team.getLoginName() == null || team.getLoginName().equals("") ? "供应商" : team.getLoginName());
 			String teamimageUrl = team.getTeamPhotoUrl();
 			if (teamimageUrl != null && !"".equals(teamimageUrl)) {
-				String filename = teamimageUrl.substring(teamimageUrl.lastIndexOf('/'), teamimageUrl.length());
-				userViewModel.setImgUrl("/team/img/" + filename);
+				//modify wlc 2016-11-4 16:36:42
+				//修改为fdfs路径begin
+				//String filename = teamimageUrl.substring(teamimageUrl.lastIndexOf('/'), teamimageUrl.length());
+				//userViewModel.setImgUrl("/team/img/" + filename);
+				userViewModel.setImgUrl(Constants.DFS_PATH + teamimageUrl);
+				//修改为fdfs路径end
 			} else {
 				userViewModel.setImgUrl("/resources/images/flow/gonghead.png");
 			}
@@ -70,8 +79,12 @@ public class UserTypeServiceImpl implements UserTempService {
 			userViewModel.setUserType("客户");
 			String userImageUrl = user.getImgUrl();
 			if (userImageUrl != null && !"".equals(userImageUrl)) {
-				String filename = userImageUrl.substring(userImageUrl.lastIndexOf('/'), userImageUrl.length());
-				userViewModel.setImgUrl("/user/img/" + filename);
+				//modify wlc 2016-11-4 16:36:42
+				//修改为fdfs路径begin
+				//String filename = userImageUrl.substring(userImageUrl.lastIndexOf('/'), userImageUrl.length());
+				//userViewModel.setImgUrl("/user/img/" + filename);
+				userViewModel.setImgUrl(Constants.DFS_PATH + userImageUrl);
+				//修改为fdfs路径end
 			} else {
 				userViewModel.setImgUrl("/resources/images/flow/kehead.png");
 			}
