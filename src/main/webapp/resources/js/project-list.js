@@ -293,6 +293,32 @@ function delFuc(){
 		});
 	}
 }
+// 删除
+function delProFuc(){
+	var arr = datagrid.datagrid('getSelections');
+	if(arr.length <= 0 ){
+		$.message('请选择进行删除操作!');
+	} else {
+		$.messager.confirm('提示信息' , '确认删除流程吗?' , function(r){
+			if(r){
+				var ids = '';
+				for(var i = 0 ; i < arr.length ; i++){
+					ids += arr[i].id + ',';
+				}
+				ids = ids.substring(0,ids.length-1);
+				$.post(getContextPath() + '/project/delete/project', {ids:ids},function(result){
+					
+					// 刷新数据
+					datagrid.datagrid('clearSelections');
+					datagrid.datagrid('reload');
+					$.message('操作成功!');
+				});
+			} else {
+				return ;
+			}
+		});
+	}
+}
 
 // 取消
 function cancelFuc(){
