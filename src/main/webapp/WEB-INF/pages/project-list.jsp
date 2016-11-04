@@ -101,6 +101,10 @@
 			<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">取消流程</a>
 		</r:permission>
 		
+		<r:permission uri="/project/delete/project">
+			<a onclick="delProFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除流程</a>
+		</r:permission>
+		
 		<r:mulparampermission uri2="/project/saveInfo" uri="/project/updateInfo">
 			<a onclick="saveFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">保存</a>
 		</r:mulparampermission>

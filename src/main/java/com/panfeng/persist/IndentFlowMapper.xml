@@ -115,7 +115,7 @@
 	<delete id="deleteByflowId" parameterType="long">
 		<![CDATA[
 			DELETE FROM INDENT_FLOW
-				WHERE IF_INDENT_ID =#{id} AND IF_FLOW_ID =#{ifFlowId}
+				WHERE IF_INDENT_ID =${id} AND IF_FLOW_ID =${ifFlowId}
 		]]>
 	</delete>
 

@@ -181,6 +181,19 @@ public class ProjectController extends BaseController {
 		final long ret = indentProjectService.update(project);
 		return ret;
 	}
+	
+	@RequestMapping("/delete/project")
+	public void deleteProject(long[] ids,HttpServletRequest request) {
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("delete IndentProject ...",sessionInfo);
+		if (ValidateUtil.isValid(ids)) {
+			for (final long id : ids) {
+				final IndentProject project = new IndentProject();
+				project.setId(id);
+				indentProjectService.deleteProject(project);
+			}
+		}
+	}
 
 	@RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
 	public long updateInfo(final IndentProject project, String user_name, String ratio, String synergyid,HttpServletRequest request) {

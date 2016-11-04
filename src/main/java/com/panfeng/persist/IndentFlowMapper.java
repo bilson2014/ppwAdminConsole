@@ -19,7 +19,7 @@ public interface IndentFlowMapper {
 
 	public long delete(IndentFlow indentFlow);
 
-	public long deleteByflowId(IndentProject indentProject, @Param("ifFlowId") String ifFlowId);
+	public long deleteByflowId(@Param("id") Long id, @Param("ifFlowId") String ifFlowId);
 
 	public long update(IndentFlow indentFlow);
 	
