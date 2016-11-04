@@ -133,10 +133,22 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 
 	@Override
 	public void removeIndentResource(IndentProject indentProject) {
-		long l = indent_ResourceMapper.deleteIndentResourceList(indentProject);
-		if (l > 0) {
-			localResourceImpl.removeDir(formatPath(indentProject, resourcesIndentMedia), true);
+		//1.删除文件
+		List<IndentResource> iList = indent_ResourceMapper.findResourcetListByIndentId(indentProject);
+		if(null!=iList && iList.size()>0){
+			for(IndentResource i : iList){
+				String irFormatName = i.getIrFormatName();
+				if(StringUtils.isNotBlank(irFormatName)){
+					fdfsService.delete(irFormatName);
+				}
+				String irViewName = i.getIrViewName();
+				if(StringUtils.isNotBlank(irViewName)){
+					fdfsService.delete(irViewName);
+				}
+			}
 		}
+		//2.删除记录
+		indent_ResourceMapper.deleteIndentResourceList(indentProject);
 	}
 
 	@Override
