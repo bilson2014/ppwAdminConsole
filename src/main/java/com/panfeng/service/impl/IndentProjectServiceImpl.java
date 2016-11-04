@@ -635,7 +635,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			break;
 		case "方案":
 			// 方案
-			info.add(InfoType.provider);
 			file.add(fileType.CeHuaFangAn);
 			file.add(fileType.BaoJiaDan);
 			file.add(fileType.PaiQiBiao);
@@ -643,27 +642,30 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		case "商务":
 			String shangwu = stepText.get(2);
 			// 查询用户级别
-
 			if (isSLevel(ip)) {
 				// S级别用户特殊对待
 				if (ip.getTask().getName().equals(shangwu)) {
 					// 身为s用户有权利跳过（只在商务阶段检测 延迟付款 ）
 					if (ip.getSkipPay() != null ? ip.getSkipPay() : false) {
+						info.add(InfoType.provider);
 						info.add(InfoType.customerPayment);
 						info.add(InfoType.priceFinish);
 					} else {
+						info.add(InfoType.provider);
 						info.add(InfoType.customerPayment);
 						info.add(InfoType.priceFinish);
 						pay.add(PayType.payFinish);
 					}
 				} else {
 					// 不是商务步骤，不检测S级别客户的支付情况
+					info.add(InfoType.provider);
 					info.add(InfoType.customerPayment);
 					info.add(InfoType.priceFinish);
 				}
 				break;
 			}
 			// 苦逼的小白
+			info.add(InfoType.provider);
 			info.add(InfoType.customerPayment);
 			info.add(InfoType.priceFinish);
 			pay.add(PayType.payFinish);
@@ -728,6 +730,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			for (int j = 0; j < resList.size(); j++) {
 				IndentResource indentResource = resList.get(j);
 				String resType = indentResource.getIrtype();
+				resType = resType.replaceAll("&amp;", "&");
 				if (resType.equals(type)) {
 					isExist = true;
 				}
