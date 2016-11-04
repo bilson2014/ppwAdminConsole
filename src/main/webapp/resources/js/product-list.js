@@ -247,10 +247,12 @@ $().ready(function(){
 				$('#productPicture').addClass('hide');
 				$('#youku-player').hide();
 				$('#productVideo').show('fast');
-				
-				var videoName = getFileName(value);
-				var videoPath = getHostName() + '/product/video/' + videoName;
-				
+				//modify by wlc 2016-11-4 10:58:08
+				//修改为dfs路径 begin
+				//var videoName = getFileName(value);
+				//var videoPath = getHostName() + '/product/video/' + videoName;
+				var videoPath = getDfsHostName() +  value;
+				//修改为dfs路径end
 				destroyPlayer('youku-player');// 销毁优酷播放器
 				$('#productVideo').attr('src',videoPath);
 				

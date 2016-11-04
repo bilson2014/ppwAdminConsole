@@ -1,7 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page import="com.panfeng.util.Constants"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="r" uri="/mytaglib" %>
-
+<spring:url value="<%=Constants.DFS_PATH %>" var="DFSurl" />
 <spring:url value="/resources/css/product-list.css" var="productListCss" />
 <spring:url value="/resources/lib/kindeditor/themes/default/default.css" var="defaultCss" />
 <spring:url value="/resources/lib/kindeditor/plugins/code/prettify.css" var="prettifyCss" />
@@ -35,7 +36,7 @@
 <script src="${WdatePickerJs }" ></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
-	
+	<input id='Fastdfs_path' type="hidden" value="${DFSurl}">
 	<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
 		<form id="searchForm">
 			<table>

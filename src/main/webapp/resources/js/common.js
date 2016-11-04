@@ -134,7 +134,13 @@ function getHostName(){
 	
 	return window.location.protocol + '//' + window.location.host;
 }
-
+/**
+ * 获取 dfs的主机名
+ */
+function getDfsHostName(){
+	var fdfsPath = $('#Fastdfs_path').val();
+	return fdfsPath == undefined ? "http://resource.apaipian.com/resource" : $('#Fastdfs_path').val();
+}
 /**
  * 数据加分隔符
  * @param number

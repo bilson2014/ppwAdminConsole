@@ -457,7 +457,7 @@ function loadResourceFuc(){
 					tBody += '<td>' + n.irtype + '</td>';
 					tBody += '<td>'+ n.irCreateDate +'</td>';
 					tBody += '<td>';
-					tBody += '<a href="'+ getContextPath() + '/getFile/' + n.irId +'">下载</a>';
+					tBody += '<a href="'+ getContextPath() + '/getDFSFile/' + n.irId +'">下载</a>';
 					tBody += '</td>';
 					tBody += '</tr>';
 				});
