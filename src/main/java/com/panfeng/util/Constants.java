@@ -21,6 +21,7 @@ public final class Constants {
 	public static String PDF2HTML;
 	public static String OFFICEHOME;
 	public static String COOKIES_SCOPE;
+	public static String DFS_PATH;
 	static Constants CONSTANTS = new Constants();
 
 	// state Constants
@@ -80,6 +81,7 @@ public final class Constants {
 		PDF2HTML = properties.getProperty("pdf2html");
 		OFFICEHOME = properties.getProperty("officehome");
 		COOKIES_SCOPE = properties.getProperty("cookies_scope");
+		DFS_PATH = properties.getProperty("upload.server.dfs.url");
 		
 		PRICE_RANGE_MAP =  new LinkedHashMap<String,String>();
 		//获知渠道

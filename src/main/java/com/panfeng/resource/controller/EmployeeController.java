@@ -1,10 +1,7 @@
 package com.panfeng.resource.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +24,7 @@ import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.EmployeeView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.EmployeeService;
+import com.panfeng.service.FDFSService;
 import com.panfeng.service.SessionInfoService;
 import com.panfeng.util.AESUtil;
 import com.panfeng.util.DataUtil;
@@ -50,6 +48,8 @@ public class EmployeeController extends BaseController{
 	
 	@Autowired
 	private final SessionInfoService infoService = null;
+	@Autowired
+	private final FDFSService fdfsService = null;
 	
 	/**
 	 * 跳转
@@ -143,7 +143,11 @@ public class EmployeeController extends BaseController{
 		final Employee e = service.findEmployerById(employee.getEmployeeId());
 		final String imagePath = e.getEmployeeImg();
 		if(ValidateUtil.isValid(imagePath)){
-			FileUtils.deleteFile(GlobalConstant.FILE_PROFIX + File.separator + imagePath);
+			//modify by wlc 2016-11-4 12:38:15
+			//修改为dfs删除 begin
+			//FileUtils.deleteFile(GlobalConstant.FILE_PROFIX + File.separator + imagePath);
+			fdfsService.delete(imagePath);
+			//修改为dfs删除 end
 		}
 				
 		service.updateWidthRelation(employee);
@@ -201,7 +205,13 @@ public class EmployeeController extends BaseController{
 	}
 	
 	public void processFile(final MultipartFile employeeImage,final Employee employee){
-		if(!employeeImage.isEmpty()){
+		//modify by wlc 2016-11-4 12:42:16
+		//修改为dfs上传begin
+		String fileId = fdfsService.upload(employeeImage);
+		employee.setEmployeeImg(fileId);
+		service.updateImagePath(employee);
+		//修改为dfs上传end
+		/*if(!employeeImage.isEmpty()){
 			final String imagePath = GlobalConstant.FILE_PROFIX + GlobalConstant.EMPLOYEE_IMAGE_PATH;
 			
 			File image = new File(imagePath);
@@ -236,7 +246,7 @@ public class EmployeeController extends BaseController{
 			} catch (IllegalStateException | IOException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 	}
 	
 	
