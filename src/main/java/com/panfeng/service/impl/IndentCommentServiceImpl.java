@@ -59,12 +59,17 @@ public class IndentCommentServiceImpl implements IndentCommentService {
 		IndentComment indentComment = new IndentComment();
 		indentComment.setIcUserId(888);
 		indentComment.setIcUserType(GlobalConstant.ROLE_SYSTEM);
-		UserViewModel userViewModel = userTempService.getInfo(
-				indentProject.getUserType(), indentProject.getUserId());
-		indentComment.setIcContent(userViewModel.getUserName() + "，" + msg);
+		if((indentProject.getUserType() == null)||(indentProject.getUserId() == null)){
+			indentComment.setIcContent("");
+		}else{
+			UserViewModel userViewModel = userTempService.getInfo(
+					indentProject.getUserType(), indentProject.getUserId());
+			indentComment.setIcContent(userViewModel.getUserName() + "，" + msg);
+		}
 		indentComment.setIcIndentId(indentProject.getId());
 		indent_CommentMapper.save(indentComment);
 		Log.error(indentComment.getIcContent(), null);
+		
 	}
 
 }
