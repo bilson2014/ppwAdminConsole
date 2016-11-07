@@ -27,7 +27,7 @@
 										  com.panfeng.fs,
 										  com.panfeng.listener,
 										  com.panfeng.mq.service" />
-
+ 	
 	<context:annotation-config />
 	
 	<tx:annotation-driven />
