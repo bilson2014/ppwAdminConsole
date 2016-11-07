@@ -161,6 +161,9 @@ public final class Constants {
 		}
 	}
 
-	
-
+	public enum mailType {
+		DINNER,
+		MEETING,
+		REGESTER;
+	}
 }

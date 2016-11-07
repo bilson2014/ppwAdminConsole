@@ -16,7 +16,7 @@ import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.MailView;
 import com.panfeng.service.MailService;
 import com.panfeng.service.UserService;
-import com.panfeng.util.MailTemplateFactory;
+import com.panfeng.util.Constants;
 
 /**
  * 邮件
@@ -29,7 +29,6 @@ public class MailController extends BaseController {
 	private final MailService mailService = null;
 	@Autowired
 	private final UserService userService = null;
-	
 	
 	@RequestMapping(value = "/mail-list")
 	public ModelAndView view(final ModelMap model) {
@@ -67,19 +66,15 @@ public class MailController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/mail/send")
-	public void send(HttpServletRequest request,Long id){
-		Mail mail = mailService.getTemplateByType("REGESTER");
+	public void send(HttpServletRequest request){
 		User user = userService.findUserById(207);
-		mail.setUserName(user.getUserName());
-		mail.setReceiver(user.getEmail());
-		String content = MailTemplateFactory.decorate(mail,mail.getContent());
 		List<Mail> list = new ArrayList<Mail>();
-		if(null!=mail&&null!=user){
-			for(int i=0;i<2;i++){
-				mail.setContent(content);
-				list.add(mail);
-			}
-			mailService.sendMails(list,request);
+		for(int i=0;i<2;i++){
+			Mail mail = new Mail();
+			mail.setReceiver(user.getEmail());
+			mail.setUserName(user.getUserName());
+			list.add(mail);
 		}
+		mailService.decorateMails(list,Constants.mailType.DINNER.toString());
 	}
 }

@@ -27,6 +27,8 @@ public interface MailService {
 	
 	void sendMails(List<Mail> mail,HttpServletRequest request);
 
+	void decorateMails(List<Mail> list,String type);
+
 	
 
 }

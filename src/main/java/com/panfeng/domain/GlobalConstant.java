@@ -44,6 +44,8 @@ public final class GlobalConstant extends BaseObject {
 														// 过期时间(秒),默认30分钟
 
 	public static final String CONVERIONHSOT = "http://123.59.75.62:8080/";
+	
+	public static final String MAIL_MAP = "mail_map"; // 邮件集合
 
 	public static String COOKIES_SCOPE = null;
 
@@ -83,7 +85,7 @@ public final class GlobalConstant extends BaseObject {
 	public static String ACTIVITY_PRODUCT_IDS;
 	
 	public static String UPLOAD_PATH;
-
+	
 	private static GlobalConstant GLOBALCONSTANT = new GlobalConstant();
 
 	static {

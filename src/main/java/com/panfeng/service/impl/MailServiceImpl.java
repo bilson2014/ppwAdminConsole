@@ -1,6 +1,5 @@
 package com.panfeng.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -8,18 +7,18 @@ import java.util.concurrent.Executors;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import com.panfeng.dao.MailDao;
 import com.panfeng.persist.MailMapper;
 import com.panfeng.resource.model.Mail;
 import com.panfeng.resource.view.MailView;
 import com.panfeng.service.MailService;
+import com.panfeng.util.Log;
+import com.panfeng.util.MailTemplateFactory;
 import com.panfeng.util.PropertiesUtils;
 
 @Service
@@ -29,6 +28,8 @@ public class MailServiceImpl implements MailService{
 	private MailMapper mailMapper;
 	@Autowired
     private JavaMailSenderImpl emailTemplate;
+	@Autowired
+    private MailDao mailDao;
 
 	@Override
 	public List<Mail> listWithPagination(MailView view) {
@@ -44,18 +45,25 @@ public class MailServiceImpl implements MailService{
 
 	@Override
 	public void save(Mail mail) {
+		//保存到数据库
 		mailMapper.save(mail);
+		//保存到redis
+		mailDao.addMailByRedis(mail);
 	}
 
 	@Override
 	public void update(Mail mail) {
 		mailMapper.update(mail);
+		//保存到redis
+		mailDao.addMailByRedis(mail);
 	}
 
 	@Override
 	public long delete(final int[] ids) {
 		if(ids.length>0){
 			for(int id : ids){
+				Mail mail = mailMapper.getTemplateById(id);
+				mailDao.removeMailFromRedis(mail.getMailType());
 				mailMapper.delete(id);
 			}
 			return 1l;
@@ -78,11 +86,10 @@ public class MailServiceImpl implements MailService{
 	 */
 	@Override
 	public void sendMail(Mail mail,HttpServletRequest request) {
-		String domain = "http://"+request.getServerName()+":"+request.getServerPort();
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					send(mail,domain);
+					send(mail);
 				}
 			}).start();
 	}
@@ -91,38 +98,44 @@ public class MailServiceImpl implements MailService{
 	 * 线程池
 	 */
 	public void sendMails(List<Mail> list,HttpServletRequest request) {
-		String domain = "http://"+request.getServerName()+":"+request.getServerPort();
 		ExecutorService es = Executors.newFixedThreadPool(3);
 		for(Mail mail : list){
 			es.submit(new Runnable() {
 				public void run() {
-					send(mail,domain);
+					send(mail);
 				}
 			});
 			new Thread().start();
 		}
 	}
-	private void send(Mail mail, String domain) {
-		 MimeMessage mailMessage = emailTemplate.createMimeMessage(); 
-		    try {
-				MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage,true);
-				messageHelper.setTo(mail.getReceiver()); 
-				messageHelper.setFrom(PropertiesUtils.getProp("mail.sender")); 
-				messageHelper.setSubject(mail.getSubject()); 
-				String content = mail.getContent();
-				Document document = Jsoup.parse(content);
-				Elements elements = document.select("img");
-				List<String> list = new ArrayList<String>();
-				for(Element e : elements){
-					String src = e.attr("src");
-					src = domain+src;
-					list.add(src);
-					e.attr("src",src);
-				}
-				messageHelper.setText(document.toString(),true);
-			} catch (MessagingException e) {
-				e.printStackTrace();
-			} 
-		    emailTemplate.send(mailMessage);
+	private void send(Mail mail) {
+		MimeMessage mailMessage = emailTemplate.createMimeMessage(); 
+	    try {
+			MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage,true);
+			messageHelper.setTo(mail.getReceiver()); 
+			messageHelper.setFrom(PropertiesUtils.getProp("mail.sender")); 
+			messageHelper.setSubject(mail.getSubject()); 
+			messageHelper.setText(mail.getContent(),true);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} 
+	    emailTemplate.send(mailMessage);
+	}
+
+	@Override
+	public void decorateMails(List<Mail> list,String type) {
+		Mail m = mailDao.getMailFromRedis(type);
+		if(null == m)m = mailMapper.getTemplateByType(type);
+		if(null != m){
+			String content = m.getContent();
+			for(Mail mail : list){
+				String c = MailTemplateFactory.decorate(mail,content);
+				mail.setSubject(m.getSubject());
+				mail.setContent(c);
+				send(mail);
+			}
+		}else{
+			Log.error("the mail type" + type + " is not exist",null);
+		}
 	}
 }
