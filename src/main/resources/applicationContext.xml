@@ -16,13 +16,17 @@
 	<import resource="DataSourceConfig.xml"/>
 	
 	<import resource="RedisConfig.xml"/>
+	
+	<import resource="spring-mq.xml"/>
 
-	<context:property-placeholder location="classpath:jdbc.properties,classpath:redis.properties" />
+	<context:property-placeholder location="classpath:jdbc.properties,classpath:redis.properties,
+											classpath:mq.properties" />
 
 	<context:component-scan base-package="com.panfeng.service,
 										  com.panfeng.dao,
 										  com.panfeng.fs,
-										  com.panfeng.listener" />
+										  com.panfeng.listener,
+										  com.panfeng.mq.service" />
 
 	<context:annotation-config />
 	
