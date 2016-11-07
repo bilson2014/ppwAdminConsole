@@ -102,7 +102,7 @@
 		</r:permission>
 		
 		<r:permission uri="/project/delete/project">
-			<a onclick="delProFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除流程</a>
+			<a onclick="delProFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
 		</r:permission>
 		
 		<r:mulparampermission uri2="/project/saveInfo" uri="/project/updateInfo">

@@ -72,6 +72,7 @@ public class LoginController extends BaseController {
 			//final HttpSession session = request.getSession();
 			final SessionInfo info = new SessionInfo();
 			info.setSessionType(GlobalConstant.ROLE_EMPLOYEE);
+			info.setReqiureId(e.getEmployeeId());
 			info.setLoginName(e.getEmployeeLoginName());
 			info.setRealName(e.getEmployeeRealName());
 			

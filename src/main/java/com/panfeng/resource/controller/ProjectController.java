@@ -190,6 +190,8 @@ public class ProjectController extends BaseController {
 			for (final long id : ids) {
 				final IndentProject project = new IndentProject();
 				project.setId(id);
+				project.setUserType(sessionInfo.getSessionType());
+				project.setUserId(sessionInfo.getReqiureId());
 				indentProjectService.deleteProject(project);
 			}
 		}
@@ -285,16 +287,17 @@ public class ProjectController extends BaseController {
 
 	@RequestMapping("/delete")
 	public long delete(final long[] ids,HttpServletRequest request) {
-
+		SessionInfo sessionInfo = getCurrentInfo(request);
 		if (ValidateUtil.isValid(ids)) {
 			for (final long id : ids) {
 				final IndentProject project = new IndentProject();
 				project.setId(id);
 				project.setState(IndentProject.PROJECT_CANCEL);
+				project.setUserType(sessionInfo.getSessionType());
+				project.setUserId(sessionInfo.getReqiureId());
 				indentProjectService.cancelProject(project);
 			}
 		}
-		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("delete IndentProjects ...  ids:"+ids.toString(),sessionInfo);
 		return 1l;
 	}

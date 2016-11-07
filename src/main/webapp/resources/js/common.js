@@ -139,7 +139,7 @@ function getHostName(){
  */
 function getDfsHostName(){
 	var fdfsPath = $('#Fastdfs_path').val();
-	return fdfsPath == undefined ? "http://resource.apaipian.com/resource" : $('#Fastdfs_path').val();
+	return fdfsPath == undefined ? "http://resource.apaipian.com/resource/" : $('#Fastdfs_path').val();
 }
 /**
  * 数据加分隔符
