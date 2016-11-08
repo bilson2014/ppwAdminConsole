@@ -1,8 +1,6 @@
 package com.panfeng.resource.model;
 
 
-import java.io.File;
-
 import com.panfeng.domain.BaseObject;
 public class Mail extends BaseObject{
 
@@ -22,42 +20,7 @@ public class Mail extends BaseObject{
 	private String updateTime = null;
 	
 	
-	/**
-     * 邮件接收者
-     */
-	private String receiver = null;//接收人
-	/**
-     * 邮件发送者
-     */
-	private String sender = ""; // 发送者
-	 /**
-     * 邮件附件
-     */
-    private File [] attachFile;
     
-    
-    //===========邮件内容替换属性===============
-    private String userName;
-    
-    
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	public String getSender() {
-		return sender;
-	}
-	public void setSender(String sender) {
-		this.sender = sender;
-	}
-	public File[] getAttachFile() {
-		return attachFile;
-	}
-	public void setAttachFile(File[] attachFile) {
-		this.attachFile = attachFile;
-	}
 	public Integer getId() {
 		return id;
 	}
@@ -94,11 +57,4 @@ public class Mail extends BaseObject{
 	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
 	}
-	public String getReceiver() {
-		return receiver;
-	}
-	public void setReceiver(String receiver) {
-		this.receiver = receiver;
-	}
-	
 }

@@ -1,8 +1,6 @@
 package com.panfeng.resource.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,12 +8,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import com.panfeng.resource.model.Mail;
-import com.panfeng.resource.model.User;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.MailView;
 import com.panfeng.service.MailService;
-import com.panfeng.service.UserService;
 import com.panfeng.util.Constants;
 
 /**
@@ -27,8 +23,8 @@ public class MailController extends BaseController {
 	
 	@Autowired
 	private final MailService mailService = null;
-	@Autowired
-	private final UserService userService = null;
+	//@Autowired
+	//private final UserService userService = null;
 	
 	@RequestMapping(value = "/mail-list")
 	public ModelAndView view(final ModelMap model) {
@@ -65,7 +61,7 @@ public class MailController extends BaseController {
 		mailService.delete(ids);
 	}
 	
-	@RequestMapping(value = "/mail/send")
+	/*@RequestMapping(value = "/mail/send")
 	public void send(HttpServletRequest request){
 		User user = userService.findUserById(207);
 		List<Mail> list = new ArrayList<Mail>();
@@ -76,5 +72,5 @@ public class MailController extends BaseController {
 			list.add(mail);
 		}
 		mailService.decorateMails(list,Constants.mailType.DINNER.toString());
-	}
+	}*/
 }

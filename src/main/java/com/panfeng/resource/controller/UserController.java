@@ -27,8 +27,8 @@ import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.mq.service.MailMQService;
 import com.panfeng.mq.service.SmsMQService;
-import com.panfeng.resource.model.MailParam;
 import com.panfeng.resource.model.Role;
+import com.panfeng.resource.model.SmsParam;
 import com.panfeng.resource.model.ThirdBind;
 import com.panfeng.resource.model.User;
 import com.panfeng.resource.view.DataGrid;
@@ -38,6 +38,7 @@ import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
 import com.panfeng.service.SessionInfoService;
 import com.panfeng.service.UserService;
+import com.panfeng.util.Constants;
 import com.panfeng.util.Constants.loginType;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.DateUtils;
@@ -65,7 +66,7 @@ public class UserController extends BaseController {
 
 	@Autowired
 	private final RightService rightService = null;
-	
+
 	@Autowired
 	private final MailMQService mailMQService = null;
 	
@@ -257,11 +258,13 @@ public class UserController extends BaseController {
 			Log.error("save user...",sessionInfo);
 			// 新增session
 			// 调用MQ发送短信和邮件
-			final MailParam mail = new MailParam();
-			mail.setTo("1061942069@qq.com");
-			mail.setSubject("拍片网注册");
-			mail.setContent("恭喜注册成功");
-			mailMQService.sendMessage(mail);
+			Map<String,String[]> map = new HashMap<String,String[]>();
+			map.put("itliucheng@126.com", new String[]{"123","456"});
+			mailMQService.sendMailsByType(Constants.mailType.REGESTER.toString(),map);
+			SmsParam sms = new SmsParam();
+			sms.setContent(new String[]{"发个短信","逗你玩玩"});
+			sms.setTelephone("17778080667");
+			smsMQService.sendMessage(sms);
 			return initSessionInfo(result, request);
 		}
 

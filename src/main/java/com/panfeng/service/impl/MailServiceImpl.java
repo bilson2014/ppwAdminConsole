@@ -1,33 +1,19 @@
 package com.panfeng.service.impl;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
 import com.panfeng.dao.MailDao;
 import com.panfeng.persist.MailMapper;
 import com.panfeng.resource.model.Mail;
 import com.panfeng.resource.view.MailView;
 import com.panfeng.service.MailService;
-import com.panfeng.util.Log;
-import com.panfeng.util.MailTemplateFactory;
-import com.panfeng.util.PropertiesUtils;
-
 @Service
 public class MailServiceImpl implements MailService{
-
 	@Autowired
 	private MailMapper mailMapper;
-	@Autowired
-    private JavaMailSenderImpl emailTemplate;
+	//@Autowired
+   // private JavaMailSenderImpl emailTemplate;
 	@Autowired
     private MailDao mailDao;
 
@@ -84,7 +70,7 @@ public class MailServiceImpl implements MailService{
 	/**
 	 * 发送单个邮件
 	 */
-	@Override
+	/*@Override
 	public void sendMail(Mail mail,HttpServletRequest request) {
 			new Thread(new Runnable() {
 				@Override
@@ -92,12 +78,12 @@ public class MailServiceImpl implements MailService{
 					send(mail);
 				}
 			}).start();
-	}
+	}*/
 	/**
 	 * 一次性发送若干邮件
 	 * 线程池
 	 */
-	public void sendMails(List<Mail> list,HttpServletRequest request) {
+	/*public void sendMails(List<Mail> list,HttpServletRequest request) {
 		ExecutorService es = Executors.newFixedThreadPool(3);
 		for(Mail mail : list){
 			es.submit(new Runnable() {
@@ -107,8 +93,8 @@ public class MailServiceImpl implements MailService{
 			});
 			new Thread().start();
 		}
-	}
-	private void send(Mail mail) {
+	}*/
+	/*private void send(Mail mail) {
 		MimeMessage mailMessage = emailTemplate.createMimeMessage(); 
 	    try {
 			MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage,true);
@@ -120,22 +106,5 @@ public class MailServiceImpl implements MailService{
 			e.printStackTrace();
 		} 
 	    emailTemplate.send(mailMessage);
-	}
-
-	@Override
-	public void decorateMails(List<Mail> list,String type) {
-		Mail m = mailDao.getMailFromRedis(type);
-		if(null == m)m = mailMapper.getTemplateByType(type);
-		if(null != m){
-			String content = m.getContent();
-			for(Mail mail : list){
-				String c = MailTemplateFactory.decorate(mail,content);
-				mail.setSubject(m.getSubject());
-				mail.setContent(c);
-				send(mail);
-			}
-		}else{
-			Log.error("the mail type" + type + " is not exist",null);
-		}
-	}
+	}*/
 }
