@@ -1,6 +1,5 @@
 package com.panfeng.mq.service;
 
-import java.util.Map;
 
 import com.panfeng.resource.model.SmsParam;
 

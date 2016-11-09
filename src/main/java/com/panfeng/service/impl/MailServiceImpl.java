@@ -12,8 +12,6 @@ import com.panfeng.service.MailService;
 public class MailServiceImpl implements MailService{
 	@Autowired
 	private MailMapper mailMapper;
-	//@Autowired
-   // private JavaMailSenderImpl emailTemplate;
 	@Autowired
     private MailDao mailDao;
 
@@ -67,44 +65,4 @@ public class MailServiceImpl implements MailService{
 		Mail mail = mailMapper.getTemplateByType(type);
 		return mail;
 	}
-	/**
-	 * 发送单个邮件
-	 */
-	/*@Override
-	public void sendMail(Mail mail,HttpServletRequest request) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					send(mail);
-				}
-			}).start();
-	}*/
-	/**
-	 * 一次性发送若干邮件
-	 * 线程池
-	 */
-	/*public void sendMails(List<Mail> list,HttpServletRequest request) {
-		ExecutorService es = Executors.newFixedThreadPool(3);
-		for(Mail mail : list){
-			es.submit(new Runnable() {
-				public void run() {
-					send(mail);
-				}
-			});
-			new Thread().start();
-		}
-	}*/
-	/*private void send(Mail mail) {
-		MimeMessage mailMessage = emailTemplate.createMimeMessage(); 
-	    try {
-			MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage,true);
-			messageHelper.setTo(mail.getReceiver()); 
-			messageHelper.setFrom(PropertiesUtils.getProp("mail.sender")); 
-			messageHelper.setSubject(mail.getSubject()); 
-			messageHelper.setText(mail.getContent(),true);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} 
-	    emailTemplate.send(mailMessage);
-	}*/
 }

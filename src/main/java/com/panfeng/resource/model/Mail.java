@@ -2,6 +2,9 @@ package com.panfeng.resource.model;
 
 
 import com.panfeng.domain.BaseObject;
+/**
+ * mail模板
+ */
 public class Mail extends BaseObject{
 
 	private static final long serialVersionUID = 1L;

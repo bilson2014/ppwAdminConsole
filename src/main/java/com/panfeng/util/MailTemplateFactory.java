@@ -71,12 +71,10 @@ public class MailTemplateFactory {
 	
 	public static  String decorate(String[] str, String content) {
 		for(int i=1;i<=str.length;i++){
-			content = content.replaceAll("\\$\\{"+ i +"\\}", str[i-1]);
+			content = content.replaceAll("\\{"+ i +"\\}", str[i-1]);
 		}
 		return content;
 	}
-	
-	
 	/*
 	public static <T> String decorate(T t, String content) {
 		try {

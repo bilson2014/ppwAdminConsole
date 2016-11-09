@@ -126,43 +126,10 @@ public class TeamController extends BaseController {
 		response.setContentType("text/html;charset=UTF-8");
 		// 先保存获取ID，然后更新
 		team.setPassword(DataUtil.md5(INIT_PASSWORD));
-		final long id = service.save(team);
-
-		// 团队logo全路径
-		//final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
-
-		// save file
-		/*File imageDir = new File(imagePath);
-		if (!imageDir.exists())
-			imageDir.mkdir();*/
+		service.save(team);
 		try {
-			/*StringBuffer fileName = new StringBuffer();
-			if (!file.isEmpty()) {
-				final String extName = FileUtils.getExtName(file.getOriginalFilename(), ".");
-				fileName.append("team" + id);
-				fileName.append("-");
-				final Calendar calendar = new GregorianCalendar();
-				fileName.append(calendar.get(Calendar.YEAR));
-				fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0" + (calendar.get(Calendar.MONTH) + 1)
-						: (calendar.get(Calendar.MONTH) + 1));
-				fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0" + calendar.get(Calendar.DAY_OF_MONTH)
-						: calendar.get(Calendar.DAY_OF_MONTH));
-				fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
-				fileName.append(calendar.get(Calendar.MINUTE));
-				fileName.append(calendar.get(Calendar.SECOND));
-				fileName.append(calendar.get(Calendar.MILLISECOND));
-				fileName.append(".");
-				fileName.append(extName);
-				// get file path
-				final String path = TEAM_IMAGE_PATH + "/" + fileName.toString();
-				File imageFile = new File(FILE_PROFIX + path);
-				file.transferTo(imageFile);
-				}*/
-				//修改为DFS上传begin
 				String path = fdfsService.upload(file);
-				//修改为DFS上传end
 				team.setTeamPhotoUrl(path);
-				// save photo path
 				service.saveTeamPhotoUrl(team);
 		} catch (Exception e) {
 			baseMsg.setErrorCode(BaseMsg.ERROR);

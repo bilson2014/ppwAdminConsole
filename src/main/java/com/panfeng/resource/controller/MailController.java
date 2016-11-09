@@ -12,7 +12,6 @@ import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.MailView;
 import com.panfeng.service.MailService;
-import com.panfeng.util.Constants;
 
 /**
  * 邮件
@@ -60,17 +59,4 @@ public class MailController extends BaseController {
 	public void delete(final int[] ids) {
 		mailService.delete(ids);
 	}
-	
-	/*@RequestMapping(value = "/mail/send")
-	public void send(HttpServletRequest request){
-		User user = userService.findUserById(207);
-		List<Mail> list = new ArrayList<Mail>();
-		for(int i=0;i<2;i++){
-			Mail mail = new Mail();
-			mail.setReceiver(user.getEmail());
-			mail.setUserName(user.getUserName());
-			list.add(mail);
-		}
-		mailService.decorateMails(list,Constants.mailType.DINNER.toString());
-	}*/
 }

@@ -167,10 +167,6 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	}
 
 	// ///////////////////////////////////////////////////////////////////
-	private String formatPath(IndentProject indentProject, ResourcesType resourcesType) {
-		return resourcesType.getPath() + indentProject.getId() + File.separator;
-	}
-
 	private String formatPath(IndentResource indentResource, ResourcesType resourcesType) {
 		return resourcesType.getPath() + indentResource.getIrIndentId() + File.separator;
 	}
