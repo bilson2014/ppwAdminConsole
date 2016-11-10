@@ -2,6 +2,7 @@ package com.panfeng.mq.service.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,12 +16,11 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
 import com.panfeng.dao.MailDao;
 import com.panfeng.mq.service.MailMQService;
 import com.panfeng.persist.MailMapper;
 import com.panfeng.resource.model.Mail;
-import com.panfeng.resource.model.MailParam;
 import com.panfeng.util.Log;
 import com.panfeng.util.MailTemplateFactory;
 /**
@@ -39,11 +39,15 @@ public class MailMQServiceImpl implements MailMQService {
 	private final MailMapper mailMapper = null;
 	
 	@Override
-	public void sendMessage(final MailParam mail) {
+	public void sendMessage(final String to, final String subject, final String content) {
 		mailJmsTemplate.send(new MessageCreator() {
 			@Override
 			public Message createMessage(Session session) throws JMSException {
-				return session.createTextMessage(JSONObject.toJSONString(mail));
+				final Map<String,Object> resultMap = new HashMap<String,Object>();
+				resultMap.put("to", to);
+				resultMap.put("subject", subject);
+				resultMap.put("content", content);
+				return session.createTextMessage(JSON.toJSONString(resultMap));
 			}
 		});
 	}
@@ -65,11 +69,8 @@ public class MailMQServiceImpl implements MailMQService {
 						String email = entry.getKey().toString();
 						String[] str = entry.getValue();
 						String c = MailTemplateFactory.decorate(str,content);
-						MailParam mail = new MailParam();
-						mail.setTo(email);
-						mail.setSubject(m.getSubject());
-						mail.setContent(c);
-						sendMessage(mail);
+						// 发送邮件
+						sendMessage(email,m.getSubject(),c);
 					}
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();

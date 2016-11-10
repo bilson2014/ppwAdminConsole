@@ -10,7 +10,10 @@ public class SmsParam implements Serializable {
 	private String[] content = null; 
 	
 	// 电话号码
-	private String telephone = null; 
+	private String telephone = null;
+	
+	// 短信模版
+	private String smsTemplateID = null;
 
 	public String[] getContent() {
 		return content;
@@ -28,4 +31,12 @@ public class SmsParam implements Serializable {
 		this.telephone = telephone;
 	}
 
+	public String getSmsTemplateID() {
+		return smsTemplateID;
+	}
+
+	public void setSmsTemplateID(String smsTemplateID) {
+		this.smsTemplateID = smsTemplateID;
+	}
+	
 }
