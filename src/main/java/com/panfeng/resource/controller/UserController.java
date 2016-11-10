@@ -37,6 +37,7 @@ import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
 import com.panfeng.service.SessionInfoService;
 import com.panfeng.service.UserService;
+import com.panfeng.util.Constants;
 import com.panfeng.util.Constants.loginType;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.DateUtils;
@@ -255,9 +256,13 @@ public class UserController extends BaseController {
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("save user...",sessionInfo);
 			// TODO 大幅度
-			mailMQService.sendMessage("609615907@qq.com", "拍片网注册", "亲爱的" + result.getRealName() + " ,恭喜您已经注册成功，拍片网会竭诚为您服务!");
 			
+			// 调用MQ发送短信和邮件
+			Map<String,String[]> map = new HashMap<String,String[]>();
+			map.put("itliucheng@126.com", new String[]{"123","456"});
+			mailMQService.sendMailsByType(Constants.mailType.REGESTER.toString(),map);
 			smsMQService.sendMessage("34949", result.getTelephone(), new String[]{"恭喜您加入拍片网大家庭!","2"});
+			mailMQService.sendMessage("609615907@qq.com", "拍片网注册", "亲爱的" + result.getRealName() + " ,恭喜您已经注册成功，拍片网会竭诚为您服务!");
 			// 新增session
 			return initSessionInfo(result, request);
 		}

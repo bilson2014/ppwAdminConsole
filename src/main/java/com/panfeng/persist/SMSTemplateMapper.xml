@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.SMSTemplateMapper">
+	<select id="listWithPagination" resultType="Sms">
+		<![CDATA[
+			SELECT 
+				s.ID,s.TEMP_ID tempId,s.TEMP_TITLE tempTitle,
+				s.TEMP_CONTENT tempContent,
+				s.CREATE_TIME createTime,
+				s.UPDATE_TIME updateTime
+			FROM SMS s
+			WHERE 1 = 1
+		]]>
+		<![CDATA[
+			ORDER BY s.ID desc
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+	<select id="maxSize" resultType="long">
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM SMS s
+			WHERE 1 = 1
+		]]>
+	</select>
+	
+	<insert id="save">
+		<![CDATA[
+			INSERT INTO SMS(
+				TEMP_ID,
+				TEMP_TITLE,
+				TEMP_CONTENT,
+				CREATE_TIME,
+				UPDATE_TIME
+			) VALUES(
+				#{tempId},
+				#{tempTitle},
+				#{tempContent},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+	</insert>
+	
+	<update id="update">
+		<![CDATA[
+		UPDATE SMS s
+		      SET s.TEMP_ID = #{tempId},
+		      s.TEMP_TITLE = #{tempTitle},
+		      s.TEMP_CONTENT = #{tempContent},
+		      s.UPDATE_TIME = CURRENT_TIMESTAMP
+		WHERE s.ID = ${id}
+		]]>
+	</update>
+	
+	<delete id="delete">
+		<![CDATA[
+			DELETE FROM SMS 
+				WHERE ID = ${id}
+		]]>
+	</delete>
+</mapper>

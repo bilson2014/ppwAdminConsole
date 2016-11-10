@@ -49,16 +49,4 @@
         <property name="maxPoolSize" value="${maxPoolSize}" />  
         <property name="waitTimes" value="${waitTimes}" />
 	</bean>
-	<bean id="emailTemplate" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="defaultEncoding" value="utf-8" />
-        <property name="host" value="${mail.host}" />
-        <property name="username" value="${mail.sender}" />
-        <property name="password" value="${mail.password}" />
-        <property name="javaMailProperties">
-            <props>
-                <prop key="mail.smtp.auth" >true</prop>
-            </props>
-        </property>
-    </bean>
-	
 </beans>

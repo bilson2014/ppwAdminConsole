@@ -1,9 +1,6 @@
 package com.panfeng.service;
 
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.panfeng.resource.model.Mail;
 import com.panfeng.resource.view.MailView;
 
@@ -22,11 +19,5 @@ public interface MailService {
 	Mail getTemplateById(int mailId);
 	
 	Mail getTemplateByType(String type);
-
-	void sendMail(Mail mail,HttpServletRequest request);
-	
-	void sendMails(List<Mail> mail,HttpServletRequest request);
-
-	
 
 }

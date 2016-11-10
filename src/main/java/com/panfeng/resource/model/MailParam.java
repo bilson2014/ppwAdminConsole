@@ -13,6 +13,8 @@ public class MailParam implements Serializable {
 	private String subject; // 主题
 
 	private String content; // 邮件内容
+	
+	
 
 	public String getFrom() {
 		return from;

@@ -6,7 +6,6 @@
 	<packaging>war</packaging>
 	<version>3.0</version>
 	<name>Pat4</name>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -283,6 +282,5 @@
 			<artifactId>spring-jms</artifactId>
 			<version>4.2.4.RELEASE</version>
 		</dependency>
-		
 	</dependencies>
 </project>

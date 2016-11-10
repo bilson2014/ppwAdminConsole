@@ -1,7 +1,6 @@
 package com.panfeng.util;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.util.Base64;
 /**
  * 提供mail模板
@@ -67,16 +66,19 @@ public class MailTemplateFactory {
 			}
 		return content;
 	}
-	/**
-	 * 1.转码
-	 * 2.反射替换对象信息 ${userName}→wanglc
-	 * 3.添加首尾html
-	 */
+	
+	
+	
+	public static  String decorate(String[] str, String content) {
+		for(int i=1;i<=str.length;i++){
+			content = content.replaceAll("\\{"+ i +"\\}", str[i-1]);
+		}
+		return content;
+	}
+	/*
 	public static <T> String decorate(T t, String content) {
 		try {
-			//1.转码
-			content = new String(Base64.getDecoder().decode(content),"utf-8");
-			//2.替换对象信息
+			//1.替换信息
 			Field[] fs = t.getClass().getDeclaredFields();
 			for(Field f : fs){
 				f.setAccessible(true); //设置属性是可以访问的
@@ -84,12 +86,10 @@ public class MailTemplateFactory {
 				Object val = f.get(t);//获取属性值
 				content = content.replaceAll("\\$\\{"+name+"\\}", null == val?"":String.valueOf(val));
 			};
-			//3.添加首尾模板
-			content = addHtml(content);
-		} catch (UnsupportedEncodingException | SecurityException | IllegalArgumentException
+		} catch (SecurityException | IllegalArgumentException
 				| IllegalAccessException e) {
 			e.printStackTrace();
 		}
 		return content;
-	}
+	}*/
 }
