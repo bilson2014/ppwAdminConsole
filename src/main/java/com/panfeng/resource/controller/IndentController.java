@@ -3,19 +3,18 @@ package com.panfeng.resource.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.panfeng.domain.Result;
 import com.panfeng.domain.SessionInfo;
+import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Indent;
 import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Service;
@@ -25,7 +24,9 @@ import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.IndentService;
 import com.panfeng.service.ProductService;
 import com.panfeng.service.ServiceService;
+import com.panfeng.util.DateUtils;
 import com.panfeng.util.Log;
+import com.panfeng.util.PropertiesUtils;
 
 /**
  * 订单相关
@@ -36,9 +37,7 @@ import com.panfeng.util.Log;
 @RestController
 @RequestMapping("/portal")
 public class IndentController extends BaseController {
-
-	// private static final Logger logger = LoggerFactory.getLogger("error");
-
+	
 	@Autowired
 	private final IndentService service = null;
 
@@ -47,6 +46,9 @@ public class IndentController extends BaseController {
 
 	@Autowired
 	private final ServiceService serService = null;
+	
+	@Autowired
+	private final SmsMQService smsMQService = null;
 
 	@RequestMapping("/indent-list")
 	public ModelAndView view(final ModelMap model) {
@@ -132,7 +134,11 @@ public class IndentController extends BaseController {
 			final long ret = service.order(indent);
 			if (ret > 0) {
 				result.setRet(true);
-				result.setMessage(indent.getProduct_name());
+				//modify by wlc 2016-11-10 14:22:34
+				//保存成功，发送短信通知业务人员 begin
+				String telephone = PropertiesUtils.getProp("service_tel");
+				smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【" + indent.getProduct_name() + "】"});
+				//保存成功，发送短信通知业务人员 end
 			}
 			return result;
 		} catch (UnsupportedEncodingException e) {
@@ -171,5 +177,28 @@ public class IndentController extends BaseController {
 			Log.error("update order ...", sessionInfo);
 		}
 		return ret>0?indent:null;
+	}
+	/**
+	 * 首页预约接通视频管家，下单
+	 */
+	@RequestMapping("/indent/appointment/{telephone}")
+	public boolean mQsendSms(@PathVariable("telephone") final String telephone) {
+		//发送短信给业务部门
+		smsMQService.sendMessage("131895", PropertiesUtils.getProp("service_tel"), 
+				new String[]{telephone,DateUtils.nowTime()});
+		//创建新订单
+		Indent indent = new Indent();
+		indent.setIndent_tele(telephone);
+		indent.setIndentName("新订单");
+		indent.setIndentType(1);
+		indent.setServiceId(-1l);
+		indent.setIndentPrice(0d);
+		indent.setProductId(-1);
+		indent.setTeamId(-1);
+		indent.setSecond(0l);
+		indent.setProductId(-1l);
+		indent.setIndentNum(" ");
+		long ret = service.save(indent);
+		return ret>0;
 	}
 }
