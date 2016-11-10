@@ -25,6 +25,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
+import com.panfeng.mq.service.MailMQService;
+import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Role;
 import com.panfeng.resource.model.ThirdBind;
 import com.panfeng.resource.model.User;
@@ -62,6 +64,12 @@ public class UserController extends BaseController {
 
 	@Autowired
 	private final RightService rightService = null;
+	
+	@Autowired
+	private final MailMQService mailMQService = null;
+	
+	@Autowired
+	private final SmsMQService smsMQService = null;
 
 //	private static Logger logger = LoggerFactory.getLogger("error");
 
@@ -246,6 +254,10 @@ public class UserController extends BaseController {
 			sessionService.removeSession(request);
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("save user...",sessionInfo);
+			// TODO 大幅度
+			mailMQService.sendMessage("609615907@qq.com", "拍片网注册", "亲爱的" + result.getRealName() + " ,恭喜您已经注册成功，拍片网会竭诚为您服务!");
+			
+			smsMQService.sendMessage("34949", result.getTelephone(), new String[]{"恭喜您加入拍片网大家庭!","2"});
 			// 新增session
 			return initSessionInfo(result, request);
 		}
