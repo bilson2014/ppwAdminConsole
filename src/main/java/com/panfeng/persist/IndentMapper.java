@@ -32,4 +32,9 @@ public interface IndentMapper {
 	public Double sumPriceBySalesmanUniqueId(@Param("salesmanUniqueId") final String salesmanUniqueId);
 	
 	public long countBySalesmanUniqueId(@Param("salesmanUniqueId") final String salesmanUniqueId);
+
+	/**
+	 * 成本计算器更新订单信息
+	 */
+	public long updateForCalculate(Indent indent);
 }

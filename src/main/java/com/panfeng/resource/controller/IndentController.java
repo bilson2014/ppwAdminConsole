@@ -155,4 +155,21 @@ public class IndentController extends BaseController {
 		final long count = service.checkStatus(0);
 		return count;
 	}
+	
+	/**
+	 * 成本计算器，保存订单后返回订单
+	 */
+	@RequestMapping(value = "/indent/cost/save", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public Indent calculateSave(@RequestBody final Indent indent,HttpServletRequest request) {
+		long ret = 0l;
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		if(indent.getIndentId()==0){
+			 ret = service.save(indent);
+			 Log.error("add new order ...", sessionInfo);
+		}else{//更新操作
+			ret = service.updateForCalculate(indent);
+			Log.error("update order ...", sessionInfo);
+		}
+		return ret>0?indent:null;
+	}
 }
