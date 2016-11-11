@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
+import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Role;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.DataGrid;
@@ -51,13 +52,9 @@ import com.panfeng.util.ValidateUtil;
 @RequestMapping("/portal")
 public class TeamController extends BaseController {
 
-	// private static Logger logger = LoggerFactory.getLogger("error");
-
 	private static String INIT_PASSWORD;
 
 	private static String FILE_PROFIX = null; // 文件前缀
-
-//	private static String TEAM_IMAGE_PATH = null; // 产品图片路径
 
 	public TeamController() {
 		if (INIT_PASSWORD == null || "".equals(INIT_PASSWORD)) {
@@ -67,7 +64,6 @@ public class TeamController extends BaseController {
 				propertis.load(is);
 				INIT_PASSWORD = propertis.getProperty("initPassw0rd");
 				FILE_PROFIX = propertis.getProperty("file.prefix");
-//				TEAM_IMAGE_PATH = propertis.getProperty("upload.server.team.image");
 			} catch (IOException e) {
 				Log.error("load Properties fail ...", null);
 				e.printStackTrace();
@@ -89,6 +85,9 @@ public class TeamController extends BaseController {
 	
 	@Autowired
 	private final FDFSService fdfsService = null;
+	
+	@Autowired
+	private final SmsMQService smsMQService = null;
 
 	@RequestMapping("team-list")
 	public ModelAndView view(final HttpServletRequest request, final ModelMap model) {
@@ -431,6 +430,10 @@ public class TeamController extends BaseController {
 				SessionInfo sessionInfo = getCurrentInfo(request);
 				Log.error("save team ...", sessionInfo);
 				if (dbteam != null && dbteam.getTeamId() > 0) {
+					//add by wlc 2016-11-11 11:19:36
+					//供应商注册短信，发送短信 begin
+					smsMQService.sendMessage("131208", team.getPhoneNumber(), new String[]{});
+					//供应商注册短信，发送短信 end
 					return initSessionInfo(dbteam, request);
 				}
 			} catch (UnsupportedEncodingException e) {
@@ -922,6 +925,28 @@ public class TeamController extends BaseController {
 		final Team team = service.findLatestTeamById(teamId);
 		team.setPassword(null);
 		return team;
+	}
+	
+	/**
+	 *	首页供应商推荐排序或者删除
+	 *	action 排序动作 up down del
+	 *	index 当前排序
+	 */
+	@RequestMapping("/team/recommend/sort")
+	public boolean sortRecommendTeam(final String action,final String teamId) {
+		boolean flag = false;
+		switch (action) {
+		case "up":
+			flag = service.moveUp(teamId);
+			break;
+		case "down":
+			flag = service.moveDown(teamId);
+			break;
+		case "del":
+			flag = service.del(teamId);
+			break;
+		}
+		return flag;
 	}
 
 }

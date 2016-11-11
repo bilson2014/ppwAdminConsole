@@ -34,13 +34,17 @@
 				   p.PROVINCE AS teamProvinceName,
 				   c.CITY AS teamCityName,
 				   t.TEAMPROVINCE AS teamProvince,
-				   t.TEAMCITY AS teamCity
+				   t.TEAMCITY AS teamCity,
+				   t.RECOMMEND_SORT recommendSort
 		    FROM TEAM t  
 		    	LEFT JOIN  PROVINCE p ON t.teamProvince = p.provinceID 
 				LEFT JOIN CITY c on t.teamCity = c.cityID
 			WHERE 1 = 1
 				AND t.flag <> 3
 		]]>
+		<if test="recommend == true ">
+			 AND t.RECOMMEND = 1 
+		</if>
 		<if test="teamId != null and teamId != ''">
 			AND t.TEAMID = ${teamId}
 		</if>
@@ -61,13 +65,15 @@
 				open="AND (" close=")">
 				t.BUSINESS LIKE CONCAT(CONCAT('%',#{bus}),'%')
 			</foreach>
-
 		</if>
 		<![CDATA[
 		ORDER BY
 		]]>
 		<if test="sort != null and sort != '' and order != null and order != ''">
 			 ${sort} ${order},
+		</if>
+		<if test="recommend == true ">
+			 t.RECOMMEND_SORT ASC, 
 		</if>
 		<![CDATA[		   
 			t.OD ASC,UPDATEDATE DESC,CREATEDATE DESC
@@ -82,6 +88,9 @@
 				WHERE 1 = 1
 					AND t.flag <> 3
 		]]>
+		<if test="recommend == true ">
+			 AND t.RECOMMEND = 1 
+		</if>
 		<if test="teamId != null and teamId != ''">
 			AND t.TEAMID = ${teamId}
 		</if>

@@ -2,6 +2,7 @@ var editing ; //判断用户是否处于编辑状态
 var flag  ;	  //判断新增和修改方法
 var formUrl;
 var datagrid;
+var recommend_datagrid;
 // 验证
 var isadd = false;
 var originalLoginName = '';
@@ -511,4 +512,80 @@ function cleanFun() {
 	idList = new Array();
 	$('#sp').find('input').attr('checked',false);
 	datagrid.datagrid('load', {});
+}
+function recommendFuc(){
+	openDialog('recommend-dlg');
+	// 初始化DataGrid
+	recommend_datagrid = $('#recommend-gride').datagrid({
+		url : getContextPath() + '/portal/team/list',
+		idField : 'teamId' ,
+		title : '供应商管理列表' , 
+		queryParams:{recommend:true},
+		fit: true ,
+		striped : true ,
+		loadMsg : '数据正在加载,请耐心的等待...' ,
+		rownumbers : true ,
+		frozenColumns : [[
+				{field : 'ck' , checkbox:true}
+		]],
+		columns:[[
+					{
+						field : 'teamName',
+						title : '公司名称',
+						width : 260,
+						align : 'center'
+					},
+					{
+						field : 'recommendSort',
+						width : 160,
+						title : '操作',
+						align : 'center',
+						formatter : function(value,row,index){
+							var all = "";
+							var totalCount = $('#recommend-gride').datagrid('getData').total;
+							var up  = '<a class="sort" data-target="up" data-id="'+row.teamId+'" href="javascript:void(0)">上移</a>';
+							var down = '<a class="sort" data-target="down" data-id="'+row.teamId+'" href="javascript:void(0)">下移</a>';
+							var del = '<a class="sort" data-target="del" data-id="'+row.teamId+'" href="javascript:void(0)">移除</a>';
+							if(totalCount<=1){
+								return del;
+							}
+							if(value==1 && value!=totalCount){
+								return down+" "+del;
+							}
+							if(value>1 && value<totalCount){
+								return up+" "+down+" "+del;
+							}
+							if(value == totalCount){
+								return up+" "+del;
+							}
+						}
+					}
+				]] ,
+		pagination: true,
+		pageSize : 20,
+		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
+		showFooter : false,
+		onLoadSuccess:function(){
+			sort();
+		}
+	});
+}
+function sort(){
+	$(".sort").off("click").on("click",function(){
+		var action = $(this).attr("data-target");
+		var teamId = $(this).attr("data-id");
+		//TODO 移除提示
+		$.ajax({
+			url : getContextPath() + '/portal/team/recommend/sort',
+			type : 'POST',
+			data : {
+				'action' : action,
+				'teamId' : teamId,
+			},
+			success : function(data){
+				recommend_datagrid.datagrid('load', {recommend:true});
+			}
+		});
+		
+	})
 }

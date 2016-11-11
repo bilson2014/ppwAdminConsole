@@ -473,4 +473,21 @@ public class TeamServiceImpl implements TeamService {
 			return mapper.findTeamById(teamId);
 		}
 	}
+
+	
+	@Override
+	public boolean moveUp(String teamId) {
+		
+		return false;
+	}
+
+	@Override
+	public boolean moveDown(String teamId) {
+		return false;
+	}
+
+	@Override
+	public boolean del(String teamId) {
+		return false;
+	}
 }

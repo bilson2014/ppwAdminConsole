@@ -134,11 +134,13 @@ public class IndentController extends BaseController {
 			final long ret = service.order(indent);
 			if (ret > 0) {
 				result.setRet(true);
-				//modify by wlc 2016-11-10 14:22:34
-				//保存成功，发送短信通知业务人员 begin
+				//modify by wlc 2016-11-10 14:22:34 begin
+				//保存成功，发送短信通知业务人员 
 				String telephone = PropertiesUtils.getProp("service_tel");
 				smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【" + indent.getProduct_name() + "】"});
-				//保存成功，发送短信通知业务人员 end
+				//发送短信给用户下单成功
+				smsMQService.sendMessage("131329", indent.getIndent_tele(), new String[]{});
+				// end
 			}
 			return result;
 		} catch (UnsupportedEncodingException e) {

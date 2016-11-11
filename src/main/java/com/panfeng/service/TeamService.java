@@ -176,4 +176,9 @@ public interface TeamService {
 
 	public Team findLatestTeamById(Long teamId);
 
+	public boolean moveUp(String teamId);
+
+	public boolean moveDown(String teamId);
+
+	public boolean del(String teamId);
 }

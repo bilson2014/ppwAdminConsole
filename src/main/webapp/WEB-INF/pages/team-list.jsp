@@ -102,6 +102,9 @@
 			</r:permission>
 			
 			<a  id="cancel-btn" onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
+			
+			
+			<a  id="cancel-btn" onclick="recommendFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">首页推荐</a>
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" style="width:520px; height:480px;padding:10px 20px"
@@ -297,7 +300,6 @@
 	    	
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
-	
 		<%-- image/video show content begin --%>
 		<div id="picture-condition" class="picture-condition hide">
 			<div class="picture-modalDialog">
@@ -312,5 +314,16 @@
 			</div>
 		</div>
 		<%-- image/video show content end --%>
+		
+		
+	<div id="recommend-dlg" class="easyui-dialog" style="width:520px; height:480px;padding:10px 20px"
+           closed="true" buttons="#recommend-dlg-buttons" title="首页推荐">
+        
+       <!--  <div data-options="region:'center',border:true" > 外层有div就他妈变成sb了-->
+			<table id="recommend-gride" data-options="fit:true,border:false"></table>
+		<!-- </div> -->
+    </div>
+     <div id="recommend-dlg-buttons">
+    </div>
 </body>
 </html>

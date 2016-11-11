@@ -66,7 +66,7 @@ public class Team extends Customer {
 	private int infoResource = 0; // 获知渠道
 
 	private String description = null; // 备注
-
+	
 	private String qqUnique = null; // QQToken
 
 	private String wbUnique = null; // 微博Token
@@ -76,6 +76,8 @@ public class Team extends Customer {
 	private String uniqueId = null; // 三方登录唯一ID
 
 	private String thirdLoginType = null; // 第三方登录类型
+	
+	
 
 	public final static String LTYPE_WEIBO = "weibo";
 
@@ -86,6 +88,10 @@ public class Team extends Customer {
 	private String teamCity = null; // 城市ID
 
 	private String teamProvince = null; // 省ID
+	
+	private Boolean recommend;//是否推荐到主页
+	
+	private Integer recommendSort;//主页推荐排序
 
 	// 冗余字段
 	private String teamProvinceName = null;// 省名
@@ -403,6 +409,22 @@ public class Team extends Customer {
 
 	public void setThirdLoginType(String thirdLoginType) {
 		this.thirdLoginType = thirdLoginType;
+	}
+
+	public Boolean getRecommend() {
+		return recommend;
+	}
+
+	public void setRecommend(Boolean recommend) {
+		this.recommend = recommend;
+	}
+
+	public Integer getRecommendSort() {
+		return recommendSort;
+	}
+
+	public void setRecommendSort(Integer recommendSort) {
+		this.recommendSort = recommendSort;
 	}
 
 }
