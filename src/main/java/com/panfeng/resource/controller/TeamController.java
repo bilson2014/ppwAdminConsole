@@ -432,7 +432,7 @@ public class TeamController extends BaseController {
 				if (dbteam != null && dbteam.getTeamId() > 0) {
 					//add by wlc 2016-11-11 11:19:36
 					//供应商注册短信，发送短信 begin
-					smsMQService.sendMessage("131208", team.getPhoneNumber(), new String[]{});
+					smsMQService.sendMessage("131208", team.getPhoneNumber(), null);
 					//供应商注册短信，发送短信 end
 					return initSessionInfo(dbteam, request);
 				}

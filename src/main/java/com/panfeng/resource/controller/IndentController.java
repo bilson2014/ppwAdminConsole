@@ -139,7 +139,7 @@ public class IndentController extends BaseController {
 				String telephone = PropertiesUtils.getProp("service_tel");
 				smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【" + indent.getProduct_name() + "】"});
 				//发送短信给用户下单成功
-				smsMQService.sendMessage("131329", indent.getIndent_tele(), new String[]{});
+				smsMQService.sendMessage("131329", indent.getIndent_tele(), null);
 				// end
 			}
 			return result;
