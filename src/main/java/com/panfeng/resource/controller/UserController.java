@@ -25,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
-import com.panfeng.mq.service.MailMQService;
 import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Role;
 import com.panfeng.resource.model.ThirdBind;
@@ -37,7 +36,6 @@ import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
 import com.panfeng.service.SessionInfoService;
 import com.panfeng.service.UserService;
-import com.panfeng.util.Constants;
 import com.panfeng.util.Constants.loginType;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.DateUtils;
@@ -67,13 +65,8 @@ public class UserController extends BaseController {
 	private final RightService rightService = null;
 	
 	@Autowired
-	private final MailMQService mailMQService = null;
-	
-	@Autowired
 	private final SmsMQService smsMQService = null;
-
-//	private static Logger logger = LoggerFactory.getLogger("error");
-
+	
 	private static String INIT_PASSWORD;
 	public UserController() {
 		if (INIT_PASSWORD == null || "".equals(INIT_PASSWORD)) {
@@ -251,22 +244,17 @@ public class UserController extends BaseController {
 		if (user != null) {
 			final User result = userService.register(user);
 
+			//add by wlc 注册成功，发送短信 2016-11-11 11:10:55
+			//bigin
+			smsMQService.sendMessage("131208", user.getTelephone(), null);
+			//end
 			// 清空当前session
 			sessionService.removeSession(request);
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("save user...",sessionInfo);
-			// TODO 大幅度
-			
-			// 调用MQ发送短信和邮件
-			Map<String,String[]> map = new HashMap<String,String[]>();
-			map.put("itliucheng@126.com", new String[]{"123","456"});
-			mailMQService.sendMailsByType(Constants.mailType.REGESTER.toString(),map);
-			smsMQService.sendMessage("34949", result.getTelephone(), new String[]{"恭喜您加入拍片网大家庭!","2"});
-			mailMQService.sendMessage("609615907@qq.com", "拍片网注册", "亲爱的" + result.getRealName() + " ,恭喜您已经注册成功，拍片网会竭诚为您服务!");
 			// 新增session
 			return initSessionInfo(result, request);
 		}
-
 		return false;
 	}
 

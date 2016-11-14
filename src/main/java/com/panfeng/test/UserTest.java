@@ -26,5 +26,4 @@ public class UserTest {
 		System.err.println(ret);
 		System.err.println(user.getId());
 	}
-	
 }

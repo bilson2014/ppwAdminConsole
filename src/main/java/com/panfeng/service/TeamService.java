@@ -176,4 +176,13 @@ public interface TeamService {
 
 	public Team findLatestTeamById(Long teamId);
 
+	public boolean moveUp(long teamId);
+
+	public boolean moveDown(long teamId);
+
+	public boolean delRecommend(long teamId);
+
+	public List<Team> getAllNoRecommend();
+
+	public boolean addRecommend(long teamId);
 }

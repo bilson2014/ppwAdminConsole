@@ -14,7 +14,7 @@ import com.panfeng.resource.view.MailView;
 import com.panfeng.service.MailService;
 
 /**
- * 邮件
+ * 邮件模板
  */
 @RestController
 @RequestMapping("/portal")
@@ -22,8 +22,6 @@ public class MailController extends BaseController {
 	
 	@Autowired
 	private final MailService mailService = null;
-	//@Autowired
-	//private final UserService userService = null;
 	
 	@RequestMapping(value = "/mail-list")
 	public ModelAndView view(final ModelMap model) {

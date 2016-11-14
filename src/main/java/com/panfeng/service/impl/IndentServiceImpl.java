@@ -106,4 +106,12 @@ public class IndentServiceImpl implements IndentService {
 		return total;
 	}
 
+	/**
+	 * 成本计算器更新订单信息
+	 */
+	@Override
+	public long updateForCalculate(Indent indent) {
+		 return mapper.updateForCalculate(indent);
+	}
+
 }
