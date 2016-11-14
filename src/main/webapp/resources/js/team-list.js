@@ -210,11 +210,7 @@ $().ready(function(){
 		onDblClickCell:function(index,field,value){
 			if(field == 'teamPhotoUrl'){
 				$('#picture-condition').removeClass('hide');
-				
-				var imgName = getFileName(value);
-				var imgPath = getHostName() + '/team/img/' + imgName;
-				
-				$('#teamPicture').attr('src',imgPath);
+				$('#teamPicture').attr('src',getDfsHostName() + value);
 				
 				$('#p-cancel').on('click',function(){
 					$('#picture-condition').addClass('hide');

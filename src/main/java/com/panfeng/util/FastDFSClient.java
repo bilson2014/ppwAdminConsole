@@ -253,6 +253,25 @@ public class FastDFSClient {
 			return null;
 		}
 	}
+	
+	/**
+	 * 获取最优的文件存储节点服务器
+	 * @param fileId
+	 * @return
+	 */
+	public String locateSource(final String fileId){
+		try {
+			TrackerServer trackerServer = pool.checkout(logId);  
+            StorageServer storageServer = null;
+            StorageClient1 client1 = new StorageClient1(trackerServer,  
+                    storageServer);
+			String sourceIP= client1.locateSource(fileId);
+			return sourceIP;
+		} catch (Exception ex) {
+			logger.error(ex);
+			return null;
+		}
+	}
 
 	/**
 	 * 获取文件后缀名（不带点）.

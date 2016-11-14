@@ -14,9 +14,11 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.dao.RightDao;
+import com.panfeng.dao.StorageLocateDao;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Right;
+import com.panfeng.service.FDFSService;
 import com.panfeng.service.SessionInfoService;
 import com.panfeng.util.UrlResourceUtils;
 import com.panfeng.util.ValidateUtil;
@@ -32,9 +34,15 @@ public class SecurityInterceptor implements HandlerInterceptor {
 	private final RightDao dao = null;
 	
 	@Autowired
+	private final StorageLocateDao storageDao = null;
+	
+	@Autowired
 	private final SessionInfoService sessionService = null;
 	
 	private List<String> excludeUrls;
+	
+	@Autowired
+	public final FDFSService fdfsService = null;
 	
 	public List<String> getExcludeUrls() {
 		return excludeUrls;
@@ -57,8 +65,14 @@ public class SecurityInterceptor implements HandlerInterceptor {
 	 * 调用 controller 具体方法执行
 	 */
 	public void postHandle(HttpServletRequest req, HttpServletResponse resp,
-			Object arg2, ModelAndView arg3) throws Exception {
-
+			Object obj, ModelAndView mv) throws Exception {
+		if(mv != null) {
+			// 如果不为空，则说明进入视图解析器
+			final Map<String, String> nodeMap = storageDao.getStorageFromRedis(GlobalConstant.STORAGE_NODE_RELATIONSHIP);
+			// 获取最优Storage节点
+			final String serviceIP = fdfsService.locateFileStoragePath(GlobalConstant.FILE_STATIC_ID);
+			mv.addObject(GlobalConstant.FILE_LOCATE_STORAGE_PATH, nodeMap.get(serviceIP));
+		}
 	}
 
 	/**
