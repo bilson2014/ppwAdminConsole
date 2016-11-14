@@ -525,9 +525,9 @@ function recommendFuc(){
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
-		frozenColumns : [[
-				{field : 'ck' , checkbox:true}
-		]],
+		//frozenColumns : [[
+		//		{field : 'ck' , checkbox:true}
+		//]],
 		columns:[[
 					{
 						field : 'teamName',
@@ -566,7 +566,19 @@ function recommendFuc(){
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
 		onLoadSuccess:function(){
-			sort();
+			sort();//排序操作
+			add();//添加操作
+		}
+	});
+	//初始化团队信息
+	$('#search-recommend-teamName').combobox({
+		url : getContextPath() + '/portal/team/all/norecommend',
+		valueField : 'teamId',
+		textField : 'teamName',
+		filter: function(q, row){
+			if(row.teamName == null)
+				return false;
+			return row.teamName.indexOf(q) >= 0;
 		}
 	});
 }
@@ -583,9 +595,39 @@ function sort(){
 				'teamId' : teamId,
 			},
 			success : function(data){
-				recommend_datagrid.datagrid('load', {recommend:true});
+				if(data){
+					recommend_datagrid.datagrid('load', {recommend:true});
+					if(action=='del'){//刷新上方选择供应商
+						$('#search-recommend-teamName').combobox('clear');
+						$('#search-recommend-teamName').combobox('reload');
+					}
+				}
 			}
 		});
 		
+	})
+}
+function add(){
+	$("#add-recommend").off("click").on("click",function(){
+		var teamId = $('#search-recommend-teamName').combobox('getValue');
+		if(teamId!=''){
+			$.ajax({
+				url : getContextPath() + '/portal/team/addrecommend',
+				type : 'POST',
+				data : {
+					'teamId' : teamId,
+				},
+				success : function(data){
+					if(data){
+						$('#search-recommend-teamName').combobox('clear');
+						$('#search-recommend-teamName').combobox('reload');
+						recommend_datagrid.datagrid('load', {recommend:true});
+					}
+				}
+			});
+		}else{
+			$.message('请选择要添加的供应商!');
+			return false;
+		}
 	})
 }

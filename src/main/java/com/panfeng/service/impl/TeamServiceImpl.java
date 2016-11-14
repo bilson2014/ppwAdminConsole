@@ -476,18 +476,45 @@ public class TeamServiceImpl implements TeamService {
 
 	
 	@Override
-	public boolean moveUp(String teamId) {
-		
-		return false;
+	public boolean moveUp(long teamId) {
+		Team team = mapper.findTeamById(teamId);
+		int index = team.getRecommendSort();
+		//1.降低上一个的排序
+		int flag1 = mapper.downSortByRecommendSort(index);
+		//2.提升当前id的排序
+		int flag2 =mapper.upSortByTeamId(teamId);
+		return flag1>0 && flag2>0;
 	}
 
 	@Override
-	public boolean moveDown(String teamId) {
-		return false;
+	public boolean moveDown(long teamId) {
+		Team team = mapper.findTeamById(teamId);
+		int index = team.getRecommendSort();
+		//1.提升上一个的排序
+		int flag1 = mapper.upSortByRecommendSort(index);
+		//2.降低当前id的排序
+		int flag2 =mapper.downSortByTeamId(teamId);
+		return flag1>0 && flag2>0;
 	}
 
 	@Override
-	public boolean del(String teamId) {
-		return false;
+	public boolean delRecommend(long teamId) {
+		Team team = mapper.findTeamById(teamId);
+		int index = team.getRecommendSort();
+		//1.删除当前供应商（不推荐而已）
+		int flag1 = mapper.updateRecommendByTeamId(false,teamId);
+		//2.提升index之下的所有排序
+		int flag2 = mapper.upAllAboveIndex(index);
+		return flag1>0 && flag2>=0;
+	}
+
+	@Override
+	public List<Team> getAllNoRecommend() {
+		return mapper.getAllNoRecommend();
+	}
+
+	@Override
+	public boolean addRecommend(long teamId) {
+		return mapper.addRecommend(teamId)>0;
 	}
 }

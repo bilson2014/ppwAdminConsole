@@ -303,6 +303,7 @@
 				   t.LOGINNAME AS loginName,
 				   t.TEAMCITY AS teamCity,
 				   t.TEAMPROVINCE AS teamProvince,
+				   t.RECOMMEND_SORT  recommendSort,
 				   p.PROVINCE AS teamProvinceName,
 				   c.CITY AS teamCityName 
 			FROM TEAM t
@@ -340,6 +341,39 @@
 			FROM TEAM t
 			WHERE 1 = 1
 				AND TEAMNAME != ''
+				AND t.flag <> 3
+		]]>
+	</select>
+	
+	<select id="getAllNoRecommend" resultType="Team">
+		<![CDATA[
+			SELECT t.TEAMID AS teamId,
+				   t.TEAMNAME AS teamName,
+				   t.TEAMPHOTOURL AS teamPhotoUrl,
+				   t.TEAMDESCRIPTION AS teamDescription,
+				   t.OD AS od,
+				   t.RECOMMENDATION AS recommendation,
+				   t.CITY AS city,
+				   t.LINKMAN AS linkman,
+				   t.WEBCHAT AS webchat,
+				   t.QQ AS qq,
+				   t.OFFICIALSITE AS officialSite,
+				   t.SCALE AS scale,
+				   t.ESTABLISHDATE AS establishDate,
+				   t.BUSINESS AS business,
+				   t.BUSINESSDESC AS businessDesc,
+				   t.PRICERANGE AS priceRange,
+				   t.DEMAND AS demand,
+				   t.INFORESOURCE AS infoResource,
+				   t.DESCRIPTION AS description,
+				   t.EMAIL AS email,
+				   t.ADDRESS AS address,
+				   t.LOGINNAME AS loginName,
+				   t.PHONENUMBER AS phoneNumber
+			FROM TEAM t
+			WHERE 1 = 1
+				AND TEAMNAME != ''
+				AND RECOMMEND=0
 				AND t.flag <> 3
 		]]>
 	</select>
@@ -650,4 +684,56 @@
 			 WHERE TEAM_ID = ${teamId} AND STATUS = 1
 		]]>
 	</select>
+	
+	<update id="downSortByRecommendSort">
+		<![CDATA[
+			UPDATE TEAM SET RECOMMEND_SORT=RECOMMEND_SORT+1 WHERE
+			 RECOMMEND=1 AND	
+			 RECOMMEND_SORT=${index-1}
+		]]>
+	</update>
+	<update id="upSortByRecommendSort">
+		<![CDATA[
+			UPDATE TEAM SET RECOMMEND_SORT=RECOMMEND_SORT-1 WHERE
+			 RECOMMEND=1 AND
+			 RECOMMEND_SORT=${index+1}
+		]]>
+	</update>
+	<update id="upSortByTeamId">
+		<![CDATA[
+			UPDATE TEAM SET RECOMMEND_SORT=RECOMMEND_SORT-1 WHERE
+			 RECOMMEND=1 AND
+			 TEAMID=${teamId}
+		]]>
+	</update>
+	<update id="downSortByTeamId">
+		<![CDATA[
+			UPDATE TEAM SET RECOMMEND_SORT=RECOMMEND_SORT+1 WHERE
+			 RECOMMEND=1 AND
+			 TEAMID=${teamId}
+		]]>
+	</update>
+	<update id="updateRecommendByTeamId">
+		<![CDATA[
+			UPDATE TEAM SET RECOMMEND=#{recommend} WHERE
+			 TEAMID=${teamId}
+		]]>
+	</update>
+	<update id="upAllAboveIndex">
+		<![CDATA[
+			UPDATE TEAM SET RECOMMEND_SORT=RECOMMEND_SORT-1 WHERE
+			 RECOMMEND=1 AND
+			 RECOMMEND_SORT>${index}
+		]]>
+	</update>
+	<update id="addRecommend">
+		<![CDATA[
+			UPDATE TEAM t
+			 SET t.RECOMMEND=1,
+			 t.RECOMMEND_SORT=(
+			 	SELECT maxsort FROM 
+			 		(SELECT IFNULL(MAX(RECOMMEND_SORT) ,0) maxsort FROM TEAM WHERE RECOMMEND=1) tt)+1
+			 WHERE t.TEAMID=${teamId}
+		]]>
+	</update>
 </mapper>

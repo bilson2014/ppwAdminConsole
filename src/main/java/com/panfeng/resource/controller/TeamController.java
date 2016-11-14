@@ -935,18 +935,36 @@ public class TeamController extends BaseController {
 	@RequestMapping("/team/recommend/sort")
 	public boolean sortRecommendTeam(final String action,final String teamId) {
 		boolean flag = false;
+		long id = Long.valueOf(teamId);
 		switch (action) {
 		case "up":
-			flag = service.moveUp(teamId);
+			flag = service.moveUp(id);
 			break;
 		case "down":
-			flag = service.moveDown(teamId);
+			flag = service.moveDown(id);
 			break;
 		case "del":
-			flag = service.del(teamId);
+			flag = service.delRecommend(id);
 			break;
 		}
 		return flag;
+	}
+	
+	/**
+	 *获取所有没有被推荐到首页的供应商
+	 */
+	@RequestMapping(value="/team/all/norecommend", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public List<Team> getAllTeamNoRecommend() {
+		final List<Team> list = service.getAllNoRecommend();
+		return list;
+	}
+	
+	/**
+	 *	添加一个供应商到首页
+	 */
+	@RequestMapping(value="/team/addrecommend")
+	public boolean addRecommend(long teamId) {
+		return service.addRecommend(teamId);
 	}
 
 }
