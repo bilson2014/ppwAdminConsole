@@ -2,11 +2,16 @@ package com.panfeng.resource.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.resource.model.ProductModule;
@@ -34,12 +39,17 @@ public class ProductModuleController extends BaseController{
 	}
 	
 	@RequestMapping(value = "/module/save")
-	public boolean save(@RequestBody ProductModule productModule) {
-		return pmService.save(productModule);
+	public boolean save(ProductModule productModule,
+			@RequestParam final MultipartFile moduleImg,
+			final HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		return pmService.save(productModule,moduleImg);
 	}
 	@RequestMapping(value = "/module/update")
-	public boolean update(@RequestBody ProductModule productModule) {
-		return pmService.update(productModule);
+	public boolean update(ProductModule productModule,
+			@RequestParam final MultipartFile moduleImg,final HttpServletResponse response) {
+		response.setContentType("text/html;charset=UTF-8");
+		return pmService.update(productModule,moduleImg);
 	}
 	
 	@RequestMapping("/module/delete")

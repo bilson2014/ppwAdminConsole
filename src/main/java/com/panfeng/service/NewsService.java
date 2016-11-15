@@ -15,6 +15,10 @@ public interface NewsService {
 
 	void update(News news);
 
-	void delete(int[] ids);
+	long delete(int[] ids);
+
+	boolean moveUp(int newid);
+
+	boolean moveDown(int newid);
 
 }

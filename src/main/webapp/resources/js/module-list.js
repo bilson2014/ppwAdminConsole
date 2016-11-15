@@ -89,12 +89,31 @@ function delFun(){
 	}
 }
 
-// 保存 操作
+//确认事件
+function saveFun(){
+	progressLoad();
+	$('#fm').form('submit',{
+		url : formUrl,
+		onSubmit : function() {
+			var flag = $(this).form('validate');
+			if(!flag){
+				progressClose();
+			}
+			return flag;
+		},
+		success : function(result) {
+			$('#dlg').dialog('close');
+			treegrid.treegrid('reload');
+			progressClose();
+			$.message('操作成功!');
+		}
+	});
+}
+/*// 保存 操作
 function saveFun(){
 	var condition = $.toJSON({
 		id : $("input[name='id']").val().trim(),
 		moduleName : $("input[name='moduleName']").val().trim(),
-		pic : $("input[name='pic']").val().trim(),
 		modulePrice : $("input[name='modulePrice']").val(),
 		description : $("input[name='description']").val(),
 		pid : $("input[name='pid']").val(),
@@ -106,7 +125,7 @@ function saveFun(){
 			treegrid.treegrid('reload');
 		}, formUrl, condition);
 	}
-}
+}*/
 
 function openDialog(id){
 	$('#' + id).dialog({
