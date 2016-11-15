@@ -19,6 +19,8 @@ public final class GlobalConstant extends BaseObject {
 	public static final String CONTEXT_RIGHT_MAP = "context_right_map"; // 权限集合
 
 	public static final String CONTEXT_PORTAL_VIDEO_MAP = "context_portal_video_map"; // 首页视频集合
+	
+	public static final String STORAGE_NODE_RELATIONSHIP = "storage_node_relationship"; // 文件系统存储节点对应关系
 
 	public static final String SESSION_INFO = "sessionInfo"; // 当前用户
 
@@ -46,7 +48,11 @@ public final class GlobalConstant extends BaseObject {
 	public static final String CONVERIONHSOT = "http://123.59.75.62:8080/";
 	
 	public static final String MAIL_MAP = "mail_map"; // 邮件集合
+	
+	public static final String FILE_LOCATE_STORAGE_PATH = "file_locate_storage_path"; // 分布式文件系统storage节点地址
 
+	public static String FILE_STATIC_ID; // 文件系统静态文件ID
+	
 	public static String COOKIES_SCOPE = null;
 
 	public static String SOLR_URL; // 通过审核的供应商及分级的客户 SOLR URL 入口
@@ -120,6 +126,7 @@ public final class GlobalConstant extends BaseObject {
 				ACTIVITY_PRODUCT_IDS = propertis.getProperty("activity.product.ids");
 				
 				UPLOAD_PATH = propertis.getProperty("upload.path");
+				FILE_STATIC_ID = propertis.getProperty("file.id");
 			} catch (Exception e) {
 
 			} finally {

@@ -47,11 +47,11 @@ public class RedisUtils {
 		return objMap;
 	}
 
-	public static Map<String, String> mapToJson(final Map<String, Object> map) {
+	public static Map<String, String> mapToJson(final Map<String, ?> map) {
 
 		final Map<String, String> objMap = new HashMap<String, String>();
 		if (ValidateUtil.isValid(map)) {
-			for (Map.Entry<String, Object> entry : map.entrySet()) {
+			for (Map.Entry<String, ?> entry : map.entrySet()) {
 				final Object t = entry.getValue();
 				// 转换为json
 				final Gson gson = new Gson();
@@ -61,7 +61,7 @@ public class RedisUtils {
 		}
 		return objMap;
 	}
-
+	
 	public static <T> T fromJson(final String json, final Class<T> clazz) {
 
 		if (ValidateUtil.isValid(json)) {
