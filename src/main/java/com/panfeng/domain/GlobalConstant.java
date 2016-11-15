@@ -64,6 +64,8 @@ public final class GlobalConstant extends BaseObject {
 	public static String EMPLOYEE_IMAGE_PATH; // 内部人员图片路径
 
 	public static String STAFF_IMAGE_PATH; // 人员图片路径
+	
+	public static String FDFS_BACKUP_SERVER_PATH; // 文件系统备用下载服务路径
 
 	// pay
 	public static String PAY_SIGN_KEY;
@@ -124,6 +126,8 @@ public final class GlobalConstant extends BaseObject {
 				ACTIVITY_PRODUCT_IDS = propertis.getProperty("activity.product.ids");
 				
 				UPLOAD_PATH = propertis.getProperty("upload.path");
+				
+				FDFS_BACKUP_SERVER_PATH = propertis.getProperty("backup.server.dfs.url");
 			} catch (Exception e) {
 
 			} finally {

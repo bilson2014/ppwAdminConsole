@@ -11,7 +11,6 @@ import com.panfeng.service.KindeditorService;
 import com.panfeng.util.Constants;
 import com.panfeng.util.FileUtils;
 import com.panfeng.util.PathFormatUtils;
-import com.panfeng.util.PropertiesUtils;
 import com.panfeng.util.VerifyFileUtils;
 
 @Service
@@ -23,13 +22,11 @@ public class KindeditorServiceImpl implements KindeditorService {
 
 	// 获取图片URL
 	final static String SAVE_URL = Constants.PRODUCT_DESCRIPTION_IMAGE_URL;
-	//DFS服务器地址
-	final static String DFS_URL = PropertiesUtils.getProp("upload.server.dfs.url");
 
 	@Override
 	public String getImageUrl(String filename) {
 		//return SAVE_URL + filename;
-		return DFS_URL + filename;
+		return filename;
 	}
 
 	@Override

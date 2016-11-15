@@ -71,10 +71,19 @@ public class SecurityInterceptor implements HandlerInterceptor {
 			final Map<String, String> nodeMap = storageDao.getStorageFromRedis(GlobalConstant.STORAGE_NODE_RELATIONSHIP);
 			// 获取最优Storage节点
 			final String serviceIP = fdfsService.locateFileStoragePath();
+			String ip = "";
 			final StringBuffer sbf = new StringBuffer();
 			sbf.append("http://");
-			sbf.append(nodeMap.get(serviceIP));
-			sbf.append(":8888/");
+			
+			if(ValidateUtil.isValid(serviceIP)) {
+				ip = nodeMap.get(serviceIP);
+				if(ValidateUtil.isValid(ip)) {
+					sbf.append(ip);
+					sbf.append(":8888/");
+				} else {
+					sbf.append(GlobalConstant.FDFS_BACKUP_SERVER_PATH);
+				}
+			}
 			mv.addObject(GlobalConstant.FILE_LOCATE_STORAGE_PATH, sbf.toString());
 		}
 	}
