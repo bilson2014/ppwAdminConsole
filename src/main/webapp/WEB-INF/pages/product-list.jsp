@@ -2,7 +2,6 @@
 <%@ page import="com.panfeng.util.Constants"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="r" uri="/mytaglib" %>
-<spring:url value="<%=Constants.DFS_PATH %>" var="DFSurl" />
 <spring:url value="/resources/css/product-list.css" var="productListCss" />
 <spring:url value="/resources/lib/kindeditor/themes/default/default.css" var="defaultCss" />
 <spring:url value="/resources/lib/kindeditor/plugins/code/prettify.css" var="prettifyCss" />
