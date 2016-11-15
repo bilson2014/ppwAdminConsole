@@ -54,6 +54,7 @@
 				   s.SERVICEOD AS serviceOd,
 				   s.MCOMS AS mcoms,
 				   s.PRODUCTID AS productId,
+				   s.PRICE_DETAIL AS priceDetail,
 				   p.PRODUCTNAME AS productName
 			FROM SERVICE s
 			LEFT JOIN PRODUCT p
@@ -63,12 +64,9 @@
 		<if test="productId != null and productId != ''">
 			AND s.PRODUCTID = ${productId}
 		</if>
-		<!-- add by wanglc 2016-7-4 15:23:31 添加模糊查询 begin -->
 		<if test="productName != null and productName != ''">
 			AND p.PRODUCTNAME LIKE CONCAT(CONCAT('%',#{productName}),'%')
 		</if>
-		<!-- add by wanglc 2016-7-4 15:23:31 添加模糊查询 end-->
-		
 		<![CDATA[
 		ORDER BY
 		]]>
@@ -76,7 +74,7 @@
 			 ${sort} ${order},
 		</if>
 		<![CDATA[
-			s.SERVICEOD,SERVICEID
+			s.SERVICEID,SERVICEOD
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
@@ -92,11 +90,9 @@
 		<if test="productId != null and productId != ''">
 			AND s.PRODUCTID = ${productId}
 		</if>
-		<!-- add by wanglc 2016-7-4 15:24:04 添加模糊查询 begin -->
 		<if test="productName != null and productName != ''">
 			AND p.PRODUCTNAME LIKE CONCAT(CONCAT('%',#{productName}),'%')
 		</if>
-		<!-- add by wanglc 2016-7-4 15:24:08 添加模糊查询 end-->
 	</select>
 	
 	<select id="findServiceById" resultMap="ServiceRM">
@@ -159,7 +155,8 @@
 				SERVICEDISCOUNT,
 				SERVICEOD,
 				MCOMS,
-				PRODUCTID
+				PRODUCTID,
+				price_detail
 			) VALUES (
 				#{serviceName},
 				#{serviceDescription},
@@ -168,7 +165,8 @@
 				${serviceDiscount},
 				${serviceOd},
 				${mcoms},
-				${productId}
+				${productId},
+				#{priceDetail}
 			)
 		]]>
 	</insert>
@@ -185,6 +183,11 @@
 					MCOMS = ${mcoms},
 					PRODUCTID = ${productId},
 					UPDATEDATE = CURRENT_TIMESTAMP
+		]]>
+		<if test="priceDetail != null and priceDetail != ''">
+			,price_detail = #{priceDetail}
+		</if>
+		<![CDATA[
 			WHERE SERVICEID = ${serviceId}
 		]]>
 	</update>
