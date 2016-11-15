@@ -45,6 +45,13 @@ $().ready(function(){
 						title : '是否显示到首页' ,
 						align : 'center' ,
 						width : 200,
+						formatter : function(value,row,index){
+							if(value){
+								return "显示";
+							}else{
+								return "不显示";
+							}
+						}
 					},{
 						field : 'sortIndex' ,
 						title : '操作' ,
@@ -53,20 +60,19 @@ $().ready(function(){
 						formatter : function(value,row,index){
 							var all = "";
 							var totalCount = $('#gride').datagrid('getData').total;
-							var up  = '<a class="sort" data-target="up" data-id="'+row.teamId+'" href="javascript:void(0)">上移</a>';
-							var down = '<a class="sort" data-target="down" data-id="'+row.teamId+'" href="javascript:void(0)">下移</a>';
-							var del = '<a class="sort" data-target="del" data-id="'+row.teamId+'" href="javascript:void(0)">移除</a>';
+							var up  = '<a class="sort" data-target="up" data-id="'+row.id+'" href="javascript:void(0)">上移</a>';
+							var down = '<a class="sort" data-target="down" data-id="'+row.id+'" href="javascript:void(0)">下移</a>';
 							if(totalCount<=1){
-								return del;
+								return '';
 							}
 							if(value==1 && value!=totalCount){
-								return down+" "+del;
+								return down;
 							}
 							if(value>1 && value<totalCount){
-								return up+" "+down+" "+del;
+								return up+" "+down;
 							}
 							if(value == totalCount){
-								return up+" "+del;
+								return up;
 							}
 						}
 					}]] ,
@@ -120,9 +126,9 @@ function createEditor(name){
 //增加
 function addFuc(){
 	$('#fm').form('clear');
-	formUrl = getContextPath() + '/portal/mail/save';
+	formUrl = getContextPath() + '/portal/news/save';
 	openDialog(null);
-	$('#mailId').val(0);
+	$('#newsId').val(0);
 }
 
 // 修改
@@ -135,7 +141,7 @@ function editFuc(){
 		$.base64.utf8encode = true;
 		var html=$.trim($.base64.atob($.trim(rows[0].content),true));
 		editor.html(html);
-		formUrl = getContextPath() + '/portal/mail/update';
+		formUrl = getContextPath() + '/portal/news/update';
 		openDialog(rows[0]);
 	} else {
 		$.message('只能选择一条记录进行修改!');
@@ -155,7 +161,7 @@ function delFuc(){
 					ids += arr[i].id + ',';
 				}
 				ids = ids.substring(0,ids.length-1);
-				$.post(getContextPath() + '/portal/mail/delete', {ids:ids},function(result){
+				$.post(getContextPath() + '/portal/news/delete', {ids:ids},function(result){
 					
 					// 刷新数据
 					datagrid.datagrid('clearSelections');
@@ -231,4 +237,25 @@ function searchFun(){
 function cleanFun() {
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {});
+}
+function sort(){
+	$(".sort").off("click").on("click",function(){
+		var action = $(this).attr("data-target");
+		var id = $(this).attr("data-id");
+		//TODO 移除提示
+		$.ajax({
+			url : getContextPath() + '/portal/news/sort',
+			type : 'POST',
+			data : {
+				'action' : action,
+				'id' : id,
+			},
+			success : function(data){
+				if(data){
+					datagrid.datagrid('load', {});
+				}
+			}
+		});
+		
+	})
 }

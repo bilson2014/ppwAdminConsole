@@ -77,23 +77,32 @@
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 500px;"
-            closed="true" buttons="#dlg-buttons" title="作品信息">
+            closed="true" buttons="#dlg-buttons" title="新闻信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
-	        	<input id="mailId" name="id" type="hidden">
+	        	<input id="newsId" name="id" type="hidden">
 	            <div class="online">
-					<div class="lable l-width">邮件标题</div>
+					<div class="lable l-width">新闻标题</div>
 					<div class="d-float f-width">
-						<input id="subject" name="subject" class="easyui-textbox" required="true" />
+						<input id="title" name="title" class="easyui-textbox" required="true" />
 					</div>
 				</div>
 				<div class="online">
-					<div class="lable l-width">邮件类型</div>
+					<div class="lable l-width">是否显示</div>
 					<div class="d-float f-width">
-						<input id="mailType" name="mailType" class="easyui-textbox" required="true" />
+						<select id="status" name="status" required="true" editable="false" class="easyui-combobox" style="width: 158px;">
+							<option value="1" selected>显示</option>
+            				<option value="0" >不显示</option>
+						</select>
+					</div>
+				</div>
+				<div class="online">
+					<div class="lable l-width">新闻描述</div>
+					<div class="d-float f-width">
+						<input id="discription" name="discription" class="easyui-textbox" required="true" />
 					</div>
 				</div>
 				<div class="textarea-position">
-					<div class="lable l-width">邮件内容</div>
+					<div class="lable l-width">新闻内容</div>
 					<input name="content" class="ta-content" required="true" />
 				</div>
 	            
