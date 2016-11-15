@@ -12,7 +12,6 @@ import com.panfeng.resource.model.User;
 import com.panfeng.resource.model.UserViewModel;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.UserTempService;
-import com.panfeng.util.Constants;
 
 @Service
 public class UserTypeServiceImpl implements UserTempService {
@@ -31,7 +30,6 @@ public class UserTypeServiceImpl implements UserTempService {
 			// 视频管家
 			Employee employee = employeeService.findEmployerById(userId);
 			// modify by wanglc 2016-7-18 13:59:19 视频管家为空 begin
-			// if(null != employee)
 			if (null != employee) {
 				userViewModel
 						.setUserName(employee.getEmployeeRealName() == null || employee.getEmployeeRealName().equals("")
@@ -42,7 +40,7 @@ public class UserTypeServiceImpl implements UserTempService {
 					//修改为fdfs路径begin
 					//String filename = imgUrl.substring(imgUrl.lastIndexOf('/'), imgUrl.length());
 					//userViewModel.setImgUrl("/employee/img" + filename);
-					userViewModel.setImgUrl(Constants.DFS_PATH + imgUrl);
+					userViewModel.setImgUrl(imgUrl);
 					//修改为fdfs路径end
 				} else
 					userViewModel.setImgUrl("/resources/images/flow/guanhead.png");
@@ -63,7 +61,7 @@ public class UserTypeServiceImpl implements UserTempService {
 				//修改为fdfs路径begin
 				//String filename = teamimageUrl.substring(teamimageUrl.lastIndexOf('/'), teamimageUrl.length());
 				//userViewModel.setImgUrl("/team/img/" + filename);
-				userViewModel.setImgUrl(Constants.DFS_PATH + teamimageUrl);
+				userViewModel.setImgUrl(teamimageUrl);
 				//修改为fdfs路径end
 			} else {
 				userViewModel.setImgUrl("/resources/images/flow/gonghead.png");
@@ -83,7 +81,7 @@ public class UserTypeServiceImpl implements UserTempService {
 				//修改为fdfs路径begin
 				//String filename = userImageUrl.substring(userImageUrl.lastIndexOf('/'), userImageUrl.length());
 				//userViewModel.setImgUrl("/user/img/" + filename);
-				userViewModel.setImgUrl(Constants.DFS_PATH + userImageUrl);
+				userViewModel.setImgUrl(userImageUrl);
 				//修改为fdfs路径end
 			} else {
 				userViewModel.setImgUrl("/resources/images/flow/kehead.png");

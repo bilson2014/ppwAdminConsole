@@ -21,5 +21,5 @@ public interface FDFSService {
 	public String upload(final InputStream inputStream, final String fileName);
 	
 	// 获取最优文件地址服务器
-	public String locateFileStoragePath(final String fileId);
+	public String locateFileStoragePath();
 }

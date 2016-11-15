@@ -139,7 +139,7 @@ function getHostName(){
  */
 function getDfsHostName(){
 	var rPath = $('#storage_node').val();
-	return rPath == undefined ? "http://resource.apaipian.com/resource/" : 'http://' + rPath + ':8000/';
+	return rPath == undefined ? "http://resource.apaipian.com/resource/" : rPath;
 }
 
 /**

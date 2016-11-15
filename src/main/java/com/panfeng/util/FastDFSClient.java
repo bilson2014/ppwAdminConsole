@@ -259,13 +259,13 @@ public class FastDFSClient {
 	 * @param fileId
 	 * @return
 	 */
-	public String locateSource(final String fileId){
+	public String locateSource(){
 		try {
 			TrackerServer trackerServer = pool.checkout(logId);  
             StorageServer storageServer = null;
             StorageClient1 client1 = new StorageClient1(trackerServer,  
                     storageServer);
-			String sourceIP= client1.locateSource(fileId);
+			String sourceIP= client1.locateServerPath1();
 			return sourceIP;
 		} catch (Exception ex) {
 			logger.error(ex);
