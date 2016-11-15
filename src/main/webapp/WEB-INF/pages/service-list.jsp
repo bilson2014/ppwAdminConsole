@@ -56,5 +56,61 @@
 		
 		<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 	</div>
+	
+		<div id="dlg" class="easyui-dialog" style="width:360px;padding:10px 20px"
+            closed="true" buttons="#dlg-buttons" title="价格信息">
+	        <form id="fm" method="post" enctype="multipart/form-data">
+	        	<input name="serviceId" type="hidden">
+	            <div class="fitem">
+	                <label>服务名称:</label>
+	                <input name="serviceName" class="easyui-textbox" required="true">
+	            </div>
+	            <div class="fitem">
+	                <label>影片时长:</label>
+	                <input name="mcoms" class="easyui-numberbox" required="true" max="999999999" size="8" maxlength="8">
+	            </div>
+	            <div class="fitem">
+	                <label>价格:</label>
+	                <input name="servicePrice"  class="easyui-numberbox" required="true" precision="2" max="999999999" size="8" maxlength="8">
+	            </div>
+	            <div class="fitem">
+	                <label>价格详情:</label>
+	                <input name="priceDetail" id='priceDetail' class="easyui-textbox"/>
+	            </div>
+	            <div class="fitem">
+	                <label>折扣:</label>
+	                <input name="serviceDiscount"  class="easyui-numberbox" required="true" min='0' max="1" precision="2"/>
+	            </div>
+	             <div class="fitem">
+	                <label>排序:</label>
+	                <input name="serviceOd"  class="easyui-numberbox"  min='0' max="999999"/>
+	            </div>
+	             <div class="fitem">
+	                <label>所属项目:</label>
+	                <input name="productId" id='productId' class="easyui-textbox" required="true"/>
+	            </div>
+	            <div class="fitem">
+	                <label>描述:</label>
+	                <input class="easyui-textbox" name="serviceDescription" multiline="true" style="height: 100px;"/>
+	            </div>
+	        </form>
+	    </div>
+	    <div id="dlg-buttons">
+	    
+	    	<r:mulparampermission uri2="/portal/service/save" uri="/portal/service/update">
+		        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveFuc()" >保存</a>
+	    	</r:mulparampermission>
+	    	
+	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
+	    </div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </body>
 </html>

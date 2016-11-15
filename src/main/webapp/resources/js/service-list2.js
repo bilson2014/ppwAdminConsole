@@ -1,4 +1,5 @@
-var formUrl;
+var editing ; //判断用户是否处于编辑状态 
+var flag  ;	  //判断新增和修改方法
 var datagrid;
 $().ready(function(){
 	
@@ -35,18 +36,48 @@ $().ready(function(){
 						formatter : function(value,row,index){
 							return '<span style=color:red; >'+ row.mcoms +' 秒</span>' ;
 						},
+						editor : {
+							type : 'numberbox' ,
+							options : {
+								required : true , 
+								min:0 ,
+								max:9999999 ,
+								precision:0,
+								missingMessage : '请填写影片时长!'
+							}
+						}
 					},{
 						field : 'servicePrice',
 						title : '价格',
 						width : 110,
 						align : 'center' ,
 						sortable : true ,
+						editor : {
+							type : 'numberbox' ,
+							options : {
+								required:true ,
+								min:0 ,
+								max:999999999 ,
+								precision:2,
+								missingMessage : '请填写服务价格!'
+							}
+						}
 					},{
 						field : 'serviceDiscount' ,
 						title : '折扣' ,
 						align : 'center' ,
 						width : 70,
 						sortable : true ,
+						editor : {
+							type : 'numberbox' ,
+							options : {
+								required:true ,
+								min:0 , 
+								max:1 ,
+								precision:2,
+								missingMessage : '请填写折扣!'
+							}
+						}
 					},{
 						field : 'serviceRealPrice',
 						title : '真实价格',
@@ -57,6 +88,15 @@ $().ready(function(){
 						title : '排序',
 						width : 70,
 						align : 'center' ,
+						editor : {
+							type : 'numberbox' ,
+							options : {
+								required : false ,
+								min:0 ,
+								max:9999,
+								missingMessage : '请填写排序!'
+							}
+						}
 					},{
 						field : 'productId',
 						title : '所属项目',
@@ -65,18 +105,54 @@ $().ready(function(){
 						formatter : function(value,row,index){
 							return '<span style=color:red; >'+ row.productName +'</span>' ;
 						},
+						editor : {
+							type : 'combobox' ,
+							options : {
+								url : getContextPath() + '/portal/service/productSelect',
+								valueField:'productId',
+								textField:'productName',
+								required : true ,
+								missingMessage : '请选择所属项目!'
+							}
+						}
 					},{
 						field : 'serviceDescription',
 						title : '描述',
 						width : 170,
 						align : 'center' ,
+					},{
+						field : 'priceDetail',
+						title : '价格详情',
+						width : 270,
+						align : 'center' ,
+						editor : {
+							type : 'combotree' ,
+							options : {
+								url : getContextPath() + '/portal/module/list',
+								parentField : 'pid',
+								lines : true,
+							    idField : 'id',
+								treeField : 'text',
+								multiple: true,
+								cascadeCheck : false
+							}
+						}
 					}]],
 		pagination: true ,
 		pageSize : 20,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar'
+		toolbar : '#toolbar',
+		onAfterEdit:function(index , record){
+			delete record.product;
+			$.post(flag =='add' ? getContextPath() + '/portal/service/save' : getContextPath() + '/portal/service/update', record , function(result){
+				datagrid.datagrid('clearSelections');
+				datagrid.datagrid('reload');
+				$.message('操作成功!');
+			});
+		}
 	});
+	
 	service.dataInit();
 });
 
@@ -97,22 +173,31 @@ var service = {
 
 //增加
 function addFuc(){
-	$('#fm').form('clear');
-	openDialog('dlg',null);
-	formUrl = getContextPath() + '/portal/service/save';
-	$('input[name="serviceId"]').val(0);
+	if(editing == undefined){
+		flag = 'add';
+		//1 先取消所有的选中状态
+		datagrid.datagrid('unselectAll');
+		//2追加一行
+		datagrid.datagrid('appendRow',{});
+		//3获取当前页的行号
+		editing = datagrid.datagrid('getRows').length -1;
+		//4开启编辑状态
+		datagrid.datagrid('beginEdit', editing);
+	}
 }
 //修改
 function editFuc(){
-	var rows = datagrid.datagrid('getSelections');
-	if(rows.length == 1){
-		$('#fm').form('clear');
-		openDialog('dlg',rows[0]);
-		$('#fm').form('load',rows[0]);
-		
-		formUrl = getContextPath() + '/portal/service/update';
-	} else {
+	var arr = datagrid.datagrid('getSelections');
+	if(arr.length != 1){
 		$.message('只能选择一条记录进行修改!');
+	} else {
+		if(editing == undefined){
+			flag = 'edit';
+			//根据行记录对象获取该行的索引位置
+			editing = datagrid.datagrid('getRowIndex' , arr[0]);
+			//开启编辑状态
+			datagrid.datagrid('beginEdit',editing);
+		}
 	}
 }
 
@@ -145,25 +230,12 @@ function delFuc(){
 
 //保存
 function saveFuc(){
-	progressLoad();
-	$('#fm').form('submit',{
-		url : formUrl,
-		onSubmit : function(param) {
-			var flag = $(this).form('validate');
-			if(!flag){
-				progressClose();
-				$.message('请将信息填写完整!');
-			}
-			return flag;
-		},
-		success : function(result) {
-			$('#dlg').dialog('close');
-			datagrid.datagrid('clearSelections');
-			datagrid.datagrid('reload');
-			progressClose();
-			$.message('操作成功!');
-		}
-	});
+	//保存之前进行数据的校验 , 然后结束编辑并释放编辑状态字段 
+	datagrid.datagrid('beginEdit', editing);
+	if(datagrid.datagrid('validateRow',editing)){
+		datagrid.datagrid('endEdit', editing);
+		editing = undefined;
+	}
 }
 
 // 取消
@@ -182,33 +254,4 @@ function searchFun(){
 function cleanFun() {
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {});
-}
-//打开dialog
-function openDialog(id,data){
-	$('#' + id).dialog({
-		modal : true,
-		onOpen : function(event, ui) {
-			// 加载角色树
-			$('#priceDetail').combotree({
-				url : getContextPath() + '/portal/module/list',
-				parentField : 'pid',
-				lines : true,
-			    idField : 'id',
-				treeField : 'text',
-				multiple: true,
-				required: true
-			});
-			$("#productId").combobox({
-				url : getContextPath() + '/portal/service/productSelect',
-				valueField:'productId',
-				textField:'productName',
-				filter: function(q, row){
-					if(row.productName == null)
-						return false;
-					return row.productName.indexOf(q) >= 0;
-				}
-			});
-			
-		}
-	}).dialog('open').dialog('center');
 }
