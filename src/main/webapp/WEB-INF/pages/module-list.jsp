@@ -69,7 +69,7 @@
 	
 	<div id="dlg" class="easyui-dialog" style="width:400px;padding:10px 20px"
             closed="true" buttons="#dlg-buttons" title="资源信息">
-	        <form id="fm" method="post" novalidate>
+	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input name="id" type="hidden" >
 	            <div class="fitem">
 	                <label>资源名称:</label>
@@ -77,8 +77,7 @@
 	            </div>
 	            <div class="fitem">
 	                <label>图片路径</label>
-	                <input name="pic" type="hidden">
-	                <input name="pick" type="file">
+	                <input name="moduleImg" type="file">
 	            </div>
 	            <div class="fitem">
 	                <label>价格:</label>
