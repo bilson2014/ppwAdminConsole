@@ -14,9 +14,12 @@ public interface FDFSService {
 	
 	public int delete(final String fileId);
 
-	public String upload(MultipartFile file);
+	public String upload(final MultipartFile file);
 
-	InputStream download(String fileId) throws IOException;
+	InputStream download(final String fileId) throws IOException;
 
-	public String upload(InputStream inputStream, String fileName);
+	public String upload(final InputStream inputStream, final String fileName);
+	
+	// 获取最优文件地址服务器
+	public String locateFileStoragePath();
 }

@@ -95,7 +95,6 @@ public class ServiceController extends BaseController{
 		Log.error("save service ...",sessionInfo);
 		return ret;
 	}
-	
 	@RequestMapping(value = "/service/update",method = RequestMethod.POST)
 	public long update(final Service service,HttpServletRequest request){
 		

@@ -16,14 +16,18 @@
 	<import resource="DataSourceConfig.xml"/>
 	
 	<import resource="RedisConfig.xml"/>
+	
+	<import resource="spring-mq.xml"/>
 
-	<context:property-placeholder location="classpath:jdbc.properties,classpath:redis.properties" />
+	<context:property-placeholder location="classpath:jdbc.properties,classpath:redis.properties,
+											classpath:mq.properties" />
 
 	<context:component-scan base-package="com.panfeng.service,
 										  com.panfeng.dao,
 										  com.panfeng.fs,
-										  com.panfeng.listener" />
-
+										  com.panfeng.listener,
+										  com.panfeng.mq.service" />
+ 	
 	<context:annotation-config />
 	
 	<tx:annotation-driven />
@@ -45,16 +49,4 @@
         <property name="maxPoolSize" value="${maxPoolSize}" />  
         <property name="waitTimes" value="${waitTimes}" />
 	</bean>
-	<bean id="emailTemplate" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-        <property name="defaultEncoding" value="utf-8" />
-        <property name="host" value="${mail.host}" />
-        <property name="username" value="${mail.sender}" />
-        <property name="password" value="${mail.password}" />
-        <property name="javaMailProperties">
-            <props>
-                <prop key="mail.smtp.auth" >true</prop>
-            </props>
-        </property>
-    </bean>
-	
 </beans>

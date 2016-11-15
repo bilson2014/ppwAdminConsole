@@ -33,136 +33,133 @@ public class StaffController extends BaseController {
 	private final StaffService service = null;
 	@Autowired
 	private final FDFSService fdfsService = null;
-	
+
 	@RequestMapping("/staff-list")
-	public ModelAndView view(){
-		
+	public ModelAndView view() {
+
 		return new ModelAndView("staff-list");
 	}
-	
+
 	@RequestMapping("/staff/list")
-	public DataGrid<Staff> list(final StaffView view,final PageFilter pf){
-		
+	public DataGrid<Staff> list(final StaffView view, final PageFilter pf) {
+
 		final long page = pf.getPage();
 		final long rows = pf.getRows();
 		view.setBegin((page - 1) * rows);
 		view.setLimit(rows);
-		
+
 		DataGrid<Staff> dataGrid = new DataGrid<Staff>();
-		
+
 		final List<Staff> list = service.listWithPagination(view);
-		
+
 		dataGrid.setRows(list);
 		final long total = service.maxSize(view);
 		dataGrid.setTotal(total);
 		return dataGrid;
 	}
-	
+
 	@RequestMapping("/staff/save")
-	public void save(final HttpServletRequest request,final HttpServletResponse response,
-					@RequestParam final MultipartFile staffImage,
-					final Staff staff){
+	public void save(final HttpServletRequest request, final HttpServletResponse response,
+			@RequestParam final MultipartFile staffImage, final Staff staff) {
 		response.setContentType("text/html;charset=UTF-8");
-		
+
 		service.save(staff);
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("save staff ...",sessionInfo);
-		processFile(staffImage,staff);
-		
+		Log.error("save staff ...", sessionInfo);
+		processFile(staffImage, staff);
+
 	}
-	
+
 	@RequestMapping("/staff/update")
-	public void update(final HttpServletRequest request,final HttpServletResponse response,
-			@RequestParam final MultipartFile staffImage,
-			final Staff staff){
-		
+	public void update(final HttpServletRequest request, final HttpServletResponse response,
+			@RequestParam final MultipartFile staffImage, final Staff staff) {
+
 		response.setContentType("text/html;charset=UTF-8");
-		
+
 		final Staff s = service.findStaffById(staff.getStaffId());
 		final String imagePath = s.getStaffImageUrl();
-		if(ValidateUtil.isValid(imagePath)){
-			//dfs删除文件
+		if (ValidateUtil.isValid(imagePath)) {
+			// dfs删除文件
 			fdfsService.delete(imagePath);
-			//FileUtils.deleteFile(imagePath);
+			// FileUtils.deleteFile(imagePath);
 		}
 		service.update(staff);
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update staff ...",sessionInfo);
+		Log.error("update staff ...", sessionInfo);
 		processFile(staffImage, staff);
 	}
-	
+
 	@RequestMapping("/staff/delete")
-	public long delete(final long[] ids,HttpServletRequest request){
-		
-		if(ids != null && ids.length > 1){
+	public long delete(final long[] ids, HttpServletRequest request) {
+
+		if (ids != null && ids.length > 1) {
 			List<Staff> list = service.findStaffsByArray(ids);
-			if(ValidateUtil.isValid(list)){
+			if (ValidateUtil.isValid(list)) {
 				for (final Staff staff : list) {
 					final String imageUrl = staff.getStaffImageUrl();
-					if(ValidateUtil.isValid(imageUrl)){
+					if (ValidateUtil.isValid(imageUrl)) {
 						FileUtils.deleteFile(GlobalConstant.FILE_PROFIX + File.separator + imageUrl);
 					}
 				}
 			}
 		}
-		
+
 		final long ret = service.deleteByArray(ids);
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("delete staff ... ids:"+ids.toString(),sessionInfo);
+		Log.error("delete staff ... ids:" + ids.toString(), sessionInfo);
 		return ret;
 	}
-	
-	public void processFile(final MultipartFile staffImage,final Staff staff){
-		if(!staffImage.isEmpty()){
-			//修改为DFS上传
+
+	public void processFile(final MultipartFile staffImage, final Staff staff) {
+		if (!staffImage.isEmpty()) {
+			// 修改为DFS上传
 			String path = fdfsService.upload(staffImage);
 			staff.setStaffImageUrl(path);
 			service.updateImagePath(staff);
-			
-			/*final String imagePath = GlobalConstant.FILE_PROFIX + GlobalConstant.STAFF_IMAGE_PATH;
-			
-			File image = new File(imagePath);
-			if(!image.exists())
-				image.mkdir();
-			
-			final String extName = FileUtils.getExtName(staffImage.getOriginalFilename(), ".");
-			final StringBuffer fileName = new StringBuffer();
-			fileName.append("staff" + staff.getStaffId());
-			fileName.append("-");
-			final Calendar calendar = new GregorianCalendar();
-			fileName.append(calendar.get(Calendar.YEAR));
-			fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0"
-					+ (calendar.get(Calendar.MONTH) + 1)
-					: (calendar.get(Calendar.MONTH) + 1));
-			fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0"
-					+ calendar.get(Calendar.DAY_OF_MONTH)
-					: calendar.get(Calendar.DAY_OF_MONTH));
-			fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
-			fileName.append(calendar.get(Calendar.MINUTE));
-			fileName.append(calendar.get(Calendar.SECOND));
-			fileName.append(calendar.get(Calendar.MILLISECOND));
-			fileName.append(".");
-			fileName.append(extName);
-			final String path = imagePath + File.separator + fileName.toString();
-			
-			File dest = new File(path);
-			try {
-				staffImage.transferTo(dest);
-				staff.setStaffImageUrl(GlobalConstant.STAFF_IMAGE_PATH + File.separator + fileName.toString());
-				service.updateImagePath(staff);
-			} catch (IllegalStateException | IOException e) {
-				e.printStackTrace();
-			}*/
+
+			/*
+			 * final String imagePath = GlobalConstant.FILE_PROFIX +
+			 * GlobalConstant.STAFF_IMAGE_PATH;
+			 * 
+			 * File image = new File(imagePath); if(!image.exists())
+			 * image.mkdir();
+			 * 
+			 * final String extName =
+			 * FileUtils.getExtName(staffImage.getOriginalFilename(), ".");
+			 * final StringBuffer fileName = new StringBuffer();
+			 * fileName.append("staff" + staff.getStaffId());
+			 * fileName.append("-"); final Calendar calendar = new
+			 * GregorianCalendar();
+			 * fileName.append(calendar.get(Calendar.YEAR));
+			 * fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0" +
+			 * (calendar.get(Calendar.MONTH) + 1) :
+			 * (calendar.get(Calendar.MONTH) + 1));
+			 * fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0" +
+			 * calendar.get(Calendar.DAY_OF_MONTH) :
+			 * calendar.get(Calendar.DAY_OF_MONTH));
+			 * fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
+			 * fileName.append(calendar.get(Calendar.MINUTE));
+			 * fileName.append(calendar.get(Calendar.SECOND));
+			 * fileName.append(calendar.get(Calendar.MILLISECOND));
+			 * fileName.append("."); fileName.append(extName); final String path
+			 * = imagePath + File.separator + fileName.toString();
+			 * 
+			 * File dest = new File(path); try { staffImage.transferTo(dest);
+			 * staff.setStaffImageUrl(GlobalConstant.STAFF_IMAGE_PATH +
+			 * File.separator + fileName.toString());
+			 * service.updateImagePath(staff); } catch (IllegalStateException |
+			 * IOException e) { e.printStackTrace(); }
+			 */
 		}
 	}
-	
+
 	// ------------------------- 前台数据接口 ------------------------
-	
+
 	/**
 	 * 获取所有人员信息
 	 */
 	@RequestMapping("/staff/static/list")
-	public List<Staff> list(final HttpServletRequest request){
+	public List<Staff> list(final HttpServletRequest request) {
 		List<Staff> list = service.getAll();
 		return list;
 	}

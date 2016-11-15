@@ -28,6 +28,8 @@ public class Service extends BaseObject {
 	
 	private Long productId = 0l; // 作品关联
 	
+	private String priceDetail = null;//价格详情数据，对应product_module表
+	
 	private String productName = null; // 冗余字段，用于保存项目名称
 	
 	private Product product = null; // 作品关联
@@ -119,5 +121,12 @@ public class Service extends BaseObject {
 	public void setMcoms(long mcoms) {
 		this.mcoms = mcoms;
 	}
-	
+
+	public String getPriceDetail() {
+		return priceDetail;
+	}
+
+	public void setPriceDetail(String priceDetail) {
+		this.priceDetail = priceDetail;
+	}
 }

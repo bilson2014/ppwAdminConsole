@@ -19,13 +19,7 @@ public class TeamView extends Pagination{
 	
 	private String teamName = null;//团队名称like查询
 	
-	public String getTeamName() {
-		return teamName;
-	}
-
-	public void setTeamName(String teamName) {
-		this.teamName = teamName;
-	}
+	private boolean recommend = false;//是否是主页推荐
 
 	public Long getTeamId() {
 		return teamId;
@@ -75,4 +69,19 @@ public class TeamView extends Pagination{
 		this.business = business;
 	}
 
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
+	public boolean isRecommend() {
+		return recommend;
+	}
+
+	public void setRecommend(boolean recommend) {
+		this.recommend = recommend;
+	}
 }

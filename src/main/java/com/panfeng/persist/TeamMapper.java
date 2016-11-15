@@ -130,4 +130,21 @@ public interface TeamMapper {
 	 * 查询供应商最新信息(未审核);
 	 */
 	public Team getLatestTmpByTeamId(@Param("teamId") long teamId);
+
+	public int downSortByRecommendSort(@Param("index") int index);
+
+	public int upSortByTeamId(@Param("teamId") long teamId);
+
+	public int upSortByRecommendSort(@Param("index") int index);
+
+	public int downSortByTeamId(@Param("teamId") long teamId);
+
+	public int updateRecommendByTeamId(@Param("recommend")boolean recommend
+			,@Param("teamId") long teamId);
+
+	public int upAllAboveIndex(@Param("index") int index);
+
+	public List<Team> getAllNoRecommend();
+
+	public int addRecommend(@Param("teamId") long teamId);
 }

@@ -216,31 +216,48 @@
 		]]>
 	</select>
 	
-	<insert id="save">
+	<insert id="save" parameterType="Indent" useGeneratedKeys="true" keyProperty="indentId">
 		<![CDATA[
 			INSERT INTO INDENT(
 				INDENTNAME,
 				INDENTNUM,
 				INDENTTYPE,
 				SERVICEID,
-				USERID,
 				INDENT_TELE,
 				INDENT_RECOMMENT,
 				INDENT_DESCRIPTION,
-				SALESMANUNIQUEID
+				SALESMANUNIQUEID,
+				PRODUCTID,
+				INDENTPRICE,
+				TEAMID,
+				ORDERDATE
 			) VALUES (
 				#{indentName},
 				#{indentNum},
 				${indentType},
 				${serviceId},
-				${userId},
-				#{INDENT_TELE},
+				#{indent_tele},
 				#{indent_recomment},
 				#{indent_description},
-				#{salesmanUniqueId}
+				#{salesmanUniqueId},
+				${productId},
+				${indentPrice},
+				${teamId},
+				CURRENT_TIMESTAMP
 			)
 		]]>
 	</insert>
+	
+	<update id="updateForCalculate">
+		<![CDATA[
+			UPDATE INDENT
+				SET INDENT_TELE = #{indent_tele},
+					INDENT_DESCRIPTION = #{indent_description},
+					INDENTPRICE = ${indentPrice},
+					ORDERDATE = CURRENT_TIMESTAMP
+				WHERE INDENTID = ${indentId}
+		]]>
+	</update>
 	
 	<update id="update">
 		<![CDATA[

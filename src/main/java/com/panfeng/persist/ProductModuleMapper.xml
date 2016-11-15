@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.ProductModuleMapper">
+
+	<select id="list" resultType="ProductModule">
+		<![CDATA[
+           SELECT ID,
+           		 PID,
+           		 MODULE_NAME moduleName,
+           		 DESCRIPTION,
+           		 MODULE_PRICE modulePrice ,
+           		 PIC,CREATE_TIME createTime,
+           		 UPDATE_TIME updateTime,
+           		 SORT_INDEX sortIndex
+			FROM PRODUCT_MODULE
+		]]>
+	</select>
+	<insert id="save" useGeneratedKeys="true" keyProperty="id"
+		parameterType="ProductModule">
+		<![CDATA[
+			INSERT INTO PRODUCT_MODULE (
+				PID,
+				MODULE_NAME,
+				DESCRIPTION,
+				MODULE_PRICE,
+				PIC,
+				CREATE_TIME,
+				UPDATE_TIME,
+				SORT_INDEX
+				) VALUES (
+				#{pid},
+				#{moduleName},
+				#{description},
+				#{modulePrice},
+				#{pic},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP,
+				${sortIndex}
+				);
+		]]>
+	</insert>
+	
+	<update id="update">
+		<![CDATA[
+			UPDATE PRODUCT_MODULE
+				SET PID=${pid},
+				MODULE_NAME=#{moduleName},
+				DESCRIPTION=#{description},
+				MODULE_PRICE=#{modulePrice},
+				PIC=#{pic},
+				update_time=CURRENT_TIMESTAMP,
+				sort_index=${sortIndex}
+				where ID=${id}
+		]]>
+	</update>
+	<delete id="delete" parameterType="long">
+		<![CDATA[
+			DELETE FROM PRODUCT_MODULE
+				WHERE ID = ${id}
+		]]>
+	</delete>
+	
+	
+
+</mapper>

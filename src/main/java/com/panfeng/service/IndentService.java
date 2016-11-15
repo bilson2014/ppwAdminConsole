@@ -41,4 +41,9 @@ public interface IndentService {
 	 * @return 订单总数
 	 */
 	public long countBySalesmanUniqueId(final String salesmanUniqueId);
+
+	/**
+	 * 成本计算器更新订单信息
+	 */
+	public long updateForCalculate(Indent indent);
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.NewsMapper">
+	<select id="listWithPagination" resultType="News">
+		<![CDATA[
+			SELECT id ,title,discription ,content ,
+			create_time createTime,
+			update_time updateTime,
+			sort_index sortIndex,
+			`status`
+			FROM NEWS WHERE 1=1
+		]]>
+		<![CDATA[
+			ORDER BY sort_index ASC
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+	<select id="maxSize" resultType="long">
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM MAIL m
+			WHERE 1 = 1
+		]]>
+	</select>
+	
+	<insert id="save">
+		<![CDATA[
+			INSERT INTO MAIL(
+				`SUBJECT`,
+				CONTENT,
+				MAIL_TYPE,
+				CREATE_TIME,
+				UPDATE_TIME
+			) VALUES(
+				#{subject},
+				#{content},
+				#{mailType},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP
+			)
+		]]>
+	</insert>
+	
+	<update id="update">
+		<![CDATA[
+			UPDATE MAIL m
+		      SET m.SUBJECT = #{subject},
+		      m.CONTENT = #{content},
+		      m.MAIL_TYPE = #{mailType},
+		      m.UPDATE_TIME = CURRENT_TIMESTAMP
+	      WHERE m.ID = ${id}
+		]]>
+	</update>
+	
+	<delete id="delete">
+		<![CDATA[
+			DELETE FROM MAIL 
+				WHERE ID = ${id}
+		]]>
+	</delete>
+	
+	
+	<select id="getTemplateById" resultType="News">
+		<![CDATA[
+			SELECT 
+				m.ID,m.SUBJECT,m.CONTENT,
+				m.MAIL_TYPE mailType,
+				m.CREATE_TIME createTime,
+				m.UPDATE_TIME updateTime
+			FROM MAIL m
+			WHERE m.ID = ${mailId}
+		]]>
+	</select>
+	
+</mapper>

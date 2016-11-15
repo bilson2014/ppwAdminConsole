@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
+import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Role;
 import com.panfeng.resource.model.ThirdBind;
 import com.panfeng.resource.model.User;
@@ -62,9 +63,10 @@ public class UserController extends BaseController {
 
 	@Autowired
 	private final RightService rightService = null;
-
-//	private static Logger logger = LoggerFactory.getLogger("error");
-
+	
+	@Autowired
+	private final SmsMQService smsMQService = null;
+	
 	private static String INIT_PASSWORD;
 	public UserController() {
 		if (INIT_PASSWORD == null || "".equals(INIT_PASSWORD)) {
@@ -242,6 +244,10 @@ public class UserController extends BaseController {
 		if (user != null) {
 			final User result = userService.register(user);
 
+			//add by wlc 注册成功，发送短信 2016-11-11 11:10:55
+			//bigin
+			smsMQService.sendMessage("131208", user.getTelephone(), null);
+			//end
 			// 清空当前session
 			sessionService.removeSession(request);
 			SessionInfo sessionInfo = getCurrentInfo(request);
@@ -249,7 +255,6 @@ public class UserController extends BaseController {
 			// 新增session
 			return initSessionInfo(result, request);
 		}
-
 		return false;
 	}
 

@@ -138,9 +138,10 @@ function getHostName(){
  * 获取 dfs的主机名
  */
 function getDfsHostName(){
-	var fdfsPath = $('#Fastdfs_path').val();
-	return fdfsPath == undefined ? "http://resource.apaipian.com/resource/" : $('#Fastdfs_path').val();
+	var rPath = $('#storage_node').val();
+	return rPath == undefined ? "http://resource.apaipian.com/resource/" : rPath;
 }
+
 /**
  * 数据加分隔符
  * @param number

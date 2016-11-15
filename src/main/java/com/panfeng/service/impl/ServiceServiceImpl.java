@@ -17,6 +17,7 @@ public class ServiceServiceImpl implements ServiceService{
 	@Autowired
 	private ServiceMapper mapper = null;
 	
+	
 	@Override
 	public List<Service> listWithPagination(final ServiceView view) {
 		
