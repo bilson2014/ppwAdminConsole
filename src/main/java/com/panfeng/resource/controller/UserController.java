@@ -246,7 +246,7 @@ public class UserController extends BaseController {
 
 			//add by wlc 注册成功，发送短信 2016-11-11 11:10:55
 			//bigin
-			smsMQService.sendMessage("131208", user.getTelephone(), null);
+			smsMQService.sendMessage("132269", user.getTelephone(), null);
 			//end
 			// 清空当前session
 			sessionService.removeSession(request);
