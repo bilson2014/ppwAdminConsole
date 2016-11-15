@@ -81,25 +81,18 @@
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input id="newsId" name="id" type="hidden">
 	            <div class="online">
-					<div class="lable l-width">新闻标题</div>
-					<div class="d-float f-width">
-						<input id="title" name="title" class="easyui-textbox" required="true" />
-					</div>
+					<label class="lable l-width">新闻标题</label>
+					<input id="title" name="title" class="easyui-textbox" required="true" />
+					<label class="lable l-width">是否显示到主页</label>
+					<select id="status" name="status" required="true" editable="false" class="easyui-combobox" style="width: 158px;">
+						<option value="1" selected>显示</option>
+	          				<option value="0" >不显示</option>
+					</select>
 				</div>
+				<br>
 				<div class="online">
-					<div class="lable l-width">是否显示</div>
-					<div class="d-float f-width">
-						<select id="status" name="status" required="true" editable="false" class="easyui-combobox" style="width: 158px;">
-							<option value="1" selected>显示</option>
-            				<option value="0" >不显示</option>
-						</select>
-					</div>
-				</div>
-				<div class="online">
-					<div class="lable l-width">新闻描述</div>
-					<div class="d-float f-width">
-						<input id="discription" name="discription" class="easyui-textbox" required="true" />
-					</div>
+					<label class="lable l-width">新闻描述</label>
+					<input id="discription" name="discription" multiline="true" class="easyui-textbox text-area" required="true" style="height: 100px;width: 82%;"/>
 				</div>
 				<div class="textarea-position">
 					<div class="lable l-width">新闻内容</div>

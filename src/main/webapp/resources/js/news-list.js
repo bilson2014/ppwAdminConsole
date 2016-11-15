@@ -11,7 +11,7 @@ $().ready(function(){
 		url : getContextPath() + '/portal/news/list',
 		idField : 'id' ,
 		title : '邮件管理列表' ,
-		//fitColumns : true ,
+		fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -34,7 +34,6 @@ $().ready(function(){
 						title : '创建时间' ,
 						align : 'center' ,
 						width : 200,
-						sortable : true ,
 					},{
 						field : 'updateTime' ,
 						title : '更新时间' ,
@@ -57,6 +56,7 @@ $().ready(function(){
 						title : '操作' ,
 						align : 'center' ,
 						width : 200,
+						hidden:true,
 						formatter : function(value,row,index){
 							var all = "";
 							var totalCount = $('#gride').datagrid('getData').total;
