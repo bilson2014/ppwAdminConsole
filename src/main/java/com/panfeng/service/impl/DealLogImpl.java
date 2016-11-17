@@ -27,14 +27,16 @@ import com.sun.star.lang.NullPointerException;
 public class DealLogImpl implements DealLogService {
 	@Autowired
 	DealLogMapper dealLogMapper;
+	
+	@Autowired
+	IndentProjectService indentProjectService;
 
 	static String KEY = "PanFengYOUWen659";
 	static int PAY_URL_TIMEOUT = 30 * 60 * 1000; // ms
 	static int PAY_ORDER_TIMEOUT = 48 * 60 * 60 * 1000; // ms
 	static String PAY_INCOME_URL = GlobalConstant.PAY_SERVER + "pay/income";
 	static String UN_WEB_RETURNURL = GlobalConstant.PAY_RETURN_SERVER + "payment/success";
-	@Autowired
-	IndentProjectService indentProjectService;
+	
 
 	@Override
 	public String getBillNo() {
