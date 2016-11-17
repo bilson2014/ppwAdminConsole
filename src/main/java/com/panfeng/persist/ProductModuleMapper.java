@@ -18,4 +18,6 @@ public interface ProductModuleMapper {
 
 	String getchild(@Param("id") final long id);
 
+	String getPic(@Param("id") final long id);
+
 }

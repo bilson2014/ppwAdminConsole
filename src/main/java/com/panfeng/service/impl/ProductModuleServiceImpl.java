@@ -2,6 +2,7 @@ package com.panfeng.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +44,8 @@ public class ProductModuleServiceImpl implements ProductModuleService{
 	@Override
 	public boolean update(ProductModule productModule,MultipartFile moduleImg) {
 		if(!moduleImg.isEmpty()){
+			//删除以前的图片
+			delOldPicById(productModule.getId());
 			String fileId = fdfsService.upload(moduleImg);
 			productModule.setPic(fileId);
 		}
@@ -52,6 +55,12 @@ public class ProductModuleServiceImpl implements ProductModuleService{
 		productModule.setSortIndex(0);
 		return pmMapper.update(productModule)>0;
 	}
+	private void delOldPicById(long pmId) {
+		String oldPath = pmMapper.getPic(pmId);
+		if(StringUtils.isNotBlank(oldPath)){
+			fdfsService.delete(oldPath);
+		}
+	}
 	@Override
 	public long delete(long[] ids) {
 		if(ids != null && ids.length > 0){
@@ -59,6 +68,7 @@ public class ProductModuleServiceImpl implements ProductModuleService{
 				String str = pmMapper.getchild(id);
 				String[] delId = str.split(",");
 				for(final String i : delId){
+					delOldPicById(Long.valueOf(i));
 					pmMapper.delete(Long.valueOf(i));
 				}
 			}

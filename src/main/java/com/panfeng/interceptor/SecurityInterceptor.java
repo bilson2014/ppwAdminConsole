@@ -83,6 +83,8 @@ public class SecurityInterceptor implements HandlerInterceptor {
 				} else {
 					sbf.append(GlobalConstant.FDFS_BACKUP_SERVER_PATH);
 				}
+			} else {
+				sbf.append(GlobalConstant.FDFS_BACKUP_SERVER_PATH);
 			}
 			mv.addObject(GlobalConstant.FILE_LOCATE_STORAGE_PATH, sbf.toString());
 		}

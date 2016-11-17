@@ -45,10 +45,10 @@ $().ready(function(){
 						align : 'center' ,
 						width : 200,
 						formatter : function(value,row,index){
-							if(value){
-								return "显示";
+							if(!value){
+								return "<span style=color:red; >不显示</span>";
 							}else{
-								return "不显示";
+								return "<span style=color:green; >显示</span>";
 							}
 						}
 					},{

@@ -46,6 +46,7 @@
 <script src="${commonJs }"></script>
 <script src="${moduleListJs }"></script>
 </head>
+<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
 <div class="easyui-layout" data-options="fit:true,border:false">
 		<div data-options="region:'center',border:false"  style="overflow: hidden;">
 			<table id="treeGrid"></table>
@@ -110,4 +111,15 @@
 	    	
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
+	    
+	    
+	    
+	    <div id="dlg-showImg" class="easyui-dialog" style="width:400px;padding:10px 20px"
+            closed="true" buttons="#dlg-buttons-img" title="资源信息">
+            <img alt="" id="show-img" src="">
+	    </div>
+	    <div id="dlg-buttons-img">
+	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg-showImg').dialog('close')" >取消</a>
+	    </div>
+	    
 </html>

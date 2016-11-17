@@ -85,7 +85,13 @@
 				WHERE ID = ${id}
 		]]>
 	</delete>
-	
+	<select id="getPic" resultType="string">
+		<![CDATA[
+           SELECT 
+           		 PIC
+			FROM PRODUCT_MODULE where ID = ${id}
+		]]>
+	</select>
 	
 
 </mapper>

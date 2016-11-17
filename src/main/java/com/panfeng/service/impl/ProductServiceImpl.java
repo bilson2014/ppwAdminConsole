@@ -3,6 +3,7 @@ package com.panfeng.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.ProductView;
 import com.panfeng.service.ProductService;
+import com.panfeng.util.JsoupUtil;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -127,6 +129,12 @@ public class ProductServiceImpl implements ProductService {
 	public Product loadProduct(final Integer productId) {
 
 		final Product product = mapper.loadProduct(productId);
+		String videoDescription = product.getVideoDescription();
+		//视频描述后台解密2016-11-17 10:55:47 begin
+		if(StringUtils.isNotEmpty(videoDescription)){
+			JsoupUtil.base64delHostImg(videoDescription);
+		}
+		//视频描述后台解密2016-11-17 10:55:47 end
 		com.panfeng.resource.model.Service service = scMapper.loadSingleService(productId);
 		if (product != null) {
 			if (service != null) {
