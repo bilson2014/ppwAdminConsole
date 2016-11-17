@@ -30,7 +30,7 @@
 <script src="${WdatePickerJs }" ></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
-	
+	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
 	<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
 		<form id="searchForm">
 			<table>

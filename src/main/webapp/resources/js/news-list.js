@@ -11,7 +11,7 @@ $().ready(function(){
 		url : getContextPath() + '/portal/news/list',
 		idField : 'id' ,
 		title : '邮件管理列表' ,
-		//fitColumns : true ,
+		fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -34,7 +34,6 @@ $().ready(function(){
 						title : '创建时间' ,
 						align : 'center' ,
 						width : 200,
-						sortable : true ,
 					},{
 						field : 'updateTime' ,
 						title : '更新时间' ,
@@ -46,10 +45,10 @@ $().ready(function(){
 						align : 'center' ,
 						width : 200,
 						formatter : function(value,row,index){
-							if(value){
-								return "显示";
+							if(!value){
+								return "<span style=color:red; >不显示</span>";
 							}else{
-								return "不显示";
+								return "<span style=color:green; >显示</span>";
 							}
 						}
 					},{
@@ -57,6 +56,7 @@ $().ready(function(){
 						title : '操作' ,
 						align : 'center' ,
 						width : 200,
+						hidden:true,
 						formatter : function(value,row,index){
 							var all = "";
 							var totalCount = $('#gride').datagrid('getData').total;
@@ -143,6 +143,7 @@ function editFuc(){
 		// 回显编辑器
 		$.base64.utf8encode = true;
 		var html=$.trim($.base64.atob($.trim(rows[0].content),true));
+	     //modify end
 		editor.html(html);
 		formUrl = getContextPath() + '/portal/news/update';
 		openDialog(rows[0]);

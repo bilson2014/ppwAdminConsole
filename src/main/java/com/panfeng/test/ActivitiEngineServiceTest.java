@@ -1,5 +1,7 @@
 package com.panfeng.test;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import org.activiti.engine.RuntimeService;
@@ -36,6 +38,7 @@ public class ActivitiEngineServiceTest {
 	public void create() {
 		String b = aes.startProcess(processDefinitionKey, processInstanceBusinessKey);
 		System.out.println(b);
+		assertEquals(1, 2);
 	}
 
 	@Test

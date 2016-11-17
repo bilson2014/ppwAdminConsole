@@ -583,26 +583,39 @@ function sort(){
 		var action = $(this).attr("data-target");
 		var teamId = $(this).attr("data-id");
 		//TODO 移除提示
-		$.ajax({
-			url : getContextPath() + '/portal/team/recommend/sort',
-			type : 'POST',
-			data : {
-				'action' : action,
-				'teamId' : teamId,
-			},
-			success : function(data){
-				if(data){
-					recommend_datagrid.datagrid('clearSelections');
-					recommend_datagrid.datagrid('load', {recommend:true});
-					if(action=='del'){//刷新上方选择供应商
-						$('#search-recommend-teamName').combobox('clear');
-						$('#search-recommend-teamName').combobox('reload');
-					}
+		if(action == 'del'){
+			$.messager.confirm('提示信息' , '确认删除?' , function(r){
+				if(r){
+					sortAjax(action,teamId);
 				}
-			}
-		});
+			});
+		}else{
+			sortAjax(action,teamId);
+		}
+		
 		
 	})
+}
+
+function sortAjax(action,teamId){
+	$.ajax({
+		url : getContextPath() + '/portal/team/recommend/sort',
+		type : 'POST',
+		data : {
+			'action' : action,
+			'teamId' : teamId,
+		},
+		success : function(data){
+			if(data){
+				recommend_datagrid.datagrid('clearSelections');
+				recommend_datagrid.datagrid('load', {recommend:true});
+				if(action=='del'){//刷新上方选择供应商
+					$('#search-recommend-teamName').combobox('clear');
+					$('#search-recommend-teamName').combobox('reload');
+				}
+			}
+		}
+	});
 }
 function add(){
 	$("#add-recommend").off("click").on("click",function(){

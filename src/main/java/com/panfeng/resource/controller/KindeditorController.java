@@ -1,5 +1,7 @@
 package com.panfeng.resource.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +28,7 @@ public class KindeditorController extends BaseController {
 
 	@RequestMapping(value = "/kindeditor/uploadImage", produces = "text/html; charset=UTF-8")
 	public String uploadImage(final MultipartRequest multipartRequest,
-			final String dir, final String sessionId) {
-
+			final String dir, final String sessionId,HttpServletRequest request) {
 		// 从源码得知 上传input标签名为“imgFile”
 		MultipartFile multipartFile = multipartRequest.getFile("imgFile");
 		// step 1.验证文件

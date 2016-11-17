@@ -7,6 +7,7 @@
            SELECT ID,
            		 PID,
            		 MODULE_NAME moduleName,
+           		 MODULE_LEVEL moduleLevel,
            		 DESCRIPTION,
            		 MODULE_PRICE modulePrice ,
            		 PIC,CREATE_TIME createTime,
@@ -21,6 +22,7 @@
 			INSERT INTO PRODUCT_MODULE (
 				PID,
 				MODULE_NAME,
+				MODULE_LEVEL,
 				DESCRIPTION,
 				MODULE_PRICE,
 				PIC,
@@ -30,6 +32,7 @@
 				) VALUES (
 				#{pid},
 				#{moduleName},
+				${moduleLevel},
 				#{description},
 				#{modulePrice},
 				#{pic},
@@ -43,23 +46,52 @@
 	<update id="update">
 		<![CDATA[
 			UPDATE PRODUCT_MODULE
-				SET PID=${pid},
+				SET PID=#{pid},
 				MODULE_NAME=#{moduleName},
+				MODULE_LEVEL=${moduleLevel},
 				DESCRIPTION=#{description},
 				MODULE_PRICE=#{modulePrice},
+		]]>
+		<if test="pic !=null and pic != ''">
 				PIC=#{pic},
+		</if>
+		<![CDATA[
 				update_time=CURRENT_TIMESTAMP,
 				sort_index=${sortIndex}
 				where ID=${id}
 		]]>
 	</update>
+	<!-- 创建存储过程
+	DELIMITER $$ DROP FUNCTION IF EXISTS `pat`.`getChildLst`$$ 
+	CREATE DEFINER=`pat`@`123.59.75.93` 
+	FUNCTION `getmodulechild`(rootId VARCHAR(50)) 
+	RETURNS VARCHAR(1000) CHARSET utf8 BEGIN 
+	DECLARE sTemp VARCHAR(1000); DECLARE sTempChd VARCHAR(1000); 
+	SET sTemp = '0'; SET sTempChd =rootId; WHILE sTempChd IS NOT NULL DO SET sTemp = CONCAT(sTemp,',',sTempChd);
+ 	SELECT GROUP_CONCAT(id) INTO sTempChd FROM PRODUCT_MODULE WHERE pid<>id AND FIND_IN_SET(pid,sTempChd)>0; 
+ 	END WHILE; RETURN sTemp;
+    END$$
+	DELIMITER ;
+	调用：SELECT getpromodulechild(id)
+	 -->
+	 <select id="getchild" resultType="string">
+		<![CDATA[
+           SELECT getmodulechild(${id})
+          ]]>
+	</select>
 	<delete id="delete" parameterType="long">
 		<![CDATA[
 			DELETE FROM PRODUCT_MODULE
 				WHERE ID = ${id}
 		]]>
 	</delete>
-	
+	<select id="getPic" resultType="string">
+		<![CDATA[
+           SELECT 
+           		 PIC
+			FROM PRODUCT_MODULE where ID = ${id}
+		]]>
+	</select>
 	
 
 </mapper>
