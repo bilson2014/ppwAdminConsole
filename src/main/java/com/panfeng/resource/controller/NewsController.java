@@ -59,4 +59,22 @@ public class NewsController extends BaseController {
 	public void delete(final int[] ids) {
 		newsService.delete(ids);
 	}
+	
+	/**
+	 *	action 排序动作 up down
+	 */
+	@RequestMapping("/news/sort")
+	public boolean sortRecommendTeam(final String action,final String id) {
+		boolean flag = false;
+		int newid = Integer.valueOf(id);
+		switch (action) {
+		case "up":
+			flag = newsService.moveUp(newid);
+			break;
+		case "down":
+			flag = newsService.moveDown(newid);
+			break;
+		}
+		return flag;
+	}
 }

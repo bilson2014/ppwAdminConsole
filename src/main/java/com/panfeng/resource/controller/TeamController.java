@@ -430,10 +430,9 @@ public class TeamController extends BaseController {
 				SessionInfo sessionInfo = getCurrentInfo(request);
 				Log.error("save team ...", sessionInfo);
 				if (dbteam != null && dbteam.getTeamId() > 0) {
-					// add by wlc 2016-11-11 11:19:36
-					// 供应商注册短信，发送短信 begin
-					smsMQService.sendMessage("131208", team.getPhoneNumber(), null);
-					// 供应商注册短信，发送短信 end
+					//add by wlc 2016-11-11 11:19:36
+					//供应商注册短信，发送短信 begin
+					smsMQService.sendMessage("132269", team.getPhoneNumber(), null);
 					return initSessionInfo(dbteam, request);
 				}
 			} catch (UnsupportedEncodingException e) {

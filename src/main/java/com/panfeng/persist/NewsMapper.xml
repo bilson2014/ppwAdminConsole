@@ -18,58 +18,91 @@
 	<select id="maxSize" resultType="long">
 		<![CDATA[
 			SELECT COUNT(1)
-				FROM MAIL m
+				FROM NEWS
 			WHERE 1 = 1
+		]]>
+	</select>
+	
+	<select id="getMaxIndex" resultType="int">
+		<![CDATA[
+			SELECT IFNULL(MAX(sort_index),0) maxIndex
+			FROM NEWS
 		]]>
 	</select>
 	
 	<insert id="save">
 		<![CDATA[
-			INSERT INTO MAIL(
-				`SUBJECT`,
-				CONTENT,
-				MAIL_TYPE,
-				CREATE_TIME,
-				UPDATE_TIME
-			) VALUES(
-				#{subject},
-				#{content},
-				#{mailType},
-				CURRENT_TIMESTAMP,
-				CURRENT_TIMESTAMP
-			)
+			INSERT INTO NEWS(
+			title,
+			DISCRIPTION,
+			CONTENT,
+			CREATE_TIME,
+			UPDATE_TIME,
+			SORT_INDEX,
+			`STATUS`
+		) VALUES(
+			#{title},
+			#{discription},
+			#{content},
+			CURRENT_TIMESTAMP,
+			CURRENT_TIMESTAMP,
+			${sortIndex},
+			${status}
+		)
 		]]>
 	</insert>
 	
 	<update id="update">
 		<![CDATA[
-			UPDATE MAIL m
-		      SET m.SUBJECT = #{subject},
-		      m.CONTENT = #{content},
-		      m.MAIL_TYPE = #{mailType},
-		      m.UPDATE_TIME = CURRENT_TIMESTAMP
-	      WHERE m.ID = ${id}
+			UPDATE NEWS n
+		      SET n.TITLE = #{title},
+		      n.CONTENT = #{content},
+		      n.DISCRIPTION = #{discription},
+		      n.UPDATE_TIME = CURRENT_TIMESTAMP,
+		      n.STATUS = ${status}    
+		WHERE n.ID = ${id}
 		]]>
 	</update>
 	
 	<delete id="delete">
 		<![CDATA[
-			DELETE FROM MAIL 
+			DELETE FROM NEWS
 				WHERE ID = ${id}
 		]]>
 	</delete>
-	
-	
-	<select id="getTemplateById" resultType="News">
+	<select id="getNewsById" resultType="News">
 		<![CDATA[
-			SELECT 
-				m.ID,m.SUBJECT,m.CONTENT,
-				m.MAIL_TYPE mailType,
-				m.CREATE_TIME createTime,
-				m.UPDATE_TIME updateTime
-			FROM MAIL m
-			WHERE m.ID = ${mailId}
+			SELECT ID,TITLE,DISCRIPTION
+			,CONTENT,CREATE_TIME createTime
+			,UPDATE_TIME updateTime,IFNULL(SORT_INDEX,0) sortIndex
+			,`status` 
+			FROM NEWS 
+			WHERE ID= ${id}
 		]]>
 	</select>
-	
+	<update id="promoteAllAboveByIndex">
+		<![CDATA[
+			UPDATE NEWS SET SORT_INDEX = SORT_INDEX-1 WHERE SORT_INDEX > ${sortIndex}
+		]]>
+	</update>
+	<update id="downSortBySort">
+		<![CDATA[
+			UPDATE NEWS SET SORT_INDEX = SORT_INDEX+1 WHERE SORT_INDEX = ${sortIndex}-1
+		]]>
+	</update>
+	<update id="upSortByNewsId">
+		<![CDATA[
+			UPDATE NEWS SET SORT_INDEX = SORT_INDEX-1 WHERE id=${id}
+		]]>
+	</update>
+	<update id="upSortBySort">
+		<![CDATA[
+			UPDATE NEWS SET SORT_INDEX = SORT_INDEX-1 WHERE SORT_INDEX = ${sortIndex}+1
+		]]>
+	</update>
+	<update id="downSortByNewsId">
+		<![CDATA[
+			UPDATE NEWS SET SORT_INDEX = SORT_INDEX+1 WHERE id=${id}
+		]]>
+	</update>
 </mapper>

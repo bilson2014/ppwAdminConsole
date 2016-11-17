@@ -7314,6 +7314,8 @@ KindEditor.plugin('image', function(K) {
 					var url = data.url;
 					if (formatUploadUrl) {
 						url = K.formatUrl(url, 'absolute');
+						//url = "http://resource.apaipian.com/resource/group1/M00/00/00/CgmPIlgq2aaAZnbqAABIcojhvoY592.png"
+						url = getDfsHostName()+url;
 					}
 					if (self.afterUpload) {
 						self.afterUpload.call(self, url, data, name);

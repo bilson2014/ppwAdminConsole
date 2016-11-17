@@ -592,6 +592,7 @@ function sort(){
 			},
 			success : function(data){
 				if(data){
+					recommend_datagrid.datagrid('clearSelections');
 					recommend_datagrid.datagrid('load', {recommend:true});
 					if(action=='del'){//刷新上方选择供应商
 						$('#search-recommend-teamName').combobox('clear');
