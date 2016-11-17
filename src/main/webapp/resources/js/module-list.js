@@ -50,7 +50,17 @@ $().ready(function(){
 			width : 150,
 			hidden : true
 		}]],
-		toolbar : '#toolbar'
+		toolbar : '#toolbar',
+		onDblClickCell:function(index,field,value){
+			if(index == 'pic' && null != field.pic){
+				$('#dlg-showImg').dialog({
+					modal : true,
+					onOpen : function(event, ui) {
+						$('#show-img').attr("src",getDfsHostName() + field.pic);
+					}
+				}).dialog('open').dialog('center');
+			}
+		}
 	});
 	
 });

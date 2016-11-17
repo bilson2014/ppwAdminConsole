@@ -185,11 +185,13 @@
 	            	<tr>
 	            		<td colspan="4">
 	            			<input type="checkbox" name="business" value="0" /> 广告
+	            			<input type="checkbox" name="business" value="16" /> TVC
 	            			<input type="checkbox" name="business" value="1"/> 宣传片
 	            			<input type="checkbox" name="business" value="2"/> 真人秀
 	            			<input type="checkbox" name="business" value="3"/> 纪录片
 	            			<input type="checkbox" name="business" value="4"/> 病毒视频
 	            			<input type="checkbox" name="business" value="5"/> 电视栏目
+	            			<input type="checkbox" name="business" value="17"/> MV
 	            			<input type="checkbox" name="business" value="6"/> 三维动画
 	            			<input type="checkbox" name="business" value="7"/> MG动画
 	            			<input type="checkbox" name="business" value="8"/> 体育赛事
@@ -200,6 +202,7 @@
 	            			<input type="checkbox" name="business" value="13"/> 航拍
 	            			<input type="checkbox" name="business" value="14"/> 活动视频
 	            			<input type="checkbox" name="business" value="15"/> 后期制作
+	            			<input type="checkbox" name="business" value="18"/> 包装
 	            		</td>
 	            	</tr>
 	            	
