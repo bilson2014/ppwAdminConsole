@@ -9,14 +9,22 @@ public class ProductModule extends BaseObject {
 	private static final long serialVersionUID = 1L;
 	
 	private Integer id;
-	private Integer pid;
+	private Integer pid = 0;
 	private String moduleName;
 	private String description;
+	private Integer moduleLevel;
 	private String modulePrice;
 	private String pic;
 	private String createTime;
 	private String updateTime;
 	private Integer sortIndex;
+	
+	public Integer getModuleLevel() {
+		return moduleLevel;
+	}
+	public void setModuleLevel(Integer moduleLevel) {
+		this.moduleLevel = moduleLevel;
+	}
 	//提供给combotree的冗余
 	private String text;
 	

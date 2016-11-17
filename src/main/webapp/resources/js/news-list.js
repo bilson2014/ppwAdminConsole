@@ -143,6 +143,7 @@ function editFuc(){
 		// 回显编辑器
 		$.base64.utf8encode = true;
 		var html=$.trim($.base64.atob($.trim(rows[0].content),true));
+	     //modify end
 		editor.html(html);
 		formUrl = getContextPath() + '/portal/news/update';
 		openDialog(rows[0]);

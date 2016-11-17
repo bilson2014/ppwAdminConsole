@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.panfeng.persist.NewsMapper;
 import com.panfeng.resource.model.News;
 import com.panfeng.resource.view.Pagination;
 import com.panfeng.service.NewsService;
+
 
 @Service
 @Transactional
@@ -38,7 +38,6 @@ public class NewsServiceImpl implements NewsService{
 	public void update(News news) {
 		mapper.update(news);
 	}
-
 	@Override
 	public long delete(int[] ids) {
 		//1.删除新闻

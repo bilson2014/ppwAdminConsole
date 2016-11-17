@@ -29,16 +29,26 @@ public class ProductModuleServiceImpl implements ProductModuleService{
 	}
 	@Override
 	public boolean save(ProductModule productModule,MultipartFile moduleImg) {
-		//上传图片
-		String fileId = fdfsService.upload(moduleImg);
-		productModule.setPic(fileId);
+		if(!moduleImg.isEmpty()){
+			//上传图片
+			String fileId = fdfsService.upload(moduleImg);
+			productModule.setPic(fileId);
+		}
+		if(productModule.getPid() == null){
+			productModule.setPid(0);
+		}
 		productModule.setSortIndex(0);
 		return pmMapper.save(productModule)>0;
 	}
 	@Override
 	public boolean update(ProductModule productModule,MultipartFile moduleImg) {
-		String fileId = fdfsService.upload(moduleImg);
-		productModule.setPic(fileId);
+		if(!moduleImg.isEmpty()){
+			String fileId = fdfsService.upload(moduleImg);
+			productModule.setPic(fileId);
+		}
+		if(productModule.getPid() == null){
+			productModule.setPid(0);
+		}
 		productModule.setSortIndex(0);
 		return pmMapper.update(productModule)>0;
 	}
@@ -46,7 +56,11 @@ public class ProductModuleServiceImpl implements ProductModuleService{
 	public long delete(long[] ids) {
 		if(ids != null && ids.length > 0){
 			for (final long id : ids) {
-				pmMapper.delete(id);
+				String str = pmMapper.getchild(id);
+				String[] delId = str.split(",");
+				for(final String i : delId){
+					pmMapper.delete(Long.valueOf(i));
+				}
 			}
 			return 1l;
 		}

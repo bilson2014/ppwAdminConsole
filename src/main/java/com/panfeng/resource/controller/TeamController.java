@@ -127,9 +127,11 @@ public class TeamController extends BaseController {
 		team.setPassword(DataUtil.md5(INIT_PASSWORD));
 		service.save(team);
 		try {
+			if(!file.isEmpty()){
 				String path = fdfsService.upload(file);
 				team.setTeamPhotoUrl(path);
-				service.saveTeamPhotoUrl(team);
+			}
+			service.saveTeamPhotoUrl(team);
 		} catch (Exception e) {
 			baseMsg.setErrorCode(BaseMsg.ERROR);
 			baseMsg.setErrorMsg("更新logo失败！");

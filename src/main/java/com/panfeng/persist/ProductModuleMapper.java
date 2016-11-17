@@ -16,4 +16,6 @@ public interface ProductModuleMapper {
 
 	void delete(@Param("id") final long id);
 
+	String getchild(@Param("id") final long id);
+
 }
