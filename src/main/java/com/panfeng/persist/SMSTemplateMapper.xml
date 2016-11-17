@@ -16,6 +16,27 @@
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
+	<select id="findSmsById" resultType="Sms">
+		<![CDATA[
+			SELECT 
+				s.ID,s.TEMP_ID tempId,s.TEMP_TITLE tempTitle,
+				s.TEMP_CONTENT tempContent,
+				s.CREATE_TIME createTime,
+				s.UPDATE_TIME updateTime
+			FROM SMS s
+			WHERE s.TEMP_ID =${smsId}
+		]]>
+	</select>
+	<select id="getAll" resultType="Sms">
+		<![CDATA[
+			SELECT 
+				s.ID,s.TEMP_ID tempId,s.TEMP_TITLE tempTitle,
+				s.TEMP_CONTENT tempContent,
+				s.CREATE_TIME createTime,
+				s.UPDATE_TIME updateTime
+			FROM SMS s
+		]]>
+	</select>
 	<select id="maxSize" resultType="long">
 		<![CDATA[
 			SELECT COUNT(1)

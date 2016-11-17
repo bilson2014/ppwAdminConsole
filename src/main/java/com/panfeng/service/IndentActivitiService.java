@@ -47,5 +47,9 @@ public interface IndentActivitiService {
 	List<HistoricTaskInstance> getHistoryProcessTask_O(IndentProject indentProject);
 	
 	BaseMsg verifyIntegrity(IndentProject indentProject);
+	
+	String getIndentCurrentFlowId(IndentProject indentProject);
+	
+	List<String> getBpmnNodes(IndentProject indentProject);
 
 }

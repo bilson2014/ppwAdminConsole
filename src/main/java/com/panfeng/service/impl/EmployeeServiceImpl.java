@@ -255,4 +255,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return baseMsg;
 	}
 
+	@Override
+	public List<Employee> findEmployeeByRoleid(Long roleid) {
+		return mapper.findEmployeeByRoleid(roleid);
+	}
+
 }

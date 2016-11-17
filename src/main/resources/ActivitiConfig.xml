@@ -20,8 +20,10 @@
 		<!-- drop-create true（保留历史数据） -->
 		<property name="databaseSchemaUpdate" value="true" />
 		<property name="jobExecutorActivate" value="false" />
+		<property name="activityFontName" value="宋体" />
+		<property name="labelFontName" value="宋体" />
 		<!-- 自动扫描 流程文件 -->
-		<property name="deploymentResources" value="classpath*:*.bpmn"></property>
+		<!-- <property name="deploymentResources" value="classpath*:*.bpmn"></property> -->
 	</bean>
 
 	<!-- Activiti引擎工厂 -->

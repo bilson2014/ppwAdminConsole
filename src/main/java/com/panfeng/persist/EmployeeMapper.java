@@ -157,4 +157,7 @@ public interface EmployeeMapper {
 	 * @return
 	 */
 	public long updateUniqueId(Employee employee);
+	
+	public List<Employee> findEmployeeByRoleid(@Param("roleid") Long roleid);
+	
 }

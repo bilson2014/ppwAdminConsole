@@ -23,6 +23,8 @@ public interface RoleService {
 	public long maxSize(final RoleView view);
 	
 	public List<Tree> tree();
+	
+	public List<Tree> tree_2();
 
 	public long grant(final Long roleId, final long[] resourceIds);
 

@@ -11,11 +11,11 @@ import com.panfeng.resource.view.Pagination;
 import com.panfeng.service.SMSTemplateService;
 
 @Service
-public class SMSTemplateServiceImpl implements SMSTemplateService{
+public class SMSTemplateServiceImpl implements SMSTemplateService {
 
 	@Autowired
 	private SMSTemplateMapper mapper;
-	
+
 	@Override
 	public List<Sms> listWithPagination(Pagination pagination) {
 		return mapper.listWithPagination(pagination);
@@ -38,13 +38,23 @@ public class SMSTemplateServiceImpl implements SMSTemplateService{
 
 	@Override
 	public long delete(int[] ids) {
-		if(ids.length>0){
-			for(int id : ids){
+		if (ids.length > 0) {
+			for (int id : ids) {
 				mapper.delete(id);
 			}
 			return 1l;
 		}
 		return 0l;
+	}
+
+	@Override
+	public List<Sms> getAll() {
+		return mapper.getAll();
+	}
+
+	@Override
+	public Sms findSmsById(long smsId) {
+		return mapper.findSmsById(smsId);
 	}
 
 }

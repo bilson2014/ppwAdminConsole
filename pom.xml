@@ -249,6 +249,21 @@
 			<artifactId>activiti-spring</artifactId>
 			<version>5.19.0.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-bpmn-layout</artifactId>
+			<version>5.19.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-bpmn-converter</artifactId>
+			<version>5.19.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-bpmn-model</artifactId>
+			<version>5.19.0.2</version>
+		</dependency>
 		<!-- activiti end -->
 
 		<dependency>

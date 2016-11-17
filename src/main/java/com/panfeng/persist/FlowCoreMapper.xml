@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.FlowCoreMapper">
+	<select id="getAllTemplate" resultType="FlowTemplate">
+		<![CDATA[
+			SELECT
+				arp.ID_ AS d_id,
+				arp.KEY_ AS d_key,
+				arp.KEY_ AS id,
+				arp.NAME_ AS name,
+				arp.DEPLOYMENT_ID_ AS d_deployment_id
+			FROM
+				ACT_RE_PROCDEF arp;
+		]]>
+	</select>
+</mapper>

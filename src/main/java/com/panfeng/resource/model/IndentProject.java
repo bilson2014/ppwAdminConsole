@@ -192,6 +192,11 @@ public class IndentProject extends BaseObject {
 	public IndentProject() {
 		super();
 	}
+	
+	public IndentProject(long id) {
+		super();
+		this.id = id;
+	}
 
 	public String getUserType() {
 		return userType;

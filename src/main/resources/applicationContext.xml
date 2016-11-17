@@ -26,7 +26,9 @@
 										  com.panfeng.dao,
 										  com.panfeng.fs,
 										  com.panfeng.listener,
-										  com.panfeng.mq.service" />
+										  com.panfeng.mq.service,
+										  com.panfeng.flow
+										  " />
  	
 	<context:annotation-config />
 	

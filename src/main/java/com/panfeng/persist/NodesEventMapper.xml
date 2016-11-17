@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.NodesEventMapper">
+	<select id="getAll" resultType="NodesEvent">
+		<![CDATA[
+			SELECT
+				ne.NE_ID AS nodesEventId,
+				ne.NE_NAME AS nodesEventName,
+				ne.NE_CLASSNAME AS nodesEventClassName,
+				ne.NE_DESCRIPTION AS nodesEventDescription,
+				ne.NE_MODEL AS nodesEventModel,
+				ne.NE_OPTIONS AS nodesOptions,
+				ne.NE_TEMPLATEID AS templateId,
+				ne.NE_DATAFILLER AS dataFiller,
+				ne.NE_DATAFIELDS AS dataFields,
+				ne.NE_RELEVANTPERSON AS relevantPerson,
+				ne.NE_TEMPLATETYPE AS templateType
+			FROM
+				NODES_EVENT ne
+		]]>
+	</select>
+	<select id="findTaskById" resultType="NodesEvent">
+		<![CDATA[
+			SELECT
+				ne.NE_ID AS nodesEventId,
+				ne.NE_NAME AS nodesEventName,
+				ne.NE_CLASSNAME AS nodesEventClassName,
+				ne.NE_DESCRIPTION AS nodesEventDescription,
+				ne.NE_MODEL AS nodesEventModel,
+				ne.NE_OPTIONS AS nodesOptions,
+				ne.NE_TEMPLATEID AS templateId,
+				ne.NE_DATAFILLER AS dataFiller,
+				ne.NE_DATAFIELDS AS dataFields,
+				ne.NE_RELEVANTPERSON AS relevantPerson,
+				ne.NE_TEMPLATETYPE AS templateType
+			FROM
+				NODES_EVENT ne 
+			where ne.NE_ID = ${nodesEventid}
+		]]>
+	</select>
+	<insert id="save" useGeneratedKeys="true" keyProperty="taskId"
+		parameterType="NodesEvent"> 
+		<![CDATA[
+			INSERT INTO NODES_EVENT (
+				NE_NAME,
+				NE_CLASSNAME,
+				NE_DESCRIPTION,
+				NE_MODEL,
+				NE_OPTIONS,
+				NE_TEMPLATEID,
+				NE_DATAFILLER,
+				NE_DATAFIELDS,
+				NE_RELEVANTPERSON,
+				NE_TEMPLATETYPE
+				)
+			VALUES
+				( #{nodesEventName}, #{nodesEventClassName}, 
+					#{nodesEventDescription}, ${nodesEventModel}
+					,#{nodesOptions},#{templateId},#{dataFiller}
+					,#{dataFields},#{relevantPerson},#{templateType}
+				);
+		]]>
+	</insert>
+	<update id="update">
+		<![CDATA[
+			UPDATE NODES_EVENT ne
+			SET ne.NE_NAME = #{nodesEventName}
+		]]>
+		<if test="nodesEventDescription != null and nodesEventDescription != ''">
+			,ne.NE_DESCRIPTION = #{nodesEventDescription}
+		</if>
+		<if test="nodesEventClassName != null and nodesEventClassName != ''">
+			,ne.NE_CLASSNAME = #{nodesEventClassName}
+		</if>
+		<if test="nodesEventModel != null">
+			,ne.NE_MODEL = #{nodesEventModel}
+		</if>
+		<if test="nodesOptions != null and nodesOptions != ''">
+			,ne.NE_OPTIONS = ${nodesOptions}
+		</if>
+		<if test="templateId != null and templateId != ''">
+			,ne.NE_TEMPLATEID = #{templateId}
+		</if>
+		<if test="dataFiller != null and dataFiller != ''">
+			,ne.NE_DATAFILLER = #{dataFiller}
+		</if>
+		<if test="dataFields != null and dataFields != ''">
+			,ne.NE_DATAFIELDS = #{dataFields}
+		</if>
+		<if test="relevantPerson != null and relevantPerson != ''">
+			,ne.NE_RELEVANTPERSON = #{relevantPerson}
+		</if>
+		<if test="templateType != null">
+			,ne.NE_TEMPLATETYPE = ${templateType}
+		</if>
+		<![CDATA[
+			WHERE
+				ne.NE_ID = ${nodesEventId}
+		]]>
+	</update>
+	<delete id="delete">
+		<![CDATA[
+			DELETE
+			FROM
+				NODES_EVENT
+			WHERE
+				NE_ID = ${nodesEventid}
+		]]>
+	</delete>
+
+</mapper>

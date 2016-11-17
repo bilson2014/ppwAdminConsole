@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.TaskChainMapper">
+
+	<resultMap type="TaskChain" id="TaskChainMap">
+		<id property="taskChainId" column="tc_id" />
+		<result property="name" column="tc_name" />
+		<result property="description" column="tc_description" />
+	</resultMap>
+
+	<resultMap type="TaskChain" id="TaskChainTaskMap" extends="TaskChainMap">
+		<collection property="nodesEvents"
+			ofType="com.panfeng.resource.model.NodesEvent">
+			<id property="nodesEventId" column="ne_id" />
+			<result property="nodesEventName" column="ne_name" />
+			<result property="nodesEventDescription" column="ne_description" />
+			<result property="nodesEventClassName" column="ne_className" />
+			<result property="nodesEventModel" column="ne_model" />
+			
+			<result property="templateId" column="ne_templateId" />
+			<result property="templateType" column="ne_templateType" />
+			<result property="dataFiller" column="ne_dataFiller" />
+			<result property="dataFields" column="ne_dataFields" />
+			<result property="relevantPerson" column="ne_relevantPerson" />
+		</collection>
+	</resultMap>
+
+	<select id="getAll" resultMap="TaskChainTaskMap">
+		<![CDATA[
+		SELECT
+			tc.TC_ID,
+			tc.TC_NAME,
+			tc.TC_DESCRIPTION,
+			ne.NE_ID,
+			ne.NE_NAME,
+			ne.NE_CLASSNAME,
+			ne.NE_DESCRIPTION,
+			ne.NE_MODEL
+		FROM
+			TASK_CHAIN tc
+		LEFT JOIN TASKCHAIN_NODESEVENT tn ON tc.TC_ID = tn.TN_TASKCHAIN_ID
+		LEFT JOIN NODES_EVENT ne ON ne.NE_ID = tn.TN_NODEEVENT_ID
+		]]>
+	</select>
+	
+	<select id="findTaskChainByTaskChainId" resultMap="TaskChainTaskMap">
+		<![CDATA[
+		SELECT
+			tc.TC_ID,
+			tc.TC_NAME,
+			tc.TC_DESCRIPTION,
+			ne.NE_ID,
+			ne.NE_NAME,
+			ne.NE_CLASSNAME,
+			ne.NE_DESCRIPTION,
+			ne.NE_MODEL,
+			ne.NE_TEMPLATEID,
+			ne.NE_TEMPLATETYPE,
+			ne.NE_DATAFILLER,
+			ne.NE_DATAFIELDS,
+			ne.NE_RELEVANTPERSON
+		FROM
+			TASK_CHAIN tc
+		LEFT JOIN TASKCHAIN_NODESEVENT tn ON tc.TC_ID = tn.TN_TASKCHAIN_ID
+		LEFT JOIN NODES_EVENT ne ON ne.NE_ID = tn.TN_NODEEVENT_ID
+		WHERE tc.TC_ID = ${taskChainId}
+		]]>
+	</select>
+	
+	<insert id="save" useGeneratedKeys="true" keyProperty="taskChainId"
+		parameterType="TaskChain">
+		<![CDATA[
+			INSERT INTO TASK_CHAIN (
+				TC_NAME ,
+				TC_DESCRIPTION 
+			)
+			VALUES
+				(#{name}, #{description});
+		]]>
+	</insert>
+
+	<update id="update">
+		<![CDATA[
+			UPDATE TASK_CHAIN tc
+				SET tc.TC_NAME = #{name}
+		]]>
+		<if test="description != null and description != ''">
+			,tc.TC_DESCRIPTION = #{description}
+		</if>
+		<![CDATA[
+			WHERE
+				tc.TC_ID = ${taskChainId}
+		]]>
+	</update>
+
+	<delete id="delete">
+		<![CDATA[
+			DELETE
+			FROM
+				TASK_CHAIN
+			WHERE
+				TC_ID = ${taskChainId}
+		]]>
+	</delete>
+
+
+	<!-- ************************link************************ -->
+
+	<delete id="deleteLink">
+		<![CDATA[
+			DELETE
+				FROM
+					TASKCHAIN_NODESEVENT
+				WHERE
+					TN_ID = ${linkId}
+		]]>
+	</delete>
+
+	<insert id="saveLink">
+		<![CDATA[
+			INSERT INTO TASKCHAIN_NODESEVENT (
+				TN_TASKCHAIN_ID,
+				TN_NODEEVENT_ID
+			)
+			VALUES (${taskChainId}, ${nodeEventId})
+		]]>
+	</insert>
+
+	<select id="findLinkByTaskChainId" resultType="TaskChainNodesEventLink">
+		<![CDATA[
+			SELECT
+				tn.TN_ID AS taskChainNodesEventLinkId,
+				tn.TN_NODEEVENT_ID AS nodeEventId,
+				tn.TN_TASKCHAIN_ID AS taskChainId
+			FROM
+				TASKCHAIN_NODESEVENT tn
+			WHERE
+				tn.TN_TASKCHAIN_ID = ${taskChainId}
+		]]>
+	</select>
+
+</mapper>
