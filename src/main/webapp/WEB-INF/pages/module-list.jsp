@@ -76,8 +76,16 @@
 	                <input name="moduleName" class="easyui-textbox" required="true">
 	            </div>
 	            <div class="fitem">
-	                <label>图片路径</label>
+	                <label>图片路径:</label>
 	                <input name="moduleImg" type="file">
+	            </div>
+	             <div class="fitem">
+	                <label>等级:</label>
+	                <select name="moduleLevel" class="easyui-combobox" required="true" style="width: 46%;">
+	                	<option value="3">低级</option>
+	                	<option value="4">中级</option>
+	                	<option value="5">高级</option>
+	                </select>
 	            </div>
 	            <div class="fitem">
 	                <label>价格:</label>

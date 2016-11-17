@@ -207,9 +207,11 @@ public class EmployeeController extends BaseController{
 	public void processFile(final MultipartFile employeeImage,final Employee employee){
 		//modify by wlc 2016-11-4 12:42:16
 		//修改为dfs上传begin
-		String fileId = fdfsService.upload(employeeImage);
-		employee.setEmployeeImg(fileId);
-		service.updateImagePath(employee);
+		if(!employeeImage.isEmpty()){
+			String fileId = fdfsService.upload(employeeImage);
+			employee.setEmployeeImg(fileId);
+			service.updateImagePath(employee);
+		}
 		//修改为dfs上传end
 		/*if(!employeeImage.isEmpty()){
 			final String imagePath = GlobalConstant.FILE_PROFIX + GlobalConstant.EMPLOYEE_IMAGE_PATH;

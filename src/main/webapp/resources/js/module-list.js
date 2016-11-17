@@ -23,6 +23,15 @@ $().ready(function(){
 			title : '图片路径',
 			width : 200
 		}, {
+			field : 'moduleLevel',
+			title : '等级',
+			width : 200,
+			formatter : function(value,row,index){
+				if(value==3)return "初级";
+				if(value==4)return "中级";
+				if(value==5)return "高级";
+			},
+		}, {
 			field : 'description',
 			title : '描述',
 			width : 200
