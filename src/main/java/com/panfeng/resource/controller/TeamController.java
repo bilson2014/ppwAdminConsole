@@ -82,10 +82,10 @@ public class TeamController extends BaseController {
 
 	@Autowired
 	private final SessionInfoService sessionService = null;
-	
+
 	@Autowired
 	private final FDFSService fdfsService = null;
-	
+
 	@Autowired
 	private final SmsMQService smsMQService = null;
 
@@ -156,40 +156,40 @@ public class TeamController extends BaseController {
 		// 如果上传文件不为空时，更新 url;反之亦然
 		if (!file.isEmpty()) {
 			// 团队logo全路径
-			//final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
+			// final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
 
 			// save file
-			/*File imageDir = new File(imagePath);
-			if (!imageDir.exists())
-				imageDir.mkdir();
-			StringBuffer fileName = new StringBuffer();
-			final String extName = FileUtils.getExtName(file.getOriginalFilename(), ".");
-			fileName.append("team" + team.getTeamId());
-			fileName.append("-");
-			final Calendar calendar = new GregorianCalendar();
-			fileName.append(calendar.get(Calendar.YEAR));
-			fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0" + (calendar.get(Calendar.MONTH) + 1)
-					: (calendar.get(Calendar.MONTH) + 1));
-			fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0" + calendar.get(Calendar.DAY_OF_MONTH)
-					: calendar.get(Calendar.DAY_OF_MONTH));
-			fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
-			fileName.append(calendar.get(Calendar.MINUTE));
-			fileName.append(calendar.get(Calendar.SECOND));
-			fileName.append(calendar.get(Calendar.MILLISECOND));
-			fileName.append(".");
-			fileName.append(extName);
-			// get file path
-			final String path = TEAM_IMAGE_PATH + "/" + fileName;
-			File imageFile = new File(FILE_PROFIX + path);
-			file.transferTo(imageFile);*/
-			
+			/*
+			 * File imageDir = new File(imagePath); if (!imageDir.exists())
+			 * imageDir.mkdir(); StringBuffer fileName = new StringBuffer();
+			 * final String extName =
+			 * FileUtils.getExtName(file.getOriginalFilename(), ".");
+			 * fileName.append("team" + team.getTeamId()); fileName.append("-");
+			 * final Calendar calendar = new GregorianCalendar();
+			 * fileName.append(calendar.get(Calendar.YEAR));
+			 * fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0" +
+			 * (calendar.get(Calendar.MONTH) + 1) :
+			 * (calendar.get(Calendar.MONTH) + 1));
+			 * fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0" +
+			 * calendar.get(Calendar.DAY_OF_MONTH) :
+			 * calendar.get(Calendar.DAY_OF_MONTH));
+			 * fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
+			 * fileName.append(calendar.get(Calendar.MINUTE));
+			 * fileName.append(calendar.get(Calendar.SECOND));
+			 * fileName.append(calendar.get(Calendar.MILLISECOND));
+			 * fileName.append("."); fileName.append(extName); // get file path
+			 * final String path = TEAM_IMAGE_PATH + "/" + fileName; File
+			 * imageFile = new File(FILE_PROFIX + path);
+			 * file.transferTo(imageFile);
+			 */
+
 			String path = fdfsService.upload(file);
 
 			// 删除 原文件
 			final Team originalTeam = service.findTeamById(team.getTeamId());
 			if (originalTeam != null) {
 				final String originalPath = originalTeam.getTeamPhotoUrl();
-				//FileUtils.deleteFile(FILE_PROFIX + originalPath);
+				// FileUtils.deleteFile(FILE_PROFIX + originalPath);
 				fdfsService.delete(originalPath);
 			}
 			team.setTeamPhotoUrl(path);
@@ -435,7 +435,6 @@ public class TeamController extends BaseController {
 					//add by wlc 2016-11-11 11:19:36
 					//供应商注册短信，发送短信 begin
 					smsMQService.sendMessage("132269", team.getPhoneNumber(), null);
-					//供应商注册短信，发送短信 end
 					return initSessionInfo(dbteam, request);
 				}
 			} catch (UnsupportedEncodingException e) {
@@ -928,14 +927,12 @@ public class TeamController extends BaseController {
 		team.setPassword(null);
 		return team;
 	}
-	
+
 	/**
-	 *	首页供应商推荐排序或者删除
-	 *	action 排序动作 up down del
-	 *	index 当前排序
+	 * 首页供应商推荐排序或者删除 action 排序动作 up down del index 当前排序
 	 */
 	@RequestMapping("/team/recommend/sort")
-	public boolean sortRecommendTeam(final String action,final String teamId) {
+	public boolean sortRecommendTeam(final String action, final String teamId) {
 		boolean flag = false;
 		long id = Long.valueOf(teamId);
 		switch (action) {
@@ -951,20 +948,20 @@ public class TeamController extends BaseController {
 		}
 		return flag;
 	}
-	
+
 	/**
-	 *获取所有没有被推荐到首页的供应商
+	 * 获取所有没有被推荐到首页的供应商
 	 */
-	@RequestMapping(value="/team/all/norecommend", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/team/all/norecommend", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public List<Team> getAllTeamNoRecommend() {
 		final List<Team> list = service.getAllNoRecommend();
 		return list;
 	}
-	
+
 	/**
-	 *	添加一个供应商到首页
+	 * 添加一个供应商到首页
 	 */
-	@RequestMapping(value="/team/addrecommend")
+	@RequestMapping(value = "/team/addrecommend")
 	public boolean addRecommend(long teamId) {
 		return service.addRecommend(teamId);
 	}
