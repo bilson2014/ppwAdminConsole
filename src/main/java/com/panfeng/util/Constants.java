@@ -117,6 +117,9 @@ public final class Constants {
 		BUSINESS_MAP.put("13", "航拍");
 		BUSINESS_MAP.put("14", "活动视频");
 		BUSINESS_MAP.put("15", "后期制作");
+		BUSINESS_MAP.put("16", "TVC");
+		BUSINESS_MAP.put("17", "MV");
+		BUSINESS_MAP.put("18", "包装");
 	}
 	
 	

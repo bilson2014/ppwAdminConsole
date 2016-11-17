@@ -199,6 +199,9 @@ $().ready(function(){
 			businessMap.set('13',"航拍");
 			businessMap.set('14',"活动视频");
 			businessMap.set('15',"后期制作");
+			businessMap.set('16',"TVC");
+			businessMap.set('17',"MV");
+			businessMap.set('18',"包装");
 			return businessMap;
 		}
 	}

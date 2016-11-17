@@ -517,4 +517,5 @@ public class TeamServiceImpl implements TeamService {
 	public boolean addRecommend(long teamId) {
 		return mapper.addRecommend(teamId)>0;
 	}
+	
 }

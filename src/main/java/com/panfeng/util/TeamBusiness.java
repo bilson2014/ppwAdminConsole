@@ -27,6 +27,9 @@ public class TeamBusiness {
 		TAGS.put(13, "航拍");
 		TAGS.put(14, "活动视频");
 		TAGS.put(15, "后期制作");
+		TAGS.put(16, "TVC");
+		TAGS.put(17, "MV");
+		TAGS.put(18, "包装");
 	}
 	
 	public static String get(int id){
