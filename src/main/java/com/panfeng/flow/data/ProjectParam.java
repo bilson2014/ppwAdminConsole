@@ -92,7 +92,7 @@ public class ProjectParam implements TemplateDateInterface<List<String>, String>
 				// 基本属性
 				switch (field) {
 				case teamName:
-					res = team.getTeamName();
+					res = indentProject.getTeamName();
 					break;
 				case currentNode:
 					Task task = activitiEngineService.getCurrentTask(processId);
@@ -108,13 +108,13 @@ public class ProjectParam implements TemplateDateInterface<List<String>, String>
 					res = user.getEmail();
 					break;
 				case userName:
-					res = user.getUserName();
+					res = indentProject.getUserName();
 					break;
 				case teamPhoneNumber:
-					res = team.getPhoneNumber();
+					res = indentProject.getTeamPhone();
 					break;
 				case userPhoneNumber:
-					res = user.getTelephone();
+					res = indentProject.getUserPhone();
 					break;
 				case projectName:
 					res = "《" + indentProject.getProjectName() + "》";
@@ -126,7 +126,7 @@ public class ProjectParam implements TemplateDateInterface<List<String>, String>
 						res = team.getEmail();
 						break;
 					case SMS:
-						res = team.getPhoneNumber();
+						res = indentProject.getTeamPhone();
 						break;
 					}
 					break;
@@ -136,7 +136,7 @@ public class ProjectParam implements TemplateDateInterface<List<String>, String>
 						res = user.getEmail();
 						break;
 					case SMS:
-						res = user.getTelephone();
+						res = indentProject.getUserPhone();
 						break;
 					}
 					break;
