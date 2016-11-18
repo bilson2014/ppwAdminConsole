@@ -975,13 +975,13 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		List<IndentProject> list = findProjectList(indentProject);
 		if (ValidateUtil.isValid(list)) {
 			list = indentActivitiService.fullCurrentTask(list);
-			List<ActivitiTask> nodes = indentActivitiService.getNodes(list.get(0));
-			for (ActivitiTask activitiTask : nodes) {
-				activitiTask.getScheduledTime().setFdStartTime("");
-				activitiTask.setCreateTime("");
-			}
 			for (int i = 0; i < list.size(); i++) {
 				List<ActivitiTask> node = new ArrayList<>();
+				List<ActivitiTask> nodes = indentActivitiService.getNodes(list.get(i));
+				for (ActivitiTask activitiTask : nodes) {
+					activitiTask.getScheduledTime().setFdStartTime("");
+					activitiTask.setCreateTime("");
+				}
 				for (int j = 0; j < nodes.size(); j++) {
 					try {
 						node.add(nodes.get(j).clone());
