@@ -188,6 +188,8 @@ public class IndentController extends BaseController {
 		//发送短信给业务部门
 		smsMQService.sendMessage("131895", PropertiesUtils.getProp("service_tel"), 
 				new String[]{telephone,DateUtils.nowTime()});
+		//发送给客户
+		smsMQService.sendMessage("134080", telephone, null);
 		//创建新订单
 		Indent indent = new Indent();
 		indent.setIndent_tele(telephone);
