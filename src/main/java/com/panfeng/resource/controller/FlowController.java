@@ -78,7 +78,7 @@ public class FlowController extends BaseController {
 		// -------------------------
 		else {
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			BaseMsg res = activitiEngineService.completeTask_2(sessionInfo, processId);
+			BaseMsg res = indentActivitiService.completeTask_2(sessionInfo, processId, indentProject);
 			return res;
 		}
 	}

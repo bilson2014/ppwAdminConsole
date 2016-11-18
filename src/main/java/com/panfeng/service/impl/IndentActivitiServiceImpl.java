@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.panfeng.domain.BaseMsg;
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.persist.FlowDateMapper;
 import com.panfeng.persist.IndentFlowMapper;
 import com.panfeng.persist.IndentProjectMapper;
@@ -142,15 +143,6 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 
 	@Override
 	public synchronized String completeTask(IndentProject indentProject) {
-
-		// ActivitiTask activitiTask = getCurrentTask(indentProject);
-		// indentProject.setTask(activitiTask);
-		// String verifyRes =
-		// indentProjectService.verifyIntegrity(indentProject);
-		// if (ValidateUtil.isValid(verifyRes)) {
-		// return verifyRes;
-		// }
-
 		ActivitiTask activitiTask = getCurrentTask(indentProject);
 		boolean res = false;
 		indentCommentService.createSystemMsg("完成了\"" + activitiTask.getName() + "\"任务", indentProject);
@@ -163,6 +155,21 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_FINISH, null);
 		}
 		return res + "";
+	}
+
+	public synchronized BaseMsg completeTask_2(SessionInfo sessionInfo, String processId, IndentProject indentProject) {
+		Task activitiTask = activitiEngineService.getCurrentTask(processId);
+		BaseMsg res = null;
+		indentCommentService.createSystemMsg("完成了\"" + activitiTask.getName() + "\"任务", indentProject);
+		res = activitiEngineService.completeTask_2(sessionInfo, processId);
+		// 检测任务是否已经完成
+
+		boolean isFinish = activitiEngineService.isFinish(processId);
+		if (isFinish) {
+			// 更新项目状态
+			indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_FINISH, null);
+		}
+		return res;
 	}
 
 	@Override

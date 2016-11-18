@@ -6,6 +6,7 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 
 import com.panfeng.domain.BaseMsg;
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
@@ -51,5 +52,7 @@ public interface IndentActivitiService {
 	String getIndentCurrentFlowId(IndentProject indentProject);
 	
 	List<String> getBpmnNodes(IndentProject indentProject);
+
+	BaseMsg completeTask_2(SessionInfo sessionInfo, String processId, IndentProject indentProject);
 
 }
