@@ -63,6 +63,7 @@ public class MailMQServiceImpl implements MailMQService {
 					content = new String(Base64.getDecoder().decode(content),"utf-8");
 					//2.添加首尾模板
 					content = MailTemplateFactory.addHtml(content);
+					content = MailTemplateFactory.addImgHost(content);
 					Iterator<Entry<String, String[]>> i = map.entrySet().iterator(); 
 					while(i.hasNext()){
 						Map.Entry<String, String[]> entry = (Map.Entry<String, String[]>)i.next();

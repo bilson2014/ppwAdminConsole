@@ -92,4 +92,10 @@ public class MailTemplateFactory {
 		}
 		return content;
 	}*/
+
+	public static String addImgHost(String content) {
+		return content.replaceAll("@.@", "http://resource.apaipian.com/resource/");
+	}
+	
+	
 }
