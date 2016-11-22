@@ -11,27 +11,29 @@
 		                   http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
 		                   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 
-	<import resource="ActivitiConfig.xml"/>
-	
-	<import resource="DataSourceConfig.xml"/>
-	
-	<import resource="RedisConfig.xml"/>
-	
-	<import resource="spring-mq.xml"/>
+	<import resource="ActivitiConfig.xml" />
 
-	<context:property-placeholder location="classpath:jdbc.properties,classpath:redis.properties,
+	<import resource="DataSourceConfig.xml" />
+
+	<import resource="RedisConfig.xml" />
+
+	<import resource="spring-mq.xml" />
+
+	<context:property-placeholder
+		location="classpath:jdbc.properties,classpath:redis.properties,
 											classpath:mq.properties" />
 
-	<context:component-scan base-package="com.panfeng.service,
+	<context:component-scan
+		base-package="com.panfeng.service,
 										  com.panfeng.dao,
 										  com.panfeng.fs,
 										  com.panfeng.listener,
 										  com.panfeng.mq.service,
 										  com.panfeng.flow
 										  " />
- 	
+
 	<context:annotation-config />
-	
+
 	<tx:annotation-driven />
 
 	<!-- log here -->
@@ -45,10 +47,10 @@
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="uploadTempDir" value="${upload.path}" />
-	</bean>
+	</bean> 
 	<bean class="com.panfeng.util.FastDFSClient" init-method="init">
-		<property name="minPoolSize" value="${minPoolSize}" />  
-        <property name="maxPoolSize" value="${maxPoolSize}" />  
-        <property name="waitTimes" value="${waitTimes}" />
+		<property name="minPoolSize" value="${minPoolSize}" />
+		<property name="maxPoolSize" value="${maxPoolSize}" />
+		<property name="waitTimes" value="${waitTimes}" />
 	</bean>
 </beans>

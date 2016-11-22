@@ -52,7 +52,7 @@ import com.panfeng.util.ValidateUtil;
 @RequestMapping("/portal")
 public class ProductController extends BaseController {
 
-	//private static Logger logger = LoggerFactory.getLogger("error");
+	// private static Logger logger = LoggerFactory.getLogger("error");
 
 	@Autowired
 	private final ProductService proService = null;
@@ -71,7 +71,7 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private final PortalVideoDao videoDao = null;
-	
+
 	@Autowired
 	private final FDFSService fdfsService = null;
 
@@ -79,11 +79,11 @@ public class ProductController extends BaseController {
 
 	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
 
-	//private static String PRODUCT_IMAGE_PATH = null; // 产品图片路径
+	// private static String PRODUCT_IMAGE_PATH = null; // 产品图片路径
 
-	//private static String ALLOW_IMAGE_TYPE = null;
+	// private static String ALLOW_IMAGE_TYPE = null;
 
-	//private static String ALLOW_VIDEO_TYPE = null;
+	// private static String ALLOW_VIDEO_TYPE = null;
 
 	private static String SOLR_URL = null;
 
@@ -95,9 +95,10 @@ public class ProductController extends BaseController {
 				propertis.load(is);
 				FILE_PROFIX = propertis.getProperty("file.prefix");
 				PRODUCT_VIDEO_PATH = propertis.getProperty("upload.server.product.video");
-	//			PRODUCT_IMAGE_PATH = propertis.getProperty("upload.server.product.image");
-	//			ALLOW_VIDEO_TYPE = propertis.getProperty("videoType");
-	//			ALLOW_IMAGE_TYPE = propertis.getProperty("imageType");
+				// PRODUCT_IMAGE_PATH =
+				// propertis.getProperty("upload.server.product.image");
+				// ALLOW_VIDEO_TYPE = propertis.getProperty("videoType");
+				// ALLOW_IMAGE_TYPE = propertis.getProperty("imageType");
 				SOLR_URL = propertis.getProperty("solr.url");
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -162,7 +163,7 @@ public class ProductController extends BaseController {
 	 *            product id array
 	 */
 	@RequestMapping(value = "/product/delete", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public long delete(final long[] ids,HttpServletRequest request) {
+	public long delete(final long[] ids, HttpServletRequest request) {
 
 		if (ids.length > 0) {
 			final List<Product> list = proService.delete(ids);
@@ -194,7 +195,7 @@ public class ProductController extends BaseController {
 				throw new RuntimeException("Product ids is null");
 			}
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("delete products ... ids:"+ids.toString(),sessionInfo);
+			Log.error("delete products ... ids:" + ids.toString(), sessionInfo);
 		}
 		return 0l;
 	}
@@ -208,77 +209,73 @@ public class ProductController extends BaseController {
 		proService.save(product);
 
 		// 视频文件全路径
-		//final String videoPath = FILE_PROFIX + PRODUCT_VIDEO_PATH;
+		// final String videoPath = FILE_PROFIX + PRODUCT_VIDEO_PATH;
 
 		// 图片文件全路径
-	//	final String imagePath = FILE_PROFIX + PRODUCT_IMAGE_PATH;
-	//		try {
+		// final String imagePath = FILE_PROFIX + PRODUCT_IMAGE_PATH;
+		// try {
 		/*
-			File videoDir = new File(videoPath);
-			File imageDir = new File(imagePath);
-			if (!videoDir.exists())
-				videoDir.mkdir();
-			if (!imageDir.exists())
-				imageDir.mkdir();*/
+		 * File videoDir = new File(videoPath); File imageDir = new
+		 * File(imagePath); if (!videoDir.exists()) videoDir.mkdir(); if
+		 * (!imageDir.exists()) imageDir.mkdir();
+		 */
 
-			// 路径接收
-			final List<String> pathList = new ArrayList<String>();
+		// 路径接收
+		final List<String> pathList = new ArrayList<String>();
 
-			for (int i = 0; i < uploadFiles.length; i++) {
-				final MultipartFile multipartFile = uploadFiles[i];
-				if (!multipartFile.isEmpty()) {
-					// 分组保存video、image
-					/*final String multipartFileName = multipartFile.getOriginalFilename();
-					final String extName = FileUtils.getExtName(multipartFileName, ".");
-					final short fileType = FileUtils.divideIntoGroup(extName, ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE);
-					final StringBuffer fileName = new StringBuffer();
-					fileName.append("product" + productId);
-					fileName.append("-");
-					final Calendar calendar = new GregorianCalendar();
-					fileName.append(calendar.get(Calendar.YEAR));
-					fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0" + (calendar.get(Calendar.MONTH) + 1)
-							: (calendar.get(Calendar.MONTH) + 1));
-					fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0" + calendar.get(Calendar.DAY_OF_MONTH)
-							: calendar.get(Calendar.DAY_OF_MONTH));
-					fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
-					fileName.append(calendar.get(Calendar.MINUTE));
-					fileName.append(calendar.get(Calendar.SECOND));
-					fileName.append(calendar.get(Calendar.MILLISECOND));
-					fileName.append(i);
-					fileName.append(".");
-					fileName.append(extName);
-					String path = "";
-					switch (fileType) {
-					case 0: // video
-						path += PRODUCT_VIDEO_PATH + "/" + fileName.toString();
-						break;
-					case 1: // image
-						path += PRODUCT_IMAGE_PATH + "/" + fileName.toString();
-						break;
-					case 2: // other
-						throw new RuntimeException("file type error ...");
-					}
-					File destFile = new File(FILE_PROFIX + path);
-					multipartFile.transferTo(destFile);*/
-					String path = fdfsService.upload(multipartFile);
-					pathList.add(path);
-				} else {
-					pathList.add("");
-				}
+		for (int i = 0; i < uploadFiles.length; i++) {
+			final MultipartFile multipartFile = uploadFiles[i];
+			if (!multipartFile.isEmpty()) {
+				// 分组保存video、image
+				/*
+				 * final String multipartFileName =
+				 * multipartFile.getOriginalFilename(); final String extName =
+				 * FileUtils.getExtName(multipartFileName, "."); final short
+				 * fileType = FileUtils.divideIntoGroup(extName,
+				 * ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE); final StringBuffer
+				 * fileName = new StringBuffer(); fileName.append("product" +
+				 * productId); fileName.append("-"); final Calendar calendar =
+				 * new GregorianCalendar();
+				 * fileName.append(calendar.get(Calendar.YEAR));
+				 * fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0"
+				 * + (calendar.get(Calendar.MONTH) + 1) :
+				 * (calendar.get(Calendar.MONTH) + 1));
+				 * fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ?
+				 * "0" + calendar.get(Calendar.DAY_OF_MONTH) :
+				 * calendar.get(Calendar.DAY_OF_MONTH));
+				 * fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
+				 * fileName.append(calendar.get(Calendar.MINUTE));
+				 * fileName.append(calendar.get(Calendar.SECOND));
+				 * fileName.append(calendar.get(Calendar.MILLISECOND));
+				 * fileName.append(i); fileName.append(".");
+				 * fileName.append(extName); String path = ""; switch (fileType)
+				 * { case 0: // video path += PRODUCT_VIDEO_PATH + "/" +
+				 * fileName.toString(); break; case 1: // image path +=
+				 * PRODUCT_IMAGE_PATH + "/" + fileName.toString(); break; case
+				 * 2: // other throw new RuntimeException("file type error ..."
+				 * ); } File destFile = new File(FILE_PROFIX + path);
+				 * multipartFile.transferTo(destFile);
+				 */
+				String path = fdfsService.upload(multipartFile);
+				pathList.add(path);
+			} else {
+				pathList.add("");
 			}
-			product.setVideoUrl(pathList.get(0));
-			product.setPicHDUrl(pathList.get(1));
-			product.setPicLDUrl(pathList.get(2));
-			// 保存路径
-			proService.saveFileUrl(product);
-			
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("add product ... ",sessionInfo);
-	//	} catch (Exception e) {
-	//		SessionInfo sessionInfo = getCurrentInfo(request);
-	//		Log.error("ProductController method:save() -- save product error ...",sessionInfo);
-	//		e.printStackTrace();
-	//	}
+		}
+		product.setVideoUrl(pathList.get(0));
+		product.setPicHDUrl(pathList.get(1));
+		product.setPicLDUrl(pathList.get(2));
+		// 保存路径
+		proService.saveFileUrl(product);
+
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("add product ... ", sessionInfo);
+		// } catch (Exception e) {
+		// SessionInfo sessionInfo = getCurrentInfo(request);
+		// Log.error("ProductController method:save() -- save product error
+		// ...",sessionInfo);
+		// e.printStackTrace();
+		// }
 	}
 
 	@RequestMapping(value = "/product/update", method = RequestMethod.POST)
@@ -304,55 +301,52 @@ public class ProductController extends BaseController {
 
 		try {
 			// 视频文件全路径
-			//final String videoPath = FILE_PROFIX + PRODUCT_VIDEO_PATH;
+			// final String videoPath = FILE_PROFIX + PRODUCT_VIDEO_PATH;
 
 			// 图片文件全路径
-			//final String imagePath = FILE_PROFIX + PRODUCT_IMAGE_PATH;
+			// final String imagePath = FILE_PROFIX + PRODUCT_IMAGE_PATH;
 
-			/*File videoDir = new File(videoPath);
-			File imageDir = new File(imagePath);
-			if (!videoDir.exists())
-				videoDir.mkdir();
-			if (!imageDir.exists())
-				imageDir.mkdir();*/
+			/*
+			 * File videoDir = new File(videoPath); File imageDir = new
+			 * File(imagePath); if (!videoDir.exists()) videoDir.mkdir(); if
+			 * (!imageDir.exists()) imageDir.mkdir();
+			 */
 
 			for (int i = 0; i < uploadFiles.length; i++) {
 				final MultipartFile multipartFile = uploadFiles[i];
 				if (!multipartFile.isEmpty()) {
 					// file字段 如果不为空,说明 更改了上传文件
 					// 分组保存video、image
-					/*final String multipartFileName = multipartFile.getOriginalFilename();
-					final String extName = FileUtils.getExtName(multipartFileName, ".");
-					final short fileType = FileUtils.divideIntoGroup(extName, ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE);
-					final StringBuffer fileName = new StringBuffer();
-					fileName.append("product" + productId);
-					fileName.append("-");
-					final Calendar calendar = new GregorianCalendar();
-					fileName.append(calendar.get(Calendar.YEAR));
-					fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0" + (calendar.get(Calendar.MONTH) + 1)
-							: (calendar.get(Calendar.MONTH) + 1));
-					fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0" + calendar.get(Calendar.DAY_OF_MONTH)
-							: calendar.get(Calendar.DAY_OF_MONTH));
-					fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
-					fileName.append(calendar.get(Calendar.MINUTE));
-					fileName.append(calendar.get(Calendar.SECOND));
-					fileName.append(calendar.get(Calendar.MILLISECOND));
-					fileName.append(i);
-					fileName.append(".");
-					fileName.append(extName);
-					String path = "";
-					switch (fileType) {
-					case 0: // video
-						path += PRODUCT_VIDEO_PATH + "/" + fileName.toString();
-						break;
-					case 1: // image
-						path += PRODUCT_IMAGE_PATH + "/" + fileName.toString();
-						break;
-					case 2: // other
-						throw new RuntimeException("file type error ...");
-					}
-					File destFile = new File(FILE_PROFIX + path);
-					multipartFile.transferTo(destFile);*/
+					/*
+					 * final String multipartFileName =
+					 * multipartFile.getOriginalFilename(); final String extName
+					 * = FileUtils.getExtName(multipartFileName, "."); final
+					 * short fileType = FileUtils.divideIntoGroup(extName,
+					 * ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE); final StringBuffer
+					 * fileName = new StringBuffer(); fileName.append("product"
+					 * + productId); fileName.append("-"); final Calendar
+					 * calendar = new GregorianCalendar();
+					 * fileName.append(calendar.get(Calendar.YEAR));
+					 * fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ?
+					 * "0" + (calendar.get(Calendar.MONTH) + 1) :
+					 * (calendar.get(Calendar.MONTH) + 1));
+					 * fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10
+					 * ? "0" + calendar.get(Calendar.DAY_OF_MONTH) :
+					 * calendar.get(Calendar.DAY_OF_MONTH));
+					 * fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
+					 * fileName.append(calendar.get(Calendar.MINUTE));
+					 * fileName.append(calendar.get(Calendar.SECOND));
+					 * fileName.append(calendar.get(Calendar.MILLISECOND));
+					 * fileName.append(i); fileName.append(".");
+					 * fileName.append(extName); String path = ""; switch
+					 * (fileType) { case 0: // video path += PRODUCT_VIDEO_PATH
+					 * + "/" + fileName.toString(); break; case 1: // image path
+					 * += PRODUCT_IMAGE_PATH + "/" + fileName.toString(); break;
+					 * case 2: // other throw new RuntimeException(
+					 * "file type error ..."); } File destFile = new
+					 * File(FILE_PROFIX + path);
+					 * multipartFile.transferTo(destFile);
+					 */
 					String path = fdfsService.upload(multipartFile);
 					pathList.add(path);
 				} else {
@@ -388,28 +382,28 @@ public class ProductController extends BaseController {
 						}
 						if (path != null && !"".equals(path)) {
 							fdfsService.delete(path);
-							//FileUtils.deleteFile(FILE_PROFIX + path);
+							// FileUtils.deleteFile(FILE_PROFIX + path);
 						}
 					}
 				}
 			}
 		} catch (Exception e) {
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("ProductController method:update() upload files error ...",sessionInfo);
+			Log.error("ProductController method:update() upload files error ...", sessionInfo);
 			e.printStackTrace();
 			throw new RuntimeException("Product update error ...", e);
 		}
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update product ... ",sessionInfo);
+		Log.error("update product ... ", sessionInfo);
 
 	}
 
 	// add by wliming, 2016/02/24 18:53 begin
 	// -> 增加信息模板的更新方法
 	@RequestMapping(value = "/product/saveVideoDescription", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public long saveVideoDescription(@RequestBody final Product product,HttpServletRequest request) {
+	public long saveVideoDescription(@RequestBody final Product product, HttpServletRequest request) {
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update product ... ",sessionInfo);
+		Log.error("update product ... ", sessionInfo);
 		proService.updateVideoDescription(product);
 		return 1l;
 	}
@@ -499,6 +493,7 @@ public class ProductController extends BaseController {
 		final List<Product> list = proService.loadProductByTeam(teamId);
 		return list;
 	}
+
 	/**
 	 * 
 	 * 
@@ -506,7 +501,7 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping("/product/static/order/team/{teamId}")
 	public List<Product> productInformationByTeamOrder(@PathVariable("teamId") final Integer teamId) {
-		
+
 		final List<Product> list = proService.loadProductByTeamOrder(teamId);
 		return list;
 	}
@@ -539,7 +534,8 @@ public class ProductController extends BaseController {
 	 *            视频唯一编号
 	 */
 	@RequestMapping("/product/static/data/deleteProduct/{productId}")
-	public boolean deleteProductByProvider(@PathVariable("productId") final long productId,HttpServletRequest request) {
+	public boolean deleteProductByProvider(@PathVariable("productId") final long productId,
+			HttpServletRequest request) {
 
 		long[] ids = new long[1];
 		ids[0] = productId;
@@ -570,7 +566,7 @@ public class ProductController extends BaseController {
 			throw new RuntimeException("Product ids is null");
 		}
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("delete product ... ",sessionInfo);
+		Log.error("delete product ... ", sessionInfo);
 		return true;
 	}
 
@@ -599,7 +595,7 @@ public class ProductController extends BaseController {
 	 * @return 服务ID
 	 */
 	@RequestMapping("/product/static/data/update/info")
-	public long updateProductInfo(@RequestBody final Product product,HttpServletRequest request) {
+	public long updateProductInfo(@RequestBody final Product product, HttpServletRequest request) {
 
 		// 解码
 		try {
@@ -616,7 +612,7 @@ public class ProductController extends BaseController {
 		}
 		proService.updateProductInfo(product); // 更新视频信息
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update product ... ",sessionInfo);
+		Log.error("update product ... ", sessionInfo);
 		final Service service = new Service();
 		if (product.getServiceId() != 0) { // 数据库中有此服务数据
 			service.setServiceId(product.getServiceId());
@@ -654,7 +650,7 @@ public class ProductController extends BaseController {
 	 * @return 保存后视频ID
 	 */
 	@RequestMapping("/product/static/data/save/info")
-	public long saveProductInfo(@RequestBody final Product product,HttpServletRequest request) {
+	public long saveProductInfo(@RequestBody final Product product, HttpServletRequest request) {
 		try {
 			// 解码
 			product.setpDescription(URLDecoder.decode(product.getpDescription(), "UTF-8"));
@@ -681,7 +677,7 @@ public class ProductController extends BaseController {
 		service.setMcoms(Long.parseLong(product.getVideoLength()));
 		serService.save(service);
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("save product ... ",sessionInfo);
+		Log.error("save product ... ", sessionInfo);
 		return product.getProductId();
 	}
 
@@ -730,32 +726,33 @@ public class ProductController extends BaseController {
 		teamService.setMasterWork(product);
 		return true;
 	}
-	
+
 	@RequestMapping(value = "/get/masterWork/{teamId}")
-	public Product getMasterWork(@PathVariable("teamId")Long teamId,HttpServletRequest request) {
+	public Product getMasterWork(@PathVariable("teamId") Long teamId, HttpServletRequest request) {
 		if (teamId == null || teamId <= 0) {
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("productId is null ...",sessionInfo);
+			Log.error("productId is null ...", sessionInfo);
 			return null;
 		}
 		Product product = proService.getMasterWork(teamId);
-		if (product == null){
+		if (product == null) {
 			List<Product> products = proService.loadProductByTeam(teamId);
-			if(ValidateUtil.isValid(products)){
+			if (ValidateUtil.isValid(products)) {
 				product = products.get(0);
-			}else{
+			} else {
 				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("product is null ...",sessionInfo);
+				Log.error("product is null ...", sessionInfo);
 			}
 		}
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("set masterWork ... ",sessionInfo);
+		Log.error("set masterWork ... ", sessionInfo);
 		return product;
 	}
+
 	// 活动页面作品列表
 	@RequestMapping(value = "/activity")
-	public List<Product> loadActivityProducts(){
+	public List<Product> loadActivityProducts() {
 		return proService.loadActivityProducts();
 	}
-	
+
 }

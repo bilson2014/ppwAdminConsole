@@ -216,7 +216,8 @@
 				SELECT s.SERVICEID AS serviceId,
 					   s.SERVICEPRICE AS servicePrice,
 					   s.SERVICEREALPRICE AS serviceRealPrice,
-					   s.MCOMS as mcoms
+					   s.MCOMS as mcoms,
+					   s.PRICE_DETAIL as priceDetail
 				FROM SERVICE s 
 				WHERE s.PRODUCTID = ${productId}
 				ORDER BY SERVICEOD ASC
