@@ -86,14 +86,16 @@ public class SolrServiceImpl implements SolrService {
 				final SolrDocument document = list.get(i);
 				document.setField("total", numFound); // 设置总数
 				
-				final List<String> pNameList = map.get(document.getFieldValue("productId")).get("productName");
-				if(pNameList != null && !pNameList.isEmpty()){
-					document.setField("productName", pNameList.get(0));
-				}
-				
-				List<String> pDescriptionList = map.get(document.getFieldValue("productId")).get("pDescription");
-				if(pDescriptionList != null && !pDescriptionList.isEmpty()){
-					document.setField("pDescription", pDescriptionList.get(0) + "...");
+				if(null != map){
+					final List<String> pNameList = map.get(document.getFieldValue("productId")).get("productName");
+					if(pNameList != null && !pNameList.isEmpty()){
+						document.setField("productName", pNameList.get(0));
+					}
+					
+					List<String> pDescriptionList = map.get(document.getFieldValue("productId")).get("pDescription");
+					if(pDescriptionList != null && !pDescriptionList.isEmpty()){
+						document.setField("pDescription", pDescriptionList.get(0) + "...");
+					}
 				}
 				
 				list.set(i, document);

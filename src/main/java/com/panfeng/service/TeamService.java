@@ -185,4 +185,9 @@ public interface TeamService {
 	public List<Team> getAllNoRecommend();
 
 	public boolean addRecommend(long teamId);
+
+	/**
+	 * 获取首页推荐供应商列表
+	 */
+	public List<Team> teamRecommendList();
 }

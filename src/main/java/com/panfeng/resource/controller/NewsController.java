@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,5 +77,22 @@ public class NewsController extends BaseController {
 			break;
 		}
 		return flag;
+	}
+	/**
+	 * 获取首页推荐的新闻列表
+	 */
+	@RequestMapping("/news/recommend")
+	public List<News> RecommendNews() {
+		List<News> list = newsService.RecommendNews();
+		return list;
+	}
+	
+	/**
+	 * 根据id获取新闻资讯
+	 */
+	@RequestMapping("/news/info/{newId}")
+	public News info(@PathVariable("newId") final Integer newId) {
+		News news = newsService.info(newId);
+		return news;
 	}
 }

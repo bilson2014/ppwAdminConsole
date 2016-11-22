@@ -137,9 +137,13 @@ public class IndentController extends BaseController {
 				//modify by wlc 2016-11-10 14:22:34 begin
 				//保存成功，发送短信通知业务人员 
 				String telephone = PropertiesUtils.getProp("service_tel");
-				smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【" + indent.getProduct_name() + "】"});
+				if(indent.getSendToStaff()){
+					smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【" + indent.getProduct_name() + "】"});
+				}
 				//发送短信给用户下单成功
-				smsMQService.sendMessage("131329", indent.getIndent_tele(), null);
+				if(indent.getSendToUser()){
+					smsMQService.sendMessage("131329", indent.getIndent_tele(), null);
+				}
 				// end
 			}
 			return result;

@@ -147,4 +147,6 @@ public interface TeamMapper {
 	public List<Team> getAllNoRecommend();
 
 	public int addRecommend(@Param("teamId") long teamId);
+
+	public List<Team> teamRecommendList();
 }

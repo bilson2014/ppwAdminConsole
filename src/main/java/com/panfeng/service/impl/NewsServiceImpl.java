@@ -77,4 +77,14 @@ public class NewsServiceImpl implements NewsService{
 		return flag1>0 && flag2>0;
 	}
 
+	@Override
+	public List<News> RecommendNews() {
+		return mapper.RecommendNews();
+	}
+
+	@Override
+	public News info(Integer newId) {
+		return mapper.info(newId);
+	}
+
 }
