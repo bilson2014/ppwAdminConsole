@@ -1,6 +1,7 @@
 package com.panfeng.flow.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,18 +11,19 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.flow.taskchain.EventType;
 import com.panfeng.persist.IndentFlowMapper;
 import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
+import com.panfeng.resource.model.Synergy;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.model.User;
 import com.panfeng.service.ActivitiEngineService;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.IndentProjectService;
+import com.panfeng.service.SynergyService;
 import com.panfeng.service.TeamService;
 import com.panfeng.service.UserService;
 import com.panfeng.util.ValidateUtil;
@@ -46,6 +48,9 @@ public class ProjectParam implements TemplateDateInterface<List<String>, String>
 
 	@Autowired
 	private EmployeeService employeeService;
+
+	@Autowired
+	private SynergyService synergyService;
 
 	final static String teamName = "teamName";
 	final static String teamEmail = "teamEmail";
@@ -86,7 +91,6 @@ public class ProjectParam implements TemplateDateInterface<List<String>, String>
 
 			User user = userService.findUserById(indentProject.getCustomerId());
 			Team team = teamService.findTeamById(indentProject.getTeamId());
-			Gson gson = new Gson();
 			for (String field : list) {
 				String res = "";
 				// 基本属性
@@ -140,27 +144,23 @@ public class ProjectParam implements TemplateDateInterface<List<String>, String>
 						break;
 					}
 					break;
+				case GlobalConstant.ROLE_MANAGER:
+					List<Long> ids = new ArrayList<>();
+					Long userId = indentProject.getUserId();
+					ids.add(userId); // 添加主负责人
+					
+					Map<Long, Synergy> synergys = synergyService.findSynergyMapByProjectId(indentProject.getId());
+					Collection<Synergy> collectionSynergys = synergys.values();
+					for (Synergy synergy : collectionSynergys) {
+						ids.add(synergy.getUserId());// 添加主协同人
+					}
+					List<Employee> es = employeeService.findEmployeeByIds(ids.toArray(new Long[ids.size()]));
+					res = listJoin(es,eventType);
+					break;
 				case GlobalConstant.ROLE_PROVIDERMANAGER:
 					// 供应商管家角色ID 4
 					List<Employee> employees = employeeService.findEmployeeByRoleid(4L);
-					if (ValidateUtil.isValid(employees)) {
-						switch (eventType) {
-						case MAIL:
-							List<String> mails = new ArrayList<>();
-							for (Employee employee : employees) {
-								mails.add(employee.getEmail());
-							}
-							res = String.join(",", mails);
-							break;
-						case SMS:
-							List<String> sms = new ArrayList<>();
-							for (Employee employee : employees) {
-								sms.add(employee.getPhoneNumber());
-							}
-							res = String.join(",", sms);
-							break;
-						}
-					}
+					res = listJoin(employees,eventType);
 					break;
 				}
 				values.add(res);
@@ -168,13 +168,35 @@ public class ProjectParam implements TemplateDateInterface<List<String>, String>
 		}
 		return values;
 	}
-
+	private String listJoin(List<Employee> es,EventType eventType){
+		String res="";
+		if (ValidateUtil.isValid(es)) {
+			switch (eventType) {
+			case MAIL:
+				List<String> mails = new ArrayList<>();
+				for (Employee employee : es) {
+					mails.add(employee.getEmail());
+				}
+				res = String.join(",", mails);
+				break;
+			case SMS:
+				List<String> sms = new ArrayList<>();
+				for (Employee employee : es) {
+					sms.add(employee.getPhoneNumber());
+				}
+				res = String.join(",", sms);
+				break;
+			}
+		}
+		return res;
+	}
 	@Override
 	public Map<String, String> personnel() {
 		Map<String, String> personnel = new HashMap<String, String>();
 		personnel.put(GlobalConstant.ROLE_PROVIDER, "供应商");
 		personnel.put(GlobalConstant.ROLE_CUSTOMER, "客户");
 		personnel.put(GlobalConstant.ROLE_PROVIDERMANAGER, "供应商管家");
+		// personnel.put(GlobalConstant.ROLE_MANAGER, "项目相关负责人");
 		return personnel;
 	}
 

@@ -3,8 +3,6 @@ package com.panfeng.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.view.EmployeeView;
@@ -86,4 +84,6 @@ public interface EmployeeService {
 	public BaseMsg bind(Employee employee);
 
 	public List<Employee> findEmployeeByRoleid(Long roleid);
+	
+	public List<Employee> findEmployeeByIds(Long[] roleid);
 }

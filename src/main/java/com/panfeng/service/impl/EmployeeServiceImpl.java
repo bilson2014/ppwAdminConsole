@@ -259,5 +259,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public List<Employee> findEmployeeByRoleid(Long roleid) {
 		return mapper.findEmployeeByRoleid(roleid);
 	}
+	
+	public List<Employee> findEmployeeByIds(Long[] roleid) {
+		return mapper.findEmployeeByIds(roleid);
+	}
 
 }

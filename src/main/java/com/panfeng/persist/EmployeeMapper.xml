@@ -55,6 +55,25 @@
 					AND e.EMPLOYEEID = ${employeeId}
 		]]>
 	</select>
+	<select id="findEmployeeByIds" resultMap="EmployeeRoleMap">
+		<![CDATA[
+			SELECT e.EMPLOYEEID AS employeeId,
+				   e.EMPLOYEELOGINNAME AS employeeLoginName,
+				   e.EMPLOYEEREALNAME AS employeeRealName,
+				   e.EMPLOYEEPASSWORD AS employeePassword,
+				   e.EMPLOYEEDESCRIPTION AS employeeDescription,
+				   e.EMPLOYEEIMG AS employeeImg,
+				   e.EMAIL AS email,
+				   e.PHONENUMBER AS phoneNumber
+			FROM EMPLOYEE e 
+			WHERE 1 = 1
+					AND e.EMPLOYEEID IN 
+		]]>
+		<foreach collection="ids" item="item" separator=","
+				open="(" close=")">
+				#{item}
+		</foreach>
+	</select>
 	<select id="findEmployeeByRoleid" resultMap="EmployeeRoleMap">
 		<![CDATA[
 			SELECT e.EMPLOYEEID AS employeeId,

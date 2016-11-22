@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.flow.taskchain.EventBase;
 import com.panfeng.flow.taskchain.EventType;
