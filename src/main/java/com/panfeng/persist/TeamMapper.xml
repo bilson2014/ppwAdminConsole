@@ -736,4 +736,21 @@
 			 WHERE t.TEAMID=${teamId}
 		]]>
 	</update>
+	<select id="teamRecommendList" resultType="Team">
+		<![CDATA[
+			SELECT t.TEAMID AS teamId,
+				   t.TEAMNAME AS teamName,
+				   t.TEAMPHOTOURL AS teamPhotoUrl,
+				   t.TEAMDESCRIPTION AS teamDescription,
+				   t.RECOMMENDATION AS recommendation,
+				   t.DESCRIPTION AS description,
+				   t.FLAG AS flag,
+				   t.RECOMMEND_SORT recommendSort
+		    FROM TEAM t  
+			WHERE 1 = 1
+				AND t.flag <> 3  AND t.RECOMMEND = 1 
+		ORDER BY
+			 t.RECOMMEND_SORT ASC
+		]]>
+	</select>
 </mapper>

@@ -13,6 +13,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.solr.client.solrj.SolrQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,9 +26,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.dao.PortalVideoDao;
+import com.panfeng.domain.GlobalConstant;
+import com.panfeng.domain.ResourceToken;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Service;
+import com.panfeng.resource.model.Solr;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
@@ -51,8 +55,6 @@ import com.panfeng.util.ValidateUtil;
 @RestController
 @RequestMapping("/portal")
 public class ProductController extends BaseController {
-
-	//private static Logger logger = LoggerFactory.getLogger("error");
 
 	@Autowired
 	private final ProductService proService = null;
@@ -78,13 +80,7 @@ public class ProductController extends BaseController {
 	private static String FILE_PROFIX = null; // 文件前缀
 
 	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
-
-	//private static String PRODUCT_IMAGE_PATH = null; // 产品图片路径
-
-	//private static String ALLOW_IMAGE_TYPE = null;
-
-	//private static String ALLOW_VIDEO_TYPE = null;
-
+	
 	private static String SOLR_URL = null;
 
 	public ProductController() {
@@ -430,11 +426,22 @@ public class ProductController extends BaseController {
 	 * 首页 装载 更多作品页-PC端
 	 */
 	@RequestMapping(value = "/product/static/pc/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<Product> load(final HttpServletRequest request) {
+	public List<Solr> load(final HttpServletRequest request) {
 
-		final List<Product> list = proService.loadProductByCommend();
+		//modify by wlc 2016-11-21 11:42:18
+		//修改为solr查询 begin
+		//final List<Product> list = proService.loadProductByCommend();
+		final SolrQuery query = new SolrQuery();
+		query.set("qf", "productName^4 tags^3 teamName^2 pDescription^1");
+		query.setQuery("*:*");
+		query.setFields("teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,recommend,tags");
+		query.setStart(0);
+		query.setRows(Integer.MAX_VALUE);
+		final List<Solr> list = solrService.queryDocs(GlobalConstant.SOLR_PORTAL_URL, query);
 		return list;
+		//修改为solr查询 end
 	}
+		
 
 	@RequestMapping("/product/static/redirect")
 	public ModelAndView redirect(final ModelMap model) {
@@ -757,5 +764,24 @@ public class ProductController extends BaseController {
 	public List<Product> loadActivityProducts(){
 		return proService.loadActivityProducts();
 	}
-	
+	//播放页获取team更多作品
+	@RequestMapping(value = "/product/more", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public List<Solr> teamMoreProduct(@RequestBody final Team team,final HttpServletRequest request){
+		final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
+		final SolrQuery query = new SolrQuery();
+		query.set("qf", "productName^4 tags^3 teamName^2 pDescription^1");
+		query.setQuery("*:*");
+		query.setFields("teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
+		query.setStart(0);
+		query.setRows(Integer.MAX_VALUE);
+		final List<Solr> list = solrService.queryDocs(token.getSolrUrl(), query);
+		//移除非team的作品
+		for(int i=0;i<list.size();i++){
+			if(Long.parseLong(list.get(i).getTeamId())!=team.getTeamId()){
+				list.remove(i);
+			}
+		}
+		return list;
+	}
+		
 }

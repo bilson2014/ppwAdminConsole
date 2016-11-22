@@ -21,4 +21,8 @@ public interface NewsService {
 
 	boolean moveDown(int newid);
 
+	List<News> RecommendNews();
+
+	News info(Integer newId);
+
 }
