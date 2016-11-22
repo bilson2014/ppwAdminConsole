@@ -1,7 +1,5 @@
 package com.panfeng.flow.taskchain.event;
 
-import java.util.Map;
-
 import org.springframework.stereotype.Component;
 
 import com.panfeng.domain.BaseMsg;

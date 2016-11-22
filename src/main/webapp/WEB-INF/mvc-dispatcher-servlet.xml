@@ -42,6 +42,7 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/portal/solr/query"/>
 			<mvc:mapping path="/portal/solr/phone/query"/>
+			<mvc:mapping path="/portal/product/more"/>
 			<bean class="com.panfeng.interceptor.SearchResourceInterceptor" />
 		</mvc:interceptor>
 		

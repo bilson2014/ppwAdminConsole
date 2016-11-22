@@ -142,8 +142,8 @@ public class ProductServiceImpl implements ProductService {
 				product.setServicePrice(service.getServicePrice());
 				product.setServiceRealPrice(service.getServiceRealPrice());
 				product.setMcoms(service.getMcoms());
+				product.setPriceDetail(service.getPriceDetail());
 			}
-
 			if (product.getTeamId() != null && !"".equals(product.getTeamId())) {
 				Team team = teamMapper.findTeamById(product.getTeamId());
 				if (team != null) {

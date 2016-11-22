@@ -76,4 +76,8 @@ public class ProductModuleServiceImpl implements ProductModuleService{
 		}
 		return 0l;
 	}
+	@Override
+	public List<ProductModule> findListByIds(Long[] ids) {
+		return pmMapper.findListByIds(ids);
+	}
 }

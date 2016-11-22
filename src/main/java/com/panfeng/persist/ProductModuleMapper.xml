@@ -16,6 +16,25 @@
 			FROM PRODUCT_MODULE
 		]]>
 	</select>
+	<select id="findListByIds" resultType="ProductModule">
+		<![CDATA[
+           SELECT ID,
+           		 PID,
+           		 MODULE_NAME moduleName,
+           		 MODULE_LEVEL moduleLevel,
+           		 DESCRIPTION,
+           		 MODULE_PRICE modulePrice ,
+           		 PIC,CREATE_TIME createTime,
+           		 UPDATE_TIME updateTime,
+           		 SORT_INDEX sortIndex
+			FROM PRODUCT_MODULE WHERE ID IN
+		]]>
+		<foreach collection="ids" item="item" separator=","
+				open="(" close=")">
+				#{item}
+		</foreach>
+	</select>
+	
 	<insert id="save" useGeneratedKeys="true" keyProperty="id"
 		parameterType="ProductModule">
 		<![CDATA[

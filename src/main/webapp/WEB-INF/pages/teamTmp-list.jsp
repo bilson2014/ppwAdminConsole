@@ -49,7 +49,7 @@
 		
 		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 500px;"
             closed="true" buttons="#dlg-buttons" title="作品信息">
-	        <form id="fm" method="post" enctype="multipart/form-data">
+	        <form id="fm" method="post">
 	        	<input type="hidden" name="id" value=''>
 	            <div id="diff_container"></div>
 				<br><br><br>
