@@ -54,7 +54,7 @@
 				   s.SERVICEOD AS serviceOd,
 				   s.MCOMS AS mcoms,
 				   s.PRODUCTID AS productId,
-				   s.PRICE_DETAIL AS priceDetail,
+				   IFNULL(s.PRICE_DETAIL,'')AS priceDetail,
 				   p.PRODUCTNAME AS productName
 			FROM SERVICE s
 			LEFT JOIN PRODUCT p

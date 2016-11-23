@@ -27,7 +27,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.dao.PortalVideoDao;
 import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.ResourceToken;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Service;
@@ -769,26 +768,4 @@ public class ProductController extends BaseController {
 	public List<Product> loadActivityProducts() {
 		return proService.loadActivityProducts();
 	}
-
-	// 播放页获取team更多作品
-	@RequestMapping(value = "/product/more", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<Solr> teamMoreProduct(@RequestBody final Team team, final HttpServletRequest request) {
-		final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
-		final SolrQuery query = new SolrQuery();
-		query.set("qf", "productName^4 tags^3 teamName^2 pDescription^1");
-		query.setQuery("*:*");
-		query.setFields(
-				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
-		query.setStart(0);
-		query.setRows(Integer.MAX_VALUE);
-		final List<Solr> list = solrService.queryDocs(token.getSolrUrl(), query);
-		// 移除非team的作品
-		for (int i = 0; i < list.size(); i++) {
-			if (Long.parseLong(list.get(i).getTeamId()) != team.getTeamId()) {
-				list.remove(i);
-			}
-		}
-		return list;
-	}
-
 }

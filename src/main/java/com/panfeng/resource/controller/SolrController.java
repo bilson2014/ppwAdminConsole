@@ -7,18 +7,22 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.ResourceToken;
+import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Solr;
+import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.SolrView;
 import com.panfeng.service.SolrService;
@@ -260,5 +264,47 @@ public class SolrController extends BaseController {
 			}
 		}
 		return null;
+	}
+	// 播放页获取team更多作品
+	@RequestMapping(value = "/product/more", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public List<Solr> teamMoreProduct(@RequestBody final Team team, final HttpServletRequest request) {
+		final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
+		final SolrQuery query = new SolrQuery();
+		query.set("qf", "productName^4 tags^3 teamName^2 pDescription^1");
+		query.setQuery("*:*");
+		query.setFields(
+				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
+		query.setStart(0);
+		query.setRows(3);
+		final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
+		// 移除非team的作品
+		for (int i = 0; i < list.size(); i++) {
+			if (Long.parseLong(list.get(i).getTeamId()) != team.getTeamId()) {
+				list.remove(i);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 播放界面获取更多推荐作品
+	 * 根据tags来搜索
+	 */
+	@RequestMapping(value = "/tags/search", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public List<Solr> getMoreProduct(@RequestBody final Product product, final HttpServletRequest request) {
+		final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
+		final SolrQuery query = new SolrQuery();
+		query.set("qf", "tags^4 productName^3 teamName^2 pDescription^1");
+		if(StringUtils.isNotBlank(product.getTags())){
+			query.setQuery("tags:"+product.getTags());
+		}else{
+			query.setQuery("*:*");
+		}
+		query.setFields(
+				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
+		query.setStart(0);
+		query.setRows(3);
+		final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
+		return list;
 	}
 }
