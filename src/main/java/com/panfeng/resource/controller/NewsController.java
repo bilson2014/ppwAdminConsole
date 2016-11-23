@@ -95,4 +95,13 @@ public class NewsController extends BaseController {
 		News news = newsService.info(newId);
 		return news;
 	}
+	
+	/**
+	 * 新闻详情页推荐列表
+	 */
+	@RequestMapping("/news/info/recommend")
+	public List<News> newsInfoRecommend() {
+		List<News> list = newsService.searchAllNews();
+		return list;
+	}
 }

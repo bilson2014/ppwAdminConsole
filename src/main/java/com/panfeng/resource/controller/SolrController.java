@@ -275,7 +275,7 @@ public class SolrController extends BaseController {
 		query.setFields(
 				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
 		query.setStart(0);
-		query.setRows(3);
+		query.setRows(Integer.MAX_VALUE);
 		final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
 		// 移除非team的作品
 		for (int i = 0; i < list.size(); i++) {
@@ -303,7 +303,7 @@ public class SolrController extends BaseController {
 		query.setFields(
 				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
 		query.setStart(0);
-		query.setRows(3);
+		query.setRows(Integer.MAX_VALUE);
 		final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
 		return list;
 	}

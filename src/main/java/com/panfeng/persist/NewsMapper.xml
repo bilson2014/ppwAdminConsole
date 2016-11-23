@@ -113,7 +113,17 @@
 				sort_index sortIndex,
 				`status`
 				FROM NEWS WHERE 1=1 AND `status` = 1
-			 ORDER BY create_time DESC
+			 ORDER BY create_time DESC LIMIT 0,6
+		]]>
+	</select>
+	<select id="searchAllNews" resultType="News">
+		<![CDATA[
+			SELECT id ,title,discription ,content,
+				create_time createTime,
+				update_time updateTime,
+				sort_index sortIndex,
+				`status`
+			FROM NEWS ORDER BY create_time DESC
 		]]>
 	</select>
 	<select id="info" resultType="News">
@@ -123,7 +133,7 @@
 			update_time updateTime,
 			sort_index sortIndex,
 			`status`
-			FROM NEWS WHERE id = ${newId} AND `status`=1
+			FROM NEWS WHERE id = ${newId}
 		]]>
 	</select>
 </mapper>

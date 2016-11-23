@@ -87,4 +87,9 @@ public class NewsServiceImpl implements NewsService{
 		return mapper.info(newId);
 	}
 
+	@Override
+	public List<News> searchAllNews() {
+		return mapper.searchAllNews();
+	}
+
 }
