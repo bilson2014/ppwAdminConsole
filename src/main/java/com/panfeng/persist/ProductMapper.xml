@@ -31,7 +31,6 @@
 			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
 			WHERE 1 = 1
-			AND pro.visible = 0
 		]]>
 		<if test="teamId !=null and teamId != ''">
 			AND pro.TEAMID = ${teamId}

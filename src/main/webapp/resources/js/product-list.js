@@ -157,6 +157,19 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'visible' ,
+						title : '前端显示' ,
+						align : 'center' ,
+						width : 60,
+						sortable : true ,
+						formatter : function(value , record , index){
+							if(value == 0){
+								return '<span style=color:green; >显示</span>' ;
+							} else if( value == 1){
+								return '<span style=color:red; >隐藏</span>' ; 
+							}
+						}
+					},{
 						field : 'picHDUrl' ,
 						title : '缩略图' ,
 						align : 'center' ,

@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%@ page import="com.panfeng.util.Constants"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="r" uri="/mytaglib" %>
 <spring:url value="/resources/css/product-list.css" var="productListCss" />
@@ -105,8 +104,9 @@
 		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 500px;"
             closed="true" buttons="#dlg-buttons" title="作品信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
-	        	<input id="productId" name="productId" type="hidden">
-	        	<input id="sessionId" name="sessionId" type="hidden">
+	        	<input id="productId" name="productId" type="hidden" />
+	        	<input id="sessionId" name="sessionId" type="hidden" />
+	        	<input id="visible" name="visible" type="hidden" />
 	        	
 	            <div class="online">
 					<div class="lable l-width">项目名称</div>
