@@ -74,7 +74,7 @@
 	                <input name="servicePrice"  class="easyui-numberbox" required="true" precision="2" max="999999999" size="8" maxlength="8">
 	            </div>
 	            <div class="fitem">
-	                <label>价格详情:</label>
+	                <label>模块化详情:</label>
 	                <input name="priceDetail" id='priceDetail' class="easyui-textbox"/>
 	            </div>
 	            <div class="fitem">

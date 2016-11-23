@@ -184,8 +184,11 @@
 					PRODUCTID = ${productId},
 					UPDATEDATE = CURRENT_TIMESTAMP
 		]]>
-		<if test="priceDetail != null and priceDetail != ''">
+		<if test="priceDetail != null and priceDetail != '' and priceDetail != -1">
 			,price_detail = #{priceDetail}
+		</if>
+		<if test="priceDetail == -1">
+			,price_detail = ''
 		</if>
 		<![CDATA[
 			WHERE SERVICEID = ${serviceId}

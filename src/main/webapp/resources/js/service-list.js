@@ -195,8 +195,7 @@ function openDialog(id,data){
 				lines : true,
 			    idField : 'id',
 				treeField : 'text',
-				multiple: true,
-				required: true
+				multiple: true
 			});
 			$("#productId").combobox({
 				url : getContextPath() + '/portal/service/productSelect',
