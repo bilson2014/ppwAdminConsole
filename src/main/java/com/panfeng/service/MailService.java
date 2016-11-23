@@ -6,6 +6,8 @@ import com.panfeng.resource.view.MailView;
 
 public interface MailService {
 
+	List<Mail> getAll();
+	
 	List<Mail> listWithPagination(MailView view);
 
 	long maxSize(MailView view);

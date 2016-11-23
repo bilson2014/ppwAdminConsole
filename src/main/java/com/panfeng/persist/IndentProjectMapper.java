@@ -21,6 +21,8 @@ public interface IndentProjectMapper {
 
 	public IndentProject findProjectInfo(IndentProject indentProject);
 	
+	public IndentProject findProjectInfo2(@Param("pid") long pid);
+	
 	public List<IndentProject> findProjectByUserName(IndentProject indentProject);
 	
 	public List<IndentProject> findProjectByIds(@Param("list") List<Long> list);

@@ -9,6 +9,10 @@ import com.panfeng.resource.view.Pagination;
 
 public interface SMSTemplateMapper {
 
+	List<Sms> getAll();
+	
+	Sms findSmsById(@Param("smsId") long smsId);
+	
 	List<Sms> listWithPagination(Pagination pagination);
 
 	long maxSize(Pagination pagination);

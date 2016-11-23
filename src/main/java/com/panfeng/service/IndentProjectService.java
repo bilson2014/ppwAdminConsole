@@ -22,6 +22,8 @@ public interface IndentProjectService {
 	public List<IndentProject> findProjectListByPhone(IndentProject indentProject);
 
 	public IndentProject getProjectInfo(IndentProject indentProject);
+	
+	public IndentProject getProjectInfo(long id);
 
 	public IndentProject getRedundantProject(IndentProject indentProject);
 

@@ -15,8 +15,9 @@
             WHERE f.IF_INDENT_ID=${id}
 		]]>
 	</select>
-	
-	<select id="findFlowDateByIndentId" resultType="IndentFlow" useCache="false">
+
+	<select id="findFlowDateByIndentId" resultType="IndentFlow"
+		useCache="false">
 		<![CDATA[
             SELECT 
             f.IF_ID AS ifId,
@@ -39,8 +40,9 @@
 				f.IF_STATE ='Y'
 		]]>
 	</select>
-	
-	<select id="findFlowDateByFlowKey" resultType="IndentFlow" useCache="false">
+
+	<select id="findFlowDateByFlowKey" resultType="IndentFlow"
+		useCache="false">
 		<![CDATA[
             SELECT 
             f.IF_ID AS ifId,
@@ -77,7 +79,18 @@
             WHERE f.IF_ID=${flowid}
 		]]>
 	</select>
-	
+	<select id="findFlowByProcessId" resultType="IndentFlow">
+		<![CDATA[
+            SELECT 
+            f.IF_ID AS ifId,
+            f.IF_FLOW_ID AS ifFlowId,
+            f.IF_INDENT_ID AS ifIndentId,
+            f.IF_STATE AS ifState
+            FROM INDENT_FLOW f 
+            WHERE f.IF_FLOW_ID=#{processId}
+		]]>
+	</select>
+
 	<select id="findFlowByIndent" resultType="IndentFlow">
 		<![CDATA[
             SELECT 
@@ -89,7 +102,7 @@
              WHERE f.IF_INDENT_ID =${id} AND f.IF_STATE ='Y'
 		]]>
 	</select>
-	
+
 	<insert id="save" useGeneratedKeys="true" keyProperty="if_id"
 		parameterType="IndentFlow">
 		<![CDATA[
@@ -111,7 +124,7 @@
 				WHERE IF_ID = ${ifId}
 		]]>
 	</delete>
-	
+
 	<delete id="deleteByflowId" parameterType="long">
 		<![CDATA[
 			DELETE FROM INDENT_FLOW
@@ -128,4 +141,10 @@
 			WHERE f.IF_ID =${ifId}
 		]]>
 	</update>
+
+<!-- 	<select id="getAll" resultType="FlowView">
+		<![CDATA[
+			
+		]]>
+	</select> -->
 </mapper>

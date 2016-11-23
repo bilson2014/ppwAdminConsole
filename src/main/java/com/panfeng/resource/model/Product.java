@@ -82,6 +82,16 @@ public class Product extends BaseObject {
 	// 冗余字段
 	private List<String> tagsArray = null;
 	
+	private String priceDetail = null;
+	
+	public String getPriceDetail() {
+		return priceDetail;
+	}
+
+	public void setPriceDetail(String priceDetail) {
+		this.priceDetail = priceDetail;
+	}
+
 	public List<String> getTagsArray() {
 		return tagsArray;
 	}

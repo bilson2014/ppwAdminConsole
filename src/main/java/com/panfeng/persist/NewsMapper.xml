@@ -11,7 +11,7 @@
 			FROM NEWS WHERE 1=1
 		]]>
 		<![CDATA[
-			ORDER BY sort_index ASC
+			ORDER BY create_time desc
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
@@ -105,4 +105,25 @@
 			UPDATE NEWS SET SORT_INDEX = SORT_INDEX+1 WHERE id=${id}
 		]]>
 	</update>
+	<select id="RecommendNews" resultType="News">
+		<![CDATA[
+			SELECT id ,title,discription ,content ,
+				create_time createTime,
+				update_time updateTime,
+				sort_index sortIndex,
+				`status`
+				FROM NEWS WHERE 1=1 AND `status` = 1
+			 ORDER BY create_time DESC
+		]]>
+	</select>
+	<select id="info" resultType="News">
+		<![CDATA[
+			SELECT id ,title,discription ,content ,
+			create_time createTime,
+			update_time updateTime,
+			sort_index sortIndex,
+			`status`
+			FROM NEWS WHERE id = ${newId} AND `status`=1
+		]]>
+	</select>
 </mapper>

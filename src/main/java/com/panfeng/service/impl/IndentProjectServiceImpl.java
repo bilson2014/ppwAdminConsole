@@ -84,6 +84,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Autowired
 	DealLogMapper dealLogMapper;
 
+	private static String SHANGWU = "商务";
+
 	@Override
 	public boolean save(IndentProject indentProject) {
 
@@ -151,6 +153,11 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public IndentProject getProjectInfo(IndentProject indentProject) {
 		return indentProjectMapper.findProjectInfo(indentProject);
+	}
+
+	@Override
+	public IndentProject getProjectInfo(long id) {
+		return indentProjectMapper.findProjectInfo2(id);
 	}
 
 	@Override
@@ -498,15 +505,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		}
 	}
 
-	private static List<String> stepText = new ArrayList<>();
-	static {
-		stepText.add("沟通");
-		stepText.add("方案");
-		stepText.add("商务");
-		stepText.add("制作");
-		stepText.add("交付");
-	}
-
 	@Override
 	public BaseMsg verifyIntegrity(IndentProject indentProject) {
 		BuildRes buildRes = new BuildRes();
@@ -527,11 +525,13 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		boolean flag = false;
 		boolean isSUser = isSLevel(ip);
 
+		List<String> stepText = indentActivitiService.getBpmnNodes(indentProject);
+
 		for (int i = (stepText.size() - 1); i > -1; i--) {
 			if (flag) {
 				Map<String, Boolean> r = execute(fileList, ip, deals, stepText.get(i));
 				if (ValidateUtil.isValid(r)) {
-					BuildRes br = buildHtml(r, 2, isSUser, indentProject);
+					BuildRes br = buildHtml(r, 2, isSUser, indentProject, stepText);
 					html += br.getHtml();
 				}
 			}
@@ -539,7 +539,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				flag = true;
 				Map<String, Boolean> r = execute(fileList, ip, deals, stepText.get(i));
 				if (ValidateUtil.isValid(r)) {
-					BuildRes br = buildHtml(r, 1, isSUser, indentProject);
+					BuildRes br = buildHtml(r, 1, isSUser, indentProject, stepText);
 					buildRes.setIsok(br.isIsok());
 					html += br.getHtml();
 				}
@@ -556,7 +556,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	 * @param buildType
 	 * @return
 	 */
-	private BuildRes buildHtml(Map<String, Boolean> res, int buildType, boolean isSuser, IndentProject indentProject) {
+	private BuildRes buildHtml(Map<String, Boolean> res, int buildType, boolean isSuser, IndentProject indentProject,
+			List<String> stepText) {
 		StringBuilder stringBuilder = new StringBuilder();
 		BuildRes br = new BuildRes();
 		boolean iok = true;
@@ -576,7 +577,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 					stringBuilder.append("√");
 				} else {
 					stringBuilder.append("<div class = 'infoimgG'>");
-					if (stepText.get(2).equals(indentProject.getTask().getName()) && key.equals("有支付完成订单")) {
+					if (SHANGWU.equals(indentProject.getTask().getName()) && key.equals("有支付完成订单")) {
 						if (isSuser && iok) {
 							if (indentProject.getSkipPay() != null ? indentProject.getSkipPay() : false) {
 							} else {
@@ -640,11 +641,11 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			file.add(fileType.PaiQiBiao);
 			break;
 		case "商务":
-			String shangwu = stepText.get(2);
+			// String shangwu = stepText.get(2);
 			// 查询用户级别
 			if (isSLevel(ip)) {
 				// S级别用户特殊对待
-				if (ip.getTask().getName().equals(shangwu)) {
+				if (ip.getTask().getName().equals(SHANGWU)) {
 					// 身为s用户有权利跳过（只在商务阶段检测 延迟付款 ）
 					if (ip.getSkipPay() != null ? ip.getSkipPay() : false) {
 						info.add(InfoType.provider);
@@ -677,6 +678,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		case "交付":
 			// 交付
 			info.add(InfoType.providerPayment);
+			break;
+		default:
 			break;
 		}
 
@@ -970,16 +973,15 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public List<IndentProject> findProjectListByPhone(IndentProject indentProject) {
 		List<IndentProject> list = findProjectList(indentProject);
-		long start = System.currentTimeMillis();
 		if (ValidateUtil.isValid(list)) {
 			list = indentActivitiService.fullCurrentTask(list);
-			List<ActivitiTask> nodes = indentActivitiService.getNodes(list.get(0));
-			for (ActivitiTask activitiTask : nodes) {
-				activitiTask.getScheduledTime().setFdStartTime("");
-				activitiTask.setCreateTime("");
-			}
 			for (int i = 0; i < list.size(); i++) {
 				List<ActivitiTask> node = new ArrayList<>();
+				List<ActivitiTask> nodes = indentActivitiService.getNodes(list.get(i));
+				for (ActivitiTask activitiTask : nodes) {
+					activitiTask.getScheduledTime().setFdStartTime("");
+					activitiTask.setCreateTime("");
+				}
 				for (int j = 0; j < nodes.size(); j++) {
 					try {
 						node.add(nodes.get(j).clone());
@@ -994,7 +996,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 				}
 			}
 		}
-		System.out.println(System.currentTimeMillis() - start);
 		return list;
 	}
 

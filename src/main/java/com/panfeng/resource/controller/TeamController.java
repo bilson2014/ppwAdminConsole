@@ -965,5 +965,14 @@ public class TeamController extends BaseController {
 	public boolean addRecommend(long teamId) {
 		return service.addRecommend(teamId);
 	}
+	
+	/**
+	 * 获取首页供应商推荐
+	 */
+	@RequestMapping(value = "/team/recommend", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public List<Team> teamRecommendList(){
+		return service.teamRecommendList();
+	}
+
 
 }

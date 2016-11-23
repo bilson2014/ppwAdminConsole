@@ -33,4 +33,8 @@ public interface NewsMapper {
 
 	int downSortByNewsId(@Param("id") final int id);
 
+	List<News> RecommendNews();
+
+	News info(@Param("newId") Integer newId);
+
 }

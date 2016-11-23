@@ -87,6 +87,24 @@ public class RoleServiceImpl implements RoleService {
 		return tree;
 	}
 
+	public List<Tree> tree_2() {
+		
+		List<Role> list = mapper.all();
+		List<Tree> tree = new ArrayList<Tree>();
+		
+		for (final Role role : list) {
+			final String roleName = role.getRoleName();
+			if(!"超级管理员".equals(roleName)){
+				Tree t = new Tree();
+				t.setId(role.getRoleId() + "");
+				t.setText(role.getRoleName());
+				
+				tree.add(t);
+			}
+		}
+		return tree;
+	}
+	
 	@Transactional
 	public long grant(final Long roleId, final long[] resourceIds) {
 		if(roleId != null){

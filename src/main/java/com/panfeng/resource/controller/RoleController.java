@@ -42,6 +42,13 @@ public class RoleController extends BaseController {
 		return trees;
 	}
 	
+	@RequestMapping(value = "/role/tree2")
+	public List<Tree> tree_2(){
+		
+		final List<Tree> trees = service.tree_2();
+		return trees;
+	}
+	
 	@RequestMapping(value = "/role/list",method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
 	public DataGrid<Role> list(RoleView view,PageFilter pf){
 		

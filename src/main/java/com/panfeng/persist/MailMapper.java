@@ -9,6 +9,8 @@ import com.panfeng.resource.view.MailView;
 
 public interface MailMapper {
 
+	public List<Mail> getAll();
+	
 	public List<Mail> listWithPagination(MailView view);
 
 	public long maxSize(MailView view);

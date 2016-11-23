@@ -8,12 +8,13 @@ import com.panfeng.persist.MailMapper;
 import com.panfeng.resource.model.Mail;
 import com.panfeng.resource.view.MailView;
 import com.panfeng.service.MailService;
+
 @Service
-public class MailServiceImpl implements MailService{
+public class MailServiceImpl implements MailService {
 	@Autowired
 	private MailMapper mailMapper;
 	@Autowired
-    private MailDao mailDao;
+	private MailDao mailDao;
 
 	@Override
 	public List<Mail> listWithPagination(MailView view) {
@@ -29,23 +30,23 @@ public class MailServiceImpl implements MailService{
 
 	@Override
 	public void save(Mail mail) {
-		//保存到数据库
+		// 保存到数据库
 		mailMapper.save(mail);
-		//保存到redis
+		// 保存到redis
 		mailDao.addMailByRedis(mail);
 	}
 
 	@Override
 	public void update(Mail mail) {
 		mailMapper.update(mail);
-		//保存到redis
+		// 保存到redis
 		mailDao.addMailByRedis(mail);
 	}
 
 	@Override
 	public long delete(final int[] ids) {
-		if(ids.length>0){
-			for(int id : ids){
+		if (ids.length > 0) {
+			for (int id : ids) {
 				Mail mail = mailMapper.getTemplateById(id);
 				mailDao.removeMailFromRedis(mail.getMailType());
 				mailMapper.delete(id);
@@ -60,9 +61,15 @@ public class MailServiceImpl implements MailService{
 		Mail mail = mailMapper.getTemplateById(mailId);
 		return mail;
 	}
+
 	@Override
 	public Mail getTemplateByType(String type) {
 		Mail mail = mailMapper.getTemplateByType(type);
 		return mail;
+	}
+
+	@Override
+	public List<Mail> getAll() {
+		return mailMapper.getAll();
 	}
 }

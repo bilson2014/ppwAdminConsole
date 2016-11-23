@@ -20,4 +20,6 @@ public interface ProductModuleMapper {
 
 	String getPic(@Param("id") final long id);
 
+	List<ProductModule> findListByIds(@Param("ids")Long[] ids);
+
 }

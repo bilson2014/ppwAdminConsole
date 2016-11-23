@@ -19,6 +19,8 @@ public interface EmployeeMapper {
 	 * @return 员工实体
 	 */
 	public Employee findEmployeeById(@Param("employeeId") final long employeeId);
+	
+	public List<Employee> findEmployeeByIds(@Param("ids") final Long[] ids);
 
 	/**
 	 * 根据输入的员工姓名，搜索员工
@@ -157,4 +159,7 @@ public interface EmployeeMapper {
 	 * @return
 	 */
 	public long updateUniqueId(Employee employee);
+	
+	public List<Employee> findEmployeeByRoleid(@Param("roleid") Long roleid);
+	
 }

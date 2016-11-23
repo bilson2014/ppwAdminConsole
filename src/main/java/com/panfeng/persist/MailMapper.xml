@@ -16,6 +16,16 @@
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
+	<select id="getAll" resultType="Mail">
+		<![CDATA[
+			SELECT 
+				m.ID,m.SUBJECT,m.CONTENT,
+				m.MAIL_TYPE mailType,
+				m.CREATE_TIME createTime,
+				m.UPDATE_TIME updateTime
+			FROM MAIL m
+		]]>
+	</select>
 	<select id="maxSize" resultType="long">
 		<![CDATA[
 			SELECT COUNT(1)

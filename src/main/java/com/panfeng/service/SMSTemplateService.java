@@ -7,6 +7,10 @@ import com.panfeng.resource.view.Pagination;
 
 public interface SMSTemplateService {
 
+	List<Sms> getAll();
+
+	Sms findSmsById(long smsId);
+
 	List<Sms> listWithPagination(Pagination pagination);
 
 	long maxSize(Pagination pagination);
