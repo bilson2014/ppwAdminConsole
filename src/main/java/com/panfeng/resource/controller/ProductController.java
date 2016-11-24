@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.ProductView;
+import com.panfeng.resource.view.SolrView;
 import com.panfeng.service.FDFSService;
 import com.panfeng.service.KindeditorService;
 import com.panfeng.service.ProductService;
@@ -427,7 +429,7 @@ public class ProductController extends BaseController {
 	 * 首页 装载 更多作品页-PC端
 	 */
 	@RequestMapping(value = "/product/static/pc/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<Solr> load(final HttpServletRequest request) {
+	public List<Solr> load(final HttpServletRequest request,@RequestBody SolrView solrView) {
 
 		// modify by wlc 2016-11-21 11:42:18
 		// 修改为solr查询 begin
@@ -436,9 +438,12 @@ public class ProductController extends BaseController {
 		query.set("qf", "productName^4 tags^3 teamName^2 pDescription^1");
 		query.setQuery("*:*");
 		query.setFields(
-				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,recommend,tags");
+				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,recommend,supportCount,tags");
 		query.setStart(0);
 		query.setRows(Integer.MAX_VALUE);
+		if(null!=solrView.getSort()){
+			query.setSort(solrView.getSort(), ORDER.desc);
+		}
 		final List<Solr> list = solrService.queryDocs(GlobalConstant.SOLR_PORTAL_URL, query);
 		return list;
 		// 修改为solr查询 end
