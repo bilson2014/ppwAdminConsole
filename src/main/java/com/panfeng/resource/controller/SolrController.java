@@ -293,11 +293,11 @@ public class SolrController extends BaseController {
 	public List<Solr> getMoreProduct(@RequestBody final SolrView solrView, final HttpServletRequest request) {
 		final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
 		final SolrQuery query = new SolrQuery();
-		query.set("qf", "tags^4 productName^3 teamName^2 pDescription^1");
+		query.set("qf", "tags^4");
 		if(StringUtils.isNotBlank(solrView.getCondition())){
 			query.setQuery("tags:"+solrView.getCondition());
 		}else{
-			query.setQuery("*:*");
+			return null;
 		}
 		query.setFields(
 				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
