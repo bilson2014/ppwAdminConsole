@@ -81,11 +81,9 @@ public class SolrServiceImpl implements SolrService {
 					}
 				}
 			}
-			
 			for (int i = 0; i < list.size(); i++) {
 				final SolrDocument document = list.get(i);
 				document.setField("total", numFound); // 设置总数
-				
 				if(null != map){
 					final List<String> pNameList = map.get(document.getFieldValue("productId")).get("productName");
 					if(pNameList != null && !pNameList.isEmpty()){
