@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.ResourceToken;
-import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Solr;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.DataGrid;
@@ -291,19 +290,19 @@ public class SolrController extends BaseController {
 	 * 根据tags来搜索
 	 */
 	@RequestMapping(value = "/tags/search", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<Solr> getMoreProduct(@RequestBody final Product product, final HttpServletRequest request) {
+	public List<Solr> getMoreProduct(@RequestBody final SolrView solrView, final HttpServletRequest request) {
 		final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
 		final SolrQuery query = new SolrQuery();
 		query.set("qf", "tags^4 productName^3 teamName^2 pDescription^1");
-		if(StringUtils.isNotBlank(product.getTags())){
-			query.setQuery("tags:"+product.getTags());
+		if(StringUtils.isNotBlank(solrView.getCondition())){
+			query.setQuery("tags:"+solrView.getCondition());
 		}else{
 			query.setQuery("*:*");
 		}
 		query.setFields(
 				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
-		query.setStart(0);
-		query.setRows(Integer.MAX_VALUE);
+		query.setStart((int)solrView.getBegin());
+		query.setRows((int)solrView.getLimit());
 		final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
 		return list;
 	}
