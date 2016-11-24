@@ -36,10 +36,6 @@ public class Log extends EventBase {
 
 	@Override
 	public void execute(NodesEvent autoEvent, SessionInfo sessionInfo, String processId) {
-		// TODO Auto-generated method stub
 		
 	}
-	
-	
-
 }

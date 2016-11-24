@@ -3,6 +3,7 @@ package com.panfeng.service.impl;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
+import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.persist.DealLogMapper;
 import com.panfeng.persist.FlowDateMapper;
 import com.panfeng.persist.IndentFlowMapper;
@@ -84,6 +86,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Autowired
 	DealLogMapper dealLogMapper;
 
+	@Autowired
+	SmsMQService smsMQService;
+
 	private static String SHANGWU = "商务";
 
 	@Override
@@ -113,6 +118,33 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			for (Synergy synergy : list) {
 				synergyService.delete(synergy.getSynergyId());
 			}
+		}
+		if (res) {
+			// 发送项目开始消息
+			List<Long> ids = new ArrayList<>();
+			Long userId = indentProject.getUserId();
+			ids.add(userId); // 添加主负责人
+
+			Map<Long, Synergy> synergys = synergyService.findSynergyMapByProjectId(indentProject.getId());
+			Collection<Synergy> collectionSynergys = synergys.values();
+			for (Synergy synergy : collectionSynergys) {
+				ids.add(synergy.getUserId());// 添加主协同人
+			}
+			List<Employee> es = employeeService.findEmployeeByIds(ids.toArray(new Long[ids.size()]));
+			if (ValidateUtil.isValid(es)) {
+				for (Employee employee : es) {
+					String[] param = new String[2];
+					param[0] = employee.getEmployeeRealName();
+					param[1] = "《" + indentProject.getProjectName() + "》";
+					smsMQService.sendMessage("134605", employee.getPhoneNumber(), param);
+				}
+			}
+			/////////////////////////////////// 给客户发送信息。=、、、、、、、、、、、、、、、、、、、、
+			String[] param = new String[2];
+			param[0] = indentProject.getUserName();
+			param[1] = "《" + indentProject.getProjectName() + "》";
+			smsMQService.sendMessage("134605", indentProject.getUserPhone(), param);
+
 		}
 		return res;
 	}
