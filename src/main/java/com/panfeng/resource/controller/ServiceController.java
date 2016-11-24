@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -104,6 +105,9 @@ public class ServiceController extends BaseController{
 		BigDecimal bg = new BigDecimal(realPrice);
 		final double roundRealPrice = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 		service.setServiceRealPrice(roundRealPrice);
+		if(StringUtils.isBlank(service.getPriceDetail())){
+			service.setPriceDetail("-1");//设置-1，代表是后台将该数据清除了，否则前台项目每次保存都会清除他，因为前台不传该数据 
+		}
 		final long ret = serService.update(service);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update service ...",sessionInfo);

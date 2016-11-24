@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -138,7 +140,11 @@ public class IndentController extends BaseController {
 				//保存成功，发送短信通知业务人员 
 				String telephone = PropertiesUtils.getProp("service_tel");
 				if(indent.getSendToStaff()){
-					smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【" + indent.getProduct_name() + "】"});
+					if(StringUtils.isBlank(indent.getProduct_name())){
+						smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【未指定具体影片】"});
+					}else{
+						smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【" + indent.getProduct_name() + "】"});
+					}
 				}
 				//发送短信给用户下单成功
 				if(indent.getSendToUser()){
@@ -182,6 +188,8 @@ public class IndentController extends BaseController {
 			ret = service.updateForCalculate(indent);
 			Log.error("update order ...", sessionInfo);
 		}
+		String telephone = PropertiesUtils.getProp("service_tel");
+		smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【未指定具体影片】"});
 		return ret>0?indent:null;
 	}
 	/**
