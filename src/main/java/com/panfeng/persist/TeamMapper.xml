@@ -373,7 +373,7 @@
 			FROM TEAM t
 			WHERE 1 = 1
 				AND TEAMNAME != ''
-				AND RECOMMEND=0
+				AND IFNULL(RECOMMEND,0) =0
 				AND t.flag <> 3
 		]]>
 	</select>
