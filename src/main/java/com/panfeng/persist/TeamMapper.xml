@@ -678,6 +678,7 @@
 				t.PHONENUMBER phoneNumber,
 				t.RECOMMENDATION recommendation,
 				t.FLAG flag,
+				t.LOGINNAME AS loginName,
 				t.DESCRIPTION description
 			 FROM TEAM_TMP tt
 			 LEFT JOIN TEAM t ON tt.TEAM_ID = t.TEAMID
