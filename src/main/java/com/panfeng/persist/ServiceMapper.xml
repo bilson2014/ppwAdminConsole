@@ -223,7 +223,7 @@
 					   s.PRICE_DETAIL as priceDetail
 				FROM SERVICE s 
 				WHERE s.PRODUCTID = ${productId}
-				ORDER BY SERVICEOD ASC
+				ORDER BY updateDate desc
 				LIMIT 1
 		]]>
 	</select>
