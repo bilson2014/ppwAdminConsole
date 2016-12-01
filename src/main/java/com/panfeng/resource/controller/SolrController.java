@@ -116,7 +116,9 @@ public class SolrController extends BaseController {
 			//condition = HanlpUtil.segment(condition);
 
 			final SolrQuery query = new SolrQuery();
-			query.set("qf", "productName^4 tags^3 teamName^2 pDescription^1");
+			query.set("qf", "productName^10 tags^6  teamName^4 pDescription^1");
+			query.set("q.alt", "*:*");
+			query.set("defType", "edismax");
 			
 			if("*".equals(condition)){
 				// 查询全部
@@ -124,7 +126,8 @@ public class SolrController extends BaseController {
 			}else {
 				
 				//query.set("defType", "dismax");
-				query.setQuery("productName:" + condition + " tags:" + condition + " teamName:" + condition + " pDescription:" + condition);
+				// query.setQuery("productName:" + condition + " tags:" + condition + " teamName:" + condition + " pDescription:" + condition);
+				query.setQuery(condition);
 			}
 			query.setFields("teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
 			query.setStart(Integer.parseInt(String.valueOf(view.getBegin())));
@@ -293,14 +296,16 @@ public class SolrController extends BaseController {
 	public List<Solr> getMoreProduct(@RequestBody final SolrView solrView, final HttpServletRequest request) {
 		final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
 		final SolrQuery query = new SolrQuery();
-		query.set("qf", "tags^4");
+		// query.set("qf", "tags^10");
+		query.set("q.alt", "*:*");
+		query.set("defType", "edismax");
 		if(StringUtils.isNotBlank(solrView.getCondition())){
-			query.setQuery("tags:"+solrView.getCondition());
+			query.setQuery("tags:(" + solrView.getCondition() + ")^30");
 		}else{
 			return null;
 		}
 		query.setFields(
-				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
+				"productId,productName,orignalPrice,price,picLDUrl,tags");
 		query.setStart((int)solrView.getBegin());
 		query.setRows((int)solrView.getLimit());
 		final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
