@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Comparator;
-import java.util.List;
+import java.util.LinkedList;
 
 import org.activiti.bpmn.BpmnAutoLayout;
 import org.activiti.bpmn.model.BpmnModel;
@@ -71,30 +71,31 @@ public class Resource {
 
 	}
 
-	private void parseNode(List<FlowNode> nodes, Process process) {
+	private void parseNode(LinkedList<FlowNode> nodes, Process process) {
 		if (ValidateUtil.isValid(nodes)) {
 			// 按照顺序存放节点
-			nodes.sort(new Comparator<FlowNode>() {
-				@Override
-				public int compare(FlowNode o1, FlowNode o2) {
-					if (o1.getIndex() < o2.getIndex())
-						return -1;
-					else if (o1.getIndex() == o2.getIndex())
-						return 0;
-					else
-						return 1;
-				}
-			});
-
-			StartEvent startEvent = Bpmn.createStartEvent();
+			Comparator<FlowNode> comparator = (FlowNode o1, FlowNode o2) -> {
+				if (o1.getIndex() < o2.getIndex())
+					return -1;
+				else if (o1.getIndex() == o2.getIndex())
+					return 0;
+				else
+					return 1;
+			};
+			nodes.sort(comparator);
+			StartEvent startEvent = Bpmn.createStartEvent(nodes.pollFirst().getflowOptionsToJson());
 			process.addFlowElement(startEvent);
-			EndEvent endEvent = Bpmn.createEndEvent();
+			EndEvent endEvent = Bpmn.createEndEvent(nodes.pollLast().getflowOptionsToJson());
 			process.addFlowElement(endEvent);
+			
+			nodes.sort(comparator);
+			
 			FlowNode nextFlowNode = null;
 			FlowNode prevFlowNode = null;
 			for (int i = 0; i < nodes.size(); i++) {
 				FlowNode flowNode = nodes.get(i);
-				UserTask userTask = Bpmn.createUserTask(flowNode.getId(), flowNode.getName(), flowNode.getflowOptionsToJson());
+				UserTask userTask = Bpmn.createUserTask(flowNode.getId(), flowNode.getName(),
+						flowNode.getflowOptionsToJson());
 				process.addFlowElement(userTask);
 
 				prevFlowNode = nextFlowNode;
@@ -118,5 +119,4 @@ public class Resource {
 			}
 		}
 	}
-
 }

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.ActivityMapper">
+	<insert id="save">
+		<![CDATA[
+			INSERT INTO ACTIVITY (
+				A_NAME, 
+				A_TEMPLATE_TYPE, 
+				A_TEMPLETE_ID, 
+				A_PARAMLIST, 
+				A_STARTTIME
+			) VALUES(
+				#{activityName},
+				${acticityTempleteType},
+				#{acticityTempleteId},
+				#{activityParamList},
+				#{activityStartTime}
+			);
+		]]>
+	</insert>
+
+	<update id="update">
+		<![CDATA[
+			UPDATE pat.ACTIVITY
+			 A_NAME = #{activityName},
+			 A_TEMPLATE_TYPE = ${acticityTempleteType},
+			 A_TEMPLETE_ID = #{acticityTempleteId},
+			 A_PARAMLIST = #{activityParamList},
+			 A_STARTTIME = #{activityStartTime}
+			WHERE
+				A_ID = ${activityId};
+		]]>
+	</update>
+
+	<delete id="delete">
+		<![CDATA[
+			DELETE FROM ACTIVITY WHERE A_ID IN
+		]]>
+		<if test="ids != null and ids != ''">
+			<foreach collection="ids" open="(" close=")" item="id"
+				separator=",">
+				${id}
+			</foreach>
+		</if>
+	</delete>
+
+	<select id="findActivityById" resultType="Activity">
+		<![CDATA[
+			SELECT
+				a.A_ID AS activityId ,
+				a.A_NAME AS activityName,
+				DATE_FORMAT(a.A_CREATETIME,'%Y-%m-%d %T') AS activityCreateTime,
+				a.A_TEMPLATE_TYPE AS acticityTempleteType,
+				a.A_TEMPLETE_ID AS acticityTempleteId,
+				a.A_PARAMLIST AS activityParamList,
+				a.A_STARTTIME AS activityStartTime
+			FROM
+				ACTIVITY a
+			WHERE
+				a.A_ID = ${activityId}
+		]]>
+	</select>
+
+	<select id="findAll" resultType="Activity">
+		<![CDATA[
+			SELECT
+				a.A_ID AS activityId ,
+				a.A_NAME AS activityName,
+				DATE_FORMAT(a.A_CREATETIME,'%Y-%m-%d %T') AS activityCreateTime,
+				a.A_TEMPLATE_TYPE AS acticityTempleteType,
+				a.A_TEMPLETE_ID AS acticityTempleteId,
+				a.A_PARAMLIST AS activityParamList,
+				a.A_STARTTIME AS activityStartTime
+			FROM
+				ACTIVITY a
+		]]>
+	</select>
+</mapper>

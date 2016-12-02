@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.persist.DealLogMapper;
 import com.panfeng.persist.FlowDateMapper;
@@ -92,7 +93,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	private static String SHANGWU = "商务";
 
 	@Override
-	public boolean save(IndentProject indentProject) {
+	public boolean save(IndentProject indentProject,SessionInfo sessionInfo) {
 
 		indentProjectMapper.save(indentProject);
 		indentProject.setSerial(getProjectSerialID(indentProject.getId()));
@@ -112,7 +113,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			}
 		}
 		// 解决项目重复bug
-		boolean res = indentActivitiService.startProcess(indentProject);
+		boolean res = indentActivitiService.startProcess(indentProject,sessionInfo);
 		if (!res) {
 			indentProjectMapper.deleteById(indentProject.getId());
 			for (Synergy synergy : list) {

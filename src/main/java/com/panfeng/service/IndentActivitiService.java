@@ -23,9 +23,9 @@ public interface IndentActivitiService {
 
 	List<ActivitiTask> getHistoryProcessTask(IndentProject indentProject);
 
-	String completeTask(IndentProject indentProject);
+	String completeTask(IndentProject indentProject, String processId,SessionInfo sessionInfo);
 
-	boolean startProcess(IndentProject indentProject);
+	boolean startProcess(IndentProject indentProject,SessionInfo sessionInfo);
 
 	boolean suspendProcess(IndentProject indentProject,boolean isBack);
 
@@ -53,6 +53,6 @@ public interface IndentActivitiService {
 	
 	List<String> getBpmnNodes(IndentProject indentProject);
 
-	BaseMsg completeTask_2(SessionInfo sessionInfo, String processId, IndentProject indentProject);
+	BaseMsg completeTask_2(IndentProject indentProject, String processId,SessionInfo sessionInfo );
 
 }

@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.SessionInfo;
+import com.panfeng.flow.taskchain.TaskChainHandler;
 import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.persist.FlowDateMapper;
 import com.panfeng.persist.IndentFlowMapper;
@@ -27,6 +28,7 @@ import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.FlowDate;
 import com.panfeng.resource.model.FlowNode;
+import com.panfeng.resource.model.FlowTemplate;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.Synergy;
@@ -61,7 +63,9 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	final EmployeeService employeeService = null;
 	@Autowired
 	SmsMQService smsMQService;
-	
+	@Autowired
+	TaskChainHandler taskChainHandler;
+
 	@Override
 	public ActivitiTask getCurrentTask(IndentProject indentProject) {
 		// new api
@@ -154,8 +158,8 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 	}
 
 	@Override
-	public synchronized String completeTask(IndentProject indentProject) {
-		ActivitiTask activitiTask = getCurrentTask(indentProject);
+	public synchronized String completeTask(IndentProject indentProject, String processId, SessionInfo sessionInfo) {
+		Task activitiTask = activitiEngineService.getCurrentTask(processId);
 		boolean res = false;
 		indentCommentService.createSystemMsg("完成了\"" + activitiTask.getName() + "\"任务", indentProject);
 		res = activitiEngineService.completeTask(getIndentCurrentFlowId(indentProject));
@@ -163,38 +167,13 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 
 		boolean isFinish = activitiEngineService.isFinish(getIndentCurrentFlowId(indentProject));
 		if (isFinish) {
-			// 更新项目状态
-			indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_FINISH, null);
-			
-			indentProject = indentProjectService.getRedundantProject(indentProject);
-			List<Long> ids = new ArrayList<>();
-			Long userId = indentProject.getUserId();
-			ids.add(userId); // 添加主负责人
-
-			Map<Long, Synergy> synergys = synergyService.findSynergyMapByProjectId(indentProject.getId());
-			Collection<Synergy> collectionSynergys = synergys.values();
-			for (Synergy synergy : collectionSynergys) {
-				ids.add(synergy.getUserId());// 添加主协同人
-			}
-			List<Employee> es = employeeService.findEmployeeByIds(ids.toArray(new Long[ids.size()]));
-			if (ValidateUtil.isValid(es)) {
-				for (Employee employee : es) {
-					String[] param = new String[2];
-					param[0] = employee.getEmployeeRealName();
-					param[1] = "《" + indentProject.getProjectName() + "》";
-					smsMQService.sendMessage("134606", employee.getPhoneNumber(), param);
-				}
-			}
-			///////////////////////////////////给客户发送信息。=、、、、、、、、、、、、、、、、、、、、
-			String[] param = new String[2];
-			param[0] = indentProject.getUserName();
-			param[1] = "《" + indentProject.getProjectName() + "》";
-			smsMQService.sendMessage("134606", indentProject.getUserPhone(), param);
+			completeProcess(indentProject, sessionInfo, activitiTask.getProcessInstanceId(),
+					activitiTask.getProcessDefinitionId());
 		}
 		return res + "";
 	}
 
-	public synchronized BaseMsg completeTask_2(SessionInfo sessionInfo, String processId, IndentProject indentProject) {
+	public synchronized BaseMsg completeTask_2(IndentProject indentProject, String processId, SessionInfo sessionInfo) {
 		Task activitiTask = activitiEngineService.getCurrentTask(processId);
 		BaseMsg res = null;
 		indentCommentService.createSystemMsg("完成了\"" + activitiTask.getName() + "\"任务", indentProject);
@@ -203,39 +182,58 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 
 		boolean isFinish = activitiEngineService.isFinish(processId);
 		if (isFinish) {
-			// 更新项目状态
-			indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_FINISH, null);
-			
-			indentProject = indentProjectService.getRedundantProject(indentProject);
-			List<Long> ids = new ArrayList<>();
-			Long userId = indentProject.getUserId();
-			ids.add(userId); // 添加主负责人
-
-			Map<Long, Synergy> synergys = synergyService.findSynergyMapByProjectId(indentProject.getId());
-			Collection<Synergy> collectionSynergys = synergys.values();
-			for (Synergy synergy : collectionSynergys) {
-				ids.add(synergy.getUserId());// 添加主协同人
-			}
-			List<Employee> es = employeeService.findEmployeeByIds(ids.toArray(new Long[ids.size()]));
-			if (ValidateUtil.isValid(es)) {
-				for (Employee employee : es) {
-					String[] param = new String[2];
-					param[0] = employee.getEmployeeRealName();
-					param[1] = "《" + indentProject.getProjectName() + "》";
-					smsMQService.sendMessage("134606", employee.getPhoneNumber(), param);
-				}
-			}
-			///////////////////////////////////给客户发送信息。=、、、、、、、、、、、、、、、、、、、、
-			String[] param = new String[2];
-			param[0] = indentProject.getUserName();
-			param[1] = "《" + indentProject.getProjectName() + "》";
-			smsMQService.sendMessage("134606", indentProject.getUserPhone(), param);
+			completeProcess(indentProject, sessionInfo, activitiTask.getProcessInstanceId(),
+					activitiTask.getProcessDefinitionId());
 		}
 		return res;
 	}
 
+	/**
+	 * 完成一个流程实例
+	 * 
+	 * @param indentProject
+	 */
+	private void completeProcess(IndentProject indentProject, SessionInfo sessionInfo, String processId,
+			String processDefinitionId) {
+		// 更新项目状态
+		indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_FINISH, null);
+		// ready to send sms
+		indentProject = indentProjectService.getRedundantProject(indentProject);
+		List<Long> ids = new ArrayList<>();
+		Long userId = indentProject.getUserId();
+		ids.add(userId); // 添加主负责人
+
+		Map<Long, Synergy> synergys = synergyService.findSynergyMapByProjectId(indentProject.getId());
+		Collection<Synergy> collectionSynergys = synergys.values();
+		for (Synergy synergy : collectionSynergys) {
+			ids.add(synergy.getUserId());// 添加主协同人
+		}
+		List<Employee> es = employeeService.findEmployeeByIds(ids.toArray(new Long[ids.size()]));
+		if (ValidateUtil.isValid(es)) {
+			for (Employee employee : es) {
+				String[] param = new String[2];
+				param[0] = employee.getEmployeeRealName();
+				param[1] = "《" + indentProject.getProjectName() + "》";
+				// smsMQService.sendMessage("134606", employee.getPhoneNumber(),
+				// param);
+			}
+		}
+		/////////////////////////////////// 给客户发送信息。=、、、、、、、、、、、、、、、、、、、、
+		String[] param = new String[2];
+		param[0] = indentProject.getUserName();
+		param[1] = "《" + indentProject.getProjectName() + "》";
+		// smsMQService.sendMessage("134606", indentProject.getUserPhone(),
+		// param);
+		// execute automatic events
+		FlowTemplate template = activitiEngineService.getTemplate(processDefinitionId);
+		FlowNode flowNode = template.getFlowNodes().get(0);
+		if (flowNode != null) {
+			taskChainHandler.execute(flowNode.getTaskChainId(), sessionInfo, processId);
+		}
+	}
+
 	@Override
-	public boolean startProcess(IndentProject indentProject) {
+	public boolean startProcess(IndentProject indentProject, SessionInfo sessionInfo) {
 		// 禁用所有流程
 		disableAllFlow(indentProject);
 		// 启动流程
@@ -264,8 +262,13 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		for (FlowDate flowDate : dates) {
 			flowDateMapper.save(flowDate);
 		}
-		indentCommentService.createSystemMsg("创建了 " + indentProject.getProjectName() + "项目", indentProject);
-		return l > 0 ? true : false;
+		if (l > 0) {
+			indentCommentService.createSystemMsg("创建了 " + indentProject.getProjectName() + "项目", indentProject);
+			activitiEngineService.executeStartEvent(sessionInfo, flowId);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override

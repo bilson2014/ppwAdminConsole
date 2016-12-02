@@ -4,6 +4,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import com.panfeng.domain.BaseMsg;
+import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.IndentProject;
@@ -11,7 +12,7 @@ import com.panfeng.resource.view.IndentProjectView;
 
 public interface IndentProjectService {
 
-	public boolean save(IndentProject indentProject);
+	public boolean save(IndentProject indentProject,SessionInfo sessionInfo);
 
 	public long update(IndentProject indentProject);
 

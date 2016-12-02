@@ -1,6 +1,6 @@
 package com.panfeng.resource.model;
 
-import java.util.List;
+import java.util.LinkedList;
 
 import com.panfeng.domain.BaseObject;
 
@@ -10,7 +10,7 @@ public class FlowTemplate extends BaseObject {
 
 	private String id = "";
 	private String name = "";
-	private List<FlowNode> flowNodes = null;
+	private LinkedList<FlowNode> flowNodes = null;
 
 	// ----------------- db 映射 ----------------------
 
@@ -64,11 +64,12 @@ public class FlowTemplate extends BaseObject {
 		this.name = name;
 	}
 
-	public List<FlowNode> getFlowNodes() {
+
+	public LinkedList<FlowNode> getFlowNodes() {
 		return flowNodes;
 	}
 
-	public void setFlowNodes(List<FlowNode> flowNodes) {
+	public void setFlowNodes(LinkedList<FlowNode> flowNodes) {
 		this.flowNodes = flowNodes;
 	}
 

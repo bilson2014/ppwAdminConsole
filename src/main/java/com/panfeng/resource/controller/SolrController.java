@@ -113,8 +113,6 @@ public class SolrController extends BaseController {
 			
 			String condition = URLDecoder.decode(view.getCondition(), "UTF-8");
 			
-			//condition = HanlpUtil.segment(condition);
-
 			final SolrQuery query = new SolrQuery();
 			query.set("qf", "productName^10 tags^6  teamName^4 pDescription^1");
 			query.set("q.alt", "*:*");
@@ -125,8 +123,6 @@ public class SolrController extends BaseController {
 				query.setQuery("*:*");
 			}else {
 				
-				//query.set("defType", "dismax");
-				// query.setQuery("productName:" + condition + " tags:" + condition + " teamName:" + condition + " pDescription:" + condition);
 				query.setQuery(condition);
 			}
 			query.setFields("teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
@@ -302,8 +298,7 @@ public class SolrController extends BaseController {
 		}else{
 			return null;
 		}
-		query.setFields(
-				"productId,productName,orignalPrice,price,picLDUrl,tags");
+		query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags");
 		query.setStart((int)solrView.getBegin());
 		query.setRows((int)solrView.getLimit());
 		final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);

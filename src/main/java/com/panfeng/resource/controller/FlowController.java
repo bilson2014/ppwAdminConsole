@@ -56,8 +56,9 @@ public class FlowController extends BaseController {
 	}
 
 	@RequestMapping("/startProcess")
-	public Boolean startProcess(@RequestBody final IndentProject indentProject) {
-		return indentActivitiService.startProcess(indentProject);
+	public Boolean startProcess(@RequestBody final IndentProject indentProject, HttpServletRequest request) {
+		SessionInfo currentInfo = getCurrentInfo(request);
+		return indentActivitiService.startProcess(indentProject, currentInfo);
 	}
 
 	@RequestMapping(value = "/getCurrectTask", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
@@ -71,14 +72,14 @@ public class FlowController extends BaseController {
 		Task task = activitiEngineService.getCurrentTask(processId);
 		// ---------兼容性----------
 		String key = task.getProcessDefinitionId();
+		SessionInfo sessionInfo = getCurrentInfo(request);
 		if (key != null && key.contains("IndentFlow")) {
-			String res = indentActivitiService.completeTask(indentProject);
+			String res = indentActivitiService.completeTask(indentProject, processId, sessionInfo);
 			return new BaseMsg(BaseMsg.NORMAL, "", res);
 		}
 		// -------------------------
 		else {
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			BaseMsg res = indentActivitiService.completeTask_2(sessionInfo, processId, indentProject);
+			BaseMsg res = indentActivitiService.completeTask_2(indentProject, processId, sessionInfo);
 			return res;
 		}
 	}
@@ -125,7 +126,8 @@ public class FlowController extends BaseController {
 	}
 
 	@RequestMapping("/flow/startProcess")
-	public BaseMsg startProcess_2(@RequestBody FlowTemplate flowTemplate) {
+	public BaseMsg startProcess_2(@RequestBody FlowTemplate flowTemplate, HttpServletRequest request) {
+		//SessionInfo currentInfo = getCurrentInfo(request);
 		String processId = activitiEngineService.startProcess(flowTemplate.getId(), null);
 		return processId == null ? new BaseMsg(BaseMsg.ERROR, "启动失败", null)
 				: new BaseMsg(BaseMsg.NORMAL, "", processId);
@@ -281,7 +283,7 @@ public class FlowController extends BaseController {
 	}
 
 	// -------------------------------------------test------------------------------------------
-	
+
 	@RequestMapping("/test/pay")
 	public BaseMsg testPay(String processId, HttpServletRequest request) {
 		Pay p = new Pay();
