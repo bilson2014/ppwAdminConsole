@@ -38,7 +38,6 @@ import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.ProductView;
 import com.panfeng.resource.view.SolrView;
 import com.panfeng.service.FDFSService;
-import com.panfeng.service.KindeditorService;
 import com.panfeng.service.ProductService;
 import com.panfeng.service.ServiceService;
 import com.panfeng.service.SolrService;
@@ -57,8 +56,6 @@ import com.panfeng.util.ValidateUtil;
 @RequestMapping("/portal")
 public class ProductController extends BaseController {
 
-	// private static Logger logger = LoggerFactory.getLogger("error");
-
 	@Autowired
 	private final ProductService proService = null;
 
@@ -68,8 +65,6 @@ public class ProductController extends BaseController {
 	@Autowired
 	private final ServiceService serService = null;
 
-	@Autowired
-	private KindeditorService kindService;
 
 	@Autowired
 	private SolrService solrService = null;
@@ -84,12 +79,6 @@ public class ProductController extends BaseController {
 
 	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
 
-	// private static String PRODUCT_IMAGE_PATH = null; // 产品图片路径
-
-	// private static String ALLOW_IMAGE_TYPE = null;
-
-	// private static String ALLOW_VIDEO_TYPE = null;
-
 	private static String SOLR_URL = null;
 
 	public ProductController() {
@@ -100,10 +89,6 @@ public class ProductController extends BaseController {
 				propertis.load(is);
 				FILE_PROFIX = propertis.getProperty("file.prefix");
 				PRODUCT_VIDEO_PATH = propertis.getProperty("upload.server.product.video");
-				// PRODUCT_IMAGE_PATH =
-				// propertis.getProperty("upload.server.product.image");
-				// ALLOW_VIDEO_TYPE = propertis.getProperty("videoType");
-				// ALLOW_IMAGE_TYPE = propertis.getProperty("imageType");
 				SOLR_URL = propertis.getProperty("solr.url");
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -178,21 +163,19 @@ public class ProductController extends BaseController {
 				for (final Product product : list) {
 					// 删除 缩略图
 					final String picLDUrl = product.getPicLDUrl();
-					FileUtils.deleteFile(picLDUrl);
-
-					// 删除 高清图
+					fdfsService.delete(picLDUrl);
+					// 删除 高清图，如果删除的是以前的作品的话，高清图是存在的
 					final String picHDUrl = product.getPicHDUrl();
-					FileUtils.deleteFile(picHDUrl);
+					fdfsService.delete(picHDUrl);
 
 					// 删除 视频
 					final String videoUrl = product.getVideoUrl();
-					FileUtils.deleteFile(videoUrl);
-
+					fdfsService.delete(videoUrl);
+					//TODO 待修改成分解富文本编辑器，删除图片
 					// 删除产品编辑页图片
-					String sessionId = product.getSessionId();
-					if (sessionId != null && !"".equals(sessionId))
-						kindService.deleteImageDir(product.getSessionId());
-
+					//String sessionId = product.getSessionId();
+					//if (sessionId != null && !"".equals(sessionId))
+					//	kindService.deleteImageDir(product.getSessionId());
 					// 删除搜索索引
 					solrService.deleteDoc(product.getProductId(), SOLR_URL);
 				}
@@ -212,55 +195,12 @@ public class ProductController extends BaseController {
 
 		// 保存 product
 		proService.save(product);
-
-		// 视频文件全路径
-		// final String videoPath = FILE_PROFIX + PRODUCT_VIDEO_PATH;
-
-		// 图片文件全路径
-		// final String imagePath = FILE_PROFIX + PRODUCT_IMAGE_PATH;
-		// try {
-		/*
-		 * File videoDir = new File(videoPath); File imageDir = new
-		 * File(imagePath); if (!videoDir.exists()) videoDir.mkdir(); if
-		 * (!imageDir.exists()) imageDir.mkdir();
-		 */
-
 		// 路径接收
 		final List<String> pathList = new ArrayList<String>();
 
 		for (int i = 0; i < uploadFiles.length; i++) {
 			final MultipartFile multipartFile = uploadFiles[i];
 			if (!multipartFile.isEmpty()) {
-				// 分组保存video、image
-				/*
-				 * final String multipartFileName =
-				 * multipartFile.getOriginalFilename(); final String extName =
-				 * FileUtils.getExtName(multipartFileName, "."); final short
-				 * fileType = FileUtils.divideIntoGroup(extName,
-				 * ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE); final StringBuffer
-				 * fileName = new StringBuffer(); fileName.append("product" +
-				 * productId); fileName.append("-"); final Calendar calendar =
-				 * new GregorianCalendar();
-				 * fileName.append(calendar.get(Calendar.YEAR));
-				 * fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0"
-				 * + (calendar.get(Calendar.MONTH) + 1) :
-				 * (calendar.get(Calendar.MONTH) + 1));
-				 * fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ?
-				 * "0" + calendar.get(Calendar.DAY_OF_MONTH) :
-				 * calendar.get(Calendar.DAY_OF_MONTH));
-				 * fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
-				 * fileName.append(calendar.get(Calendar.MINUTE));
-				 * fileName.append(calendar.get(Calendar.SECOND));
-				 * fileName.append(calendar.get(Calendar.MILLISECOND));
-				 * fileName.append(i); fileName.append(".");
-				 * fileName.append(extName); String path = ""; switch (fileType)
-				 * { case 0: // video path += PRODUCT_VIDEO_PATH + "/" +
-				 * fileName.toString(); break; case 1: // image path +=
-				 * PRODUCT_IMAGE_PATH + "/" + fileName.toString(); break; case
-				 * 2: // other throw new RuntimeException("file type error ..."
-				 * ); } File destFile = new File(FILE_PROFIX + path);
-				 * multipartFile.transferTo(destFile);
-				 */
 				String path = fdfsService.upload(multipartFile);
 				pathList.add(path);
 			} else {
@@ -268,19 +208,12 @@ public class ProductController extends BaseController {
 			}
 		}
 		product.setVideoUrl(pathList.get(0));
-		product.setPicHDUrl(pathList.get(1));
-		product.setPicLDUrl(pathList.get(2));
+		product.setPicLDUrl(pathList.get(1));
 		// 保存路径
 		proService.saveFileUrl(product);
 
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("add product ... ", sessionInfo);
-		// } catch (Exception e) {
-		// SessionInfo sessionInfo = getCurrentInfo(request);
-		// Log.error("ProductController method:save() -- save product error
-		// ...",sessionInfo);
-		// e.printStackTrace();
-		// }
 	}
 
 	@RequestMapping(value = "/product/update", method = RequestMethod.POST)
@@ -305,53 +238,9 @@ public class ProductController extends BaseController {
 		final List<String> pathList = new ArrayList<String>(); // 路径集合
 
 		try {
-			// 视频文件全路径
-			// final String videoPath = FILE_PROFIX + PRODUCT_VIDEO_PATH;
-
-			// 图片文件全路径
-			// final String imagePath = FILE_PROFIX + PRODUCT_IMAGE_PATH;
-
-			/*
-			 * File videoDir = new File(videoPath); File imageDir = new
-			 * File(imagePath); if (!videoDir.exists()) videoDir.mkdir(); if
-			 * (!imageDir.exists()) imageDir.mkdir();
-			 */
-
 			for (int i = 0; i < uploadFiles.length; i++) {
 				final MultipartFile multipartFile = uploadFiles[i];
 				if (!multipartFile.isEmpty()) {
-					// file字段 如果不为空,说明 更改了上传文件
-					// 分组保存video、image
-					/*
-					 * final String multipartFileName =
-					 * multipartFile.getOriginalFilename(); final String extName
-					 * = FileUtils.getExtName(multipartFileName, "."); final
-					 * short fileType = FileUtils.divideIntoGroup(extName,
-					 * ALLOW_IMAGE_TYPE, ALLOW_VIDEO_TYPE); final StringBuffer
-					 * fileName = new StringBuffer(); fileName.append("product"
-					 * + productId); fileName.append("-"); final Calendar
-					 * calendar = new GregorianCalendar();
-					 * fileName.append(calendar.get(Calendar.YEAR));
-					 * fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ?
-					 * "0" + (calendar.get(Calendar.MONTH) + 1) :
-					 * (calendar.get(Calendar.MONTH) + 1));
-					 * fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10
-					 * ? "0" + calendar.get(Calendar.DAY_OF_MONTH) :
-					 * calendar.get(Calendar.DAY_OF_MONTH));
-					 * fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
-					 * fileName.append(calendar.get(Calendar.MINUTE));
-					 * fileName.append(calendar.get(Calendar.SECOND));
-					 * fileName.append(calendar.get(Calendar.MILLISECOND));
-					 * fileName.append(i); fileName.append(".");
-					 * fileName.append(extName); String path = ""; switch
-					 * (fileType) { case 0: // video path += PRODUCT_VIDEO_PATH
-					 * + "/" + fileName.toString(); break; case 1: // image path
-					 * += PRODUCT_IMAGE_PATH + "/" + fileName.toString(); break;
-					 * case 2: // other throw new RuntimeException(
-					 * "file type error ..."); } File destFile = new
-					 * File(FILE_PROFIX + path);
-					 * multipartFile.transferTo(destFile);
-					 */
 					String path = fdfsService.upload(multipartFile);
 					pathList.add(path);
 				} else {
@@ -360,8 +249,7 @@ public class ProductController extends BaseController {
 				}
 			}
 			product.setVideoUrl(pathList.get(0));
-			product.setPicHDUrl(pathList.get(1));
-			product.setPicLDUrl(pathList.get(2));
+			product.setPicLDUrl(pathList.get(1));
 
 			proService.update(product);
 
@@ -376,10 +264,7 @@ public class ProductController extends BaseController {
 						case 0: // videoFile
 							path = originalProduct.getVideoUrl();
 							break;
-						case 1: // picHDFile
-							path = originalProduct.getPicHDUrl();
-							break;
-						case 2: // picLDFile
+						case 1: // picLDFile
 							path = originalProduct.getPicLDUrl();
 							break;
 						default:
@@ -387,7 +272,6 @@ public class ProductController extends BaseController {
 						}
 						if (path != null && !"".equals(path)) {
 							fdfsService.delete(path);
-							// FileUtils.deleteFile(FILE_PROFIX + path);
 						}
 					}
 				}

@@ -105,9 +105,7 @@
             closed="true" buttons="#dlg-buttons" title="作品信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input id="productId" name="productId" type="hidden" />
-	        	<input id="sessionId" name="sessionId" type="hidden" />
-	        	<input id="visible" name="visible" type="hidden" />
-	        	
+	        	<input id="visible" name="visible" type="hidden"/>
 	            <div class="online">
 					<div class="lable l-width">项目名称</div>
 					<div class="d-float f-width">
@@ -118,11 +116,11 @@
 				<div class="online">
 					<div class="lable l-width">项目类型</div>
 					<div class="d-float f-width1">
-						<input id="productType" name="productType" class="p-textbox-small" style="width: 144px;height: 30px;"/>
+						<input id="productType" name="productType" required="true" class="p-textbox-small" style="width: 144px;height: 30px;"/>
 					</div>
 					<div class="lable-right l-width">所属团队</div>
 					<div class="d-float f-width1">
-						<input id="teamId" name="teamId" class="p-textbox-small" style="width: 144px;height: 30px;"/>
+						<input id="teamId" name="teamId" required="true" class="p-textbox-small" style="width: 144px;height: 30px;"/>
 					</div>
 				</div>
 				
@@ -134,7 +132,7 @@
 				<div class="online">
 					<div class="lable l-width">展示图文</div>
 					<div class="d-float f-width1">
-						<select name="showType" class="easyui-combobox" editable="false">
+						<select name="showType" id='showType' class="easyui-combobox" editable="false">
 							<option value="1" selected>展示</option>
 							<option value="0">不展示</option>
 						</select>
@@ -152,7 +150,7 @@
 					</div>
 					<div class="lable-right l-width">创作时间</div>
 					<div class="d-float f-width1">
-						<input class="textbox" name="creationTime" id = "creationTime" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly"/>
+						<input class="textbox" name="creationTime" required="true" id = "creationTime" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly"/>
 					</div>
 				</div>
 				
@@ -162,15 +160,6 @@
 						<input type="file" id="videoFile" name="uploadFiles" class="p-file" />
 					</div>
 				</div>
-				
-				
-				<div class="online">
-					<div class="lable l-width">缩略图</div>
-					<div class="d-float f-width">
-						<input type="file" id="picHDFile" name="uploadFiles" class="p-file" />
-					</div>
-				</div>
-				
 				<div class="online">
 					<div class="lable l-width">封面图片</div>
 					<div class="d-float f-width">
@@ -181,7 +170,7 @@
 				<div class="online">
 					<div class="lable l-width">标签</div>
 					<div class="d-float f-width1">
-						<input type="text" id="tags" name="tags" class="easyui-textbox" />
+						<input type="text" id="tags" name="tags" required="true" class="easyui-textbox" />
 					</div>
 					
 					<div class="lable-right l-width">赞值</div>

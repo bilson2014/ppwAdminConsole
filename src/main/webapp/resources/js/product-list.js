@@ -1,7 +1,6 @@
 var editing ; //判断用户是否处于编辑状态
 var formUrl;
 var datagrid;
-var sessionId;
 var editor;
 $.base64.utf8encode = true;
 editorBeReady("videoDescription");
@@ -170,17 +169,6 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'picHDUrl' ,
-						title : '缩略图' ,
-						align : 'center' ,
-						width : 180,
-						editor : {
-							type : 'validatebox' ,
-							options : {
-								required : false 
-							}
-						}
-					},{
 						field : 'picLDUrl' ,
 						title : '海报' ,
 						align : 'center' ,
@@ -215,11 +203,6 @@ $().ready(function(){
 								required : false 
 							}
 						}
-					},{
-						field : 'sessionId' ,
-						title : '文件夹编号' ,
-						align : 'center' ,
-						width : 80
 					},{
 						field : 'creationTime' ,
 						title : '作品创作时间' ,
@@ -260,12 +243,7 @@ $().ready(function(){
 				$('#productPicture').addClass('hide');
 				$('#youku-player').hide();
 				$('#productVideo').show('fast');
-				//modify by wlc 2016-11-4 10:58:08
-				//修改为dfs路径 begin
-				//var videoName = getFileName(value);
-				//var videoPath = getHostName() + '/product/video/' + videoName;
 				var videoPath = getDfsHostName() +  value;
-				//修改为dfs路径end
 				destroyPlayer('youku-player');// 销毁优酷播放器
 				$('#productVideo').attr('src',videoPath);
 				
@@ -275,42 +253,13 @@ $().ready(function(){
 					$('#productPicture').attr('src','');
 					$('#youku-player').hide('fast');
 				});
-			}else if(field == 'picHDUrl'){
-				// HDPicture
-				$('#picture-condition').removeClass('hide');
-				$('#productPicture').removeClass('hide');
-				$('#productVideo').addClass('hide');
-				$('#youku-player').hide('fast');
-				$('#productVideo').hide('fast');
-				
-				//modify by wlc 2016-11-4 16:59:20
-				//修改为fdfs路径 begin
-				//var imgName = getFileName(value);
-				//var imgPath = getHostName() + '/product/img/' + imgName;
-				var imgPath = getDfsHostName() + value;
-				//修改为fdfs路径 end
-				destroyPlayer('youku-player');// 销毁优酷播放器
-				$('#productPicture').attr('src',imgPath);
-				
-				$('#p-cancel').on('click',function(){
-					$('#picture-condition').addClass('hide');
-					$('#productVideo').attr('src','');
-					$('#productPicture').attr('src','');
-					$('#youku-player').hide('fast');
-				});
 			}else if(field == 'picLDUrl'){
-				// LOWPicture
 				$('#picture-condition').removeClass('hide');
 				$('#productPicture').removeClass('hide');
 				$('#productVideo').addClass('hide');
 				$('#youku-player').hide('fast');
 				$('#productVideo').hide('fast');
-				//modify by wlc 2016-11-4 16:59:20
-				//修改为fdfs路径 begin
-				//var imgName = getFileName(value);
-				//var imgPath = getHostName() + '/product/img/' + imgName;
 				var imgPath = getDfsHostName() + value;
-				//修改为fdfs路径 end
 				destroyPlayer('youku-player');// 销毁优酷播放器
 				$('#productPicture').attr('src',imgPath);
 				
@@ -325,12 +274,10 @@ $().ready(function(){
 				$('#picture-condition').removeClass('hide');
 				$('#productVideo').removeClass('hide');
 				$('#productPicture').addClass('hide');
-				
 				$('#productVideo').hide('fast');
 				$('#youku-player').show('fast');
 				destroyPlayer('youku-player');// 销毁优酷播放器
 				makePlayer('youku-player',value);
-				
 				$('#p-cancel').on('click',function(){
 					$('#picture-condition').addClass('hide');
 					$('#productVideo').attr('src','');
@@ -350,9 +297,7 @@ var product = {
 		$('#search-teamName').combobox({
 			url : getContextPath() + '/portal/product/init',
 			//valueField : 'teamId',
-			//modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 begin 
 			valueField : 'teamName',
-			//modify by wanglc 2016-6-30 12:54:21 团队搜索模糊查询 end
 			textField : 'teamName',
 			filter: function(q, row){
 				if(row.teamName == null)
@@ -407,19 +352,11 @@ function createEditor(name){
 //增加
 function addFuc(){
 	$('#fm').form('clear');
-	
 	formUrl = getContextPath() + '/portal/product/save';
-	// 新增时，首先获取SESSIONID
-	loadData(function(pData){
-		
-		sessionId = pData.sessionId;
-		$('input[name="sessionId"]').val(sessionId);
-		
-		openDialog(null);
-		
-	}, getContextPath() + '/portal/product/sessionId', null);
-	
+	openDialog(null);
 	$('input[name="productId"]').val(0);
+	$('input[name="visible"]').val(1);
+	$('#showType').combobox('setValue','1');
 }
 
 // 修改
@@ -486,6 +423,12 @@ function save(){
 	$('#fm').form('submit',{
 		url : formUrl,
 		onSubmit : function() {
+			//创作时间必填
+			var creationTime = $("#creationTime").val();
+			if(creationTime==null&&creationTime==undefined&&creationTime==''){
+				$.message('请填写创作时间!');
+				return false;
+			}
 			var flag = $(this).form('validate');
 			if(!flag){
 				progressClose();

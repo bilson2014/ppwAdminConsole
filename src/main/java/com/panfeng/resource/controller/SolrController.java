@@ -182,7 +182,6 @@ public class SolrController extends BaseController {
 			//condition = HanlpUtil.segment(condition);
 			
 			final SolrQuery query = new SolrQuery();
-			/*query.set("defType", "dismax");*/
 			query.set("qf", "productName^2 tags^1.5 teamName^1.2 pDescription^1");
 			if("*".equals(condition)){
 				// 查询全部
@@ -296,7 +295,6 @@ public class SolrController extends BaseController {
 	public List<Solr> getMoreProduct(@RequestBody final SolrView solrView, final HttpServletRequest request) {
 		final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
 		final SolrQuery query = new SolrQuery();
-		// query.set("qf", "tags^10");
 		query.set("q.alt", "*:*");
 		query.set("defType", "edismax");
 		if(StringUtils.isNotBlank(solrView.getCondition())){
