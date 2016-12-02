@@ -103,7 +103,7 @@ public class ManagerSmsEvent extends EventBase {
 				param[0] = employee.getEmployeeRealName();
 				param[1] = "《" + indentProject.getProjectName() + "》";
 				param[2] = "【" + task.getName() + "】";
-				smsMQService.sendMessage("134601", employee.getPhoneNumber(), param);
+				//smsMQService.sendMessage("134601", employee.getPhoneNumber(), param);
 			}
 		}
 	}

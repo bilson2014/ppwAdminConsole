@@ -105,7 +105,8 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		IndentProject indentProject = indentProjectService
 				.getRedundantProject(new IndentProject(indentFlow.getIfIndentId()));
 		Task task = activitiEngineService.getCurrentTask(processId);
-		indentProject.setTask(ActivitiTask.TaskToActivitiTask(task));
+		if (task != null)
+			indentProject.setTask(ActivitiTask.TaskToActivitiTask(task));
 
 		LinkedList<String> fields = fillerParam.getFields();
 		LinkedList<String> relevantPersons = fillerParam.getRelevantPersons();
@@ -236,7 +237,12 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 			result = indentProject.getUserPhone();
 			break;
 		case currentNode:
-			result = indentProject.getTask().getName();
+			ActivitiTask task = indentProject.getTask();
+			if (task != null)
+				result = task.getName();
+			else
+				result = "";
+
 			break;
 		case projectName:
 			result = indentProject.getProjectName();
