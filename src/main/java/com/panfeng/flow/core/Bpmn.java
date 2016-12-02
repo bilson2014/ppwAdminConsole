@@ -38,18 +38,20 @@ public class Bpmn {
 	}
 
 	/* 开始节点 */
-	protected static StartEvent createStartEvent() {
+	protected static StartEvent createStartEvent(String documentation) {
 		StartEvent startEvent = new StartEvent();
 		startEvent.setId("startEvent");
 		startEvent.setName("Start");
+		startEvent.setDocumentation(documentation);
 		return startEvent;
 	}
 
 	/* 结束节点 */
-	protected static EndEvent createEndEvent() {
+	protected static EndEvent createEndEvent(String documentation) {
 		EndEvent endEvent = new EndEvent();
 		endEvent.setId("endEvent");
 		endEvent.setName("End");
+		endEvent.setDocumentation(documentation);
 		return endEvent;
 	}
 

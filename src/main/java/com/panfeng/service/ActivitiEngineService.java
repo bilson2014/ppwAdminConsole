@@ -67,4 +67,5 @@ public interface ActivitiEngineService {
 
 	void stopProcess(String processInstanceId);
 
+	void executeStartEvent(SessionInfo sessionInfo,String flowId);
 }

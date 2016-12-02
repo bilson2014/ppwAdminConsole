@@ -39,16 +39,16 @@ public class ProjectController extends BaseController {
 	@Autowired
 	private IndentProjectService indentProjectService = null;
 
-//	@Autowired
-//	private IndentActivitiService activitiService = null;
+	// @Autowired
+	// private IndentActivitiService activitiService = null;
 
 	@Autowired
 	private IndentResourceService resourceService = null;
 
 	@RequestMapping("/save")
-	public Boolean save(@RequestBody final IndentProject indentProject) {
-
-		return indentProjectService.save(indentProject);
+	public Boolean save(@RequestBody final IndentProject indentProject, HttpServletRequest request) {
+		SessionInfo currentInfo = getCurrentInfo(request);
+		return indentProjectService.save(indentProject, currentInfo);
 	}
 
 	@RequestMapping("/flow-index")
@@ -67,6 +67,7 @@ public class ProjectController extends BaseController {
 		final List<IndentProject> list = indentProjectService.findProjectList(indentProject);
 		return list;
 	}
+
 	@RequestMapping("/phone-project")
 	public List<IndentProject> getPhoneProject(@RequestBody final IndentProject indentProject) {
 		final List<IndentProject> list = indentProjectService.findProjectListByPhone(indentProject);
@@ -85,17 +86,17 @@ public class ProjectController extends BaseController {
 	}
 
 	@RequestMapping("/update-indentProject")
-	public boolean updateIndentProject(@RequestBody final IndentProject indentProject,HttpServletRequest request) {
+	public boolean updateIndentProject(@RequestBody final IndentProject indentProject, HttpServletRequest request) {
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update indentProject ...",sessionInfo);
-		return indentProjectService.updateIndentProject(indentProject,false);
+		Log.error("update indentProject ...", sessionInfo);
+		return indentProjectService.updateIndentProject(indentProject, false);
 	}
-	
+
 	@RequestMapping("/update-synergyProject")
-	public boolean updateSynergyProject(@RequestBody final IndentProject indentProject,HttpServletRequest request) {
+	public boolean updateSynergyProject(@RequestBody final IndentProject indentProject, HttpServletRequest request) {
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update indentProject ...",sessionInfo);
-		return indentProjectService.updateIndentProject(indentProject,true);
+		Log.error("update indentProject ...", sessionInfo);
+		return indentProjectService.updateIndentProject(indentProject, true);
 	}
 
 	@RequestMapping("/getProjectTags")
@@ -108,9 +109,9 @@ public class ProjectController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/cancelProject")
-	public boolean cancelProject(@RequestBody final IndentProject indentProject,HttpServletRequest request) {
+	public boolean cancelProject(@RequestBody final IndentProject indentProject, HttpServletRequest request) {
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("cancelProject ...",sessionInfo);
+		Log.error("cancelProject ...", sessionInfo);
 		return indentProjectService.cancelProject(indentProject);
 	}
 
@@ -175,17 +176,17 @@ public class ProjectController extends BaseController {
 	}
 
 	@RequestMapping("/update")
-	public long update(@RequestBody final IndentProject project,HttpServletRequest request) {
+	public long update(@RequestBody final IndentProject project, HttpServletRequest request) {
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update IndentProject ...",sessionInfo);
+		Log.error("update IndentProject ...", sessionInfo);
 		final long ret = indentProjectService.update(project);
 		return ret;
 	}
-	
+
 	@RequestMapping("/delete/project")
-	public void deleteProject(long[] ids,HttpServletRequest request) {
+	public void deleteProject(long[] ids, HttpServletRequest request) {
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("delete IndentProject ...",sessionInfo);
+		Log.error("delete IndentProject ...", sessionInfo);
 		if (ValidateUtil.isValid(ids)) {
 			for (final long id : ids) {
 				final IndentProject project = new IndentProject();
@@ -198,7 +199,8 @@ public class ProjectController extends BaseController {
 	}
 
 	@RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
-	public long updateInfo(final IndentProject project, String user_name, String ratio, String synergyid,HttpServletRequest request) {
+	public long updateInfo(final IndentProject project, String user_name, String ratio, String synergyid,
+			HttpServletRequest request) {
 		// add by wanglc,2016-06-23 10:00 begin
 		// -> 增加了3个参数,user_name,synergyid和ratio,用于后台修改
 		List<Synergy> list = new ArrayList<Synergy>();
@@ -232,23 +234,24 @@ public class ProjectController extends BaseController {
 
 		project.setSynergys(list);
 		// add by wanglc,2016-06-23 10:30 end
-//		if (project.getState() == 3) { // 暂停动作同时调用工作流引擎暂停
-//			activitiService.suspendProcess(project,true);
-//		}
-//
-//		// 如果之前项目状态为暂停，那么应该启动引擎
-//		if (project.getState() == 0) {
-//			final IndentProject originalProject = indentProjectService.getProjectInfo(project);
-//			if (originalProject != null) {
-//				if (originalProject.getState() == 3) { // 之前项目状态为3，那么恢复流程
-//					activitiService.resumeProcess(project,true);
-//				}
-//			}
-//		}
+		// if (project.getState() == 3) { // 暂停动作同时调用工作流引擎暂停
+		// activitiService.suspendProcess(project,true);
+		// }
+		//
+		// // 如果之前项目状态为暂停，那么应该启动引擎
+		// if (project.getState() == 0) {
+		// final IndentProject originalProject =
+		// indentProjectService.getProjectInfo(project);
+		// if (originalProject != null) {
+		// if (originalProject.getState() == 3) { // 之前项目状态为3，那么恢复流程
+		// activitiService.resumeProcess(project,true);
+		// }
+		// }
+		// }
 
 		final long ret = indentProjectService.update(project);
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update IndentProject ...",sessionInfo);
+		Log.error("update IndentProject ...", sessionInfo);
 		return ret;
 	}
 
@@ -267,8 +270,9 @@ public class ProjectController extends BaseController {
 	}
 
 	@RequestMapping("/saveInfo")
-	public Boolean saveInfo(final IndentProject indentProject, String user_name, String ratio,HttpServletRequest request) {
-		if(null!=user_name && null != ratio){
+	public Boolean saveInfo(final IndentProject indentProject, String user_name, String ratio,
+			HttpServletRequest request) {
+		if (null != user_name && null != ratio) {
 			List<Synergy> list = new ArrayList<Synergy>();
 			String[] users = user_name.split(",");
 			String[] ratios = ratio.split(",");
@@ -281,12 +285,12 @@ public class ProjectController extends BaseController {
 			indentProject.setSynergys(list);
 		}
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("save IndentProject ...",sessionInfo);
-		return indentProjectService.save(indentProject);
+		Log.error("save IndentProject ...", sessionInfo);
+		return indentProjectService.save(indentProject, sessionInfo);
 	}
 
 	@RequestMapping("/delete")
-	public long delete(final long[] ids,HttpServletRequest request) {
+	public long delete(final long[] ids, HttpServletRequest request) {
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		if (ValidateUtil.isValid(ids)) {
 			for (final long id : ids) {
@@ -298,7 +302,7 @@ public class ProjectController extends BaseController {
 				indentProjectService.cancelProject(project);
 			}
 		}
-		Log.error("delete IndentProjects ...  ids:"+ids.toString(),sessionInfo);
+		Log.error("delete IndentProjects ...  ids:" + ids.toString(), sessionInfo);
 		return 1l;
 	}
 
@@ -344,11 +348,11 @@ public class ProjectController extends BaseController {
 			view.setBegin(0);
 			view.setLimit(999999999l);
 			List<IndentProject> list = indentProjectService.listWithPagination(view);
-			//indentProjectService.getReport(list, outputStream);
-			//modify by wanglc 2016-9-19 15:46:08 begin
-			//-->修改导出方法,加快导出速度 
+			// indentProjectService.getReport(list, outputStream);
+			// modify by wanglc 2016-9-19 15:46:08 begin
+			// -->修改导出方法,加快导出速度
 			indentProjectService.getReportForExport(list, outputStream);
-			//modify by wanglc 2016-9-19 15:46:08 end
+			// modify by wanglc 2016-9-19 15:46:08 end
 			if (outputStream != null) {
 				outputStream.flush();
 				outputStream.close();
@@ -399,9 +403,9 @@ public class ProjectController extends BaseController {
 		return indentProjectService.getSynergys(indentProject);
 	}
 	// -------------------------------- 验证流程资源完整度------------------------------
-	
-//	public boolean verifyIntegrity(){
-//		
-//		return true;
-//	}
+
+	// public boolean verifyIntegrity(){
+	//
+	// return true;
+	// }
 }
