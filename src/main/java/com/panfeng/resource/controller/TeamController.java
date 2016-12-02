@@ -800,8 +800,12 @@ public class TeamController extends BaseController {
 
 	@RequestMapping("/team/static/data/add/account")
 	public boolean addAccount(@RequestBody final Team team, HttpServletRequest request) {
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		if(null != sessionInfo){
+			team.setTeamId(sessionInfo.getReqiureId());
+		}
 		long count = service.updateTeamAccount(team);
-		if (count > 0) {
+		if (count >= 0) {
 			Team t = service.findTeamById(team.getTeamId());
 			sessionService.removeSession(request);
 			initSessionInfo(t, request);

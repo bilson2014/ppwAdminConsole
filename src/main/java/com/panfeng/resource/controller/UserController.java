@@ -163,15 +163,11 @@ public class UserController extends BaseController {
 			final HttpServletResponse response) {
 		User orignUser = null;
 		if (user != null) {
-			// modify by wanglc 2016-7-13 14:36:39 添加用户名密码登录begin
-			// orignUser = userService.findUserByAttr(user);
-			// 不为空
 			if (user.getLoginType().equals(loginType.phone.getKey())) {
 				orignUser = userService.findUserByAttr(user);
 			} else if (user.getLoginType().equals(loginType.account.getKey())) {
 				orignUser = userService.findUserByLoginNameAndPwd(user);
 			}
-			// modify by wanglc 2016-7-13 14:36:39 添加用户名密码登录begin
 			if (orignUser != null) {
 				// 清空当前session
 				sessionService.removeSession(request);

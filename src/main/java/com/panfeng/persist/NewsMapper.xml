@@ -107,12 +107,8 @@
 	</update>
 	<select id="RecommendNews" resultType="News">
 		<![CDATA[
-			SELECT id ,title,discription ,content ,
-				create_time createTime,
-				update_time updateTime,
-				sort_index sortIndex,
-				`status`
-				FROM NEWS WHERE 1=1 AND `status` = 1
+			SELECT id ,title,discription 
+				FROM NEWS WHERE status = 1
 			 ORDER BY create_time DESC LIMIT 0,6
 		]]>
 	</select>
