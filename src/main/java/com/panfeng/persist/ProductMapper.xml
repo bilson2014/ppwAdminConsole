@@ -110,15 +110,15 @@
 				SESSIONID,
 				CREATIONTIME
 			]]>
-			<if test="videoUrl != null and videoUrl != ''">
+		<if test="videoUrl != null and videoUrl != ''">
 			,VIDEOURL
-			</if>
-			<if test="picHDUrl != null and picHDUrl != ''">
+		</if>
+		<if test="picHDUrl != null and picHDUrl != ''">
 			,picHDUrl
-			</if>
-			<if test="picLDUrl != null and picLDUrl != ''">
+		</if>
+		<if test="picLDUrl != null and picLDUrl != ''">
 			,picLDUrl
-			</if>
+		</if>
 			<![CDATA[
 			) VALUES(
 				#{videoDescription},
@@ -137,15 +137,15 @@
 				#{sessionId},
 				DATE_FORMAT(#{creationTime},'%Y-%m-%d')
 			]]>
-			<if test="videoUrl != null and videoUrl != ''">
+		<if test="videoUrl != null and videoUrl != ''">
 			,#{videoUrl}
-			</if>
-			<if test="picHDUrl != null and picHDUrl != ''">
+		</if>
+		<if test="picHDUrl != null and picHDUrl != ''">
 			,#{picHDUrl}
-			</if>
-			<if test="picLDUrl != null and picLDUrl != ''">
+		</if>
+		<if test="picLDUrl != null and picLDUrl != ''">
 			,#{picLDUrl}
-			</if>
+		</if>
 		<![CDATA[
 			)
 		]]>
@@ -481,36 +481,57 @@
 
 	<select id="loadProductByTeamOrder" resultType="Product">
 		<![CDATA[
-			SELECT pro.PRODUCTID AS productId,
-				   pro.VIDEOURL AS videoUrl,
-				   pro.VIDEODESCRIPTION AS videoDescription,
-				   pro.PDESCRIPTION AS pDescription,
-				   pro.PRODUCTNAME AS productName,
-				   pro.PICHDURL AS picHDUrl,
-				   pro.PICLDURL AS picLDUrl,
-				   pro.VISIBLE AS visible,
-				   t.TEAMPHOTOURL AS teamPhotoUrl,
-				   pro.VIDEOLENGTH AS videoLength,
-				   pro.TEAMID AS teamId,
-				   pro.HRET AS hret,
-				   pro.TAGS AS tags,
-				   pro.SESSIONID AS sessionId,
-				   pro.SHOWTYPE AS showType,
-				   t.TEAMNAME AS teamName,
-				   t.TEAMDESCRIPTION AS teamDescription,
-				   pro.MASTERWORK AS masterWork,
-				   s.SERVICEPRICE AS servicePrice,
-				   s.SERVICEREALPRICE AS serviceRealPrice,
-				   DATE_FORMAT(IF(creationTime IS NULL ,uploadDate,creationTime),'%Y-%m-%d') AS creationTime
-			FROM PRODUCT pro
-			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
-			LEFT JOIN SERVICE s ON s.PRODUCTID = pro.PRODUCTID
-			WHERE 1 = 1
-				AND pro.FLAG = 1
-				AND pro.VISIBLE = 0
-				AND t.FLAG = 1
-				AND t.TEAMID = ${teamId} 
-			ORDER BY creationTime DESC
+			SELECT
+				*
+			FROM
+				(
+					SELECT
+						pro.PRODUCTID AS productId,
+						pro.VIDEOURL AS videoUrl,
+						pro.VIDEODESCRIPTION AS videoDescription,
+						pro.PDESCRIPTION AS pDescription,
+						pro.PRODUCTNAME AS productName,
+						pro.PICHDURL AS picHDUrl,
+						pro.PICLDURL AS picLDUrl,
+						pro.VISIBLE AS visible,
+						t.TEAMPHOTOURL AS teamPhotoUrl,
+						pro.VIDEOLENGTH AS videoLength,
+						pro.TEAMID AS teamId,
+						pro.HRET AS hret,
+						pro.TAGS AS tags,
+						pro.SESSIONID AS sessionId,
+						pro.SHOWTYPE AS showType,
+						t.TEAMNAME AS teamName,
+						t.TEAMDESCRIPTION AS teamDescription,
+						pro.MASTERWORK AS masterWork,
+						s.SERVICEPRICE AS servicePrice,
+						s.SERVICEREALPRICE AS serviceRealPrice,
+						s.updateDate,
+						DATE_FORMAT(
+			
+							IF (
+								creationTime IS NULL,
+								uploadDate,
+								creationTime
+							),
+							'%Y-%m-%d'
+						) AS creationTime
+					FROM
+						PRODUCT pro
+					LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
+					LEFT JOIN SERVICE s ON s.PRODUCTID = pro.PRODUCTID
+					WHERE
+						1 = 1
+					AND pro.FLAG = 1
+					AND pro.VISIBLE = 0
+					AND t.FLAG = 1
+					AND t.TEAMID = ${teamId}
+					ORDER BY
+						s.updateDate DESC,
+						creationTime DESC
+				) AS p
+			GROUP BY
+				p.productId
 		]]>
 	</select>
 

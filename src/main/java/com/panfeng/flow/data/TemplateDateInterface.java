@@ -20,7 +20,7 @@ public interface TemplateDateInterface<F, T> {
 	 * @param list
 	 * @return
 	 */
-	F fillData(List<String> list, T t, EventType eventType);
+	F fillData(FillerParam fillerParam, T t, EventType eventType);
 
 	Map<String, String> personnel();
 

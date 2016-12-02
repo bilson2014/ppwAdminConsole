@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
+import com.panfeng.flow.data.FillerParam;
 import com.panfeng.flow.data.TemplateDateInterface;
 import com.panfeng.flow.taskchain.EventBase;
 import com.panfeng.flow.taskchain.EventType;
@@ -88,10 +89,10 @@ public class TemplateDataManageImpl implements ApplicationListener<ApplicationEv
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <F, T> F fillData(List<String> list, String templateDataKey, T t,EventType eventType) {
+	public <F, T> F fillData(FillerParam fillerParam, String templateDataKey, T t,EventType eventType) {
 		if (ValidateUtil.isValid(templateDataKey)) {
 			TemplateDateInterface<F, T> td = templateData.get(templateDataKey);
-			return td.fillData(list, t,eventType);
+			return td.fillData(fillerParam, t,eventType);
 		}
 		return null;
 	}

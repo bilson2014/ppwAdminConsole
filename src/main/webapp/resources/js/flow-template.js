@@ -2,6 +2,8 @@ var editing ; //判断用户是否处于编辑状态
 var flag  ;	  //判断新增和修改方法
 var resourceTree;
 var datagrid;
+var createTemplateDefaultJson=$.parseJSON('[{"id":"startEvent","name":"Start","nodeType":null,"index":-1,"allowSkip"'+
+		':false,"description":"startEvent"},{"id":"endEvent","name":"End","nodeType":null,"index":-2,"allowSkip":false,"description":"endEvent"}]');
 $().ready(function(){
 		
 	// 初始化DataGrid
@@ -68,10 +70,46 @@ function reviewImages(d_deployment_id){
 }
 //增加
 function addFuc(){
-	 $('#editTemplate').removeClass('hide');
 	 $('#templateId').textbox('textbox').attr('readonly',false);
 	 $('#templateform').form('clear');
-	  //获取当前页的记录数  
+	 createFlowNodeView();
+	 $('#editTable').datagrid("loadData",createTemplateDefaultJson);
+	 openDialog('dlg');
+}
+// 修改
+function editFuc(){
+	var rows = datagrid.datagrid('getSelections');
+	$('#templateId').textbox('textbox').attr('readonly',true);
+	$('#templateform').form('clear');
+	if(rows.length == 1){
+		var templateId = rows[0].d_id+'';
+		syncLoadData(function(res){
+			 createFlowNodeView();
+			 $('#editTable').datagrid("loadData",res.flowNodes);
+			 $('#editTable').datagrid('enableDnd');
+			 openDialog('dlg');
+		}, '/get/template', $.toJSON({
+			"d_id" : templateId
+		}));
+	    $("#templateId").textbox('setValue',rows[0].id);
+	    $("#templateName").textbox('setValue',rows[0].name);
+	    $("#d_id").val(templateId);
+	} else {
+		$.message('只能选择一条记录进行修改!');
+	}
+}
+
+function createFlowNodeView(){
+	$('#editTemplate').removeClass('hide');
+	// cache treeView data
+	var tree;
+	var tree2;
+	syncLoadData(function(msg){
+		tree = msg;
+	}, getContextPath() + '/get/event/tree',null);
+	syncLoadData(function(msg){
+		tree2 = msg;
+	}, getContextPath() + '/portal/role/tree2',null);
 		$('#editTable').datagrid({
 			rownumbers : true ,
 			fitColumns : true ,
@@ -89,7 +127,8 @@ function addFuc(){
 								type : 'validatebox' ,
 								options : {
 									required : true , 
-									missingMessage : '请填写角色名!'
+									missingMessage : '请填写角色名!',
+									disabled:true
 								}
 							}
 						},{
@@ -113,7 +152,7 @@ function addFuc(){
 								type : 'combotree' ,
 								options : {
 									valueField: 'id', textField: 'text',
-									url: getContextPath() + '/get/event/tree',
+									data : tree,
 								    multiple: true,
 								    required: true,
 								    panelHeight : 'auto',
@@ -122,25 +161,23 @@ function addFuc(){
 								}
 							},
 							formatter : function(value, row, index) {
-								if(row.events != undefined){
+								if( row.events != undefined){
 									var ids = row.events.split(',');
 									var str = '';
 									var index = 0;
-									syncLoadData(function(msg){
-										if(msg!=null && msg.length >0){
+										if(tree!=null && tree.length >0){
 											for (var int = 0; int < ids.length; int++) {
-												for ( var role in msg) {
-													if(ids[int] == msg[role].id){
+												for ( var role in tree) {
+													if(ids[int] == tree[role].id){
 														if(index ==0)
-															str+=msg[role].text;
+															str+=tree[role].text;
 														else
-															str+=','+msg[role].text;
+															str+=','+tree[role].text;
 														index++;
 													}
 												}
 											}
 										}
-									}, getContextPath() + '/get/event/tree', null);
 								}
 								return str;
 							}
@@ -169,12 +206,10 @@ function addFuc(){
 								type : 'combotree' ,
 								options : {
 									valueField: 'id', textField: 'text',
-									url: getContextPath() + '/portal/role/tree2',
+									data : tree2,
 								    multiple: true,
-								    required: true,
 								    panelHeight : 'auto',
-								    value : null,
-									required : true 
+								    value : null
 								}
 							},formatter : function(value, row, index) {
 								var str = '';
@@ -185,21 +220,19 @@ function addFuc(){
 									assignee =  row.assignee;
 									if(assignee != ''){
 										ids = assignee.split(',');
-										syncLoadData(function(msg){
-											if(msg.length > 0){
+											if(tree2.length > 0){
 												for (var int = 0; int < ids.length; int++) {
-													for ( var role in msg) {
-														if(ids[int] == msg[role].id){
+													for ( var role in tree2) {
+														if(ids[int] == tree2[role].id){
 															if(index ==0)
-																str+=msg[role].text;
+																str+=tree2[role].text;
 															else
-																str+=','+msg[role].text;
+																str+=','+tree2[role].text;
 															index++;
 														}
 													}
 												}
 											}
-										}, getContextPath() + '/portal/role/tree2', null);
 										return str;
 									}
 								}
@@ -219,179 +252,8 @@ function addFuc(){
 								}
 							}
 						}]]
-		});
-	 $('#editTable').datagrid('enableDnd');
-	 openDialog('dlg');
-}
-// 修改
-function editFuc(){
-	var rows = datagrid.datagrid('getSelections');
-	$('#templateId').textbox('textbox').attr('readonly',true);
-	$('#templateform').form('clear');
-	if(rows.length == 1){
-		var templateId = rows[0].d_id+'';
-		syncLoadData(function(res){
-			$('#editTemplate').removeClass('hide');
-			$('#editTable').datagrid({
-				rownumbers : true ,
-				fitColumns : true ,
-				striped : true ,
-				frozenColumns : [[
-				  				{field : 'ck' , checkbox:true}
-				  		]],
-				columns:[[
-							{
-								field : 'id',
-								title : '节点ID',
-								width : 120,
-								align : 'center',
-								editor : {
-									type : 'validatebox' ,
-									options : {
-										required : true , 
-										missingMessage : '请填写角色名!'
-									}
-								}
-							},{
-								field : 'name' ,
-								title : '节点名' ,
-								width : 200,
-								align : 'center',
-								editor : {
-									type : 'validatebox' ,
-									options : {
-										required : true , 
-										missingMessage : '请填写角色名!'
-									}
-								}
-							},{ 
-								field : 'events' ,
-								title : '任务链' ,
-								width : 200,
-								align : 'center',
-								editor : {
-									type : 'combotree' ,
-									options : {
-										valueField: 'id', textField: 'text',
-										url: getContextPath() + '/get/event/tree',
-									    multiple: true,
-									    required: true,
-									    panelHeight : 'auto',
-									    value : null,
-										required : true 
-									}
-								},
-								formatter : function(value, row, index) {
-									if(row.taskChainId!=undefined && row.events != undefined){
-										var ids = row.events.split(',');
-										var str = '';
-										var index = 0;
-										syncLoadData(function(msg){
-											if(msg!=null && msg.length >0){
-												for (var int = 0; int < ids.length; int++) {
-													for ( var role in msg) {
-														if(ids[int] == msg[role].id){
-															if(index ==0)
-																str+=msg[role].text;
-															else
-																str+=','+msg[role].text;
-															index++;
-														}
-													}
-												}
-											}
-										}, getContextPath() + '/get/event/tree', null);
-									}
-									return str;
-								}
-							},{ // TODO
-								field : 'allowSkip' ,
-								title : '允许跳过' ,
-								width : 200,
-								align : 'center',
-								editor : {
-									type : 'combobox' ,
-									options : {
-										required : true , 
-										missingMessage : '请填写角色名!',
-										panelHeight: 'auto',
-										valueField : 'id',
-										textField : 'text',
-										data : [{'id':'true','text':'true'},{'id':'false','text':'false'}]
-									}
-								}
-							},{
-								field : 'assignee' ,
-								title : '控制人' ,
-								width : 200,
-								align : 'center',
-								editor : {
-									type : 'combotree' ,
-									options : {
-										valueField: 'id', textField: 'text',
-										url: getContextPath() + '/portal/role/tree2',
-									    multiple: true,
-									    required: true,
-									    panelHeight : 'auto',
-									    value : null,
-										required : true 
-									}
-								},formatter : function(value, row, index) {
-									var str = '';
-									var ids;
-									var index = 0;
-									var assignee = '';
-									if(row.assignee!=undefined){
-										assignee =  row.assignee;
-										if(assignee != ''){
-											ids = assignee.split(',');
-											syncLoadData(function(msg){
-												if(msg.length > 0){
-													for (var int = 0; int < ids.length; int++) {
-														for ( var role in msg) {
-															if(ids[int] == msg[role].id){
-																if(index ==0)
-																	str+=msg[role].text;
-																else
-																	str+=','+msg[role].text;
-																index++;
-															}
-														}
-													}
-												}
-											}, getContextPath() + '/portal/role/tree2', null);
-											return str;
-										}
-									}
-									return '';
-								}
-							},{ // TODO
-								field : 'description' ,
-								title : '描述' ,
-								width : 200,
-								align : 'center',
-								editor : {
-									type : 'textbox' ,
-									options : {
-										required : true , 
-										missingMessage : '请填写描述!',
-										panelHeight: 'auto'
-									}
-								}
-							}]]
-			});
-			 $('#editTable').datagrid("loadData",res.flowNodes);
-			 $('#editTable').datagrid('enableDnd');
-			 openDialog('dlg');
-		}, '/get/template', $.toJSON({
-			"d_id" : templateId
-		}));
-	    $("#templateId").textbox('setValue',rows[0].id);
-	    $("#templateName").textbox('setValue',rows[0].name);
-	    $("#d_id").val(templateId);
-	} else {
-		$.message('只能选择一条记录进行修改!');
-	}
+					});
+	
 }
 function openDialog(id){
 	$('#' + id).dialog({
@@ -417,9 +279,13 @@ function addFuc2(){
 		//1 先取消所有的选中状态
 		$('#editTable').datagrid('unselectAll');
 		//2追加一行
-		$('#editTable').datagrid('appendRow',{});
+		$('#editTable').datagrid('insertRow',{
+			// 在最后一行之前插入
+			index: $('#editTable').datagrid('getRows').length -1,
+		    row: {}
+		});
 		//3获取当前页的行号
-		editing = $('#editTable').datagrid('getRows').length -1;
+		editing = $('#editTable').datagrid('getRows').length -2;
 		//4开启编辑状态
 		$('#editTable').datagrid('beginEdit', editing);
 	}
@@ -477,6 +343,12 @@ function editFuc2(){
 			editing = $('#editTable').datagrid('getRowIndex' , arr[0]);
 			//开启编辑状态
 			$('#editTable').datagrid('beginEdit',editing);
+			var id = $("#editTable").datagrid('getEditor',{index:0,field:'id'});
+			var name = $("#editTable").datagrid('getEditor',{index:0,field:'name'});
+			if(id.oldHtml == 'startEvent' || id.oldHtml == 'endEvent'){
+				id.target.attr("readonly","readonly");
+				name.target.attr("readonly","readonly");
+			}
 		}
 	}
 }

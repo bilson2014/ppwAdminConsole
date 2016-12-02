@@ -12,7 +12,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.EndEvent;
 import org.activiti.bpmn.model.FlowElement;
+import org.activiti.bpmn.model.StartEvent;
 import org.activiti.bpmn.model.UserTask;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ManagementService;
@@ -121,7 +123,21 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 			pi = runtimeService.startProcessInstanceByKey(processDefinitionKey);
 		else
 			pi = runtimeService.startProcessInstanceByKey(processDefinitionKey, processInstanceBusinessKey);
-		return pi == null ? "" : pi.getProcessInstanceId();
+		if (pi == null) {
+			return "";
+		} else {
+			return pi.getProcessInstanceId();
+		}
+	}
+	
+	public void executeStartEvent(SessionInfo sessionInfo,String flowId){
+		Task currentTask = getCurrentTask(flowId);
+		String processDefinitionId = currentTask.getProcessDefinitionId();
+		FlowTemplate template = getTemplate(processDefinitionId);
+		FlowNode flowNode = template.getFlowNodes().get(0);
+		if (flowNode != null) {
+			taskChainHandler.execute(flowNode.getTaskChainId(), sessionInfo, flowId);
+		}
 	}
 
 	public boolean suspendProcess(String processInstanceId) {
@@ -262,40 +278,56 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 
 	public FlowTemplate getTemplate(String flowTemplateId) {
 		FlowTemplate flowTemplate = new FlowTemplate();
-		List<FlowNode> flowNodes = new LinkedList<>();
+		LinkedList<FlowNode> flowNodes = new LinkedList<>();
+		FlowNode startNode = null;
+		FlowNode endNode = null;
 		BpmnModel model = repositoryService.getBpmnModel(flowTemplateId);
 		if (model != null) {
 			flowTemplate.setId(model.getMainProcess().getId());// 一个模板里只有一个流程
 			flowTemplate.setName(model.getMainProcess().getName());
 			Collection<FlowElement> flowElements = model.getMainProcess().getFlowElements();
-			int index = 0;
+			int index = 1;
 			for (FlowElement flowElement : flowElements) {
 				if (flowElement instanceof UserTask) {
 					UserTask userTask = (UserTask) flowElement;
-					FlowNode flowNode = new FlowNode();
-					flowNode.setflowOptionst(userTask.getDocumentation());
-					flowNode.setId(userTask.getId());
-					flowNode.setName(userTask.getName());
-					List<TaskChainNodesEventLink> linkeds = taskChainMapper
-							.findLinkByTaskChainId(flowNode.getTaskChainId());
-					String str = "";
-					for (int i = 0; i < linkeds.size(); i++) {
-						if (i == 0) {
-							str += linkeds.get(i).getNodeEventId();
-						} else {
-							str += "," + linkeds.get(i).getNodeEventId();
-						}
-					}
+					FlowNode flowNode = createFlowNode(userTask);
 					flowNode.setIndex(index);
-					flowNode.setEvents(str);
 					flowNodes.add(flowNode);
 					index++;
+				} else if (flowElement instanceof StartEvent) {
+					startNode = createFlowNode(flowElement);
+				} else if (flowElement instanceof EndEvent) {
+					endNode = createFlowNode(flowElement);
 				}
 			}
+			startNode.setIndex(0);
+			flowNodes.addFirst(startNode);
+			endNode.setIndex(index);
+			flowNodes.addLast(endNode);
 		}
 		flowTemplate.setD_id(flowTemplateId);
 		flowTemplate.setFlowNodes(flowNodes);
 		return flowTemplate;
+	}
+
+	private FlowNode createFlowNode(FlowElement element) {
+		FlowNode flowNode = new FlowNode();
+		flowNode.setflowOptionst(element.getDocumentation());
+		flowNode.setId(element.getId());
+		flowNode.setName(element.getName());
+		if (flowNode.getTaskChainId() != null) {
+			List<TaskChainNodesEventLink> linkeds = taskChainMapper.findLinkByTaskChainId(flowNode.getTaskChainId());
+			String str = "";
+			for (int i = 0; i < linkeds.size(); i++) {
+				if (i == 0) {
+					str += linkeds.get(i).getNodeEventId();
+				} else {
+					str += "," + linkeds.get(i).getNodeEventId();
+				}
+			}
+			flowNode.setEvents(str);
+		}
+		return flowNode;
 	}
 
 	public BaseMsg createFlowTemplate(FlowTemplate flowTemplate) {
@@ -306,18 +338,22 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 			TaskChain taskChain = new TaskChain();
 			List<NodesEvent> nodesEvents = new ArrayList<>();
 			Long[] ids = flowNode.getEventIds();
-			for (Long id : ids) {
-				NodesEvent ne = new NodesEvent();
-				ne.setNodesEventId(id);
-				nodesEvents.add(ne);
+			if (ids != null) {
+				for (Long id : ids) {
+					NodesEvent ne = new NodesEvent();
+					ne.setNodesEventId(id);
+					nodesEvents.add(ne);
+				}
+				taskChain.setNodesEvents(nodesEvents);
 			}
-			taskChain.setNodesEvents(nodesEvents);
 			if (flowNode.getTaskChainId() != null) {// 更新
 				taskChain.setTaskChainId(flowNode.getTaskChainId());
 				taskChainService.updateNodes(taskChain);
 			} else { // 新建
-				taskChainService.addNodes(taskChain);
-				flowNode.setTaskChainId(taskChain.getTaskChainId());
+				if (nodesEvents.size() > 0) {
+					taskChainService.addNodes(taskChain);
+					flowNode.setTaskChainId(taskChain.getTaskChainId());
+				}
 			}
 		}
 		boolean res = false;
