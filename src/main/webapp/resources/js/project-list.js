@@ -209,7 +209,12 @@ var project = {
 		$('#search-teamId').combobox({
 			url : getContextPath() + '/project/getAllTeam',
 			valueField : 'teamName',
-			textField : 'teamName'
+			textField : 'teamName',
+			filter: function(q, row){
+				if(row.teamName == null)
+					return false;
+				return row.teamName.indexOf(q) >= 0;
+			}
 		});
 		
 		$('#search-customerId').combobox({
@@ -472,6 +477,11 @@ function openDialog(id,data){
 				onSelect : function(record){
 					$('#teamContact').textbox('setValue',record.teamContact);
 					$('#teamPhone').textbox('setValue',record.teamPhone);
+				},
+				filter: function(q, row){
+					if(row.teamName == null)
+						return false;
+					return row.teamName.indexOf(q) >= 0;
 				}
 			});
 			

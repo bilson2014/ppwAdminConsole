@@ -16,13 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.ResourceToken;
 import com.panfeng.resource.model.Solr;
-import com.panfeng.resource.model.Team;
-import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.SolrView;
 import com.panfeng.service.SolrService;
 
@@ -38,120 +34,56 @@ public class SolrController extends BaseController {
 	@Autowired
 	private final SolrService service = null;
 	
-	@RequestMapping("/solr-list")
-	public ModelAndView SolrView(){
-		
-		return new ModelAndView("solr-list");
-	}
-	
-	@RequestMapping("/solr")
-	public DataGrid<Solr> query(@RequestBody final SolrView view){
-		
-		String condition = view.getCondition();
-		//condition = HanlpUtil.segment(condition);
-
-		final SolrQuery query = new SolrQuery();
-		query.set("defType", "dismax");
-		query.set("qf", "productName^4 tags^3 teamName^2 pDescription^1");
-		query.setQuery("productName:" + condition + " tags:" + condition + " teamName:" + condition + " pDescription:" + condition);
-		query.setFields("teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
-		query.setStart(Integer.parseInt(String.valueOf(view.getBegin())));
-		query.setRows(Integer.parseInt(String.valueOf(view.getLimit())));
-		final String priceFq = view.getPriceFq(); // 视频区间筛选条件
-		final String lengthFq = view.getLengthFq(); // 时长区间筛选条件
-		final String itemFq = view.getItemFq(); // 视频类型筛选条件
-		
-		// 如果价格区间为空，则设置为全部
-		if(priceFq == null || "".equals(priceFq)){
-			view.setPriceFq("[0 TO *]");
-		}
-		
-		// 如果时长区间为空，则设置为全部
-		if(lengthFq == null || "".equals(lengthFq)){
-			view.setLengthFq("[0 TO *]");
-		}
-		
-		// 如果视频类型为空，则设置为全部
-		if(itemFq == null || "".equals(itemFq)){
-			view.setItemFq("*");
-		}
-		
-		query.addFilterQuery("price:" + view.getPriceFq());
-		query.addFilterQuery("length:" + view.getLengthFq());
-		query.addFilterQuery("productType:" + view.getItemFq());
-		
-		// 开启高亮
-		query.setHighlight(true);
-		query.addHighlightField("productName,pDescription");
-		query.set("hl.highlightMultiTerm", true);
-		query.setHighlightFragsize(30);
-		query.setHighlightSimplePre("<font color=\"red\">");
-		query.setHighlightSimplePost("</font>");
-		
-		// 设置排序规则-按照价格升序排列
-		//query.setSort("productName", ORDER.desc);
-		final List<Solr> list = service.queryDocs(GlobalConstant.SOLR_URL, query);
-		long total = 0l;
-		if(list != null && !list.isEmpty()){
-			final Solr solr = list.get(0);
-			if(solr != null ){
-				total = solr.getTotal();
-			}
-		}
-		
-		DataGrid<Solr> dataGrid = new DataGrid<Solr>();
-		dataGrid.setRows(list);
-		dataGrid.setTotal(total);
-		return dataGrid;
-	}
-	
 	@RequestMapping("/solr/query")
 	public List<Solr> search(@RequestBody final SolrView view,final HttpServletRequest request){
 		
 		try {
 			final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
-			
 			String condition = URLDecoder.decode(view.getCondition(), "UTF-8");
 			
 			final SolrQuery query = new SolrQuery();
-			query.set("qf", "productName^10 tags^6  teamName^4 pDescription^1");
-			query.set("q.alt", "*:*");
 			query.set("defType", "edismax");
+			query.set("qf", "productName^2.3 tags teamName^0.4");
+			query.set("q.alt", "*:*");
 			
 			if("*".equals(condition)){
 				// 查询全部
-				query.setQuery("*:*");
-			}else {
-				
-				query.setQuery(condition);
+				condition = "";
 			}
-			query.setFields("teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
+			
+			query.setQuery(condition);
+			query.set("pf", "productName tags teamName");
+			query.set("tie", "0.1");
+			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags");
 			query.setStart(Integer.parseInt(String.valueOf(view.getBegin())));
 			query.setRows(Integer.parseInt(String.valueOf(view.getLimit())));
+			
 			// 如果价格区间为空，则设置为全部
-			if(view.getPriceFq() == null || "".equals(view.getPriceFq())){
-				view.setPriceFq("[0 TO *]");
+			if(view.getPriceFq() != null && !"".equals(view.getPriceFq())){
+				query.addFilterQuery("price:" + view.getPriceFq());
 			}
 			
 			// 如果时长区间为空，则设置为全部
-			if(view.getLengthFq() == null || "".equals(view.getLengthFq())){
-				view.setLengthFq("[0 TO *]");
+			if(view.getLengthFq() != null && !"".equals(view.getLengthFq())){
+				query.addFilterQuery("length:" + view.getLengthFq());
 			}
 			
-			// 如果视频类型为空，则设置为全部
-			if(view.getItemFq() == null || "".equals(view.getItemFq())){
-				view.setItemFq("*");
+			// 如果标签为空，则设置为全部
+			if(view.getTagsFq() != null && !"".equals(view.getTagsFq().trim())){
+				// 按空格及,分词
+				String tags = view.getTagsFq();
+				tags = tags.replaceAll("(\\s*)(,|，)(\\s*)", " ");
+				String[] tagArr = tags.split("\\s+");
+				if(tagArr != null) {
+					for (final String tag : tagArr) {
+						query.addFilterQuery("tags:" + tag);
+					}
+				}
 			}
-			
-			query.addFilterQuery("price:" + view.getPriceFq());
-			query.addFilterQuery("length:" + view.getLengthFq());
-			query.addFilterQuery("productType:" + view.getItemFq());
-			// 设置排序规则-按照价格升序排列
-			//query.setSort("productName", ORDER.desc);
 			
 			// 开启高亮
 			query.setHighlight(true);
-			query.addHighlightField("productName,pDescription");
+			query.addHighlightField("productName");
 			query.set("hl.highlightMultiTerm", true);
 			query.setHighlightFragsize(30);
 			query.setHighlightSimplePre("<font color=\"red\">");
@@ -175,40 +107,37 @@ public class SolrController extends BaseController {
 			final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
 			
 			String condition = URLDecoder.decode(view.getCondition(), "UTF-8");
-			//condition = HanlpUtil.segment(condition);
 			
 			final SolrQuery query = new SolrQuery();
-			query.set("qf", "productName^2 tags^1.5 teamName^1.2 pDescription^1");
+			query.set("defType", "edismax");
+			query.set("qf", "productName^2.3 tags teamName^0.4");
+			query.set("q.alt", "*:*");
 			if("*".equals(condition)){
 				// 查询全部
-				query.setQuery("*:*");
-			}else {
-				query.setQuery("productName:" + condition + " tags:" + condition + " teamName:" + condition + " pDescription:" + condition);
+				condition = "";
 			}
+			query.setQuery(condition);
+			query.set("pf", "productName tags teamName");
+			query.set("tie", "0.1");
 			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,pDescription,tags");
 			query.setStart(0);
 			query.setRows(9999);
-			// 如果价格区间为空，则设置为全部
-			if(view.getPriceFq() == null || "".equals(view.getPriceFq())){
-				view.setPriceFq("[0 TO *]");
+			// 如果价格区间不为空，则设置为全部
+			if(view.getPriceFq() != null && !"".equals(view.getPriceFq())){
+				query.addFilterQuery("price:" + view.getPriceFq());
 			}
 			
-			// 如果时长区间为空，则设置为全部
-			if(view.getLengthFq() == null || "".equals(view.getLengthFq())){
-				view.setLengthFq("[0 TO *]");
+			// 如果时长区间不为空，则设置为全部
+			if(view.getLengthFq() != null && !"".equals(view.getLengthFq())){
+				query.addFilterQuery("length:" + view.getLengthFq());
 			}
 			
-			// 如果视频类型为空，则设置为全部
-			if(view.getItemFq() == null || "".equals(view.getItemFq())){
-				view.setItemFq("*");
+			// 如果视频类型不为空，则设置为全部
+			// TODO 手机端改版之后，需要将 视频类型 换成 标签类型
+			if(view.getItemFq() != null || !"".equals(view.getItemFq())){
+				query.addFilterQuery("productType:" + view.getItemFq());
 			}
 			
-			query.addFilterQuery("price:" + view.getPriceFq());
-			query.addFilterQuery("length:" + view.getLengthFq());
-			query.addFilterQuery("productType:" + view.getItemFq());
-			
-			// 设置排序规则-按照价格升序排列
-			//query.setSort("productName", ORDER.desc);
 			if(view.getSequence() != null && !"".equals(view.getSequence())){
 				if(view.getSortord() == 0){ // 升序
 					query.setSort(view.getSequence(), ORDER.asc);
@@ -219,6 +148,7 @@ public class SolrController extends BaseController {
 			
 			// 开启高亮
 			query.setHighlight(true);
+			// TODO 手机端改版之后，高亮部分需要将 pDescription 换成 tags
 			query.addHighlightField("productName,pDescription");
 			query.set("hl.highlightMultiTerm", true);
 			query.setHighlightFragsize(30);
@@ -240,6 +170,7 @@ public class SolrController extends BaseController {
 		if(token != null && !"".equals(token)){
 			try {
 				final ResourceToken resourceToken = (ResourceToken) request.getAttribute("searchResourceToken"); // 访问资源库令牌
+				
 				final String word = URLDecoder.decode(token, "UTF-8");
 				final SolrQuery query = new SolrQuery();
 				query.set("qt", "/suggest");
@@ -262,25 +193,34 @@ public class SolrController extends BaseController {
 		}
 		return null;
 	}
+	
 	// 播放页获取team更多作品
 	@RequestMapping(value = "/product/more", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<Solr> teamMoreProduct(@RequestBody final Team team, final HttpServletRequest request) {
+	public List<Solr> teamMoreProduct(@RequestBody final SolrView view, final HttpServletRequest request) {
 		final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
-		final SolrQuery query = new SolrQuery();
-		query.set("qf", "productName^4 tags^3 teamName^2 pDescription^1");
-		query.setQuery("*:*");
-		query.setFields(
-				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,tags");
-		query.setStart(0);
-		query.setRows(Integer.MAX_VALUE);
-		final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
-		// 移除非team的作品
-		for (int i = 0; i < list.size(); i++) {
-			if (Long.parseLong(list.get(i).getTeamId()) != team.getTeamId()) {
-				list.remove(i);
+		try {
+			String condition = URLDecoder.decode(view.getCondition(), "UTF-8");
+			final SolrQuery query = new SolrQuery();
+			query.set("defType", "edismax");
+			query.set("q.alt", "*:*");
+			query.set("qf", "teamId");
+			if(StringUtils.isNotBlank(condition)) {
+				query.setQuery(condition);
+			}else {
+				return null;
 			}
+			query.set("pf", "teamId");
+			query.set("tie", "0.1");
+			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags");
+			query.setStart(Integer.parseInt(String.valueOf(view.getBegin())));
+			query.setRows(Integer.parseInt(String.valueOf(view.getLimit())));
+			
+			final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
+			return list;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
-		return list;
+		return null;
 	}
 	
 	/**
@@ -290,17 +230,23 @@ public class SolrController extends BaseController {
 	@RequestMapping(value = "/tags/search", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public List<Solr> getMoreProduct(@RequestBody final SolrView solrView, final HttpServletRequest request) {
 		final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
+		
 		final SolrQuery query = new SolrQuery();
-		query.set("q.alt", "*:*");
 		query.set("defType", "edismax");
+		query.set("q.alt", "*:*");
+		query.set("qf", "productName^2.3 tags");
 		if(StringUtils.isNotBlank(solrView.getCondition())){
-			query.setQuery("tags:(" + solrView.getCondition() + ")^30");
+			query.setQuery(solrView.getCondition());
 		}else{
+			// 没有标签，则相关视频推荐为空
 			return null;
 		}
+		query.set("pf", "productName tags");
+		query.set("tie", "0.1");
 		query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags");
 		query.setStart((int)solrView.getBegin());
 		query.setRows((int)solrView.getLimit());
+		
 		final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
 		return list;
 	}
