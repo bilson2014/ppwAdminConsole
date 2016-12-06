@@ -19,24 +19,36 @@ public class ActvityServiceImpl implements ActivityService {
 	private ActivityMapper activityMapper;
 
 	@Override
-	public List<Activity> getAll() {
-		return activityMapper.findAll();
+	public List<Activity> getAll() throws Exception {
+		List<Activity> activityList = activityMapper.findAll();
+		if (ValidateUtil.isValid(activityList)) {
+			for (Activity activity : activityList) {
+				String json = activity.getActivityParamList();
+				if (ValidateUtil.isValid(json)) {
+					List<param> paramList = JsonUtil.fromJsonArray(json, param.class);
+					activity.setParamList(paramList);
+				}
+			}
+		}
+		return activityList;
 	}
 
 	@Override
 	public BaseMsg saveActivity(Activity activity) {
-		paramConvesionToString(activity);
+		paramConversionToString(activity);
 		Long res = activityMapper.save(activity);
 		if (res != null && res > 0) {
 			return new BaseMsg(BaseMsg.NORMAL, "", "新增成功！");
 		} else {
 			return new BaseMsg(BaseMsg.ERROR, "", "新增失败！");
 		}
+		
+		
 	}
 
 	@Override
 	public BaseMsg updateActivity(Activity activity) {
-		paramConvesionToString(activity);
+		paramConversionToString(activity);
 		Long res = activityMapper.update(activity);
 		if (res != null && res > 0) {
 			return new BaseMsg(BaseMsg.NORMAL, "", "修改成功！");
@@ -56,24 +68,22 @@ public class ActvityServiceImpl implements ActivityService {
 	}
 
 	public void parseParam(Activity activity) throws Exception {
-		paramConvesionToObj(activity);
+		paramConversionToObj(activity);
 		List<param> paramList = activity.getParamList();
 		if (ValidateUtil.isValid(paramList)) {
 			for (param param : paramList) {
 				if (param.getType() == Activity.SYSTEMPARAM) {
 					// 识别参数
-//					<option value="0">供应商名称</option>
-//		            <option value="1">客户名称</option>
-					
-					
+					// <option value="0">供应商名称</option>
+					// <option value="1">客户名称</option>
 				} else if (param.getType() == Activity.CUSTOMPARAM) {
-					
+
 				}
 			}
 		}
 	}
 
-	private void paramConvesionToString(Activity activity) {
+	private void paramConversionToString(Activity activity) {
 		List<param> paramList = activity.getParamList();
 		if (ValidateUtil.isValid(paramList)) {
 			String json = JsonUtil.toJson(paramList);
@@ -81,7 +91,7 @@ public class ActvityServiceImpl implements ActivityService {
 		}
 	}
 
-	private void paramConvesionToObj(Activity activity) throws Exception {
+	private void paramConversionToObj(Activity activity) throws Exception {
 		String activityParamList = activity.getActivityParamList();
 		if (ValidateUtil.isValid(activityParamList)) {
 			List<param> params = JsonUtil.fromJsonArray(activityParamList, param.class);

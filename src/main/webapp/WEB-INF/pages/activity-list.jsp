@@ -50,20 +50,21 @@
 		<div id="dlg" class="easyui-dialog" style="width:380px; height:500px;"
             closed="true" buttons="#dlg-buttons" title="人员信息">
             <form id="fm">
+            	<input type="hidden" name="activityId" id="activityId">
             	<div class="fitem">
 	                <label>活动名称：</label>
-	                <input id="activityName" class="easyui-textbox" required="true">
+	                <input id="activityName" name="activityName" class="easyui-textbox" required="true">
 	            </div>
             	<div class="fitem">
 	                <label>类型：</label>
-	                <select id="acticityTempleteType" class="easyui-combobox" required="true">
+	                <select id="acticityTempleteType" name="acticityTempleteType" class="easyui-combobox" required="true">
 	                	<option value="0">短信</option>
 	                	<option value="1">邮件</option>
 	                </select>
 	            </div>
             	<div class="fitem">
 	                <label>模板：</label>
-	                <input id="acticityTempleteId" class="easyui-combobox" required="true">
+	                <input id="acticityTempleteId" name="acticityTempleteId" class="easyui-combobox" required="true">
 	            </div>
             	<div class="fitem">
 	                <label>参数列表：</label>
@@ -77,8 +78,18 @@
 	            </div>
             	<div class="fitem">
 	                <label>启动时间：</label>
-	                <input id="activityStartTime" class="easyui-datetimebox" required="true">
+	                <input id="activityCreateTime" name="activityCreateTime" class="easyui-datetimebox" required="true">
 	            </div>
+	            
+	            <div class="fitem">
+	                <label>相关人员：</label>
+	                 <select id="actitityRelevantPersons" name="actitityRelevantPersons" class="easyui-combobox" required="true">
+	                	<option value="0">所有供应商</option>
+	                	<option value="1">所偶有客户</option>
+	                	<option value="2">所偶工作人员</option>
+	                </select>
+	            </div>
+	            
 				<div id="dlg-buttons">
 					<r:mulparampermission uri2="/portal/employee/save" uri="/portal/employee/update">
 					<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="save()" >保存</a>

@@ -8,25 +8,28 @@
 				A_TEMPLATE_TYPE, 
 				A_TEMPLETE_ID, 
 				A_PARAMLIST, 
-				A_STARTTIME
+				A_STARTTIME,
+				A_RELEVANT_PERSONS
 			) VALUES(
 				#{activityName},
 				${acticityTempleteType},
 				#{acticityTempleteId},
 				#{activityParamList},
-				#{activityStartTime}
+				#{activityStartTime},
+				#{actitityRelevantPersons}
 			);
 		]]>
 	</insert>
 
 	<update id="update">
 		<![CDATA[
-			UPDATE pat.ACTIVITY
+			UPDATE ACTIVITY SET
 			 A_NAME = #{activityName},
 			 A_TEMPLATE_TYPE = ${acticityTempleteType},
 			 A_TEMPLETE_ID = #{acticityTempleteId},
 			 A_PARAMLIST = #{activityParamList},
-			 A_STARTTIME = #{activityStartTime}
+			 A_STARTTIME = #{activityStartTime},
+			 A_RELEVANT_PERSONS = #{actitityRelevantPersons}
 			WHERE
 				A_ID = ${activityId};
 		]]>
@@ -53,7 +56,8 @@
 				a.A_TEMPLATE_TYPE AS acticityTempleteType,
 				a.A_TEMPLETE_ID AS acticityTempleteId,
 				a.A_PARAMLIST AS activityParamList,
-				a.A_STARTTIME AS activityStartTime
+				a.A_STARTTIME AS activityStartTime,
+				a.A_RELEVANT_PERSONS AS actitityRelevantPersons
 			FROM
 				ACTIVITY a
 			WHERE
@@ -70,7 +74,8 @@
 				a.A_TEMPLATE_TYPE AS acticityTempleteType,
 				a.A_TEMPLETE_ID AS acticityTempleteId,
 				a.A_PARAMLIST AS activityParamList,
-				a.A_STARTTIME AS activityStartTime
+				a.A_STARTTIME AS activityStartTime,
+				a.A_RELEVANT_PERSONS AS actitityRelevantPersons
 			FROM
 				ACTIVITY a
 		]]>

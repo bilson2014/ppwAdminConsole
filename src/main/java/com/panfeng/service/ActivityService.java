@@ -6,7 +6,7 @@ import com.panfeng.domain.BaseMsg;
 import com.panfeng.resource.model.Activity;
 
 public interface ActivityService {
-	List<Activity> getAll();
+	List<Activity> getAll() throws Exception;
 
 	BaseMsg saveActivity(Activity activity);
 

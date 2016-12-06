@@ -32,7 +32,12 @@ public class ActivityController extends BaseController {
 
 	@RequestMapping("/get/activities")
 	public List<Activity> getAll() {
-		return activityService.getAll();
+		try {
+			return activityService.getAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@RequestMapping("/post/activity")
@@ -49,4 +54,5 @@ public class ActivityController extends BaseController {
 	public BaseMsg deleteActivities(){
 		return null;
 	}
+	
 }
