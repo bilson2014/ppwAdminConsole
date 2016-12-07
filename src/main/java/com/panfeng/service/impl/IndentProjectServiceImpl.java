@@ -3,7 +3,6 @@ package com.panfeng.service.impl;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1067,5 +1066,15 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		public void setHtml(String html) {
 			this.html = html;
 		}
+	}
+
+	/**
+	 * 导出excel表格
+	 * @param list
+	 * @param outputStream
+	 */
+	public void export2Excel(final List<IndentProject> list, final OutputStream outputStream) {
+		
+		
 	}
 }

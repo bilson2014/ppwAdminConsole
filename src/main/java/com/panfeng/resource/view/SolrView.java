@@ -10,6 +10,8 @@ public class SolrView extends Pagination{
 	
 	private String itemFq = null; // 视频类型
 	
+	private String tagsFq = null; // 标签类型
+	
 	private String condition = null; // 搜索条件
 	
 	private int sortord = 0; // 0：升序 1：降序
@@ -62,6 +64,14 @@ public class SolrView extends Pagination{
 
 	public void setSequence(String sequence) {
 		this.sequence = sequence;
+	}
+
+	public String getTagsFq() {
+		return tagsFq;
+	}
+
+	public void setTagsFq(String tagsFq) {
+		this.tagsFq = tagsFq;
 	}
 
 }

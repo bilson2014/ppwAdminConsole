@@ -117,4 +117,11 @@ public interface IndentProjectService {
 	public void getReportForExport(List<IndentProject> list, OutputStream outputStream); 
 	
 	public void deleteProject(IndentProject indentProject);
+
+	/**
+	 * 导出excel表格
+	 * @param list
+	 * @param outputStream
+	 */
+	public void export2Excel(final List<IndentProject> list, final OutputStream outputStream);
 }

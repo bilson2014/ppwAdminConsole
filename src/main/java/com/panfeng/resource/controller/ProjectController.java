@@ -337,13 +337,14 @@ public class ProjectController extends BaseController {
 
 	@RequestMapping(value = "/export", method = RequestMethod.POST)
 	public void export(final IndentProjectView view, final HttpServletResponse response) {
+		OutputStream outputStream = null;
 		try {
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("application/octet-stream");
 			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
 			String filename = URLEncoder.encode("项目列表" + dateString + ".xlsx", "UTF-8");
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
-			OutputStream outputStream = response.getOutputStream();
+			outputStream = response.getOutputStream();
 			// 获取所有的项目
 			view.setBegin(0);
 			view.setLimit(999999999l);
@@ -351,14 +352,21 @@ public class ProjectController extends BaseController {
 			// indentProjectService.getReport(list, outputStream);
 			// modify by wanglc 2016-9-19 15:46:08 begin
 			// -->修改导出方法,加快导出速度
-			indentProjectService.getReportForExport(list, outputStream);
+			// indentProjectService.getReportForExport(list, outputStream);
+			indentProjectService.export2Excel(list, outputStream);
 			// modify by wanglc 2016-9-19 15:46:08 end
-			if (outputStream != null) {
-				outputStream.flush();
-				outputStream.close();
-			}
+			outputStream.flush();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
