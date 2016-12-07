@@ -3,12 +3,15 @@ package com.panfeng.query;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.panfeng.domain.DataSource;
 import com.panfeng.resource.model.MetaDataColumn;
 
 /**
@@ -20,16 +23,10 @@ public abstract class AbstractQueryer {
 
 	final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	protected String driverClass = null;
-	protected String jdbcUrl = null;
-	protected String user = null;
-	protected String password = null;
+	protected DataSource ds = null;
 	
-	public AbstractQueryer (final String driverClass, final String jdbcUrl, final String user, final String password) {
-		this.driverClass = driverClass;
-		this.jdbcUrl = jdbcUrl;
-		this.user = user;
-		this.password = password;
+	public AbstractQueryer (final DataSource ds) {
+		this.ds = ds;
 	}
 	
 	/**
@@ -52,11 +49,26 @@ public abstract class AbstractQueryer {
 			final ResultSetMetaData rsMetaData = rs.getMetaData();
 			// 获取元数据列
 			final int count = rsMetaData.getColumnCount();
+			columns = new ArrayList<MetaDataColumn>();
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
+			// 遍历元数据，然后封装
+			for(int i = 1; i <= count;i ++) {
+				final MetaDataColumn column = new MetaDataColumn();
+				column.setName(rsMetaData.getColumnLabel(i));
+				column.setDataType(rsMetaData.getColumnTypeName(i));
+				column.setWidth(rsMetaData.getColumnDisplaySize(i));
+				
+				columns.add(column);
+			}
+			
+		} catch (SQLException ex) {
+			logger.error(ex.getMessage());
+			throw new RuntimeException("获取元数据出错", ex);
+		} finally {
+			releaseJdbcResource(conn, stmt, rs);
 		}
+		
+		return columns == null ? new ArrayList<MetaDataColumn>(0) : columns;
 	}
 
 	/**

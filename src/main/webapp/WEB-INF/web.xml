@@ -59,6 +59,10 @@
   		<taglib-location>/WEB-INF/tags/security.tld</taglib-location>
   	</taglib>
   </jsp-config>
+  
+  <session-config>
+  		<session-timeout>720</session-timeout>
+  </session-config>
 
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
