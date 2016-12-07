@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.dao.PortalVideoDao;
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Product;
@@ -499,7 +500,6 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping("/product/static/data/update/info")
 	public long updateProductInfo(@RequestBody final Product product, HttpServletRequest request) {
-
 		// 解码
 		try {
 			product.setpDescription(URLDecoder.decode(product.getpDescription(), "UTF-8"));
@@ -656,5 +656,35 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = "/activity")
 	public List<Product> loadActivityProducts() {
 		return proService.loadActivityProducts();
+	}
+	
+	/**
+	 * 查找推荐的作品 分页
+	 */
+	@RequestMapping(value = "/product/recommend/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public DataGrid<Product> recommendList(final ProductView view, final PageFilter pf) {
+
+		final long page = pf.getPage();
+		final long rows = pf.getRows();
+		view.setBegin((page - 1) * rows);
+		view.setLimit(rows);
+		DataGrid<Product> dataGrid = new DataGrid<Product>();
+		final List<Product> list = proService.searchPageRecommendList(view);
+		dataGrid.setRows(list);
+		final long total = proService.maxRecommendSize(view);
+		dataGrid.setTotal(total);
+		return dataGrid;
+	}
+	/**
+	 * 查找推荐的作品 分页
+	 */
+	@RequestMapping(value = "/product/updateRecommend", method = RequestMethod.POST)
+	public BaseMsg updateRecommend(final Product product) {
+		final boolean b = proService.updateRecommend(product);
+		if(b){
+			return new BaseMsg(1,"success");
+		}else{
+			return new BaseMsg(0,"修改失败");
+		}
 	}
 }

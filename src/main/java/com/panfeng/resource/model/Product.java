@@ -35,7 +35,7 @@ public class Product extends BaseObject {
 
 	private String picLDUrl = null; // 海报
 
-	private int productType; // 项目类别
+	private int productType = 0; // 项目类别
 
 	private String productTypeName = null; // 项目类别名称
 

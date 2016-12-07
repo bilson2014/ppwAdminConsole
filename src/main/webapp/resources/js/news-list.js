@@ -1,7 +1,5 @@
-var editing ; //判断用户是否处于编辑状态
 var formUrl;
 var datagrid;
-var sessionId;
 var editor;
 $.base64.utf8encode = true;
 editorBeReady("content");
@@ -106,23 +104,8 @@ function createEditor(name){
 					'bold', 'italic', 'underline', 'removeformat', '|',
 					'justifyleft', 'justifycenter', 'justifyright',
 					'insertorderedlist', 'insertunorderedlist', '|',
-					'emoticons', 'image', 'link', 'unlink', 'fullscreen',
+					'emoticons', 'image', 'link', 'unlink','media', 'fullscreen',
 					'table',   'preview' ]
-	});
-	
-	var iframe = editor.edit.iframe.get(); //此时为iframe对象
-	var iframe_body = iframe.contentWindow.document.body;
-	KindEditor.ctrl(iframe_body, 'S', function() {
-		var mailId=$('#mailId').val().trim();
-		$.base64.utf8encode = true;
-		var content= $.base64.btoa(editor.html());
-		/*loadData(function(){
-			ls = datagrid.datagrid('getSelections');
-			ls[0].content = content;
-		}, getContextPath() + '/portal/product/saveContent', $.toJSON({
-			'mailId' : mailId,
-			'content' : content	
-		}));*/
 	});
 }
 
@@ -179,13 +162,6 @@ function delFuc(){
 	}
 }
 
-// 取消
-function cancelFuc(){
-	//回滚数据 
-	datagrid.datagrid('rejectChanges');
-	editing = undefined;
-}
-
 // 确认事件
 function save(){
 	progressLoad();
@@ -215,7 +191,7 @@ function openDialog(data){
 	$('#dlg').dialog({
 		title : '邮件信息',
 		modal : true,
-		width : 520,
+		width : 700,
 		height : 500,
 		onOpen : function(event, ui) {
 			KindEditor.remove('input[name="content"]');

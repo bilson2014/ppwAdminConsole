@@ -184,12 +184,12 @@ public class IndentController extends BaseController {
 		if(indent.getIndentId()==0){
 			 ret = service.save(indent);
 			 Log.error("add new order ...", sessionInfo);
+			 String telephone = PropertiesUtils.getProp("service_tel");
+			 smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【未指定具体影片】"});
 		}else{//更新操作
 			ret = service.updateForCalculate(indent);
 			Log.error("update order ...", sessionInfo);
 		}
-		String telephone = PropertiesUtils.getProp("service_tel");
-		smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【未指定具体影片】"});
 		return ret>0?indent:null;
 	}
 	/**

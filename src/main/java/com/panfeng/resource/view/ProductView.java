@@ -38,6 +38,16 @@ public class ProductView extends Pagination{
 	
 	private String endTime = null;//上传时间搜索 结束时间
 	
+	private String visible = null; // 0:可见,1:不可见
+	
+	public String getVisible() {
+		return visible;
+	}
+
+	public void setVisible(String visible) {
+		this.visible = visible;
+	}
+
 	public String getBeginTime() {
 		return beginTime;
 	}

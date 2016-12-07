@@ -70,6 +70,9 @@
 		<if test="flag != null and flag != ''">
 			AND pro.FLAG = #{flag}
 		</if>
+		<if test="visible != null and visible != ''">
+			AND pro.VISIBLE = #{visible}
+		</if>
 		<if test="hret != null and hret != '' and hret == 0">
 			<![CDATA[
 				AND pro.HRET <> ''
@@ -342,6 +345,9 @@
 		</if>
 		<if test="flag !=null and flag != ''">
 			AND pro.FLAG = ${flag}
+		</if>
+		<if test="visible != null and visible != ''">
+			AND pro.VISIBLE = #{visible}
 		</if>
 		<if test="hret != null and hret != '' and hret == 0">
 			<![CDATA[
@@ -793,5 +799,38 @@
 			AND masterWork = 1
 		]]>
 	</select>
-
+	
+	<select id="searchPageRecommendList" resultType="Product"> 
+		<![CDATA[
+			SELECT p.productId,p.productName, t.teamName,p.recommend
+				FROM PRODUCT p
+				LEFT JOIN TEAM t ON p.teamId = t.teamId
+				WHERE p.recommend <> 0 
+				AND p.FLAG = 1
+				AND p.visible = 0
+				AND t.FLAG = 1
+				ORDER BY p.recommend ASC
+				LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+	<select id="maxRecommendSize"  resultType="java.lang.Long"> 
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM PRODUCT p
+				LEFT JOIN TEAM t ON p.teamId = t.teamId
+				WHERE p.recommend <> 0 
+				AND p.FLAG = 1
+				AND p.visible = 0
+				AND t.FLAG = 1
+				ORDER BY p.recommend ASC
+		]]>
+	</select>
+	<update id="updateRecommend">
+		<![CDATA[
+			UPDATE PRODUCT p SET
+				p.recommend = ${recommend}
+			WHERE
+				p.PRODUCTID = ${productId}
+		]]>
+	</update>
 </mapper>
