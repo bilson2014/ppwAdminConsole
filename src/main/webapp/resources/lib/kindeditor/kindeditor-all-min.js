@@ -1,5 +1,5 @@
-//modify  5295 保存    3845获取展示  7400上传回显    7364 
-//4263增加参数dfshost的代码
+//modify  5295 保存到数据库    		3845打开预览，获取展示  			7400 上传回显  
+//4263增加参数dfshost的代码，目的是表单提交到后台接口，提供host，现在没用了
 
 
 /*******************************************************************************
@@ -3845,10 +3845,6 @@ _extend(KEdit, KWidget, {
 			}
 			if (self.beforeSetHtml) {
 				//modify begin
-		    	// var re2='src="([^"]*)"';	// HTTP URL 1
-				//var re2 = 'src="([^/])([^1-9])([^http])([^"]*)"';
-			    // var p = new RegExp(re2,["gm"]);
-			    // val=val.replace(p, "src='"+getDfsHostName()+"$4"+"'");
 				var re2 = 'src="@.@([^"]*)"';
 			    var p = new RegExp(re2,["gm"]);
 			    val=val.replace(p, "src='"+getDfsHostName()+"$1"+"'");

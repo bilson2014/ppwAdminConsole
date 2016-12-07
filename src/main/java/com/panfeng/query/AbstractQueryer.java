@@ -37,7 +37,7 @@ public abstract class AbstractQueryer {
 	 * @param sqlText
 	 * @return
 	 */
-	public List<MetaDataColumn> parseMetaDataColumns(final String sqlText) {
+	/*public List<MetaDataColumn> parseMetaDataColumns(final String sqlText) {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -57,7 +57,7 @@ public abstract class AbstractQueryer {
 			e.printStackTrace();
 			logger.error(e.getMessage());
 		}
-	}
+	}*/
 
 	/**
 	 * 预处理获取列表集合的sql语句
