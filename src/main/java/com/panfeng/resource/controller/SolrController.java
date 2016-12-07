@@ -194,7 +194,7 @@ public class SolrController extends BaseController {
 		return null;
 	}
 	
-	// 播放页获取team更多作品
+	// 获取team更多作品
 	@RequestMapping(value = "/product/more", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public List<Solr> teamMoreProduct(@RequestBody final SolrView view, final HttpServletRequest request) {
 		final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
@@ -211,7 +211,7 @@ public class SolrController extends BaseController {
 			}
 			query.set("pf", "teamId");
 			query.set("tie", "0.1");
-			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags");
+			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags,updateDate,creationTime");
 			query.setStart(Integer.parseInt(String.valueOf(view.getBegin())));
 			query.setRows(Integer.parseInt(String.valueOf(view.getLimit())));
 			

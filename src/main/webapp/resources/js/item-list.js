@@ -152,7 +152,6 @@ function delFuc(){
 				}
 				ids = ids.substring(0,ids.length-1);
 				$.post(getContextPath() + '/portal/item/delete', {ids:ids},function(result){
-					
 					// 刷新数据
 					datagrid.datagrid('clearSelections');
 					datagrid.datagrid('reload');

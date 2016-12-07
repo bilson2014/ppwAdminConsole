@@ -127,4 +127,16 @@ public interface ProductService {
 	public Product getMasterWork(long teamId);
 
 	public List<Product> loadActivityProducts();
+
+	/**
+	 * 查询推荐的作品，分页
+	 */
+	public List<Product> searchPageRecommendList(ProductView view);
+
+	public long maxRecommendSize(ProductView view);
+
+	/**
+	 * 修改作品的推荐值
+	 */
+	public boolean updateRecommend(Product product);
 }

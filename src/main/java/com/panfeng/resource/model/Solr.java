@@ -53,9 +53,13 @@ public class Solr extends BaseObject{
 	private Integer recommend = null; // 推荐值
 	
 	@Field
-	private Integer supportCount = null; // 推荐值
+	private Integer supportCount = null; //相同推荐值的排序
 	
+	@Field
+	private String updateDate = null;//作品修改时间
 	
+	@Field
+	private String creationTime = null;//作品创建时间
 	
 	public String getProductId() {
 		return productId;
@@ -183,5 +187,21 @@ public class Solr extends BaseObject{
 
 	public void setSupportCount(Integer supportCount) {
 		this.supportCount = supportCount;
+	}
+
+	public String getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public String getCreationTime() {
+		return creationTime;
+	}
+
+	public void setCreationTime(String creationTime) {
+		this.creationTime = creationTime;
 	}
 }

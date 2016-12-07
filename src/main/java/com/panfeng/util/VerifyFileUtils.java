@@ -18,7 +18,7 @@ public final class VerifyFileUtils {
 	private final static List<String> extDocList = new ArrayList<>();
 	static {
 		extMap.put("image", "gif,jpg,jpeg,png,bmp");
-		extMap.put("media", "swf,flv,mp3,wav,wma,wmv,mid,avi,mpg,asf,rm,rmvb");
+		extMap.put("media", "swf,flv,mp3,wav,wma,wmv,mid,avi,mpg,asf,rm,rmvb,mp4");
 
 		extDocList.add("doc");
 		extDocList.add("docx");
@@ -29,7 +29,8 @@ public final class VerifyFileUtils {
 		extDocList.add("pdf");
 	}
 
-	private final static long DEFAULT_FILE_MAX_SIZE = 500 * 1024;
+	private final static long DEFAULT_IMG_MAX_SIZE = 500 * 1024;
+	private final static long DEFAULT_MEDIA_MAX_SIZE = 1024 * 1024 * 100;
 
 	public static boolean verifyDocFile(String extName) {
 		extName = extName.toLowerCase();
@@ -47,12 +48,17 @@ public final class VerifyFileUtils {
 	 *            文件大小
 	 * @return 返回结果“”为正常
 	 */
-	public static String verifyFile(MultipartFile multipartFile, String type,
-			long size) {
+	public static String verifyFile(MultipartFile multipartFile, String type) {
 		if (multipartFile == null)
 			return "请选择上传文件。";
-		if (multipartFile.getSize() > size)
-			return "上传文件超出大小。";
+		if(type.equals("media")){
+			if (multipartFile.getSize() > DEFAULT_MEDIA_MAX_SIZE)
+				return "上传文件超出大小。";
+		}
+		if(type.equals("image")){
+			if (multipartFile.getSize() > DEFAULT_IMG_MAX_SIZE)
+				return "上传文件超出大小。";
+		}
 		String originalExtName = FileUtils.getExtName(
 				multipartFile.getOriginalFilename(), null);
 		String ExtName = extMap.get(type);
@@ -60,18 +66,5 @@ public final class VerifyFileUtils {
 			return "不允许上传此类型文件。";
 
 		return "";
-	}
-
-	/**
-	 * 验证文件 默认文件大小250KB
-	 * 
-	 * @param multipartFile
-	 *            上传包装文件
-	 * @param type
-	 *            文件类型
-	 * @return 返回结果“”为正常
-	 */
-	public static String verifyFile(MultipartFile multipartFile, String type) {
-		return verifyFile(multipartFile, type, DEFAULT_FILE_MAX_SIZE);
 	}
 }

@@ -26,6 +26,7 @@ public class KindeditorController extends BaseController {
 	@Autowired
 	private FDFSService dfsService;
 
+	//上传图片和视频
 	@RequestMapping(value = "/kindeditor/uploadImage", produces = "text/html; charset=UTF-8")
 	public String uploadImage(final MultipartRequest multipartRequest,
 			final String dir, final String sessionId,HttpServletRequest request) {
@@ -36,7 +37,6 @@ public class KindeditorController extends BaseController {
 		if (!"".equals(result))
 			return kindeditorService.createMsg(result, Constants.MSG_FAIL);
 		// step 2.保存文件
-		//result = kindeditorService.saveImage(multipartFile, sessionId);
 		result = dfsService.upload(multipartFile);
 		if (Constants.FAIL.equals(result))
 			return kindeditorService.createMsg("保存文件失败。", Constants.MSG_FAIL);
