@@ -17,6 +17,8 @@ public class MetaDataColumn extends BaseObject {
 	
 	private String dataType; // 数据类型
 	
+	private long width; // 长度
+	
 	public String getName() {
 		return name;
 	}
@@ -39,6 +41,14 @@ public class MetaDataColumn extends BaseObject {
 	
 	public void setDataType(String dataType) {
 		this.dataType = dataType;
+	}
+	
+	public long getWidth() {
+		return width;
+	}
+
+	public void setWidth(long width) {
+		this.width = width;
 	}
 
 	public MetaDataColumn(String name, String text, String dataType) {

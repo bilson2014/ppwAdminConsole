@@ -203,15 +203,16 @@ public class SolrController extends BaseController {
 			final SolrQuery query = new SolrQuery();
 			query.set("defType", "edismax");
 			query.set("q.alt", "*:*");
-			query.set("qf", "teamId");
+			query.set("qf", "teamName");
 			if(StringUtils.isNotBlank(condition)) {
 				query.setQuery(condition);
 			}else {
 				return null;
 			}
-			query.set("pf", "teamId");
+			query.setSort("creationTime", ORDER.asc);
+			query.set("pf", "teamName");
 			query.set("tie", "0.1");
-			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags,updateDate,creationTime");
+			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags,creationTime");
 			query.setStart(Integer.parseInt(String.valueOf(view.getBegin())));
 			query.setRows(Integer.parseInt(String.valueOf(view.getLimit())));
 			
