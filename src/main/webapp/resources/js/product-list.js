@@ -407,8 +407,19 @@ function save(){
 		onSubmit : function() {
 			//创作时间必填
 			var creationTime = $("#creationTime").val();
-			if(creationTime==null&&creationTime==undefined&&creationTime==''){
+			if(creationTime==null||creationTime==undefined||creationTime==''){
 				$.message('请填写创作时间!');
+				progressClose();
+				return false;
+			}
+			if($("#videoUrl").val()=='' && $("#videoFile").val()==''){
+				$.message('请上传视频文件!');
+				progressClose();
+				return false;
+			}
+			if($("#picLDUrl").val()=='' && $("#picLDFile").val()==''){
+				$.message('请上传封面!');
+				progressClose();
 				return false;
 			}
 			var flag = $(this).form('validate');
@@ -442,8 +453,14 @@ function openDialog(data){
 			});
 			if(data == null){
 				$('#teamId').combobox('setValue','');
+				$('#videoLength').textbox('setValue','0');
+				$('#recommend').textbox('setValue','0');
+				$('#supportCount').textbox('setValue','0');
+				$('#flag').combobox('setValue','1');
 			}else {
 				$('#teamId').combobox('setValue',data.teamId);
+				$('#videoUrl').val(data.videoUrl);
+				$('#picLDUrl').val(data.picLDUrl);
 			}
 			
 			KindEditor.remove('input[name="videoDescription"]');

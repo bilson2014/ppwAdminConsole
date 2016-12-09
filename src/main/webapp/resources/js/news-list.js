@@ -73,7 +73,16 @@ $().ready(function(){
 								return up;
 							}
 						}
-					}]] ,
+					},{
+						field : 'id' ,
+						title : '预览' ,
+						align : 'center' ,
+						width : 150,
+						formatter : function(value,row,index){
+							return "<a target='_blank' style=color:red; href='http://"+location.hostname+"/news/article-"+value+".html'>预览</a>";
+						}
+					}
+					]] ,
 		pagination: true ,
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
@@ -126,7 +135,6 @@ function editFuc(){
 		// 回显编辑器
 		$.base64.utf8encode = true;
 		var html=$.trim($.base64.atob($.trim(rows[0].content),true));
-	     //modify end
 		editor.html(html);
 		formUrl = getContextPath() + '/portal/news/update';
 		openDialog(rows[0]);
@@ -149,7 +157,6 @@ function delFuc(){
 				}
 				ids = ids.substring(0,ids.length-1);
 				$.post(getContextPath() + '/portal/news/delete', {ids:ids},function(result){
-					
 					// 刷新数据
 					datagrid.datagrid('clearSelections');
 					datagrid.datagrid('reload');

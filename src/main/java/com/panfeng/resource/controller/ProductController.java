@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.panfeng.dao.PortalVideoDao;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
@@ -69,9 +67,6 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private SolrService solrService = null;
-
-	@Autowired
-	private final PortalVideoDao videoDao = null;
 
 	@Autowired
 	private final FDFSService fdfsService = null;
@@ -224,20 +219,8 @@ public class ProductController extends BaseController {
 		final long productId = product.getProductId(); // product id
 		final Product originalProduct = proService.findProductById(productId);
 
-		final int recomment = product.getRecommend(); // 修改之后的推荐值
-		final int originalRecomment = originalProduct.getRecommend();
-
-		if (recomment != 0 || originalRecomment != 0) {
-			// 推荐值改变,更新redis的首页视频集合
-			if (product.getRecommend() > 0) {
-				final Map<Long, Product> portalVideomap = proService.getProductByRecommend();
-				videoDao.resetPortalVideo(portalVideomap);
-			}
-		}
-
 		// 获取未更改前的product对象,用于删除修改过的文件
 		final List<String> pathList = new ArrayList<String>(); // 路径集合
-
 		try {
 			for (int i = 0; i < uploadFiles.length; i++) {
 				final MultipartFile multipartFile = uploadFiles[i];

@@ -252,7 +252,7 @@
 		<![CDATA[
 			UPDATE INDENT
 				SET INDENT_TELE = #{indent_tele},
-					INDENT_DESCRIPTION = #{indent_description},
+					INDENT_RECOMMENT = #{indent_recomment},
 					INDENTPRICE = ${indentPrice},
 					ORDERDATE = CURRENT_TIMESTAMP
 				WHERE INDENTID = ${indentId}

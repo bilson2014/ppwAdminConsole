@@ -53,8 +53,8 @@ public class UsersTest {
 	@Test
 	public void sendMail(){
 		Map<String, String[]> map =  new HashMap<>();
-		map.put("609615907@qq.com", new String[]{"郭阳"});
-		map.put("1061942069@qq.com", new String[]{"王留成"});
+		//map.put("609615907@qq.com", new String[]{"郭阳"});
+		//map.put("1061942069@qq.com", new String[]{"王留成"});
 		map.put("694174250@qq.com", new String[]{"卢涛"});
 		mailMQService.sendMailsByType("qianduan", map);
 		

@@ -141,21 +141,22 @@
 					</div>
 					<div class="lable-right l-width">视频长度</div>
 					<div class="d-float f-width1">
-						<input id="videoLength" name="videoLength" class="easyui-numberbox" required="true" precision="0"/>
+						<input id="videoLength" name="videoLength" class="easyui-numberbox"  precision="0"/>
 					</div>
 				</div>
 				
 				<div class="online">
 					<div class="lable l-width">推荐值</div>
 					<div class="d-float f-width1">
-						<input id="recommend" name="recommend" class="easyui-numberbox" style="width: 141px" required="true" precision="0" />
+						<input id="recommend" name="recommend" required="true" class="easyui-numberbox" style="width: 141px"  precision="0" />
 					</div>
 					<div class="lable-right l-width">创作时间</div>
 					<div class="d-float f-width1">
 						<input class="textbox" name="creationTime" required="true" id = "creationTime" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly"/>
 					</div>
 				</div>
-				
+				<input id="videoUrl"  type="hidden"/>
+				<input id="picLDUrl"  type="hidden"/>
 				<div class="online">
 					<div class="lable l-width">视频文件</div>
 					<div class="d-float f-width">
@@ -177,7 +178,7 @@
 					
 					<div class="lable-right l-width">赞值</div>
 					<div class="d-float f-width1">
-						<input id="supportCount" name="supportCount" class="easyui-numberbox" required="true" precision="0" />
+						<input id="supportCount" required="true" name="supportCount" class="easyui-numberbox" precision="0" />
 					</div>
 				</div>
 				
