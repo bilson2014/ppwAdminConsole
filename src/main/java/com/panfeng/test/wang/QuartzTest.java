@@ -22,12 +22,10 @@ public class QuartzTest {
 
 	@Autowired
 	private SchedulerFactoryBean schedulerFactoryBean;
-
-	@Test
 	public void addJob() {
 		try {
 			Scheduler scheduler = schedulerFactoryBean.getScheduler();
-			
+
 			// 唯一主键
 			String jobName = "wang1";
 			String jobGroup = "wang1";
@@ -56,85 +54,87 @@ public class QuartzTest {
 			e.printStackTrace();
 		}
 	}
-	
-    public  void pasueOneJob() {  
-        try {  
-            Scheduler scheduler = schedulerFactoryBean.getScheduler();
-            // 唯一主键  
-            String jobName = "";  
-            String jobGroup = "";  
-            TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);  
-            Trigger trigger = scheduler.getTrigger(triggerKey);  
-//          if(null==trigger){  
-//              log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:removeJob trigger is NULL ");  
-//              return;  
-//          }  
-            JobKey jobKey = trigger.getJobKey();  
-            scheduler.pauseJob(jobKey);  
-        } catch (Exception e) {  
-            throw new RuntimeException(e);  
-        }  
-    }
-    
-    public  void resOneJob() {  
-        try {  
-            Scheduler scheduler = schedulerFactoryBean.getScheduler();
-            // 唯一主键  
-            String jobName = "";  
-            String jobGroup = "";  
-            TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);  
-            Trigger trigger = scheduler.getTrigger(triggerKey);  
-//          if(null==trigger){  
-//              log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:removeJob trigger is NULL ");  
-//              return;  
-//          }  
-            scheduler.rescheduleJob(triggerKey, trigger);  
-              
-//          Thread.sleep(TimeUnit.MINUTES.toMillis(10));  
-        } catch (Exception e) {  
-            throw new RuntimeException(e);  
-        }  
-    } 
-    
-    public  void modifyJobTime( String time) {  
-        try {  
-            Scheduler scheduler = schedulerFactoryBean.getScheduler();
-            // 唯一主键  
-            String jobName = "";  
-            String jobGroup = "";  
-            TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);  
-            CronTrigger cronTrigger = (CronTrigger) scheduler.getTrigger(triggerKey);  
-            CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("");  
-            cronTrigger = cronTrigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(cronScheduleBuilder)  
-                    .build();  
-            scheduler.rescheduleJob(triggerKey, cronTrigger);  
-            
-//          Thread.sleep(TimeUnit.MINUTES.toMillis(60));  
-        } catch (Exception e) {  
-            throw new RuntimeException(e);  
-        }  
-    }
-    
-    public  void removeJob() {  
-        try {  
-            Scheduler scheduler = schedulerFactoryBean.getScheduler();  
-            // 唯一主键  
-            String jobName = "";  
-            String jobGroup = "";  
-            TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);  
-            Trigger trigger = scheduler.getTrigger(triggerKey);  
-            if(null==trigger){  
-                return;  
-            }  
-            JobKey jobKey = trigger.getJobKey();  
-            scheduler.pauseTrigger(triggerKey);// 停止触发器  
-            scheduler.unscheduleJob(triggerKey);// 移除触发器  
-            scheduler.deleteJob(jobKey);// 删除任务  
-              
-            //Thread.sleep(TimeUnit.MINUTES.toMillis(10));  
-        } catch (Exception e) {  
-            throw new RuntimeException(e);  
-        }  
-    }
-    
+
+	public void pasueOneJob() {
+		try {
+			Scheduler scheduler = schedulerFactoryBean.getScheduler();
+			// 唯一主键
+			String jobName = "";
+			String jobGroup = "";
+			TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+			Trigger trigger = scheduler.getTrigger(triggerKey);
+			// if(null==trigger){
+			// log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:removeJob trigger
+			// is NULL ");
+			// return;
+			// }
+			JobKey jobKey = trigger.getJobKey();
+			scheduler.pauseJob(jobKey);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void resOneJob() {
+		try {
+			Scheduler scheduler = schedulerFactoryBean.getScheduler();
+			// 唯一主键
+			String jobName = "";
+			String jobGroup = "";
+			TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+			Trigger trigger = scheduler.getTrigger(triggerKey);
+			// if(null==trigger){
+			// log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>method:removeJob trigger
+			// is NULL ");
+			// return;
+			// }
+			scheduler.rescheduleJob(triggerKey, trigger);
+
+			// Thread.sleep(TimeUnit.MINUTES.toMillis(10));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void modifyJobTime(String time) {
+		try {
+			Scheduler scheduler = schedulerFactoryBean.getScheduler();
+			// 唯一主键
+			String jobName = "";
+			String jobGroup = "";
+			TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+			CronTrigger cronTrigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+			CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule("");
+			cronTrigger = cronTrigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(cronScheduleBuilder)
+					.build();
+			scheduler.rescheduleJob(triggerKey, cronTrigger);
+
+			// Thread.sleep(TimeUnit.MINUTES.toMillis(60));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void removeJob() {
+		try {
+			Scheduler scheduler = schedulerFactoryBean.getScheduler();
+			// 唯一主键
+			String jobName = "";
+			String jobGroup = "";
+			TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroup);
+			Trigger trigger = scheduler.getTrigger(triggerKey);
+			if (null == trigger) {
+				return;
+			}
+			JobKey jobKey = trigger.getJobKey();
+			scheduler.pauseTrigger(triggerKey);// 停止触发器
+			scheduler.unscheduleJob(triggerKey);// 移除触发器
+			scheduler.deleteJob(jobKey);// 删除任务
+
+			// Thread.sleep(TimeUnit.MINUTES.toMillis(10));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 }

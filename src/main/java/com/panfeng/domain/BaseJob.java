@@ -18,7 +18,7 @@ public class BaseJob implements Serializable {
 	private Object param; // 传递给任务的参数
 
 	public static String ACTIVITY = "activity"; // 分组名
-	public static String PARAMKEY = "paramkey"; // 传递参数的KEY
+	//public static String PARAMKEY = "paramkey"; // 传递参数的KEY
 
 	public String getJobName() {
 		return jobName;
@@ -70,7 +70,7 @@ public class BaseJob implements Serializable {
 
 	public TriggerKey getTriggerKey() {
 		// 如果jobGroup 是空则会默认用DEFAULT分组
-		TriggerKey triggerKey = TriggerKey.triggerKey(this.jobName, this.jobGroup);
+		TriggerKey triggerKey = TriggerKey.triggerKey(this.jobName+"_trigger", this.jobGroup);
 		return triggerKey;
 	}
 }

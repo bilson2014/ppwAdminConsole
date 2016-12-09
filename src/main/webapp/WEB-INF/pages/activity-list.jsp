@@ -27,7 +27,7 @@
 				<table>
 					<tr>
 						<th>姓名:</th>
-						<td><input name="roleName" placeholder="请输入模板名称"/></td>
+						<td><input name="activityName" id="searchFormactivityName" placeholder="请输入活动名称"/></td>
 						<td>
 							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 						</td>
@@ -69,7 +69,7 @@
             	<div class="fitem">
 	                <label>参数列表：</label>
 	                <a id="addSystemParam" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加系统参数</a>
-	                <a id="addCustomParam" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加自定义参数</a>
+	                <a id="addCustomParam" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加自定义参数</a><br/>
 	                -----------------------------------------------------
 	                <div id="paramList">
 	                	
@@ -78,15 +78,15 @@
 	            </div>
             	<div class="fitem">
 	                <label>启动时间：</label>
-	                <input id="activityCreateTime" name="activityCreateTime" class="easyui-datetimebox" required="true">
+	                <input id="activityStartTime" name="activityStartTime" class="easyui-datetimebox" required="true">
 	            </div>
 	            
 	            <div class="fitem">
 	                <label>相关人员：</label>
 	                 <select id="actitityRelevantPersons" name="actitityRelevantPersons" class="easyui-combobox" required="true">
 	                	<option value="0">所有供应商</option>
-	                	<option value="1">所偶有客户</option>
-	                	<option value="2">所偶工作人员</option>
+	                	<option value="1">所有有客户</option>
+	                	<option value="2">所有工作人员</option>
 	                </select>
 	            </div>
 	            

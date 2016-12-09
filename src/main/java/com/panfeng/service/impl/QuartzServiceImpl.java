@@ -1,8 +1,6 @@
 package com.panfeng.service.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +33,9 @@ import com.panfeng.service.QuartzService;
 public class QuartzServiceImpl implements QuartzService {
 	@Autowired
 	private SchedulerFactoryBean schedulerFactoryBean;
+	String PARAMKEY = "paramkey";
 
-	public void addJob(BaseJob baseJob) throws SchedulerException {
+	public void addOrUpdateJob(BaseJob baseJob) throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
 		// 唯一主键
 		String jobName = baseJob.getJobName();
@@ -44,20 +43,25 @@ public class QuartzServiceImpl implements QuartzService {
 		TriggerKey triggerKey = baseJob.getTriggerKey();
 		CronTrigger cronTrigger = (CronTrigger) scheduler.getTrigger(triggerKey);
 		if (null == cronTrigger) {
-			JobDetail jobDetail = JobBuilder.newJob(baseJob.getJobClass()).withIdentity(jobName, jobGroup).build();
-			cronTrigger = TriggerBuilder.newTrigger().withIdentity(jobName, jobGroup)
+			JobDetail jobDetail = scheduler.getJobDetail(JobKey.jobKey(jobName + "_Job", jobGroup));
+			// 一个job类可以执行多种相同性质但是参数不同的任务
+			// 通过JobDetail 进行关联，一个job对应着多个JobDetail。
+			if (jobDetail == null)
+				jobDetail = JobBuilder.newJob(baseJob.getJobClass()).withIdentity(jobName + "_Job", jobGroup).requestRecovery().build();
+
+			cronTrigger = TriggerBuilder.newTrigger().withIdentity(jobName + "_trigger", jobGroup)
 					.withSchedule(CronScheduleBuilder.cronSchedule(baseJob.getCronExpression())).build();
+			
 			if (baseJob.getParam() != null)
-				cronTrigger.getJobDataMap().put(BaseJob.PARAMKEY, baseJob.getParam());
+				jobDetail.getJobDataMap().put(PARAMKEY, baseJob.getParam().toString());
 			scheduler.scheduleJob(jobDetail, cronTrigger);
 			// 启动一个定时器
 			if (!scheduler.isShutdown()) {
 				scheduler.start();
 			}
 		} else {
-			cronTrigger = cronTrigger.getTriggerBuilder().withIdentity(triggerKey)
-					.withSchedule(CronScheduleBuilder.cronSchedule(baseJob.getCronExpression())).build();
-			scheduler.rescheduleJob(triggerKey, cronTrigger);
+			removeJob(baseJob);
+			addOrUpdateJob(baseJob);
 		}
 	}
 
@@ -74,17 +78,8 @@ public class QuartzServiceImpl implements QuartzService {
 		scheduler.deleteJob(jobKey);// 删除任务
 	}
 
-	public void modifyJobTime(BaseJob baseJob) throws SchedulerException {
-		Scheduler scheduler = schedulerFactoryBean.getScheduler();
-		TriggerKey triggerKey = baseJob.getTriggerKey();
-		CronTrigger cronTrigger = (CronTrigger) scheduler.getTrigger(triggerKey);
-		CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(baseJob.getCronExpression());
-		cronTrigger = cronTrigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(cronScheduleBuilder)
-				.build();
-		scheduler.rescheduleJob(triggerKey, cronTrigger);
-	}
-
 	public void pasueOneJob(BaseJob baseJob) throws SchedulerException {
+		// 暂停触发器
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
 		TriggerKey triggerKey = baseJob.getTriggerKey();
 		Trigger trigger = scheduler.getTrigger(triggerKey);
@@ -95,58 +90,51 @@ public class QuartzServiceImpl implements QuartzService {
 		scheduler.pauseJob(jobKey);
 	}
 
-	public void resOneJob(BaseJob baseJob) throws SchedulerException {
+	public void resumeOneJob(BaseJob baseJob) throws SchedulerException {
+		// 恢复触发器
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
 		TriggerKey triggerKey = baseJob.getTriggerKey();
 		Trigger trigger = scheduler.getTrigger(triggerKey);
 		if (null == trigger) {
 			return;
 		}
+		JobKey jobKey = trigger.getJobKey();
+		scheduler.resumeJob(jobKey);  
 		scheduler.rescheduleJob(triggerKey, trigger);
 	}
-	
-    //获取所有的触发器  
-    public List<BaseJob> getTriggersInfo(){  
-        try {
-        	Scheduler scheduler = schedulerFactoryBean.getScheduler();
-            GroupMatcher<TriggerKey> matcher = GroupMatcher.anyTriggerGroup();  
-            Set<TriggerKey> Keys = scheduler.getTriggerKeys(matcher);  
-            List<BaseJob> triggers = new ArrayList<BaseJob>();  
-              
-            for (TriggerKey key : Keys) {  
-                Trigger trigger = scheduler.getTrigger(key);  
-                BaseJob pageTrigger = new BaseJob();  
-                pageTrigger.setJobName(trigger.getJobKey().getName());  
-                pageTrigger.setJobGroup(trigger.getJobKey().getGroup());  
-                pageTrigger.setTriggerState(scheduler.getTriggerState(key));  
-                if (trigger instanceof SimpleTrigger) {
-                    SimpleTrigger simple = (SimpleTrigger) trigger;  
-                    //pageTrigger.setExpression("重复次数:"+ (simple.getRepeatCount() == -1 ?   
-                     //       "无限" : simple.getRepeatCount()) +",重复间隔:"+(simple.getRepeatInterval()/1000L));  
-                    //pageTrigger.setDesc(simple.getDescription());  
-                }  
-                if (trigger instanceof CronTrigger) {  
-                    CronTrigger cron = (CronTrigger) trigger;  
-                    pageTrigger.setCronExpression(cron.getCronExpression());  
-                }  
-                triggers.add(pageTrigger);  
-            }  
-            return triggers;  
-        } catch (SchedulerException e) {  
-            e.printStackTrace();  
-        }  
-        return null;  
-    }
 
-	/////////////////////////////////////////////////////////////////////
-	private static final String CRON_DATE_FORMAT = "ss mm HH dd MM ? yyyy";
-
-	public static String getCron(final Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat(CRON_DATE_FORMAT);
-		String formatTimeStr = "";
-		if (date != null) {
-			formatTimeStr = sdf.format(date);
+	// 获取所有的触发器
+	public List<BaseJob> getTriggersInfo() {
+		try {
+			Scheduler scheduler = schedulerFactoryBean.getScheduler();
+			GroupMatcher<TriggerKey> matcher = GroupMatcher.anyTriggerGroup(); // 获取所有分组
+			Set<TriggerKey> Keys = scheduler.getTriggerKeys(matcher); // 获取所有key
+			List<BaseJob> triggers = new ArrayList<BaseJob>();
+			for (TriggerKey key : Keys) {
+				Trigger trigger = scheduler.getTrigger(key);
+				BaseJob pageTrigger = new BaseJob();
+				pageTrigger.setJobName(trigger.getJobKey().getName());
+				pageTrigger.setJobGroup(trigger.getJobKey().getGroup());
+				pageTrigger.setTriggerState(scheduler.getTriggerState(key));
+				if (trigger instanceof SimpleTrigger) {
+					// SimpleTrigger simple = (SimpleTrigger) trigger;
+					// pageTrigger.setExpression("重复次数:"+
+					// (simple.getRepeatCount() == -1 ?
+					// "无限" : simple.getRepeatCount())
+					// +",重复间隔:"+(simple.getRepeatInterval()/1000L));
+					// pageTrigger.setDesc(simple.getDescription());
+				}
+				if (trigger instanceof CronTrigger) {
+					CronTrigger cron = (CronTrigger) trigger;
+					pageTrigger.setCronExpression(cron.getCronExpression());
+				}
+				triggers.add(pageTrigger);
+			}
+			return triggers;
+		} catch (SchedulerException e) {
+			e.printStackTrace();
 		}
-		return formatTimeStr;
+		return null;
 	}
+
 }

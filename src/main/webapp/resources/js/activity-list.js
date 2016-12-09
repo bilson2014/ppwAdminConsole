@@ -5,7 +5,7 @@ var datagrid;
 $().ready(function() {
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
-		url : getContextPath() + '/portal/get/activities',
+		url : getContextPath() + '/portal/activitie/list',
 		idField : 'activityId',
 		title : '用户列表',
 		fitColumns : true,
@@ -35,7 +35,16 @@ $().ready(function() {
 			field : 'acticityTempleteType',
 			title : '类型',
 			width : 60,
-			align : 'center'
+			align : 'center',
+			formatter : function(value,row,index){
+				if(value != undefined ){
+					if(row.acticityTempleteType == 0){
+						return '<span>短信</span>' ;
+					}else{
+						return '<span>右键</span>' ;
+					}
+				}
+			}
 		}, {
 			field : 'acticityTempleteId',
 			title : '模板',
@@ -56,7 +65,22 @@ $().ready(function() {
 			field : 'actitityRelevantPersons',
 			title : '相关人员',
 			align : 'center',
-			width : 60
+			width : 60,
+			formatter : function(value,row,index){
+				if(value != undefined ){
+					switch (row.actitityRelevantPersons) {
+					case "0":
+						return '<span>所有供应商</span>' ;
+						break;
+					case "1":
+						return '<span>所有有客户</span>' ;
+						break;
+					case "2":
+						return '<span>所有工作人员</span>' ;
+						break;
+					}
+				}
+			}
 		} ] ],
 		pagination : true,
 		pageSize : 50,
@@ -89,7 +113,7 @@ $().ready(function() {
 							});
 						}else{
 							$("#acticityTempleteId").combobox({
-								valueField : 'id',
+								valueField : 'mailType',
 								textField : 'subject',
 								data:data.rows
 							});
@@ -150,7 +174,7 @@ function openDialog(id, data) {
 							});
 						}else{
 							$("#acticityTempleteId").combobox({
-								valueField : 'id',
+								valueField : 'mailType',
 								textField : 'subject',
 								data:msg.rows,
 								value : data.acticityTempleteId
@@ -203,6 +227,30 @@ function editFuc() {
 	}
 	
 }
+function delFuc(){
+	var arr = datagrid.datagrid('getSelections');
+	if(arr.length <= 0 ){
+		$.message('请选择进行删除操作!');
+	} else {
+		$.messager.confirm('提示信息' , '确认删除?' , function(r){
+			if(r){
+				var ids = '';
+				for(var i = 0 ; i < arr.length ; i++){
+					ids += arr[i].activityId + ',';
+				}
+				ids = ids.substring(0,ids.length-1);
+				$.post(getContextPath() + '/portal/delete/activity', {eventIds:ids},function(result){
+					// 刷新数据
+					datagrid.datagrid('clearSelections');
+					datagrid.datagrid('reload');
+					$.message('操作成功!');
+				});
+			} else {
+				 return "";
+			}
+		});
+	}
+}
 
 function save(){
 	progressLoad();
@@ -219,24 +267,27 @@ function save(){
 		acticityTempleteType : $('#acticityTempleteType').combobox('getValue'),
 		acticityTempleteId : $('#acticityTempleteId').combobox('getValue'),
 		paramList : buildParam(),
-		activityStartTime : $('#activityCreateTime').datetimebox('getValue'),
+		activityStartTime : $('#activityStartTime').datetimebox('getValue'),
 		actitityRelevantPersons : $('#actitityRelevantPersons').combobox('getValue')
 	}));
 }
-
-
-
+function searchFun(){
+	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
+}
+function cleanFun(){
+	$('#searchFormactivityName').val('');
+}
 function createParamView(system,value){
 	if(system == 'system'){
 		var option = "";
 		if(value != null && value != undefined && value == 0){
-			option = ['<option value="0" selected="selected" >供应商名称</option>',
+			option = ['<option value="0" selected="selected" >用户名</option>',
 			          '<option value="1">客户名称</option>'].join('');
 		}else if(value != null && value != undefined && value == 1){
-			option = ['<option value="0">供应商名称</option>',
+			option = ['<option value="0">用户名</option>',
 			          '<option value="1" selected="selected">客户名称</option>'].join('');
 		}else{
-			option = ['<option value="0">供应商名称</option>',
+			option = ['<option value="0">用户名</option>',
 			          '<option value="1">客户名称</option>'].join('');
 		}
 		var html = [

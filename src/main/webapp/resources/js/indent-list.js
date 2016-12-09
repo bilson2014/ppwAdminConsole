@@ -41,7 +41,6 @@ $().ready(function(){
 						align : 'center',
 						sortable : true ,
 						formatter : function(value,row,index){
-							
 							return thousandCount(row.indentPrice) + '<span style=color:#999; > 元</span>' ;
 						},
 						editor : {

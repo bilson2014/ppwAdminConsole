@@ -25,12 +25,12 @@
 
 	<context:component-scan
 		base-package="com.panfeng.service,
-										  com.panfeng.dao,
-										  com.panfeng.fs,
-										  com.panfeng.listener,
-										  com.panfeng.mq.service,
-										  com.panfeng.flow
-										  " />
+					  com.panfeng.dao,
+					  com.panfeng.fs,
+					  com.panfeng.listener,
+					  com.panfeng.mq.service,
+					  com.panfeng.flow
+					  " />
 
 	<context:annotation-config />
 
@@ -50,11 +50,14 @@
 		<property name="maxPoolSize" value="${maxPoolSize}" />
 		<property name="waitTimes" value="${waitTimes}" />
 	</bean>
-	<bean id="schedulerFactoryBean" autowire="no"
+	<bean id="jobFactory" class="com.panfeng.service.impl.job.SpringJobFactory"></bean>
+	<bean id="schedulerFactoryBean"
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="jobFactory" ref="jobFactory" />
 		<property name="schedulerName" value="TestScheduler1" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="configLocation" value="classpath:quartz.properties" />
+		<property name="startupDelay" value="30"></property><!-- 延迟30秒启动scheduling -->
 		<property name="applicationContextSchedulerContextKey" value="applicationContextKey" />
 	</bean>
 </beans>
