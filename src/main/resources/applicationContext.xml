@@ -43,11 +43,11 @@
 		<aop:include name="callMonitor" />
 	</aop:aspectj-autoproxy>
 
-	<bean id="multipartResolver"
+	<!-- <bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="uploadTempDir" value="${upload.path}" />
-	</bean> 
+	</bean>  -->
 	<bean class="com.panfeng.util.FastDFSClient" init-method="init">
 		<property name="minPoolSize" value="${minPoolSize}" />
 		<property name="maxPoolSize" value="${maxPoolSize}" />
