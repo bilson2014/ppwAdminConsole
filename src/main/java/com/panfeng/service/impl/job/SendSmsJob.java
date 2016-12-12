@@ -10,7 +10,6 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.panfeng.mq.service.MailMQService;
 import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Activity;
 import com.panfeng.resource.model.Sms;
