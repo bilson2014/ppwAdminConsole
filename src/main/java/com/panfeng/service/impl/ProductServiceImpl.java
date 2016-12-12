@@ -268,4 +268,27 @@ public class ProductServiceImpl implements ProductService {
 		return mapper.findProductByIds(lids);
 	}
 
+
+	/**
+	 * 查找分页的作品，分页
+	 */
+	@Override
+	public List<Product> searchPageRecommendList(ProductView view) {
+		final List<Product> list = mapper.searchPageRecommendList(view);
+		return list;
+	}
+
+	@Override
+	public long maxRecommendSize(ProductView view) {
+		final long total = mapper.maxRecommendSize(view);
+		return total;
+	}
+	/**
+	 * 修改作品的推荐值
+	 */
+	@Override
+	public boolean updateRecommend(Product product) {
+		long l = mapper.updateRecommend(product);
+		return l>=0;
+	}
 }

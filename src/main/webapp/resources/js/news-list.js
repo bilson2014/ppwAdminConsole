@@ -1,7 +1,5 @@
-var editing ; //判断用户是否处于编辑状态
 var formUrl;
 var datagrid;
-var sessionId;
 var editor;
 $.base64.utf8encode = true;
 editorBeReady("content");
@@ -75,7 +73,16 @@ $().ready(function(){
 								return up;
 							}
 						}
-					}]] ,
+					},{
+						field : 'id' ,
+						title : '预览' ,
+						align : 'center' ,
+						width : 150,
+						formatter : function(value,row,index){
+							return "<a target='_blank' style=color:red; href='http://"+location.hostname+"/news/article-"+value+".html'>预览</a>";
+						}
+					}
+					]] ,
 		pagination: true ,
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
@@ -106,23 +113,8 @@ function createEditor(name){
 					'bold', 'italic', 'underline', 'removeformat', '|',
 					'justifyleft', 'justifycenter', 'justifyright',
 					'insertorderedlist', 'insertunorderedlist', '|',
-					'emoticons', 'image', 'link', 'unlink', 'fullscreen',
+					'emoticons', 'image', 'link', 'unlink','media', 'fullscreen',
 					'table',   'preview' ]
-	});
-	
-	var iframe = editor.edit.iframe.get(); //此时为iframe对象
-	var iframe_body = iframe.contentWindow.document.body;
-	KindEditor.ctrl(iframe_body, 'S', function() {
-		var mailId=$('#mailId').val().trim();
-		$.base64.utf8encode = true;
-		var content= $.base64.btoa(editor.html());
-		/*loadData(function(){
-			ls = datagrid.datagrid('getSelections');
-			ls[0].content = content;
-		}, getContextPath() + '/portal/product/saveContent', $.toJSON({
-			'mailId' : mailId,
-			'content' : content	
-		}));*/
 	});
 }
 
@@ -143,7 +135,6 @@ function editFuc(){
 		// 回显编辑器
 		$.base64.utf8encode = true;
 		var html=$.trim($.base64.atob($.trim(rows[0].content),true));
-	     //modify end
 		editor.html(html);
 		formUrl = getContextPath() + '/portal/news/update';
 		openDialog(rows[0]);
@@ -166,7 +157,6 @@ function delFuc(){
 				}
 				ids = ids.substring(0,ids.length-1);
 				$.post(getContextPath() + '/portal/news/delete', {ids:ids},function(result){
-					
 					// 刷新数据
 					datagrid.datagrid('clearSelections');
 					datagrid.datagrid('reload');
@@ -177,13 +167,6 @@ function delFuc(){
 			}
 		});
 	}
-}
-
-// 取消
-function cancelFuc(){
-	//回滚数据 
-	datagrid.datagrid('rejectChanges');
-	editing = undefined;
 }
 
 // 确认事件
@@ -215,7 +198,7 @@ function openDialog(data){
 	$('#dlg').dialog({
 		title : '邮件信息',
 		modal : true,
-		width : 520,
+		width : 700,
 		height : 500,
 		onOpen : function(event, ui) {
 			KindEditor.remove('input[name="content"]');

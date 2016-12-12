@@ -178,7 +178,7 @@
 	        		<tr>
 	        			<th>供应商名称</th>
 	        			<td>
-	        				<input id="teamId" name="teamId" class="easyui-combobox" editable="false" />
+	        				<input id="teamId" name="teamId" class="easyui-combobox" />
 	        			</td>
 	        			
 	        			<th>供应商联系人</th>

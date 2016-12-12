@@ -1,5 +1,6 @@
-//modify  5295 保存    3845获取展示  7400上传回显    7364 
-//4263增加参数dfshost的代码
+//modify  5300 保存到数据库    		3860打开预览获取展示  			7410 图片上传回显  
+//7880视频上传回显路径  963视频上传回显html    
+//4263增加参数dfshost的代码，目的是表单提交到后台接口，提供host，现在没用了
 
 
 /*******************************************************************************
@@ -305,6 +306,7 @@ K.options = {
 			'.font-style', '.text-decoration', '.vertical-align', '.background', '.border'
 		],
 		a : ['id', 'class', 'href', 'target', 'name'],
+		video : ['src','controls','width', 'height'],
 		embed : ['id', 'class', 'src', 'width', 'height', 'type', 'loop', 'autostart', 'quality', '.width', '.height', 'align', 'allowscriptaccess', 'wmode'],
 		img : ['id', 'class', 'src', 'width', 'height', 'border', 'alt', 'title', 'align', '.width', '.height', '.border'],
 		'p,ol,ul,li,blockquote,h1,h2,h3,h4,h5,h6' : [
@@ -951,12 +953,22 @@ function _mediaAttrs(srcTag) {
 	return _getAttrList(unescape(srcTag));
 }
 function _mediaEmbed(attrs) {
-	var html = '<embed ';
+	//修改视频上传回显html begin
+	var html = '<video controls="controls"  ';
+	_each(attrs, function(key, val) {
+		if(key == 'src' || key == 'width' || key == 'height'){
+			html += key + '="' + val + '" ';
+		}
+	});
+	html += '/>';
+	return html;
+	//修改视频上传回显html end
+	/*var html = '<embed ';
 	_each(attrs, function(key, val) {
 		html += key + '="' + val + '" ';
 	});
 	html += '/>';
-	return html;
+	return html;*/
 }
 function _mediaImg(blankPath, attrs) {
 	var width = attrs.width,
@@ -979,7 +991,8 @@ function _mediaImg(blankPath, attrs) {
 		html += 'style="' + style + '" ';
 	}
 	html += 'data-ke-tag="' + escape(srcTag) + '" alt="" />';
-	return html;
+	//return html;
+	return srcTag;
 }
 
 
@@ -3845,10 +3858,6 @@ _extend(KEdit, KWidget, {
 			}
 			if (self.beforeSetHtml) {
 				//modify begin
-		    	// var re2='src="([^"]*)"';	// HTTP URL 1
-				//var re2 = 'src="([^/])([^1-9])([^http])([^"]*)"';
-			    // var p = new RegExp(re2,["gm"]);
-			    // val=val.replace(p, "src='"+getDfsHostName()+"$4"+"'");
 				var re2 = 'src="@.@([^"]*)"';
 			    var p = new RegExp(re2,["gm"]);
 			    val=val.replace(p, "src='"+getDfsHostName()+"$1"+"'");
@@ -7867,7 +7876,9 @@ KindEditor.plugin('media', function(K) {
 						if (data.error === 0) {
 							var url = data.url;
 							if (formatUploadUrl) {
-								url = K.formatUrl(url, 'absolute');
+								//修改视频上传回显路径
+								//url = K.formatUrl(url, 'absolute');
+								url = getDfsHostName()+url;
 							}
 							urlBox.val(url);
 							if (self.afterUpload) {

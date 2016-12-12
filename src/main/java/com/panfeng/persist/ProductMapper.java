@@ -110,5 +110,16 @@ public interface ProductMapper {
 	 * @return
 	 */
 	public Product getMasterWork(@Param("teamId")long teamId);
+	/**
+	 * 查询推荐值大于0的分页集合
+	 */
+	public List<Product> searchPageRecommendList(ProductView view);
+
+	public long maxRecommendSize(ProductView view);
+
+	/**
+	 * 修改作品推荐值
+	 */
+	public long updateRecommend(Product product);
 
 }

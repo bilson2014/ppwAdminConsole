@@ -35,7 +35,7 @@
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
-	<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
+	<div data-options="region:'north',border:false" style="height: 66px; overflow: hidden;background-color: #fff">
 		<form id="searchForm">
 			<table>
 				<tr>
@@ -46,10 +46,10 @@
 					<th>上传时间:</th>
 					<td>
 						<input name="beginTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />~
-					</td>
-					<td>
 						<input name="endTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
 					</td>
+				</tr>
+				<tr>
 					<th>审核状态：</th>
 					<td>
 						<select name="flag" class="easyui-combobox" editable="false">
@@ -57,6 +57,14 @@
 							<option value="0">审核中</option>
 							<option value="1">审核通过</option>
 							<option value="2">未审核通过</option>
+						</select>
+					</td>
+					<th>是否可见：</th>
+					<td>
+						<select name="visible" class="easyui-combobox" editable="false">
+							<option value="" selected>-- 请选择 --</option>
+							<option value="0">可见</option>
+							<option value="1">不可见</option>
 						</select>
 					</td>
 					<th>是否挂接外链：</th>
@@ -98,34 +106,28 @@
 			
 			<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 			
-			<a onclick="setMaster();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">设为代表作</a>
+			<a onclick="setMaster();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'">设为代表作</a>
+			<a onclick="recommendFuc()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">首页推荐</a>
 		</div>
 		
-		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 500px;"
+		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 6500px;height: 500px;"
             closed="true" buttons="#dlg-buttons" title="作品信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input id="productId" name="productId" type="hidden" />
 	        	<input id="visible" name="visible" type="hidden"/>
-	            <div class="online">
+				<div class="online">
 					<div class="lable l-width">项目名称</div>
 					<div class="d-float f-width">
 						<input id="productName" name="productName" class="easyui-textbox" required="true" />
 					</div>
-				</div>
-				
-				<div class="online">
-					<div class="lable l-width">项目类型</div>
-					<div class="d-float f-width1">
-						<input id="productType" name="productType" required="true" class="p-textbox-small" style="width: 144px;height: 30px;"/>
-					</div>
 					<div class="lable-right l-width">所属团队</div>
 					<div class="d-float f-width1">
-						<input id="teamId" name="teamId" required="true" class="p-textbox-small" style="width: 144px;height: 30px;"/>
+						<input id="teamId" name="teamId" required="true" class="p-textbox-small" />
 					</div>
 				</div>
 				
 				<div class="textarea-position">
-					<div class="lable l-width">项目描述</div>
+					<div class="lable-right l-width">项目描述</div>
 					<textarea class="easyui-textbox" id="pDescription" name="pDescription" multiline="true" style="height: 50px;"></textarea>
 				</div>
 				
@@ -139,21 +141,22 @@
 					</div>
 					<div class="lable-right l-width">视频长度</div>
 					<div class="d-float f-width1">
-						<input id="videoLength" name="videoLength" class="easyui-numberbox" required="true" precision="0"/>
+						<input id="videoLength" name="videoLength" class="easyui-numberbox"  precision="0"/>
 					</div>
 				</div>
 				
 				<div class="online">
 					<div class="lable l-width">推荐值</div>
 					<div class="d-float f-width1">
-						<input id="recommend" name="recommend" class="easyui-numberbox" style="width: 141px" required="true" precision="0" />
+						<input id="recommend" name="recommend" required="true" class="easyui-numberbox" style="width: 141px"  precision="0" />
 					</div>
 					<div class="lable-right l-width">创作时间</div>
 					<div class="d-float f-width1">
 						<input class="textbox" name="creationTime" required="true" id = "creationTime" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly"/>
 					</div>
 				</div>
-				
+				<input id="videoUrl"  type="hidden"/>
+				<input id="picLDUrl"  type="hidden"/>
 				<div class="online">
 					<div class="lable l-width">视频文件</div>
 					<div class="d-float f-width">
@@ -175,7 +178,7 @@
 					
 					<div class="lable-right l-width">赞值</div>
 					<div class="d-float f-width1">
-						<input id="supportCount" name="supportCount" class="easyui-numberbox" required="true" precision="0" />
+						<input id="supportCount" required="true" name="supportCount" class="easyui-numberbox" precision="0" />
 					</div>
 				</div>
 				
@@ -230,5 +233,12 @@
 			</div>
 		</div>
 		<!-- image/video show content end-->
+		
+		<div id="recommend-dlg" class="easyui-dialog" style="width:430px; height:480px;padding:10px 20px"
+           closed="true" buttons="#recommend-dlg-buttons" title="首页推荐">
+			<table id="recommend-gride" data-options="fit:true,border:false"></table>
+    </div>
+     <div id="recommend-dlg-buttons">
+    </div>
 </body>
 </html>

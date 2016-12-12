@@ -1067,4 +1067,14 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			this.html = html;
 		}
 	}
+
+	/**
+	 * 导出excel表格
+	 * @param list
+	 * @param outputStream
+	 */
+	public void export2Excel(final List<IndentProject> list, final OutputStream outputStream) {
+		
+		
+	}
 }

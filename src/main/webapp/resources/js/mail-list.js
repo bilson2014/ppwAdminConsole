@@ -176,7 +176,7 @@ function openDialog(data){
 	$('#dlg').dialog({
 		title : '邮件信息',
 		modal : true,
-		width : 520,
+		width : 700,
 		height : 500,
 		onOpen : function(event, ui) {
 			KindEditor.remove('input[name="content"]');

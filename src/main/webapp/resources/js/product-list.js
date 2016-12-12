@@ -1,6 +1,7 @@
 var editing ; //判断用户是否处于编辑状态
 var formUrl;
 var datagrid;
+var recommend_datagrid;
 var editor;
 $.base64.utf8encode = true;
 editorBeReady("videoDescription");
@@ -28,21 +29,6 @@ $().ready(function(){
 							options : {
 								required : true , 
 								missingMessage : '请填写项目名称!'
-							}
-						}
-					},{
-						field : 'productType',
-						title : '项目类型',
-						width : 60,
-						align : 'center' ,
-						formatter : function(value,row,index){
-							return '<span style=color:orange; >'+ row.productTypeName +'</span>' ;
-						},
-						editor : {
-							type : 'validatebox' ,
-							options : {
-								required : false , 
-								missingMessage : '请上传团队照片!'
 							}
 						}
 					},{
@@ -287,8 +273,6 @@ $().ready(function(){
 			}
 		}
 	});
-	
-	
 	product.initData();
 });
 
@@ -337,7 +321,6 @@ function createEditor(name){
 	KindEditor.ctrl(iframe_body, 'S', function() {
 		var productId=$('#productId').val().trim();
 		$.base64.utf8encode = true;
-		
 		var videoDescription= $.base64.btoa(editor.html());
 		loadData(function(){
 			ls = datagrid.datagrid('getSelections');
@@ -412,7 +395,6 @@ function cancelFuc(){
 	datagrid.datagrid('rejectChanges');
 	editing = undefined;
 }
-
 // 确认事件
 function save(){
 	progressLoad();
@@ -425,8 +407,19 @@ function save(){
 		onSubmit : function() {
 			//创作时间必填
 			var creationTime = $("#creationTime").val();
-			if(creationTime==null&&creationTime==undefined&&creationTime==''){
+			if(creationTime==null||creationTime==undefined||creationTime==''){
 				$.message('请填写创作时间!');
+				progressClose();
+				return false;
+			}
+			if($("#videoUrl").val()=='' && $("#videoFile").val()==''){
+				$.message('请上传视频文件!');
+				progressClose();
+				return false;
+			}
+			if($("#picLDUrl").val()=='' && $("#picLDFile").val()==''){
+				$.message('请上传封面!');
+				progressClose();
 				return false;
 			}
 			var flag = $(this).form('validate');
@@ -458,19 +451,16 @@ function openDialog(data){
 				valueField : 'teamId',
 				textField : 'teamName'
 			});
-			
-			$('#productType').combobox({
-				url : getContextPath() + '/portal/item/itemSelect',
-				valueField : 'itemId',
-				textField : 'itemName'
-			});
-			
 			if(data == null){
-				$('#productType').combobox('setValue','');
 				$('#teamId').combobox('setValue','');
+				$('#videoLength').textbox('setValue','0');
+				$('#recommend').textbox('setValue','0');
+				$('#supportCount').textbox('setValue','0');
+				$('#flag').combobox('setValue','1');
 			}else {
-				$('#productType').combobox('setValue',data.productType);
 				$('#teamId').combobox('setValue',data.teamId);
+				$('#videoUrl').val(data.videoUrl);
+				$('#picLDUrl').val(data.picLDUrl);
 			}
 			
 			KindEditor.remove('input[name="videoDescription"]');
@@ -515,4 +505,130 @@ function setMaster(){
 	} else {
 		$.message('只能选择一条记录进行修改!');
 	}
+}
+
+function recommendFuc(){
+	$('#recommend-dlg').dialog({
+		title : '作品推荐',
+		modal : true,
+		width : 950,
+		height : 500,
+		onOpen : function(event, ui) {
+		},
+	}).dialog('open').dialog('center');
+	// 初始化DataGrid
+	recommend_datagrid = $('#recommend-gride').datagrid({
+		url : getContextPath() + '/portal/product/recommend/list',
+		idField : 'productId',
+		title : '首页作品推荐' , 
+		fit: true ,
+		striped : true ,
+		loadMsg : '数据正在加载,请耐心的等待...' ,
+		rownumbers : true ,
+		columns:[[
+					{
+						field : 'productName',
+						title : '作品名称',
+						width : 260,
+						align : 'center'
+					},
+					{
+						field : 'teamName',
+						title : '供应商名称',
+						width : 260,
+						align : 'center'
+					},
+					{
+						field : 'recommend',
+						title : '推荐值',
+						width : 180,
+						align : 'center',
+						formatter:function(value,row,index){
+							if(row.recommend==1){
+								return '<span style=color:blue; >热门爆款</span>' ;
+							}
+							if(row.recommend==2){
+								return '<span style=color:green; >精品案例</span>' ;
+							}else{
+								return '<span style=color:black; >推荐视频</span>' ;
+							}
+						},
+						editor:{
+							type:'combobox' , 
+							options:{
+								data:[{id:1 , val:'热门爆款'},{id:2 , val:'精品案例'},{id:3 , val:'推荐视频'}] ,
+								valueField:'id' , 
+								textField:'val' ,
+								required:true , 
+								editable : false
+							}
+						}
+					},
+					{
+						field : 'recommendDeal',
+						width : 160,
+						title : '操作',
+						align : 'center',
+						formatter : function(value,row,index){
+							var all = "";
+							var totalCount = $('#recommend-gride').datagrid('getData').total;
+							var modify  = '<a class="modify-recommend" data-index="'+index+'" data-id="'+row.productId+'" href="javascript:void(0)">修改</a>';
+							var save  = '<a class="save-recommend hide" data-index="'+index+'" data-id="'+row.productId+'" href="javascript:void(0)">保存</a>';
+							var del = '<a class="del-recommend" data-id="'+row.productId+'" href="javascript:void(0)">移除</a>';
+							return modify+" "+save+" "+del;
+						}
+					}
+				]] ,
+		pagination: true,
+		pageSize : 20,
+		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
+		showFooter : false,
+		onLoadSuccess:function(){
+			modifyCommend();
+			delCommend();
+		},
+		onAfterEdit:function(index , record){
+			$.post(getContextPath() + '/portal/product/updateRecommend', record ,function(result){
+				recommend_datagrid.datagrid('clearSelections');
+				recommend_datagrid.datagrid('reload');
+				$.message('操作成功!');
+			});
+		}
+	});
+}
+function modifyCommend(){
+	$(".modify-recommend").off("click").on("click",function(){
+		var index = $(this).attr("data-index");
+		//开启编辑状态
+		recommend_datagrid.datagrid('beginEdit',index);
+		$(this).addClass("hide")
+		$(this).next().removeClass("hide");
+		saveCommend();
+	})
+}
+function saveCommend(){
+	$(".save-recommend").off("click").on("click",function(){
+		var index = $(this).attr("data-index");
+		//保存之前进行数据的校验 , 然后结束编辑并释放编辑状态字段 
+		recommend_datagrid.datagrid('beginEdit', index);
+		if(recommend_datagrid.datagrid('validateRow',index)){
+			recommend_datagrid.datagrid('endEdit', index);
+		}
+	})
+}
+function delCommend(){
+	$(".del-recommend").off("click").on("click",function(){
+		var productId = $(this).attr("data-id");
+		$.messager.confirm('提示信息' , '确认删除?' , function(r){
+			if(r){
+				$.post(getContextPath() + '/portal/product/updateRecommend', {
+					productId:productId,
+					recommend:0
+				} ,function(result){
+					recommend_datagrid.datagrid('reload');
+					$.message('操作成功!');
+				});
+			}
+		});
+	})
 }
