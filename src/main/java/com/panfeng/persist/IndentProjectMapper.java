@@ -88,5 +88,5 @@ public interface IndentProjectMapper {
 	public List<IndentProject> listWithPaginationAll(IndentProjectView view);
 
 	public List<IndentProject> listWithPaginationAllAndSynergy(IndentProjectView view);
-	
+
 }

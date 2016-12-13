@@ -8,4 +8,5 @@ public interface MailMQService {
 	public void sendMessage(final String to, final String subject, final String content);
 
 	public void sendMailsByType(String mailType, Map<String, String[]> map);
+	
 }

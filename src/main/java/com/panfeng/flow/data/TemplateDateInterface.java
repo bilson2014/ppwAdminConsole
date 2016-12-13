@@ -23,5 +23,6 @@ public interface TemplateDateInterface<F, T> {
 	F fillData(FillerParam fillerParam, T t, EventType eventType);
 
 	Map<String, String> personnel();
+	
 
 }

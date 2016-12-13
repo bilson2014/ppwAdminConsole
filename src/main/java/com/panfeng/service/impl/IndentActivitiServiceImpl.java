@@ -1,7 +1,6 @@
 package com.panfeng.service.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -25,13 +24,11 @@ import com.panfeng.persist.FlowDateMapper;
 import com.panfeng.persist.IndentFlowMapper;
 import com.panfeng.persist.IndentProjectMapper;
 import com.panfeng.resource.model.ActivitiTask;
-import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.FlowDate;
 import com.panfeng.resource.model.FlowNode;
 import com.panfeng.resource.model.FlowTemplate;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
-import com.panfeng.resource.model.Synergy;
 import com.panfeng.service.ActivitiEngineService;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.IndentActivitiService;
@@ -506,5 +503,6 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		}
 		return indentProject;
 	}
+
 
 }

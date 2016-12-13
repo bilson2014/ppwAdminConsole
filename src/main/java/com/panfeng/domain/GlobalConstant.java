@@ -98,6 +98,13 @@ public final class GlobalConstant extends BaseObject {
 	
 	public static String UPLOAD_PATH;
 	
+	// database
+	public static String JDBC_URL;
+	
+	public static String JDBC_ROOT;
+	
+	public static String JDBC_PASSWORD;
+	
 	private static GlobalConstant GLOBALCONSTANT = new GlobalConstant();
 
 	static {
@@ -134,6 +141,13 @@ public final class GlobalConstant extends BaseObject {
 				UPLOAD_PATH = propertis.getProperty("upload.path");
 				
 				FDFS_BACKUP_SERVER_PATH = propertis.getProperty("backup.server.dfs.url");
+				
+				// jdbc
+				JDBC_URL = propertis.getProperty("jdbc.url");
+				
+				JDBC_ROOT = propertis.getProperty("jdbc.username");
+				
+				JDBC_PASSWORD = propertis.getProperty("jdbc.password");
 			} catch (Exception e) {
 
 			} finally {

@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panfeng.persist.ActivityMapper">
-	<insert id="save">
+	<insert id="save" useGeneratedKeys="true" keyProperty="activityId">
 		<![CDATA[
 			INSERT INTO ACTIVITY (
 				A_NAME, 
 				A_TEMPLATE_TYPE, 
 				A_TEMPLETE_ID, 
 				A_PARAMLIST, 
-				A_STARTTIME
+				A_STARTTIME,
+				A_RELEVANT_PERSONS
 			) VALUES(
 				#{activityName},
 				${acticityTempleteType},
 				#{acticityTempleteId},
 				#{activityParamList},
-				#{activityStartTime}
+				#{activityStartTime},
+				#{actitityRelevantPersons}
 			);
 		]]>
 	</insert>
 
 	<update id="update">
 		<![CDATA[
-			UPDATE pat.ACTIVITY
+			UPDATE ACTIVITY SET
 			 A_NAME = #{activityName},
 			 A_TEMPLATE_TYPE = ${acticityTempleteType},
 			 A_TEMPLETE_ID = #{acticityTempleteId},
 			 A_PARAMLIST = #{activityParamList},
-			 A_STARTTIME = #{activityStartTime}
+			 A_STARTTIME = #{activityStartTime},
+			 A_RELEVANT_PERSONS = #{actitityRelevantPersons}
 			WHERE
 				A_ID = ${activityId};
 		]]>
@@ -53,7 +56,8 @@
 				a.A_TEMPLATE_TYPE AS acticityTempleteType,
 				a.A_TEMPLETE_ID AS acticityTempleteId,
 				a.A_PARAMLIST AS activityParamList,
-				a.A_STARTTIME AS activityStartTime
+				a.A_STARTTIME AS activityStartTime,
+				a.A_RELEVANT_PERSONS AS actitityRelevantPersons
 			FROM
 				ACTIVITY a
 			WHERE
@@ -70,7 +74,41 @@
 				a.A_TEMPLATE_TYPE AS acticityTempleteType,
 				a.A_TEMPLETE_ID AS acticityTempleteId,
 				a.A_PARAMLIST AS activityParamList,
-				a.A_STARTTIME AS activityStartTime
+				a.A_STARTTIME AS activityStartTime,
+				a.A_RELEVANT_PERSONS AS actitityRelevantPersons
+			FROM
+				ACTIVITY a
+		]]>
+	</select>
+	<select id="listWithPagination" resultType="Activity">
+		<![CDATA[
+			SELECT
+				a.A_ID AS activityId ,
+				a.A_NAME AS activityName,
+				DATE_FORMAT(a.A_CREATETIME,'%Y-%m-%d %T') AS activityCreateTime,
+				a.A_TEMPLATE_TYPE AS acticityTempleteType,
+				a.A_TEMPLETE_ID AS acticityTempleteId,
+				a.A_PARAMLIST AS activityParamList,
+				a.A_STARTTIME AS activityStartTime,
+				a.A_RELEVANT_PERSONS AS actitityRelevantPersons
+			FROM
+				ACTIVITY a
+			WHERE 1=1
+		]]>
+		<if test="activityName != null and activityName != ''">
+			AND a.A_NAME LIKE
+			CONCAT(CONCAT('%',#{activityName}),'%')
+		</if>
+		<![CDATA[
+			ORDER BY a.A_ID DESC
+			LIMIT ${begin} , ${limit}
+		]]>
+	</select>
+	
+	<select id="maxSize" resultType="long">
+		<![CDATA[
+			SELECT
+				COUNT(1)
 			FROM
 				ACTIVITY a
 		]]>

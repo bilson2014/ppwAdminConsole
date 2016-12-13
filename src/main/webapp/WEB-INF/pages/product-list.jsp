@@ -110,7 +110,7 @@
 			<a onclick="recommendFuc()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">首页推荐</a>
 		</div>
 		
-		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 500px;"
+		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 6500px;height: 500px;"
             closed="true" buttons="#dlg-buttons" title="作品信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input id="productId" name="productId" type="hidden" />
@@ -120,9 +120,9 @@
 					<div class="d-float f-width">
 						<input id="productName" name="productName" class="easyui-textbox" required="true" />
 					</div>
-					<div class="lable l-width">所属团队</div>
+					<div class="lable-right l-width">所属团队</div>
 					<div class="d-float f-width1">
-						<input id="teamId" name="teamId" required="true" class="p-textbox-small" style="width: 144px;height: 30px;"/>
+						<input id="teamId" name="teamId" required="true" class="p-textbox-small" />
 					</div>
 				</div>
 				

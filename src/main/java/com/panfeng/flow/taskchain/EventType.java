@@ -33,5 +33,4 @@ public enum EventType {
 		this.name = name;
 		this.id = id;
 	}
-
 }

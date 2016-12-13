@@ -78,7 +78,7 @@
 		
 		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 500px;"
             closed="true" buttons="#dlg-buttons" title="作品信息">
-	        <form id="fm" method="post" enctype="multipart/form-data">
+	        <form id="fm" method="post">
 	        	<input id="mailId" name="id" type="hidden">
 	            <div class="online">
 					<div class="lable l-width">邮件标题</div>
