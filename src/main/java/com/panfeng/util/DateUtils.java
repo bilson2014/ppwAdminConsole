@@ -164,9 +164,19 @@ public class DateUtils {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(c.getTime());
 	}
+	/**
+	 *取得当前时间 格式yyyy-MM-dd hh:mm:ss
+	 */
+	public static String nowDate() {
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(new Date().getTime());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		return dateFormat.format(c.getTime());
+	}
 	
 	public static void main(String[] args) {
-		Date date1=getDateByFormat("2016-05-11","yyyy-MM-dd");
-		System.out.println(dateInterval(date1.getTime(),getDateByFormat("2016-06-23","yyyy-MM-dd").getTime()));
+		System.out.println(nowDate());
+		//Date date1=getDateByFormat("2016-05-11","yyyy-MM-dd");
+		//System.out.println(dateInterval(date1.getTime(),getDateByFormat("2016-06-23","yyyy-MM-dd").getTime()));
 	}
 }

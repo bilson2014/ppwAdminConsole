@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.panfeng.resource.model.TeamTmp;
-import com.panfeng.resource.view.MailView;
+import com.panfeng.resource.view.Pagination;
 
 public interface TeamTmpMapper {
 
@@ -13,9 +13,9 @@ public interface TeamTmpMapper {
 
 	void addTeamTmp(TeamTmp tmp);
 
-	List<TeamTmp> listWithPagination(MailView view);
+	List<TeamTmp> listWithPagination(Pagination view);
 
-	long maxSize(MailView view);
+	long maxSize(Pagination view);
 
 	TeamTmp getTeamTmpById(@Param("id") final Integer id);
 

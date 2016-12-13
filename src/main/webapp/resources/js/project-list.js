@@ -340,7 +340,6 @@ function save(){
 	$('#fm').form('submit',{
 		url : formUrl,
 		onSubmit : function(param) {
-			
 			var flag = $(this).form('validate');
 			if(!flag){
 				progressClose();
