@@ -9,7 +9,7 @@ import com.panfeng.persist.TeamTmpMapper;
 import com.panfeng.resource.model.DIffBean;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.model.TeamTmp;
-import com.panfeng.resource.view.MailView;
+import com.panfeng.resource.view.Pagination;
 import com.panfeng.service.TeamTmpService;
 import com.panfeng.util.Constants;
 
@@ -22,13 +22,13 @@ public class TeamTmpServiceImpl implements TeamTmpService{
 	private TeamMapper teamMapper;
 
 	@Override
-	public List<TeamTmp> listWithPagination(MailView view) {
+	public List<TeamTmp> listWithPagination(Pagination view) {
 		final List<TeamTmp> list = teamTmpMapper.listWithPagination(view);
 		return list;
 	}
 
 	@Override
-	public long maxSize(MailView view) {
+	public long maxSize(Pagination view) {
 		final long total = teamTmpMapper.maxSize(view);
 		return total;
 	}

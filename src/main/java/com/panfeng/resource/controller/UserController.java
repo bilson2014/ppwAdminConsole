@@ -133,6 +133,7 @@ public class UserController extends BaseController {
 	public long save(final User user,HttpServletRequest request) {
 
 		user.setPassword(DataUtil.md5(INIT_PASSWORD));
+		user.setBirthday(DateUtils.nowDate());
 		user.setUpdateTime(DateUtils.nowTime());
 		final long ret = userService.save(user);
 		SessionInfo sessionInfo = getCurrentInfo(request);

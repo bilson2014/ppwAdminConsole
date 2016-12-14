@@ -4,13 +4,13 @@ import java.util.List;
 
 import com.panfeng.resource.model.DIffBean;
 import com.panfeng.resource.model.TeamTmp;
-import com.panfeng.resource.view.MailView;
+import com.panfeng.resource.view.Pagination;
 
 public interface TeamTmpService {
 
-	List<TeamTmp> listWithPagination(MailView view);
+	List<TeamTmp> listWithPagination(Pagination view);
 
-	long maxSize(MailView view);
+	long maxSize(Pagination view);
 
 	TeamTmp getTeamTmpById(Integer id);
 
