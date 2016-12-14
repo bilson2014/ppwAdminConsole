@@ -59,12 +59,18 @@ public class ActivityController extends BaseController {
 		view.setLimit(rows);
 		
 		DataGrid<Activity> dataGrid = new DataGrid<Activity>();
-		final List<Activity> list = activityService.listWithPagination(view);
+		List<Activity> list;
+		try {
+			list = activityService.listWithPagination(view);
+			dataGrid.setRows(list);
+			final long total = activityService.maxSize(view);
+			dataGrid.setTotal(total);
+			return dataGrid;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 		
-		dataGrid.setRows(list);
-		final long total = activityService.maxSize(view);
-		dataGrid.setTotal(total);
-		return dataGrid;
 	}
 
 	@RequestMapping("/post/activity")

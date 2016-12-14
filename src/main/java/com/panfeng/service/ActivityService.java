@@ -20,7 +20,7 @@ public interface ActivityService {
 
 	Activity getActivityById(Long activityId) throws Exception;
 	
-	List<Activity> listWithPagination(final ActivityView view);
+	List<Activity> listWithPagination(final ActivityView view)  throws Exception;
 
 	long maxSize(ActivityView view);
 

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.flow.taskchain.EventBase;
 import com.panfeng.flow.taskchain.TaskStatus;
-import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.persist.IndentFlowMapper;
 import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.IndentFlow;
@@ -40,8 +39,8 @@ public class ManagerSmsEvent extends EventBase {
 	@Autowired
 	private SynergyService synergyService;
 
-	@Autowired
-	private SmsMQService smsMQService;
+	//@Autowired
+	//private SmsMQService smsMQService;
 
 	@Autowired
 	private ActivitiEngineService activitiEngineService;

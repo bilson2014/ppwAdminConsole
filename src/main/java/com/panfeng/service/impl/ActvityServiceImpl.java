@@ -159,9 +159,18 @@ public class ActvityServiceImpl implements ActivityService {
 	}
 
 	@Override
-	public List<Activity> listWithPagination(ActivityView view) {
-		final List<Activity> lists = activityMapper.listWithPagination(view);
-		return lists;
+	public List<Activity> listWithPagination(ActivityView view) throws Exception {
+		final List<Activity> activityList = activityMapper.listWithPagination(view);
+		if (ValidateUtil.isValid(activityList)) {
+			for (Activity activity : activityList) {
+				String json = activity.getActivityParamList();
+				if (ValidateUtil.isValid(json)) {
+					List<param> paramList = JsonUtil.fromJsonArray(json, param.class);
+					activity.setParamList(paramList);
+				}
+			}
+		}
+		return activityList;
 	}
 
 	@Override
