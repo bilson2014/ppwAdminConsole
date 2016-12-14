@@ -96,6 +96,8 @@ public class SmsEvent extends EventBase {
 								sortParam[i] = value[index];
 								i++;
 							}
+							if (sortParam.length == 0)
+								sortParam = null;
 							smsMQService.sendMessage(autoEvent.getTemplateId(), keyString, sortParam);
 						}
 					}

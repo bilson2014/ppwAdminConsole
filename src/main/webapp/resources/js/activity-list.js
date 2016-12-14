@@ -109,13 +109,19 @@ $().ready(function() {
 							$("#acticityTempleteId").combobox({
 								valueField : 'tempId',
 								textField : 'tempTitle',
-								data:data.rows
+								data:data.rows,
+								onSelect : function(){
+									loadTemplateValue();
+								}
 							});
 						}else{
 							$("#acticityTempleteId").combobox({
 								valueField : 'mailType',
 								textField : 'subject',
-								data:data.rows
+								data:data.rows,
+								onSelect : function(){
+									loadTemplateValue();
+								}
 							});
 						}
 					},
@@ -143,7 +149,41 @@ $().ready(function() {
 	    panelHeight : 'auto'
 	});
 });
-
+function loadTemplateValue(){
+	var url = getContextPath();
+	var key =$('#acticityTempleteId').combobox('getValue') ;
+	var type = $('#acticityTempleteType').combobox('getValue');
+	if(type == '0'){
+		// sms
+		url+='/portal/get/smstemplate';
+	}else{
+		// mail
+		url+='/portal/get/mailtemplate';
+	}
+	$.ajax({
+		url : url,
+		type : 'POST',
+		data : {"templateKey":key},
+		dataType : 'json',
+		success : function(msg){
+			var val = msg.result;
+			if(type == '0'){
+				// sms
+				$("#templateValue").html(val);
+			}else{
+				// mail
+				$.base64.utf8encode = true;
+				var html=$.trim($.base64.atob($.trim(val),true));
+				$("#templateValue").html(html);
+			}
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			console.error('ajax(' + url + ')[' + jqXHR.status + ']' + jqXHR.statusText);
+			console.error(jqXHR.responseText);
+			console.error('[' + textStatus + ']' + errorThrown);
+		}
+	});;
+}
 // 打开dialog
 function openDialog(id, data) {
 	$('#' + id).dialog({
@@ -170,14 +210,20 @@ function openDialog(id, data) {
 								valueField : 'tempId',
 								textField : 'tempTitle',
 								data:msg.rows,
-								value : data.acticityTempleteId
+								value : data.acticityTempleteId,
+								onSelect : function(){
+									loadTemplateValue();
+								}
 							});
 						}else{
 							$("#acticityTempleteId").combobox({
 								valueField : 'mailType',
 								textField : 'subject',
 								data:msg.rows,
-								value : data.acticityTempleteId
+								value : data.acticityTempleteId,
+								onSelect : function(){
+									loadTemplateValue();
+								}
 							});
 						}
 						//$("#acticityTempleteId").combobox('setValue',);
@@ -222,6 +268,7 @@ function editFuc() {
 		$('#activityId').val(rows[0].activityId);
 		formUrl = getContextPath() + '/portal/put/activity';
 		openDialog('dlg',rows[0]);
+		loadTemplateValue();
 	} else {
 		$.message('只能选择一条记录进行修改!');
 	}

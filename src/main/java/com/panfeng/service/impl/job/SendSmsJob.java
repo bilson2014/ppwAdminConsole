@@ -32,6 +32,7 @@ public class SendSmsJob implements Job {
 
 	@Autowired
 	private SMSTemplateService smsTemplateService;
+
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		JobExecutionContext context2 = context;
@@ -42,7 +43,7 @@ public class SendSmsJob implements Job {
 				Activity activity = activityService.getActivityById(activityId);
 				Sms findSmsById = smsTemplateService.findSmsById(Long.parseLong(activity.getActicityTempleteId()));
 				String content = findSmsById.getTempContent();
-				
+
 				Map<String, String[]> parser = jobParamParser.parser(activityId);
 				Set<String> key = parser.keySet();
 				for (String keyString : key) {
@@ -58,6 +59,8 @@ public class SendSmsJob implements Job {
 							sortParam[i] = value[index];
 							i++;
 						}
+						if (sortParam.length == 0)
+							sortParam = null;
 						smsMQService.sendMessage(activity.getActicityTempleteId(), keyString, sortParam);
 					}
 				}

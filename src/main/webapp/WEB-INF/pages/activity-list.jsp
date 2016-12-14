@@ -7,6 +7,7 @@
 <spring:url value="/resources/lib/jquery.easyui/datagrid-dnd.js" var="datagridDndJs" />
 <spring:url value="/resources/lib/jquery.json/jquery.json-2.4.min.js"
 	var="jsonJs" />
+<spring:url value="/resources/lib/jquery/jquery.base64.js" var="jquerybase64Js" />
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -20,6 +21,7 @@
 <script type="text/javascript" src="${jsonJs }"></script>
 <script type="text/javascript" src="${datagridDndJs }"></script>
 <script src="${activityJs }"></script>
+<script src="${jquerybase64Js }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 		<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
@@ -65,6 +67,10 @@
             	<div class="fitem">
 	                <label>模板：</label>
 	                <input id="acticityTempleteId" name="acticityTempleteId" class="easyui-combobox" required="true">
+	            </div>
+	            <div>
+	            	<label>模板内容：</label><br/>
+	                <span id="templateValue"></span>
 	            </div>
             	<div class="fitem">
 	                <label>参数列表：</label>
