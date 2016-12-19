@@ -265,7 +265,6 @@
 			<version>5.19.0.2</version>
 		</dependency>
 		<!-- activiti end -->
-
 		<dependency>
 			<groupId>commons-pool</groupId>
 			<artifactId>commons-pool</artifactId>
