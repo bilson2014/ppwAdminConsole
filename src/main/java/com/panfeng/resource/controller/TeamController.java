@@ -342,6 +342,8 @@ public class TeamController extends BaseController {
 				if (description != null && !"".equals(description)) {
 					team.setDescription(URLDecoder.decode(description, "UTF-8"));
 				}
+				// 将状态置为审核中
+				team.setFlag(0);
 
 				final long ret = service.updateTeamInfomation(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);

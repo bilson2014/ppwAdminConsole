@@ -74,6 +74,7 @@ public class TeamTmpServiceImpl implements TeamTmpService{
 		team.setDemand(tmp.getDemand());
 		team.setEstablishDate(tmp.getEstablishDate());
 		team.setOfficialSite(tmp.getOfficialSite());
+		team.setTeamPhotoUrl(tmp.getTeamPhotoUrl());
 		return team;
 	}
 
@@ -271,6 +272,17 @@ public class TeamTmpServiceImpl implements TeamTmpService{
 			bean.setPropertyName("公司名称");
 			bean.setOldValue(_team);
 			bean.setNewValue(tmp_team);
+			list.add(bean);
+		}
+		
+		tmp_team = null == tmp.getTeamPhotoUrl()?"":tmp.getTeamPhotoUrl();
+		 _team = null == team.getTeamPhotoUrl()?"":team.getTeamPhotoUrl();
+		if(tmp_team.compareTo(_team) != 0){
+			DIffBean bean = new DIffBean();
+			bean.setProperty("teamPhotoUrl");
+			bean.setPropertyName("公司Logo");
+			bean.setOldValue("更换了新的Logo");
+			bean.setNewValue("~");
 			list.add(bean);
 		}
 		return list;

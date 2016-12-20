@@ -243,6 +243,11 @@
 				,TEAMCITY = #{teamCity}
 			]]>
 		</if>
+		<if test="teamPhotoUrl != null and teamPhotoUrl != ''">
+			<![CDATA[
+				,TEAMPHOTOURL = #{teamPhotoUrl}
+			]]>
+		</if>
 		<![CDATA[
 			WHERE TEAMID = ${teamId}
 		]]>
@@ -450,7 +455,8 @@
 					INFORESOURCE = ${infoResource},
 					DESCRIPTION = #{description},
 					TEAMPROVINCE = #{teamProvince},
-					teamCity = #{teamCity}
+					TEAMCITY = #{teamCity},
+					FLAG = ${flag}
 		]]>
 
 		<if test="phoneNumber != null and phoneNumber != ''">
