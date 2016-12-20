@@ -690,6 +690,7 @@
 				   pro.HRET AS hret,
 				   pro.TAGS AS tags,
 				   pro.SHOWTYPE AS showType,
+				   pro.FLAG AS flag,
 				   pro.CHECK_DETAILS AS checkDetails,
 				   pro.SESSIONID AS sessionId,
 				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
@@ -698,7 +699,6 @@
 			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			INNER JOIN TEAM t ON t.TEAMID = pro.TEAMID
 			WHERE 1 = 1
-				AND pro.FLAG <> 2
 				AND t.TEAMID = ${teamId}
 		]]>
 	</select>
