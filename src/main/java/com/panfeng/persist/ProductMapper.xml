@@ -30,7 +30,7 @@
 			FROM PRODUCT pro
 			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
-			WHERE 1 = 1
+			WHERE 1 = 1 and pro.flag<>3 
 		]]>
 		<if test="teamId !=null and teamId != ''">
 			AND pro.TEAMID = ${teamId}
@@ -619,6 +619,7 @@
 				PRODUCTTYPE = ${productType},
 				VIDEOLENGTH = #{videoLength},
 				VISIBLE = ${visible},
+				FLAG = ${flag},
 				TAGS = #{tags},
 				VIDEODESCRIPTION = #{videoDescription},
 				UPDATEDATE = CURRENT_TIMESTAMP,
@@ -626,9 +627,6 @@
 		]]>
 		<if test="videoUrl != null and videoUrl != ''">
 			,VIDEOURL = #{videoUrl}
-		</if>
-		<if test="picHDUrl != null and picHDUrl != ''">
-			,PICHDURL = #{picHDUrl}
 		</if>
 		<if test="picLDUrl != null and picLDUrl != ''">
 			,PICLDURL = #{picLDUrl}
@@ -692,6 +690,7 @@
 				   pro.HRET AS hret,
 				   pro.TAGS AS tags,
 				   pro.SHOWTYPE AS showType,
+				   pro.CHECK_DETAILS AS checkDetails,
 				   pro.SESSIONID AS sessionId,
 				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
 				   pro.MASTERWORK AS masterWork
@@ -829,6 +828,14 @@
 		<![CDATA[
 			UPDATE PRODUCT p SET
 				p.recommend = ${recommend}
+			WHERE
+				p.PRODUCTID = ${productId}
+		]]>
+	</update>
+	<update id="updateProductVisibility">
+		<![CDATA[
+			UPDATE PRODUCT p SET
+				p.visible = ${visible}
 			WHERE
 				p.PRODUCTID = ${productId}
 		]]>

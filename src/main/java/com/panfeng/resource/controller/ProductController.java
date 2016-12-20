@@ -3,7 +3,6 @@ package com.panfeng.resource.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ import com.panfeng.service.ServiceService;
 import com.panfeng.service.SolrService;
 import com.panfeng.service.TeamService;
 import com.panfeng.util.DataUtil;
-import com.panfeng.util.FileUtils;
+import com.panfeng.util.JsoupUtil;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
@@ -67,11 +66,10 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private SolrService solrService = null;
-
+	
 	@Autowired
 	private final FDFSService fdfsService = null;
 
-	private static String FILE_PROFIX = null; // 文件前缀
 
 	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
 
@@ -83,7 +81,6 @@ public class ProductController extends BaseController {
 			try {
 				Properties propertis = new Properties();
 				propertis.load(is);
-				FILE_PROFIX = propertis.getProperty("file.prefix");
 				PRODUCT_VIDEO_PATH = propertis.getProperty("upload.server.product.video");
 				SOLR_URL = propertis.getProperty("solr.url");
 			} catch (IOException e) {
@@ -100,7 +97,6 @@ public class ProductController extends BaseController {
 
 	@RequestMapping(value = "/product/sessionId", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public Product getSessionId(final ModelMap map) {
-
 		final String sessionId = DataUtil.getUuid();
 		Product product = new Product();
 		product.setSessionId(sessionId);
@@ -130,12 +126,6 @@ public class ProductController extends BaseController {
 
 		DataGrid<Product> dataGrid = new DataGrid<Product>();
 		final List<Product> list = proService.listWithPagination(view);
-		for (Product product : list) {
-			String sid = product.getSessionId();
-			if (sid == null || "".equals(sid)) {
-				product.setSessionId(DataUtil.getUuid());
-			}
-		}
 		dataGrid.setRows(list);
 		final long total = proService.maxSize(view);
 		dataGrid.setTotal(total);
@@ -167,11 +157,12 @@ public class ProductController extends BaseController {
 					// 删除 视频
 					final String videoUrl = product.getVideoUrl();
 					fdfsService.delete(videoUrl);
-					//TODO 待修改成分解富文本编辑器，删除图片
-					// 删除产品编辑页图片
-					//String sessionId = product.getSessionId();
-					//if (sessionId != null && !"".equals(sessionId))
-					//	kindService.deleteImageDir(product.getSessionId());
+					//待修改成分解富文本编辑器，删除图片
+					final String description = product.getVideoDescription();
+					List<String>  imgList = JsoupUtil.getImgSrc(description);
+					for(String s : imgList){
+						fdfsService.delete(s);
+					}
 					// 删除搜索索引
 					solrService.deleteDoc(product.getProductId(), SOLR_URL);
 				}
@@ -188,9 +179,9 @@ public class ProductController extends BaseController {
 	public void save(final HttpServletRequest request, final HttpServletResponse response,
 			@RequestParam final MultipartFile[] uploadFiles, final Product product) {
 		response.setContentType("text/html;charset=UTF-8");
-
 		// 保存 product
 		proService.save(product);
+		
 		// 路径接收
 		final List<String> pathList = new ArrayList<String>();
 
@@ -207,11 +198,25 @@ public class ProductController extends BaseController {
 		product.setPicLDUrl(pathList.get(1));
 		// 保存路径
 		proService.saveFileUrl(product);
-
-		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("add product ... ", sessionInfo);
+		//add by wanglc 2016-12-15 12:18:20 begin
+		//增加审核通过时，创建service数据
+		if(product.getFlag()==1){
+			final double servicePrice = product.getServicePrice(); // 保存服务信息
+			Service service = new Service();
+			service.setProductId(product.getProductId());
+			service.setProductName(product.getProductName());
+			service.setServiceDiscount(1);
+			service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
+			service.setServiceOd(0);
+			service.setServicePrice(servicePrice);
+			service.setServiceRealPrice(servicePrice);
+			service.setMcoms(Long.parseLong(product.getVideoLength()));
+			serService.save(service);
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("add product ... ", sessionInfo);
+		}
+		//add by wanglc 2016-12-15 12:18:20 end
 	}
-
 	@RequestMapping(value = "/product/update", method = RequestMethod.POST)
 	public void update(final HttpServletRequest request, final HttpServletResponse response,
 			@RequestParam final MultipartFile[] uploadFiles, final Product product) {
@@ -219,7 +224,7 @@ public class ProductController extends BaseController {
 		final long productId = product.getProductId(); // product id
 		final Product originalProduct = proService.findProductById(productId);
 
-		// 获取未更改前的product对象,用于删除修改过的文件
+		//获取未更改前的product对象,用于删除修改过的文件
 		final List<String> pathList = new ArrayList<String>(); // 路径集合
 		try {
 			for (int i = 0; i < uploadFiles.length; i++) {
@@ -236,7 +241,25 @@ public class ProductController extends BaseController {
 			product.setPicLDUrl(pathList.get(1));
 
 			proService.update(product);
-
+			//add by wanglc 2016-12-15 12:18:20 begin
+			//增加审核通过时，创建service数据
+			List<Service> list = serService.loadService((int)product.getProductId());
+			if(product.getFlag()==1){
+				if(null == list || list.size() == 0){
+					final double servicePrice = product.getServicePrice(); // 保存服务信息
+					Service service = new Service();
+					service.setProductId(product.getProductId());
+					service.setProductName(product.getProductName());
+					service.setServiceDiscount(1);
+					service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
+					service.setServiceOd(0);
+					service.setServicePrice(servicePrice);
+					service.setServiceRealPrice(servicePrice);
+					service.setMcoms(Long.parseLong(product.getVideoLength()));
+					serService.save(service);
+				}
+			}
+			//add by wanglc 2016-12-15 12:18:20 end
 			if (originalProduct != null) {
 				// 删除 原文件
 				for (int i = 0; i < pathList.size(); i++) {
@@ -439,15 +462,19 @@ public class ProductController extends BaseController {
 			for (final Product product : list) {
 				// 删除 缩略图
 				final String picLDUrl = product.getPicLDUrl();
-				FileUtils.deleteFile(FILE_PROFIX + picLDUrl);
-
+				fdfsService.delete(picLDUrl);
 				// 删除 高清图
 				final String picHDUrl = product.getPicHDUrl();
-				FileUtils.deleteFile(FILE_PROFIX + picHDUrl);
-
+				fdfsService.delete(picHDUrl);
 				// 删除 视频
 				final String videoUrl = product.getVideoUrl();
-				FileUtils.deleteFile(FILE_PROFIX + videoUrl);
+				fdfsService.delete(videoUrl);
+				// 待修改成分解富文本，删除图片
+				final String description = product.getVideoDescription();
+				List<String>  imgList = JsoupUtil.getImgSrc(description);
+				for(String s : imgList){
+					fdfsService.delete(s);
+				}
 			}
 		} else {
 			throw new RuntimeException("Product ids is null");
@@ -482,52 +509,23 @@ public class ProductController extends BaseController {
 	 * @return 服务ID
 	 */
 	@RequestMapping("/product/static/data/update/info")
-	public long updateProductInfo(@RequestBody final Product product, HttpServletRequest request) {
+	public boolean updateProductInfo(@RequestBody final Product product, HttpServletRequest request) {
 		// 解码
 		try {
-			product.setpDescription(URLDecoder.decode(product.getpDescription(), "UTF-8"));
-			product.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
-			product.setVideoLength(URLDecoder.decode(product.getVideoLength(), "UTF-8"));
-
-			if (product.getTags() != null && !"".equals(product.getTags())) {
-				product.setTags(URLDecoder.decode(product.getTags(), "UTF-8"));
-			}
-
+			Product oldProduct = proService.findProductById(product.getProductId());
+			oldProduct.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
+			oldProduct.setCreationTime(product.getCreationTime());
+			oldProduct.setFlag(product.getFlag());
+			oldProduct.setPicLDUrl(product.getPicLDUrl());
+			oldProduct.setVideoUrl(product.getVideoUrl());
+			long l = proService.updateProductInfo(oldProduct); // 更新视频信息
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("update product ... ", sessionInfo);
+			return l>=0;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		proService.updateProductInfo(product); // 更新视频信息
-		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update product ... ", sessionInfo);
-		final Service service = new Service();
-		if (product.getServiceId() != 0) { // 数据库中有此服务数据
-			service.setServiceId(product.getServiceId());
-			service.setMcoms(Long.parseLong(product.getVideoLength()));
-			service.setServicePrice(product.getServicePrice());
-
-			// 获取该服务打折信息
-			Service originalService = serService.loadServiceById(product.getServiceId());
-			final double discount = originalService.getServiceDiscount();
-			final double realPrice = product.getServicePrice() * discount;
-			BigDecimal bg = new BigDecimal(realPrice);
-			final double roundRealPrice = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-			service.setServiceRealPrice(roundRealPrice);
-
-			serService.updatePriceAndMcoms(service); // 更新 服务信息
-			return product.getServiceId();
-		} else { // 数据库中无此服务数据
-			final double servicePrice = product.getServicePrice(); // 保存服务信息
-			service.setProductId(product.getProductId());
-			service.setProductName(product.getProductName());
-			service.setServiceDiscount(1);
-			service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
-			service.setServiceOd(0);
-			service.setServicePrice(servicePrice);
-			service.setServiceRealPrice(servicePrice);
-			service.setMcoms(Long.parseLong(product.getVideoLength()));
-			serService.save(service);
-			return service.getServiceId();
-		}
+		return false;
 	}
 
 	/**
@@ -548,20 +546,7 @@ public class ProductController extends BaseController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-
 		proService.save(product); // 保存视频信息
-
-		final double servicePrice = product.getServicePrice(); // 保存服务信息
-		Service service = new Service();
-		service.setProductId(product.getProductId());
-		service.setProductName(product.getProductName());
-		service.setServiceDiscount(1);
-		service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
-		service.setServiceOd(0);
-		service.setServicePrice(servicePrice);
-		service.setServiceRealPrice(servicePrice);
-		service.setMcoms(Long.parseLong(product.getVideoLength()));
-		serService.save(service);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save product ... ", sessionInfo);
 		return product.getProductId();
@@ -669,5 +654,12 @@ public class ProductController extends BaseController {
 		}else{
 			return new BaseMsg(0,"修改失败");
 		}
+	}
+	/**
+	 * 修改作品可见性
+	 */
+	@RequestMapping(value = "/product/visibility", method = RequestMethod.POST)
+	public boolean productVisibility(@RequestBody final Product product) {
+		return proService.updateProductVisibility(product);
 	}
 }

@@ -139,4 +139,9 @@ public interface ProductService {
 	 * 修改作品的推荐值
 	 */
 	public boolean updateRecommend(Product product);
+
+	/**
+	 * 修改作品可见性
+	 */
+	public boolean updateProductVisibility(Product product);
 }

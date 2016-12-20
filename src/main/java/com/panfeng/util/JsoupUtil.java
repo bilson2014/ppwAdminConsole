@@ -1,6 +1,8 @@
 package com.panfeng.util;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,7 +12,11 @@ import org.springframework.util.Base64Utils;
 
 public class JsoupUtil {
 
-	public static String base64delHostImg(String content) {
+	/**
+	 * 获取html中的img的src
+	 */
+	public static List<String> getImgSrc(String content) {
+		List<String> list = new ArrayList<>();
 		try {
 			byte[] b = content.getBytes("UTF-8");
 			content = new String(Base64Utils.decode(b),"UTF-8");
@@ -18,17 +24,14 @@ public class JsoupUtil {
 			Elements elements = document.select("img");
 			for(Element e : elements){
 				String src = e.attr("src");
-				//去掉host
-				String re="((?:http|https)(?::\\/{2}[\\w]+).*?/)";
-				src = src.replaceFirst(re, "@.@");
-				e.attr("src", src);
+				if(src.contains("@.@")){
+					src = src.replace("@.@", "");
+				}
+				list.add(src);
 			}
-			b = Base64Utils.encode(document.toString().getBytes("UTF-8"));
-			content = new String(b,"UTF-8");
-			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		return content;
+		return list;
 	}
 }

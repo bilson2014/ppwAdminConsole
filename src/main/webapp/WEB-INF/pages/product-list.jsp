@@ -120,7 +120,7 @@
 					<div class="d-float f-width">
 						<input id="productName" name="productName" class="easyui-textbox" required="true" />
 					</div>
-					<div class="lable-right l-width">所属团队</div>
+					<div class="lable l-width">所属团队</div>
 					<div class="d-float f-width1">
 						<input id="teamId" name="teamId" required="true" class="p-textbox-small" />
 					</div>
