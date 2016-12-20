@@ -20,6 +20,7 @@ import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Right;
 import com.panfeng.service.FDFSService;
 import com.panfeng.service.SessionInfoService;
+import com.panfeng.util.Constants;
 import com.panfeng.util.UrlResourceUtils;
 import com.panfeng.util.ValidateUtil;
 
@@ -107,7 +108,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
 		final Right right = dao.getRightFromRedis(uri);
 		SessionInfo info = (SessionInfo) sessionService.getSessionWithField(req, GlobalConstant.SESSION_INFO); // 获取session
 		if(null == info){
-			info = checkAutoLogin(req);
+			info = checkAutoLogin(req,resp);
 		}
 		// 首先验证是否是公共资源
 		if(ValidateUtil.hasRight(uri, req, sc,right,resp,info)){
@@ -142,7 +143,8 @@ public class SecurityInterceptor implements HandlerInterceptor {
 		
 	}
 
-	private SessionInfo checkAutoLogin(HttpServletRequest request) {
+	private SessionInfo checkAutoLogin(HttpServletRequest request
+			,HttpServletResponse response) {
 		SessionInfo info = null;
 		String token = null;
 		Cookie[] cookie = request.getCookies();
@@ -161,6 +163,13 @@ public class SecurityInterceptor implements HandlerInterceptor {
 						Map<String, Object> map = new HashMap<String, Object>();
 						map.put(GlobalConstant.SESSION_INFO, info);
 						sessionService.addSessionSeveralTime(request, map,60*60*24*7);//登陆用户存放七天
+						
+						Cookie cookieUsername = new Cookie("token", request.getSession().getId());
+						cookieUsername.setPath("/");
+						cookieUsername.setDomain(Constants.COOKIES_SCOPE);
+						cookieUsername.setMaxAge(60 * 60 * 24 * 7); /* 设置cookie的有效期为 7 天 */
+						response.addCookie(cookieUsername);
+						sessionService.removeSessionByToken(request,token);
 					}
 				}
 			}

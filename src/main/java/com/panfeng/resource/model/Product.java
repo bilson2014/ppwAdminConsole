@@ -79,11 +79,21 @@ public class Product extends BaseObject {
 	
 	private Integer masterWork = null; // 推荐作品，0为正常 1 为推荐 
 	
+	private String checkDetails = null; // 审核详情
 	// 冗余字段
 	private List<String> tagsArray = null;
 	
 	private String priceDetail = null;
 	
+	
+	public String getCheckDetails() {
+		return checkDetails;
+	}
+
+	public void setCheckDetails(String checkDetails) {
+		this.checkDetails = checkDetails;
+	}
+
 	public String getPriceDetail() {
 		return priceDetail;
 	}
