@@ -11,6 +11,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -515,6 +516,9 @@ public class ProductController extends BaseController {
 			Product oldProduct = proService.findProductById(product.getProductId());
 			oldProduct.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
 			oldProduct.setCreationTime(product.getCreationTime());
+			if(StringUtils.isNotEmpty(product.getTags())){
+				oldProduct.setTags(product.getTags());
+			}
 			oldProduct.setFlag(product.getFlag());
 			oldProduct.setPicLDUrl(product.getPicLDUrl());
 			oldProduct.setVideoUrl(product.getVideoUrl());
@@ -594,8 +598,7 @@ public class ProductController extends BaseController {
 
 	@RequestMapping(value = "/set/masterWork")
 	public boolean setMasterWork(@RequestBody final Product product) {
-		teamService.setMasterWork(product);
-		return true;
+		return teamService.setMasterWork(product);
 	}
 
 	@RequestMapping(value = "/get/masterWork/{teamId}")

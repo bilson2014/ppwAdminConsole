@@ -629,7 +629,7 @@
 	</update>
 	
 	<update id="setMasterWork">
-		UPDATE PRODUCT SET masterWork = ${status} WHERE productId = ${productId}
+		UPDATE PRODUCT SET masterWork = ${masterWork} WHERE productId = ${productId}
 	</update>
 	<select id="getTeamInfo" resultType="Team">
 		<![CDATA[

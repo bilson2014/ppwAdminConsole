@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.TeamView;
 
@@ -111,7 +112,7 @@ public interface TeamMapper {
 	// 重置代表作
 	public void resetMasterWork(@Param("teamId")final long teamId);
 	
-	public void setMasterWork(@Param("productId")final long productId,@Param("status") int status);
+	public void setMasterWork(final Product product);
 	
 	public void unBindThird(Team team);
 

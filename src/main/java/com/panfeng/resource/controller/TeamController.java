@@ -884,11 +884,11 @@ public class TeamController extends BaseController {
 
 		final long count = service.checkExist(team);
 		if (count > 0) {
-			return new BaseMsg(3, "手机号码已被占用");
+			return new BaseMsg(0, "手机号码已被占用");
 		}
 		final long ret = service.modifyTeamPhone(team);
 		if (ret > 0) {
-			return new BaseMsg(2, "success");
+			return new BaseMsg(1, "success");
 		}
 		return new BaseMsg(0, "error");
 	}

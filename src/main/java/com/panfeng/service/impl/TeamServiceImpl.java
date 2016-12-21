@@ -320,11 +320,12 @@ public class TeamServiceImpl implements TeamService {
 
 	@Override
 	@Transactional
-	public void setMasterWork(Product product) {
+	public boolean setMasterWork(Product product) {
 		// 重置所有代表作初始值
 		mapper.resetMasterWork(product.getTeamId());
-		// 设置代表作
-		mapper.setMasterWork(product.getProductId(), Product.MASTERWORK_LEVEL_1);
+		// 更新当前作品master
+		mapper.setMasterWork(product);
+		return true;
 	}
 
 	public Map<String, Object> thirdStatus(Team t) {
