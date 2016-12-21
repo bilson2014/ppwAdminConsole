@@ -455,6 +455,9 @@ public class TeamServiceImpl implements TeamService {
 		if(null != team.getDemand()){
 			tmp.setDemand(team.getDemand());
 		}
+		if(null != team.getTeamPhotoUrl()){
+			tmp.setTeamPhotoUrl(team.getTeamPhotoUrl());
+		}
 		//删除其他tmp
 		teamTmpMapper.delTeamMapperByTeamId(tmp);
 		//增加一条记录
