@@ -57,4 +57,10 @@ public class SMSTemplateServiceImpl implements SMSTemplateService {
 		return mapper.findSmsById(smsId);
 	}
 
+	@Override
+	public String getTemplateValue(String templateKey) {
+		Sms sms = mapper.findSmsById(Long.valueOf(templateKey));
+		return sms != null ? sms.getTempContent() : "";
+	}
+
 }

@@ -239,13 +239,13 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		case currentNode:
 			ActivitiTask task = indentProject.getTask();
 			if (task != null)
-				result = task.getName();
+				result = "【" + task.getName() + "】";
 			else
 				result = "";
 
 			break;
 		case projectName:
-			result = indentProject.getProjectName();
+			result = "【" + indentProject.getProjectName() + "】";
 			break;
 		case projectSerialNumber:
 			result = indentProject.getSerial();

@@ -1,6 +1,7 @@
 var editing ; //判断用户是否处于编辑状态 
 var flag  ;	  //判断新增和修改方法
 var datagrid;
+var formUrl;
 //验证
 var isadd = false;
 var originalLoginName = '';
@@ -308,69 +309,32 @@ $().ready(function(){
 		pageSize : 20,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar',
-		onAfterEdit:function(index , record){
-			delete record.roles;
-			//$.post(flag =='add' ? getContextPath() + '/portal/user/save' : getContextPath() + '/portal/user/update', record , function(result){
-			//	datagrid.datagrid('clearSelections');
-			///	datagrid.datagrid('reload');
-			//	$.message('操作成功!');
-			//});
-			//modify by wanglc 添加用户名唯一性 验证 begin
-			loadData(function(data){
-				if(data){
-					// /user/valication/phone/18801376524
-					$.post(flag =='add' ? getContextPath() + '/portal/user/save' : getContextPath() + '/portal/user/update', record , function(result){
-						datagrid.datagrid('clearSelections');
-						datagrid.datagrid('reload');
-						$.message('操作成功!');
-					});
-				}else{
-					editing = index;
-					datagrid.datagrid('beginEdit', editing);
-					$.message('用户名已经存在!');
-				}
-			}, getContextPath() + '/portal/user/unique/username',$.toJSON({
-				userName : record.userName,
-				id:record.id
-			}));
-			//modify by wanglc 添加用户名唯一性 验证 end
-		},
+		toolbar : '#toolbar'
 	});
 	
 });
 
 //增加
 function addFuc(){
-	if(editing == undefined){
-		isadd = true;
-		flag = 'add';
-		//1 先取消所有的选中状态
-		datagrid.datagrid('unselectAll');
-		//2追加一行
-		datagrid.datagrid('appendRow',{birthday : getCurrentTime()});
-		//3获取当前页的行号
-		editing = datagrid.datagrid('getRows').length -1;
-		//4开启编辑状态
-		datagrid.datagrid('beginEdit', editing);
-	}
+	$('#fm').form('clear');
+	openDialog(null);
+	isadd = true;
+	$("#userId").val(0);
+	formUrl = getContextPath() + '/portal/user/save';
 }
 
 //修改
 function editFuc(){
-	var arr = datagrid.datagrid('getSelections');
-	isadd = false;
-	if(arr.length != 1){
-		$.message('只能选择一条记录进行修改!');
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length == 1){
+		isadd = false;
+		originalPhoneNumber = rows[0].telephone;
+		$('#fm').form('clear');
+		$('#fm').form('load',rows[0]);
+		openDialog('dlg',rows[0]);
+		formUrl = getContextPath() + '/portal/user/update';
 	} else {
-		if(editing == undefined){
-			originalPhoneNumber = arr[0].telephone;
-			flag = 'edit';
-			//根据行记录对象获取该行的索引位置
-			editing = datagrid.datagrid('getRowIndex' , arr[0]);
-			//开启编辑状态
-			datagrid.datagrid('beginEdit',editing);
-		}
+		$.message('只能选择一条记录进行修改!');
 	}
 }
 
@@ -402,13 +366,26 @@ function delFuc(){
 }
 
 //保存
-function saveFuc(){
-	//保存之前进行数据的校验 , 然后结束编辑并释放编辑状态字段 
-	datagrid.datagrid('beginEdit', editing);
-	if(datagrid.datagrid('validateRow',editing)){
-		datagrid.datagrid('endEdit', editing);
-		editing = undefined;
-	}
+function save(){
+	progressLoad();
+	$('#fm').form('submit',{
+		url : formUrl,
+		onSubmit : function(param) {
+			var flag = $(this).form('validate');
+			if(!flag){
+				progressClose();
+				$.message('请将信息填写完整!');
+			}
+			return flag;
+		},
+		success : function(result) {
+			$('#dlg').dialog('close');
+			datagrid.datagrid('clearSelections');
+			datagrid.datagrid('reload');
+			progressClose();
+			$.message('操作成功!');
+		}
+	});
 }
 
 // 取消
@@ -439,7 +416,6 @@ $.extend($.fn.validatebox.defaults.rules, {
         	var url = getContextPath() + '/portal/user/valication/phone/'+value;
 			var isok = false;
         	if(isadd){
-        		// 验证登录名
     			syncLoadData(function (res) {
     				isok = !res;
     			}, url, null);
@@ -458,3 +434,28 @@ $.extend($.fn.validatebox.defaults.rules, {
         message : '手机号已经重复！'  
     }  
 });
+$.extend($.fn.validatebox.defaults.rules, {
+    vuNickName : {
+        validator : function(value, param) {
+        	var url = getContextPath() + '/portal/user/unique/username';
+			var isok = false;
+			syncLoadData(function (res) {
+				isok = res;
+			}, url, $.toJSON({
+				'userName' : value,
+				'id' : $("#userId").val()
+			}));
+			return isok;
+        },
+        message : '昵称被占用！'  
+    }  
+});
+//打开dialog
+function openDialog(data){
+	$('#dlg').dialog({
+		modal : true,
+		onOpen : function(event, ui) {
+			
+		},
+	}).dialog('open').dialog('center');
+}

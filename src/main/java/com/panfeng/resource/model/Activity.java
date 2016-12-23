@@ -11,8 +11,6 @@ import com.panfeng.domain.BaseObject;
  *
  */
 public class Activity extends BaseObject {
-	public final static Integer SYSTEMPARAM = 0;
-	public final static Integer CUSTOMPARAM = 1;
 	private static final long serialVersionUID = -6322954280136241826L;
 
 	private Long activityId = null; // 活动ID
@@ -22,6 +20,14 @@ public class Activity extends BaseObject {
 	private String acticityTempleteId = null; // 模板id
 	private String activityParamList = null; // 模板参数列表
 	private String activityStartTime = null; // 活动开始时间
+	private String actitityRelevantPersons = null;
+
+	// 常量
+	public final static int SYSTEMPARAM = 0;
+	public final static int CUSTOMPARAM = 1;
+	public final static int PERSONS_ALL_PROVIDER = 0;
+	public final static int PERSONS_ALL_USER = 1;
+	public final static int PERSONS_ALL_EMPLOYEE = 2;
 
 	// 冗余字段
 	private List<Activity.param> paramList = null;
@@ -88,6 +94,14 @@ public class Activity extends BaseObject {
 
 	public void setParamList(List<param> paramList) {
 		this.paramList = paramList;
+	}
+
+	public String getActitityRelevantPersons() {
+		return actitityRelevantPersons;
+	}
+
+	public void setActitityRelevantPersons(String actitityRelevantPersons) {
+		this.actitityRelevantPersons = actitityRelevantPersons;
 	}
 
 	public static class param {

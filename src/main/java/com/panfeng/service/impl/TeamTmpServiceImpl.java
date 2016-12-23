@@ -9,7 +9,7 @@ import com.panfeng.persist.TeamTmpMapper;
 import com.panfeng.resource.model.DIffBean;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.model.TeamTmp;
-import com.panfeng.resource.view.MailView;
+import com.panfeng.resource.view.Pagination;
 import com.panfeng.service.TeamTmpService;
 import com.panfeng.util.Constants;
 
@@ -22,13 +22,13 @@ public class TeamTmpServiceImpl implements TeamTmpService{
 	private TeamMapper teamMapper;
 
 	@Override
-	public List<TeamTmp> listWithPagination(MailView view) {
+	public List<TeamTmp> listWithPagination(Pagination view) {
 		final List<TeamTmp> list = teamTmpMapper.listWithPagination(view);
 		return list;
 	}
 
 	@Override
-	public long maxSize(MailView view) {
+	public long maxSize(Pagination view) {
 		final long total = teamTmpMapper.maxSize(view);
 		return total;
 	}
@@ -74,6 +74,7 @@ public class TeamTmpServiceImpl implements TeamTmpService{
 		team.setDemand(tmp.getDemand());
 		team.setEstablishDate(tmp.getEstablishDate());
 		team.setOfficialSite(tmp.getOfficialSite());
+		team.setTeamPhotoUrl(tmp.getTeamPhotoUrl());
 		return team;
 	}
 
@@ -271,6 +272,17 @@ public class TeamTmpServiceImpl implements TeamTmpService{
 			bean.setPropertyName("公司名称");
 			bean.setOldValue(_team);
 			bean.setNewValue(tmp_team);
+			list.add(bean);
+		}
+		
+		tmp_team = null == tmp.getTeamPhotoUrl()?"":tmp.getTeamPhotoUrl();
+		 _team = null == team.getTeamPhotoUrl()?"":team.getTeamPhotoUrl();
+		if(tmp_team.compareTo(_team) != 0){
+			DIffBean bean = new DIffBean();
+			bean.setProperty("teamPhotoUrl");
+			bean.setPropertyName("公司Logo");
+			bean.setOldValue("更换了新的Logo");
+			bean.setNewValue("~");
 			list.add(bean);
 		}
 		return list;

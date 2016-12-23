@@ -209,7 +209,7 @@ public class SolrController extends BaseController {
 			}else {
 				return null;
 			}
-			query.setSort("creationTime", ORDER.asc);
+			query.setSort("creationTime", ORDER.desc);
 			query.set("pf", "teamName");
 			query.set("tie", "0.1");
 			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags,creationTime");

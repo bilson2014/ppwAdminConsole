@@ -76,7 +76,7 @@ public class SmsEvent extends EventBase {
 				fillerParam.setRelevantPersons(relevantPersonsList);
 			}
 			Object fillData = templateDataManage.fillData(fillerParam, autoEvent.getDataFiller(), processId,
-					EventType.MAIL);
+					EventType.SMS);
 			if (fillData != null) {
 				Sms findSmsById = smsTemplateService.findSmsById(Long.parseLong(autoEvent.getTemplateId()));
 				String content = findSmsById.getTempContent();
@@ -96,6 +96,8 @@ public class SmsEvent extends EventBase {
 								sortParam[i] = value[index];
 								i++;
 							}
+							if (sortParam.length == 0)
+								sortParam = null;
 							smsMQService.sendMessage(autoEvent.getTemplateId(), keyString, sortParam);
 						}
 					}

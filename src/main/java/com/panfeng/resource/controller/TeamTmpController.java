@@ -15,8 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.panfeng.resource.model.DIffBean;
 import com.panfeng.resource.model.TeamTmp;
 import com.panfeng.resource.view.DataGrid;
-import com.panfeng.resource.view.MailView;
 import com.panfeng.resource.view.PageFilter;
+import com.panfeng.resource.view.Pagination;
 import com.panfeng.service.TeamTmpService;
 
 /**
@@ -25,16 +25,18 @@ import com.panfeng.service.TeamTmpService;
 @RestController
 @RequestMapping("/portal")
 public class TeamTmpController extends BaseController {
-	
+
 	@Autowired
 	private final TeamTmpService service = null;
+
 	@RequestMapping(value = "/teamTmp-list")
 	public ModelAndView view(final ModelMap model) {
 
 		return new ModelAndView("teamTmp-list", model);
 	}
+
 	@RequestMapping(value = "/teamTmp/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public DataGrid<TeamTmp> list(final MailView view, final PageFilter pf) {
+	public DataGrid<TeamTmp> list(final Pagination view, final PageFilter pf) {
 
 		final long page = pf.getPage();
 		final long rows = pf.getRows();
@@ -48,16 +50,17 @@ public class TeamTmpController extends BaseController {
 		dataGrid.setTotal(total);
 		return dataGrid;
 	}
-	
+
 	@RequestMapping(value = "/teamTmp/update", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public void update(TeamTmp teamTmp,HttpServletRequest reqeust) {
+	public void update(TeamTmp teamTmp, HttpServletRequest reqeust) {
 		service.updateTeamTmp(teamTmp);
 	}
+
 	/**
 	 * 查询team和teamTmp的差异字段
 	 */
 	@RequestMapping(value = "/teamTmp/find/diff/{teamId}")
-	public List<DIffBean> findDiffTeam(@PathVariable("teamId")Integer teamId,HttpServletRequest reqeust) {
+	public List<DIffBean> findDiffTeam(@PathVariable("teamId") Integer teamId, HttpServletRequest reqeust) {
 		return service.findDiffTeam(teamId);
 	}
 }

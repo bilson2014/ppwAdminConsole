@@ -30,9 +30,4 @@ public class SynergyTest {
 		Thread.sleep(60 * 1000);
 //		scheduler.shutdown();
 	}
-	@Scheduled( cron = "0/5 * * * * ?")
-	public void getJobDetail() {
-		System.out.println("123");
-	}
-
 }

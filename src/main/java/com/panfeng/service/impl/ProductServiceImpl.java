@@ -3,12 +3,10 @@ package com.panfeng.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.panfeng.dao.PortalVideoDao;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.ProductMapper;
 import com.panfeng.persist.ServiceMapper;
@@ -17,7 +15,6 @@ import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.ProductView;
 import com.panfeng.service.ProductService;
-import com.panfeng.util.JsoupUtil;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -31,9 +28,6 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private final TeamMapper teamMapper = null;
 
-	@Autowired
-	private final PortalVideoDao videoDao = null;
-
 	@Override
 	public List<Product> listWithPagination(final ProductView view) {
 
@@ -45,39 +39,16 @@ public class ProductServiceImpl implements ProductService {
 	public long save(final Product product) {
 
 		mapper.save(product);
-
-		// 如果推荐值大于0，那么更新redis的首页视频集合
-		if (product.getRecommend() > 0) {
-			final Map<Long, Product> portalVideomap = mapper.getProductByRecommend();
-			videoDao.resetPortalVideo(portalVideomap);
-		}
-
 		return product.getProductId();
 	}
 
 	@Transactional
 	public List<Product> delete(final long[] ids) {
-
 		final List<Product> originalList = mapper.findProductByArray(ids);
-
-		final Map<Long, Product> portalVideoMap = videoDao.getProductsFromRedis(); // 首页推荐视频集合
-		boolean flag = false;
 		if (ids.length > 0) {
 			for (long id : ids) {
 				mapper.delete(id);
 				scMapper.deleteByProduct(id);
-
-				// 判断是否在首页推荐视频
-				final Product product = portalVideoMap.get(id);
-				if (product != null) {
-					flag = true;
-				}
-			}
-
-			if (flag) {
-				// 更新redis首页推荐视频列表
-				final Map<Long, Product> productMap = mapper.getProductByRecommend();
-				videoDao.resetPortalVideo(productMap);
 			}
 		}
 		return originalList;
@@ -129,12 +100,6 @@ public class ProductServiceImpl implements ProductService {
 	public Product loadProduct(final Integer productId) {
 
 		final Product product = mapper.loadProduct(productId);
-		String videoDescription = product.getVideoDescription();
-		//视频描述后台解密2016-11-17 10:55:47 begin
-		if(StringUtils.isNotEmpty(videoDescription)){
-			JsoupUtil.base64delHostImg(videoDescription);
-		}
-		//视频描述后台解密2016-11-17 10:55:47 end
 		com.panfeng.resource.model.Service service = scMapper.loadSingleService(productId);
 		if (product != null) {
 			if (service != null) {
@@ -290,5 +255,14 @@ public class ProductServiceImpl implements ProductService {
 	public boolean updateRecommend(Product product) {
 		long l = mapper.updateRecommend(product);
 		return l>=0;
+	}
+
+	/**
+	 * 修改作品可见性
+	 */
+	@Override
+	public boolean updateProductVisibility(Product product) {
+		long l = mapper.updateProductVisibility(product);
+		return l>0?true:false;
 	}
 }

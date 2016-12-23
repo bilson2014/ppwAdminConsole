@@ -121,5 +121,9 @@ public interface ProductMapper {
 	 * 修改作品推荐值
 	 */
 	public long updateRecommend(Product product);
+	/**
+	 * 修改作品可见性
+	 */
+	public long updateProductVisibility(Product product);
 
 }

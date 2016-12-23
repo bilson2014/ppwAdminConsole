@@ -243,6 +243,11 @@
 				,TEAMCITY = #{teamCity}
 			]]>
 		</if>
+		<if test="teamPhotoUrl != null and teamPhotoUrl != ''">
+			<![CDATA[
+				,TEAMPHOTOURL = #{teamPhotoUrl}
+			]]>
+		</if>
 		<![CDATA[
 			WHERE TEAMID = ${teamId}
 		]]>
@@ -450,7 +455,8 @@
 					INFORESOURCE = ${infoResource},
 					DESCRIPTION = #{description},
 					TEAMPROVINCE = #{teamProvince},
-					teamCity = #{teamCity}
+					TEAMCITY = #{teamCity},
+					FLAG = ${flag}
 		]]>
 
 		<if test="phoneNumber != null and phoneNumber != ''">
@@ -629,7 +635,7 @@
 	</update>
 	
 	<update id="setMasterWork">
-		UPDATE PRODUCT SET masterWork = ${status} WHERE productId = ${productId}
+		UPDATE PRODUCT SET masterWork = ${masterWork} WHERE productId = ${productId}
 	</update>
 	<select id="getTeamInfo" resultType="Team">
 		<![CDATA[

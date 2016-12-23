@@ -127,7 +127,7 @@ public class TeamController extends BaseController {
 		team.setPassword(DataUtil.md5(INIT_PASSWORD));
 		service.save(team);
 		try {
-			if(!file.isEmpty()){
+			if (!file.isEmpty()) {
 				String path = fdfsService.upload(file);
 				team.setTeamPhotoUrl(path);
 			}
@@ -342,6 +342,8 @@ public class TeamController extends BaseController {
 				if (description != null && !"".equals(description)) {
 					team.setDescription(URLDecoder.decode(description, "UTF-8"));
 				}
+				// 将状态置为审核中
+				team.setFlag(0);
 
 				final long ret = service.updateTeamInfomation(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);
@@ -432,8 +434,8 @@ public class TeamController extends BaseController {
 				SessionInfo sessionInfo = getCurrentInfo(request);
 				Log.error("save team ...", sessionInfo);
 				if (dbteam != null && dbteam.getTeamId() > 0) {
-					//add by wlc 2016-11-11 11:19:36
-					//供应商注册短信，发送短信 begin
+					// add by wlc 2016-11-11 11:19:36
+					// 供应商注册短信，发送短信 begin
 					smsMQService.sendMessage("132269", team.getPhoneNumber(), null);
 					return initSessionInfo(dbteam, request);
 				}
@@ -801,7 +803,7 @@ public class TeamController extends BaseController {
 	@RequestMapping("/team/static/data/add/account")
 	public boolean addAccount(@RequestBody final Team team, HttpServletRequest request) {
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		if(null != sessionInfo){
+		if (null != sessionInfo) {
 			team.setTeamId(sessionInfo.getReqiureId());
 		}
 		long count = service.updateTeamAccount(team);
@@ -884,11 +886,11 @@ public class TeamController extends BaseController {
 
 		final long count = service.checkExist(team);
 		if (count > 0) {
-			return new BaseMsg(3, "手机号码已被占用");
+			return new BaseMsg(0, "手机号码已被占用");
 		}
 		final long ret = service.modifyTeamPhone(team);
 		if (ret > 0) {
-			return new BaseMsg(2, "success");
+			return new BaseMsg(1, "success");
 		}
 		return new BaseMsg(0, "error");
 	}
@@ -969,14 +971,13 @@ public class TeamController extends BaseController {
 	public boolean addRecommend(long teamId) {
 		return service.addRecommend(teamId);
 	}
-	
+
 	/**
 	 * 获取首页供应商推荐
 	 */
 	@RequestMapping(value = "/team/recommend", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<Team> teamRecommendList(){
+	public List<Team> teamRecommendList() {
 		return service.teamRecommendList();
 	}
-
 
 }

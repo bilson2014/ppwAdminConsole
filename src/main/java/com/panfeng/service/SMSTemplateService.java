@@ -21,4 +21,6 @@ public interface SMSTemplateService {
 
 	long delete(int[] ids);
 
+	String getTemplateValue(String templateKey);
+
 }

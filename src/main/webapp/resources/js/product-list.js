@@ -32,6 +32,12 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'checkDetails' ,
+						title : '审核详情' ,
+						align : 'center' ,
+						width : 100,
+						hidden : true
+					},{
 						field : 'flag' ,
 						title : '审核状态' ,
 						align : 'center' ,
@@ -500,7 +506,8 @@ function setMaster(){
 			$.message('操作成功!');
 		}, getContextPath() + '/portal/set/masterWork',$.toJSON({
 			productId : productId,
-			teamId:teamId
+			teamId:teamId,
+			masterWork:'1'
 		}));
 	} else {
 		$.message('只能选择一条记录进行修改!');

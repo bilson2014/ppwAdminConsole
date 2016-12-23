@@ -144,7 +144,7 @@ public interface TeamService {
 
 	public long updateTeamAccount(Team original);
 	
-	public void setMasterWork(final Product product);
+	public boolean setMasterWork(final Product product);
 
 	/**
 	 * 查询第三方绑定状态

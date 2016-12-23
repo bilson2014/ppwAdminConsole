@@ -9,7 +9,7 @@ $().ready(function(){
 		url : getContextPath()+ '/portal/salesman/list',
 		idField : 'salesmanId' ,
 		title : '分销人员列表' , 
-		fitColumns : true ,
+		//fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -49,6 +49,7 @@ $().ready(function(){
 			},{
 				field : 'salesmanURL' ,
 				title : '分销产品地址' ,
+				width : 200,
 				align : 'center',
 				formatter : function(value,row,index){
 					return '<span style=color:orange; >'+ getServerName() + '/salesman/' + row.uniqueId +'</span>' ;
@@ -68,6 +69,7 @@ $().ready(function(){
 				field : 'salesmanOrderURL' ,
 				title : '分销下单地址' ,
 				align : 'center',
+				width : 200,
 				formatter : function(value,row,index){
 					return '<span style=color:black; >'+ getServerName() + '/salesman/order/' + row.uniqueId +'</span>' ;
 				}
@@ -85,10 +87,13 @@ $().ready(function(){
 			},{
 				field : 'total' ,
 				title : '分销总单数',
+				width : 200,
 				align : 'center'
+					
 			},{
 				field : 'sumPrice' ,
 				title : '分销总额',
+				width : 200,
 				align : 'center'
 			}]],
 		pagination: true ,

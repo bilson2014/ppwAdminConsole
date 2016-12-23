@@ -23,7 +23,7 @@ public class Team extends Customer {
 
 	private String address = null; // 公司地址
 
-	private int flag = 0; // 状态位
+	private int flag = 0; // 状态位 0 审核中 1审核通过 2审核未通过 3未提交审核 4 ghost
 
 	private String teamName = null; // 团队名称
 
