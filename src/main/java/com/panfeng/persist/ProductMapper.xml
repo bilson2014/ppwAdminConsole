@@ -26,7 +26,8 @@
 				   pro.SHOWTYPE AS showType,
 				   pro.SESSIONID AS sessionId,
 				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
-				   pro.MASTERWORK AS masterWork
+				   pro.MASTERWORK AS masterWork,
+				   pro.CHECK_DETAILS AS checkDetails
 			FROM PRODUCT pro
 			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
@@ -111,16 +112,11 @@
 				TAGS,
 				SHOWTYPE,
 				SESSIONID,
+				CHECK_DETAILS,
 				CREATIONTIME
 			]]>
 		<if test="videoUrl != null and videoUrl != ''">
 			,VIDEOURL
-		</if>
-		<if test="picHDUrl != null and picHDUrl != ''">
-			,picHDUrl
-		</if>
-		<if test="picLDUrl != null and picLDUrl != ''">
-			,picLDUrl
 		</if>
 			<![CDATA[
 			) VALUES(
@@ -138,16 +134,11 @@
 				#{tags},
 				${showType},
 				#{sessionId},
+				#{checkDetails},
 				DATE_FORMAT(#{creationTime},'%Y-%m-%d')
 			]]>
 		<if test="videoUrl != null and videoUrl != ''">
 			,#{videoUrl}
-		</if>
-		<if test="picHDUrl != null and picHDUrl != ''">
-			,#{picHDUrl}
-		</if>
-		<if test="picLDUrl != null and picLDUrl != ''">
-			,#{picLDUrl}
 		</if>
 		<![CDATA[
 			)
@@ -188,6 +179,9 @@
 		</if>
 		<if test="picLDUrl != null and picLDUrl != ''">
 			,PICLDURL = #{picLDUrl}
+		</if>
+		<if test="checkDetails != null and checkDetails != ''">
+			,CHECK_DETAILS = #{checkDetails}
 		</if>
 		<if test="creationTime != null and creationTime != ''">
 			,CREATIONTIME = DATE_FORMAT(#{creationTime},'%Y-%m-%d')
@@ -315,7 +309,7 @@
 			SELECT COUNT(1)
 				FROM PRODUCT pro
 				LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
-			WHERE 1 = 1
+			WHERE 1 = 1 and pro.flag<>3 
 		]]>
 		<if test="teamId !=null and teamId != ''">
 			AND pro.TEAMID = ${teamId}
@@ -700,6 +694,7 @@
 			INNER JOIN TEAM t ON t.TEAMID = pro.TEAMID
 			WHERE 1 = 1
 				AND t.TEAMID = ${teamId}
+				ORDER BY pro.PRODUCTID DESC
 		]]>
 	</select>
 

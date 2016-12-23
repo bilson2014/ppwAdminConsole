@@ -247,15 +247,14 @@ public class ProductController extends BaseController {
 			List<Service> list = serService.loadService((int)product.getProductId());
 			if(product.getFlag()==1){
 				if(null == list || list.size() == 0){
-					final double servicePrice = product.getServicePrice(); // 保存服务信息
 					Service service = new Service();
 					service.setProductId(product.getProductId());
 					service.setProductName(product.getProductName());
 					service.setServiceDiscount(1);
 					service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
 					service.setServiceOd(0);
-					service.setServicePrice(servicePrice);
-					service.setServiceRealPrice(servicePrice);
+					service.setServicePrice(0d);
+					service.setServiceRealPrice(0d);
 					service.setMcoms(Long.parseLong(product.getVideoLength()));
 					serService.save(service);
 				}
@@ -517,12 +516,32 @@ public class ProductController extends BaseController {
 			oldProduct.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
 			oldProduct.setCreationTime(product.getCreationTime());
 			if(StringUtils.isNotEmpty(product.getTags())){
-				oldProduct.setTags(product.getTags());
+				oldProduct.setTags(URLDecoder.decode(product.getTags(), "UTF-8"));
 			}
 			oldProduct.setFlag(product.getFlag());
-			oldProduct.setPicLDUrl(product.getPicLDUrl());
-			oldProduct.setVideoUrl(product.getVideoUrl());
+			if(StringUtils.isNotBlank(product.getPicLDUrl())){
+				oldProduct.setPicLDUrl(product.getPicLDUrl());
+				if(StringUtils.isNotBlank(oldProduct.getPicLDUrl()) &&!product.getPicLDUrl().equals(oldProduct.getPicLDUrl())){
+					fdfsService.delete(oldProduct.getPicLDUrl());
+				}
+			}
 			long l = proService.updateProductInfo(oldProduct); // 更新视频信息
+			//ghost审核通过的自动创建service记录
+			List<Service> list = serService.loadService((int)product.getProductId());
+			if(product.getFlag()==1){
+				if(null == list || list.size() == 0){
+					Service service = new Service();
+					service.setProductId(product.getProductId());
+					service.setProductName(product.getProductName());
+					service.setServiceDiscount(1);
+					service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
+					service.setServiceOd(0);
+					service.setServicePrice(0d);
+					service.setServiceRealPrice(0d);
+					service.setMcoms(Long.parseLong(product.getVideoLength()));
+					serService.save(service);
+				}
+			}
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("update product ... ", sessionInfo);
 			return l>=0;
@@ -540,20 +559,16 @@ public class ProductController extends BaseController {
 	@RequestMapping("/product/static/data/save/info")
 	public long saveProductInfo(@RequestBody final Product product, HttpServletRequest request) {
 		try {
-			// 解码
-			product.setpDescription(URLDecoder.decode(product.getpDescription(), "UTF-8"));
 			product.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
-			product.setVideoLength(URLDecoder.decode(product.getVideoLength(), "UTF-8"));
-			if (product.getTags() != null && !"".equals(product.getTags())) {
-				product.setTags(URLDecoder.decode(product.getTags(), "UTF-8"));
-			}
+			proService.save(product); // 保存视频信息
+			
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("save product ... ", sessionInfo);
+			return product.getProductId();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		proService.save(product); // 保存视频信息
-		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("save product ... ", sessionInfo);
-		return product.getProductId();
+		return 0;
 	}
 
 	/**

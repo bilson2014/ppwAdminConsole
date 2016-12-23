@@ -199,7 +199,10 @@
 						</select>
 					</div>
 				</div>
-				
+				<div class="textarea-position">
+					<div class="lable l-width">审核详情</div>
+					<textarea class="easyui-textbox" id="checkDetails" name="checkDetails" multiline="true" style="height: 50px;width: 380px"></textarea>
+				</div>
 				<div class="textarea-position">
 					<div class="lable l-width">视频描述</div>
 					<!-- <textarea class="ta-content" id="videoDescription" name="videoDescription" ></textarea> -->

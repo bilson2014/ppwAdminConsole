@@ -32,6 +32,12 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'checkDetails' ,
+						title : '审核详情' ,
+						align : 'center' ,
+						width : 100,
+						hidden : true
+					},{
 						field : 'flag' ,
 						title : '审核状态' ,
 						align : 'center' ,
