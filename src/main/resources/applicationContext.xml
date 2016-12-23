@@ -18,7 +18,7 @@
 	<import resource="RedisConfig.xml" />
 
 	<import resource="spring-mq.xml" />
-
+	
 	<context:property-placeholder
 		location="classpath:jdbc.properties,classpath:redis.properties,
 											classpath:mq.properties" />
