@@ -127,7 +127,7 @@ public class TeamController extends BaseController {
 		team.setPassword(DataUtil.md5(INIT_PASSWORD));
 		service.save(team);
 		try {
-			if(!file.isEmpty()){
+			if (!file.isEmpty()) {
 				String path = fdfsService.upload(file);
 				team.setTeamPhotoUrl(path);
 			}
@@ -434,8 +434,8 @@ public class TeamController extends BaseController {
 				SessionInfo sessionInfo = getCurrentInfo(request);
 				Log.error("save team ...", sessionInfo);
 				if (dbteam != null && dbteam.getTeamId() > 0) {
-					//add by wlc 2016-11-11 11:19:36
-					//供应商注册短信，发送短信 begin
+					// add by wlc 2016-11-11 11:19:36
+					// 供应商注册短信，发送短信 begin
 					smsMQService.sendMessage("132269", team.getPhoneNumber(), null);
 					return initSessionInfo(dbteam, request);
 				}
@@ -803,7 +803,7 @@ public class TeamController extends BaseController {
 	@RequestMapping("/team/static/data/add/account")
 	public boolean addAccount(@RequestBody final Team team, HttpServletRequest request) {
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		if(null != sessionInfo){
+		if (null != sessionInfo) {
 			team.setTeamId(sessionInfo.getReqiureId());
 		}
 		long count = service.updateTeamAccount(team);
@@ -971,14 +971,13 @@ public class TeamController extends BaseController {
 	public boolean addRecommend(long teamId) {
 		return service.addRecommend(teamId);
 	}
-	
+
 	/**
 	 * 获取首页供应商推荐
 	 */
 	@RequestMapping(value = "/team/recommend", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<Team> teamRecommendList(){
+	public List<Team> teamRecommendList() {
 		return service.teamRecommendList();
 	}
-
 
 }
