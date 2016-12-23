@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
+import com.panfeng.mq.service.FileConvertMQService;
 import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Service;
 import com.panfeng.resource.model.Solr;
@@ -70,6 +71,9 @@ public class ProductController extends BaseController {
 	
 	@Autowired
 	private final FDFSService fdfsService = null;
+	
+	@Autowired
+	private final FileConvertMQService fileConvertMQService = null;
 
 
 	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
@@ -217,6 +221,10 @@ public class ProductController extends BaseController {
 			Log.error("add product ... ", sessionInfo);
 		}
 		//add by wanglc 2016-12-15 12:18:20 end
+		
+		// 加入文件转换队列
+		fileConvertMQService.sendMessage(product.getProductId(), product.getVideoUrl());
+		
 	}
 	@RequestMapping(value = "/product/update", method = RequestMethod.POST)
 	public void update(final HttpServletRequest request, final HttpServletResponse response,
@@ -279,6 +287,9 @@ public class ProductController extends BaseController {
 						}
 						if (path != null && !"".equals(path)) {
 							fdfsService.delete(path);
+							// 如果视频更新的话，需要将新视频添加到转换队列
+							if(i == 0) 
+								fileConvertMQService.sendMessage(originalProduct.getProductId(), pathList.get(0));
 						}
 					}
 				}
