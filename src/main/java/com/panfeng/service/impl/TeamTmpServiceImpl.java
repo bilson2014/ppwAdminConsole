@@ -268,8 +268,8 @@ public class TeamTmpServiceImpl implements TeamTmpService{
 		 _team = null == team.getBusinessDesc()?"":team.getBusinessDesc();
 		if(tmp_team.compareTo(_team) != 0){
 			DIffBean bean = new DIffBean();
-			bean.setProperty("teamName");
-			bean.setPropertyName("公司名称");
+			bean.setProperty("businessDescription");
+			bean.setPropertyName("主要客户");
 			bean.setOldValue(_team);
 			bean.setNewValue(tmp_team);
 			list.add(bean);
