@@ -45,7 +45,7 @@
 		<property name="defaultDestinationName" value="${logQueue}"/>
 	</bean>
 	
-	<bean id="FileConverJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+	<bean id="fileConverJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<property name="connectionFactory" ref="connectionFactory" />
 		<property name="defaultDestinationName" value="${fileConverQueue}"/>
 	</bean>

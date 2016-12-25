@@ -572,8 +572,9 @@ public class ProductController extends BaseController {
 		try {
 			product.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
 			proService.save(product); // 保存视频信息
-			
 			SessionInfo sessionInfo = getCurrentInfo(request);
+			// 加入文件转换队列
+			fileConvertMQService.sendMessage(product.getProductId(), product.getVideoUrl());
 			Log.error("save product ... ", sessionInfo);
 			return product.getProductId();
 		} catch (UnsupportedEncodingException e) {
