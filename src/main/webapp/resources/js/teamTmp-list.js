@@ -263,7 +263,12 @@ var teamTmp_tpl = {
 				'{@each list as item}',
 				'<div>',
 				'	<h4 style="margin-bottom: 5px !important">${item.propertyName}:</h4>',
+				'{@if item.propertyName != "公司Logo"}',
 				'	<span>&nbsp;&nbsp;${item.oldValue == ""?"空值":item.oldValue}</span><b>&nbsp;&rarr;&nbsp;</b><span>${item.newValue == ""?"空值":item.newValue}</span>',
+				'{@/if}',
+				'{@if item.propertyName == "公司Logo"}',
+				'&nbsp;&nbsp;<a target="blank" href='+getDfsHostName()+'${item.oldValue == ""?"空值":item.oldValue}>旧公司LOGO</a><b>&nbsp;&rarr;&nbsp;</b><a target="blank" href='+getDfsHostName()+'${item.newValue == ""?"空值":item.newValue}>新公司LOGO</a>',
+				'{@/if}',
 				'</div>',
 				'{@/each}'	 	   
 		 ].join("")

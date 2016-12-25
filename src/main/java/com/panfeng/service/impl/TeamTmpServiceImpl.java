@@ -281,8 +281,8 @@ public class TeamTmpServiceImpl implements TeamTmpService{
 			DIffBean bean = new DIffBean();
 			bean.setProperty("teamPhotoUrl");
 			bean.setPropertyName("公司Logo");
-			bean.setOldValue("更换了新的Logo");
-			bean.setNewValue("~");
+			bean.setOldValue(_team);
+			bean.setNewValue(tmp_team);
 			list.add(bean);
 		}
 		return list;
