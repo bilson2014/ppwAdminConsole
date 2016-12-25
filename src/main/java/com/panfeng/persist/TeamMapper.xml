@@ -455,8 +455,7 @@
 					INFORESOURCE = ${infoResource},
 					DESCRIPTION = #{description},
 					TEAMPROVINCE = #{teamProvince},
-					TEAMCITY = #{teamCity},
-					FLAG = ${flag}
+					TEAMCITY = #{teamCity}
 		]]>
 
 		<if test="phoneNumber != null and phoneNumber != ''">
@@ -680,7 +679,7 @@
 				tt.BUSINESS_DESCRIPTION businessDesc,
 				tt.CHECK_STATUS checkStatus,
 				tt.CHECK_DETAILS checkDetails,
-				t.TEAMPHOTOURL teamPhotoUrl,
+				tt.TEAMPHOTOURL teamPhotoUrl,
 				t.PHONENUMBER phoneNumber,
 				t.RECOMMENDATION recommendation,
 				t.FLAG flag,
