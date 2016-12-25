@@ -45,7 +45,7 @@ public class Product extends BaseObject {
 	
 	private long supportCount = 0; // 点赞
 	
-	private String videoLength = "0:00"; // 视频长度
+	private String videoLength = "0"; // 视频长度
 
 	private int flag = 0; // 产品状态位
 
