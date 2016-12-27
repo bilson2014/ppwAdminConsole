@@ -461,7 +461,11 @@
 		<if test="phoneNumber != null and phoneNumber != ''">
 			,PHONENUMBER = #{phoneNumber}
 		</if>
-		
+		<if test="teamPhotoUrl != null and teamPhotoUrl != ''">
+			<![CDATA[
+				,TEAMPHOTOURL = #{teamPhotoUrl}
+			]]>
+		</if>
 		<![CDATA[
 			WHERE TEAMID = ${teamId}
 		]]>
@@ -653,7 +657,12 @@
 		]]>
 	</select>
 	<update id="updateTeamDescription">
-		UPDATE TEAM SET description = #{description} WHERE TEAMID = ${teamId}
+		UPDATE TEAM SET 
+			DESCRIPTION = #{description},
+			ESTABLISHDATE = #{establishDate},
+			OFFICIALSITE = #{officialSite},
+			BUSINESSDESC = #{businessDesc}
+			WHERE TEAMID = ${teamId}
 	</update>
 	<select id="getLatestTmpByTeamId" resultType="Team">
 		<![CDATA[
