@@ -222,7 +222,7 @@ public class ProductController extends BaseController {
 		//add by wanglc 2016-12-15 12:18:20 end
 		
 		// 加入文件转换队列
-		// fileConvertMQService.sendMessage(product.getProductId(), product.getVideoUrl());
+		fileConvertMQService.sendMessage(product.getProductId(), product.getVideoUrl());
 		
 	}
 	@RequestMapping(value = "/product/update", method = RequestMethod.POST)
@@ -287,8 +287,8 @@ public class ProductController extends BaseController {
 						if (path != null && !"".equals(path)) {
 							fdfsService.delete(path);
 							// 如果视频更新的话，需要将新视频添加到转换队列
-							// if(i == 0) 
-								// fileConvertMQService.sendMessage(originalProduct.getProductId(), pathList.get(0));
+							if(i == 0) 
+								fileConvertMQService.sendMessage(originalProduct.getProductId(), pathList.get(0));
 						}
 					}
 				}
@@ -569,7 +569,7 @@ public class ProductController extends BaseController {
 			proService.save(product); // 保存视频信息
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			// 加入文件转换队列
-			// fileConvertMQService.sendMessage(product.getProductId(), product.getVideoUrl());
+			fileConvertMQService.sendMessage(product.getProductId(), product.getVideoUrl());
 			Log.error("save product ... ", sessionInfo);
 			return product.getProductId();
 		} catch (UnsupportedEncodingException e) {
