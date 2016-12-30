@@ -212,7 +212,7 @@ public class SolrController extends BaseController {
 			query.setSort("creationTime", ORDER.desc);
 			query.set("pf", "teamName");
 			query.set("tie", "0.1");
-			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags,creationTime");
+			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags,creationTime,pDescription");
 			query.setStart(Integer.parseInt(String.valueOf(view.getBegin())));
 			query.setRows(Integer.parseInt(String.valueOf(view.getLimit())));
 			
