@@ -189,10 +189,8 @@ public class ProductController extends BaseController {
 		response.setContentType("text/html;charset=UTF-8");
 		// 保存 product
 		proService.save(product);
-		
 		// 路径接收
 		final List<String> pathList = new ArrayList<String>();
-
 		for (int i = 0; i < uploadFiles.length; i++) {
 			final MultipartFile multipartFile = uploadFiles[i];
 			if (!multipartFile.isEmpty()) {

@@ -48,8 +48,6 @@
 						<input name="beginTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />~
 						<input name="endTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
 					</td>
-				</tr>
-				<tr>
 					<th>审核状态：</th>
 					<td>
 						<select name="flag" class="easyui-combobox" editable="false">
@@ -59,6 +57,8 @@
 							<option value="2">未审核通过</option>
 						</select>
 					</td>
+				</tr>
+				<tr>
 					<th>是否可见：</th>
 					<td>
 						<select name="visible" class="easyui-combobox" editable="false">
@@ -73,6 +73,16 @@
 							<option value="" selected>-- 请选择 --</option>
 							<option value="0">是</option>
 							<option value="1">否</option>
+						</select>
+					</td>
+					<th>推荐值：</th>
+					<td>
+						<select name="recommend" class="easyui-combobox" editable="false">
+							<option value="" selected>-- 请选择 --</option>
+							<option value="0">不推荐</option>
+							<option value="1">热门爆款</option>
+							<option value="2">精品案例</option>
+							<option value="3">推荐视频</option>
 						</select>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 					</td>
@@ -108,6 +118,8 @@
 			
 			<a onclick="setMaster();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'">设为代表作</a>
 			<a onclick="recommendFuc()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">首页推荐</a>
+			
+			<a onclick="toPlayHtml()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">作品链接</a>
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 6500px;height: 500px;"
@@ -127,14 +139,14 @@
 				</div>
 				
 				<div class="textarea-position">
-					<div class="lable-right l-width">项目描述</div>
-					<textarea class="easyui-textbox" id="pDescription" name="pDescription" multiline="true" style="height: 50px;"></textarea>
+					<div class="lable l-width">项目描述</div>
+					<textarea class="easyui-textbox" id="pDescription" name="pDescription" multiline="true" style="width:156px;height: 50px;"></textarea>
 				</div>
 				
 				<div class="online">
 					<div class="lable l-width">展示图文</div>
 					<div class="d-float f-width1">
-						<select name="showType" id='showType' class="easyui-combobox" editable="false">
+						<select name="showType" id='showType' class="easyui-combobox" style="width:156px" editable="false">
 							<option value="1" selected>展示</option>
 							<option value="0">不展示</option>
 						</select>
@@ -148,11 +160,11 @@
 				<div class="online">
 					<div class="lable l-width">推荐值</div>
 					<div class="d-float f-width1">
-						<input id="recommend" name="recommend" required="true" class="easyui-numberbox" style="width: 141px"  precision="0" />
+						<input id="recommend" name="recommend" required="true" class="easyui-numberbox" style="width: 156px"  precision="0" />
 					</div>
 					<div class="lable-right l-width">创作时间</div>
 					<div class="d-float f-width1">
-						<input class="textbox" name="creationTime" required="true" id = "creationTime" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly"/>
+						<input class="textbox" name="creationTime" style="width:156px" id = "creationTime" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly"/>
 					</div>
 				</div>
 				<input id="videoUrl"  type="hidden"/>
@@ -173,7 +185,7 @@
 				<div class="online">
 					<div class="lable l-width">标签</div>
 					<div class="d-float f-width1">
-						<input type="text" id="tags" name="tags" required="true" class="easyui-textbox" />
+						<input type="text" id="tags" name="tags" style="width:156px" required="true" class="easyui-textbox" />
 					</div>
 					
 					<div class="lable-right l-width">赞值</div>
@@ -192,7 +204,7 @@
 				<div class="online">
 					<div class="lable l-width">审核状态</div>
 					<div class="d-float f-width">
-						<select id="flag" name="flag" class="easyui-combobox" editable="false" required="true">
+						<select id="flag" name="flag" class="easyui-combobox"  editable="false" required="true">
 							<option value="0">审核中</option>
 							<option value="1" selected>审核通过</option>
 							<option value="2">未通过审核</option>
@@ -201,7 +213,7 @@
 				</div>
 				<div class="textarea-position">
 					<div class="lable l-width">审核详情</div>
-					<textarea class="easyui-textbox" id="checkDetails" name="checkDetails" multiline="true" style="height: 50px;width: 380px"></textarea>
+					<textarea class="easyui-textbox" id="checkDetails" name="checkDetails" multiline="true" style="height: 50px;width: 422px"></textarea>
 				</div>
 				<div class="textarea-position">
 					<div class="lable l-width">视频描述</div>
