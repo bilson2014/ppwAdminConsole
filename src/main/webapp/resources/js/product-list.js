@@ -244,7 +244,13 @@ $().ready(function(){
 							//http://www.apaipian.com/play/16_659.html
 							return 'http://www.apaipian.com/play/'+record.teamId + '_' + record.productId+'.html';
 						}
-					}]] ,
+					},{
+						field : 'submitTime' ,
+						title : '提交审核时间' ,
+						align : 'center' ,
+						width : 280,
+						sortable : true ,
+					}]],
 		pagination: true ,
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],

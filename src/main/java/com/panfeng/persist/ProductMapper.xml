@@ -27,7 +27,8 @@
 				   pro.SESSIONID AS sessionId,
 				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
 				   pro.MASTERWORK AS masterWork,
-				   pro.CHECK_DETAILS AS checkDetails
+				   pro.CHECK_DETAILS AS checkDetails,
+				   pro.SUBMITTIME AS submitTime
 			FROM PRODUCT pro
 			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
@@ -625,6 +626,7 @@
 				TAGS = #{tags},
 				VIDEODESCRIPTION = #{videoDescription},
 				UPDATEDATE = CURRENT_TIMESTAMP,
+				SUBMITTIME = CURRENT_TIMESTAMP,
 				SESSIONID = #{sessionId}
 		]]>
 		<if test="videoUrl != null and videoUrl != ''">

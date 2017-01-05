@@ -99,7 +99,6 @@ public class ProductController extends BaseController {
 
 	@RequestMapping(value = "/product-list")
 	public ModelAndView view(final ModelMap model) {
-
 		return new ModelAndView("product-list", model);
 	}
 

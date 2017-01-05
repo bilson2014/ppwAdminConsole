@@ -80,12 +80,22 @@ public class Product extends BaseObject {
 	private Integer masterWork = null; // 推荐作品，0为正常 1 为推荐 
 	
 	private String checkDetails = null; // 审核详情
+	
+	private String submitTime = null; // 提交审核时间，该字段只会在前端修改提交后修改
 	// 冗余字段
 	private List<String> tagsArray = null;
 	
 	private String priceDetail = null;
 	
 	
+	public String getSubmitTime() {
+		return submitTime;
+	}
+
+	public void setSubmitTime(String submitTime) {
+		this.submitTime = submitTime;
+	}
+
 	public String getCheckDetails() {
 		return checkDetails;
 	}
