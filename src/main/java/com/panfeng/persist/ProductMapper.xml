@@ -112,9 +112,11 @@
 				TAGS,
 				SHOWTYPE,
 				SESSIONID,
-				CHECK_DETAILS,
-				CREATIONTIME
+				CHECK_DETAILS
 			]]>
+		<if test="creationTime != null and creationTime != ''">
+			,CREATIONTIME
+		</if>
 		<if test="videoUrl != null and videoUrl != ''">
 			,VIDEOURL
 		</if>
@@ -134,9 +136,11 @@
 				#{tags},
 				${showType},
 				#{sessionId},
-				#{checkDetails},
-				DATE_FORMAT(#{creationTime},'%Y-%m-%d')
+				#{checkDetails}
 			]]>
+		<if test="creationTime != null and creationTime != ''">
+			,DATE_FORMAT(#{creationTime},'%Y-%m-%d')
+		</if>
 		<if test="videoUrl != null and videoUrl != ''">
 			,#{videoUrl}
 		</if>
@@ -169,6 +173,7 @@
 				SHOWTYPE = ${showType},
 				SESSIONID = #{sessionId},
 				RECOMMEND = ${recommend},
+				CREATIONTIME = null,
 				SUPPORTCOUNT = ${supportCount}
 		]]>
 		<if test="videoUrl != null and videoUrl != ''">
@@ -313,6 +318,9 @@
 		]]>
 		<if test="teamId !=null and teamId != ''">
 			AND pro.TEAMID = ${teamId}
+		</if>
+		<if test="recommend != null and recommend != ''">
+			AND pro.RECOMMEND = ${recommend}
 		</if>
 		<if test="teamName !=null and teamName != ''">
 			AND t.TEAMNAME LIKE CONCAT(CONCAT('%',#{teamName}),'%')
