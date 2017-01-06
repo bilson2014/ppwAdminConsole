@@ -18,7 +18,7 @@
 	<import resource="RedisConfig.xml" />
 
 	<import resource="spring-mq.xml" />
-	
+
 	<context:property-placeholder
 		location="classpath:jdbc.properties,classpath:redis.properties,
 											classpath:mq.properties" />
@@ -38,7 +38,7 @@
 
 	<!-- log here -->
 	<bean id="callMonitor" class="com.panfeng.util.CallMonitor" />
-	
+
 	<aop:aspectj-autoproxy>
 		<aop:include name="callMonitor" />
 	</aop:aspectj-autoproxy>
