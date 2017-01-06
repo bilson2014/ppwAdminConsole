@@ -27,7 +27,8 @@
 				   pro.SESSIONID AS sessionId,
 				   DATE_FORMAT(pro.CREATIONTIME,'%Y-%m-%d') AS creationTime,
 				   pro.MASTERWORK AS masterWork,
-				   pro.CHECK_DETAILS AS checkDetails
+				   pro.CHECK_DETAILS AS checkDetails,
+				   DATE_FORMAT(pro.SUBMITTIME,'%Y-%m-%d %T')  AS submitTime
 			FROM PRODUCT pro
 			LEFT JOIN ITEM i ON i.ITEMID = pro.PRODUCTTYPE
 			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
@@ -59,7 +60,7 @@
 			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d %T') =
 			#{uploadDate}
 		</if>
-		<if test="recommend != null and recommend != ''">
+		<if test="recommend != null">
 			AND pro.RECOMMEND = ${recommend}
 		</if>
 		<if test="supportCount != null and supportCount != ''">
@@ -112,9 +113,11 @@
 				TAGS,
 				SHOWTYPE,
 				SESSIONID,
-				CHECK_DETAILS,
-				CREATIONTIME
+				CHECK_DETAILS
 			]]>
+		<if test="creationTime != null and creationTime != ''">
+			,CREATIONTIME
+		</if>
 		<if test="videoUrl != null and videoUrl != ''">
 			,VIDEOURL
 		</if>
@@ -134,9 +137,11 @@
 				#{tags},
 				${showType},
 				#{sessionId},
-				#{checkDetails},
-				DATE_FORMAT(#{creationTime},'%Y-%m-%d')
+				#{checkDetails}
 			]]>
+		<if test="creationTime != null and creationTime != ''">
+			,DATE_FORMAT(#{creationTime},'%Y-%m-%d')
+		</if>
 		<if test="videoUrl != null and videoUrl != ''">
 			,#{videoUrl}
 		</if>
@@ -169,6 +174,7 @@
 				SHOWTYPE = ${showType},
 				SESSIONID = #{sessionId},
 				RECOMMEND = ${recommend},
+				CREATIONTIME = null,
 				SUPPORTCOUNT = ${supportCount}
 		]]>
 		<if test="videoUrl != null and videoUrl != ''">
@@ -313,6 +319,9 @@
 		]]>
 		<if test="teamId !=null and teamId != ''">
 			AND pro.TEAMID = ${teamId}
+		</if>
+		<if test="recommend != null">
+			AND pro.RECOMMEND = ${recommend}
 		</if>
 		<if test="teamName !=null and teamName != ''">
 			AND t.TEAMNAME LIKE CONCAT(CONCAT('%',#{teamName}),'%')
@@ -617,6 +626,7 @@
 				TAGS = #{tags},
 				VIDEODESCRIPTION = #{videoDescription},
 				UPDATEDATE = CURRENT_TIMESTAMP,
+				SUBMITTIME = CURRENT_TIMESTAMP,
 				SESSIONID = #{sessionId}
 		]]>
 		<if test="videoUrl != null and videoUrl != ''">

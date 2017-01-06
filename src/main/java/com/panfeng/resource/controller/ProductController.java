@@ -74,11 +74,12 @@ public class ProductController extends BaseController {
 	
 	@Autowired
 	private final FileConvertMQService fileConvertMQService = null;
-
-
+	
 	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
 
 	private static String SOLR_URL = null;
+	private static String SOLR_EMPLOYEE_URL = null;
+	private static String SOLR_PORTAL_URL = null;
 
 	public ProductController() {
 		if (PRODUCT_VIDEO_PATH == null || "".equals(PRODUCT_VIDEO_PATH)) {
@@ -88,6 +89,8 @@ public class ProductController extends BaseController {
 				propertis.load(is);
 				PRODUCT_VIDEO_PATH = propertis.getProperty("upload.server.product.video");
 				SOLR_URL = propertis.getProperty("solr.url");
+				SOLR_EMPLOYEE_URL = propertis.getProperty("solr.employee.url");
+				SOLR_PORTAL_URL = propertis.getProperty("solr.portal.url");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -96,7 +99,6 @@ public class ProductController extends BaseController {
 
 	@RequestMapping(value = "/product-list")
 	public ModelAndView view(final ModelMap model) {
-
 		return new ModelAndView("product-list", model);
 	}
 
@@ -186,10 +188,8 @@ public class ProductController extends BaseController {
 		response.setContentType("text/html;charset=UTF-8");
 		// 保存 product
 		proService.save(product);
-		
 		// 路径接收
 		final List<String> pathList = new ArrayList<String>();
-
 		for (int i = 0; i < uploadFiles.length; i++) {
 			final MultipartFile multipartFile = uploadFiles[i];
 			if (!multipartFile.isEmpty()) {
@@ -464,6 +464,8 @@ public class ProductController extends BaseController {
 
 		// 删除搜索索引
 		solrService.deleteDoc(productId, SOLR_URL);
+		solrService.deleteDoc(productId, SOLR_EMPLOYEE_URL);
+		solrService.deleteDoc(productId, SOLR_PORTAL_URL);
 
 		serService.deleteByProduct(productId); // 删除服务信息
 
@@ -505,12 +507,6 @@ public class ProductController extends BaseController {
 	public Product findProductById(@PathVariable("videoId") final long productId) {
 
 		final Product product = proService.findProductById(productId);
-		// 获取服务价格
-		Service service = serService.loadSingleService(Integer.parseInt(String.valueOf(productId)));
-		if (service != null) {
-			product.setServicePrice(service.getServicePrice());
-			product.setServiceId(service.getServiceId());
-		}
 		return product;
 	}
 

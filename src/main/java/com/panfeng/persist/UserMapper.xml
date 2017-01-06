@@ -22,7 +22,7 @@
 			ORDER BY CREATEDATE,ID DESC
 		]]>
 	</select>
-	
+
 	<select id="listWithPagination" resultType="User">
 		<![CDATA[
 			SELECT u.ID AS id,
@@ -59,7 +59,7 @@
 				AND DATE_FORMAT(u.FOLLOW_TIME,'%Y-%m-%d') >= #{beginTime}
 			]]>
 		</if>
-		
+
 		<if test="endTime != null  and endTime != ''">
 			<![CDATA[
 				AND DATE_FORMAT(u.FOLLOW_TIME,'%Y-%m-%d') <= #{endTime}
@@ -69,7 +69,7 @@
 			<when test="clientLevel == null">
 				AND u.clientLevel IS NULL
 			</when>
-			
+
 			<when test="clientLevel != null and clientLevel != -1">
 				AND u.clientLevel = ${clientLevel}
 			</when>
@@ -78,14 +78,14 @@
 		ORDER BY
 		]]>
 		<if test="sort != null and sort != '' and order != null and order != ''">
-			 ${sort} ${order},
+			${sort} ${order},
 		</if>
 		<![CDATA[
 			CREATEDATE,ID DESC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
-	
+
 	<select id="maxSize" resultType="long">
 		<![CDATA[
 			SELECT COUNT(1) 
@@ -102,13 +102,13 @@
 			<when test="clientLevel == null">
 				AND u.clientLevel IS NULL
 			</when>
-			
+
 			<when test="clientLevel != null and clientLevel != -1">
 				AND u.clientLevel = ${clientLevel}
 			</when>
 		</choose>
 	</select>
-	
+
 	<select id="findUserById" resultType="User">
 		<![CDATA[
 			SELECT u.ID AS id,
@@ -136,8 +136,9 @@
 			WHERE u.ID = ${id}
 		]]>
 	</select>
-	
-	<insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+
+	<insert id="save" useGeneratedKeys="true" keyProperty="id"
+		parameterType="User">
 		<![CDATA[
 			INSERT INTO USERS(
 				USERNAME,
@@ -157,12 +158,12 @@
 				FOLLOW_TIME,
 				UPDATE_TIME
 		]]>
-				<if test="clientLevel != null">
-					,CLIENTLEVEL
-				</if>
-				<if test="preference != null">
-					,PREFERENCE
-				</if>
+		<if test="clientLevel != null">
+			,CLIENTLEVEL
+		</if>
+		<if test="preference != null">
+			,PREFERENCE
+		</if>
 				
 		<![CDATA[
 			) VALUES(
@@ -184,7 +185,7 @@
 				CURRENT_TIMESTAMP
 				
 		]]>
-		
+
 		<if test="clientLevel != null">
 			,${clientLevel}
 		</if>
@@ -196,8 +197,9 @@
 			)
 		]]>
 	</insert>
-	
-	<insert id="simpleSave" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+
+	<insert id="simpleSave" useGeneratedKeys="true" keyProperty="id"
+		parameterType="User">
 		<![CDATA[
 			INSERT INTO USERS(
 				USERNAME,
@@ -210,14 +212,14 @@
 			)
 		]]>
 	</insert>
-	
+
 	<delete id="delete">
 		<![CDATA[
 			DELETE FROM USERS
 				WHERE ID = ${id}
 		]]>
 	</delete>
-	
+
 	<update id="update">
 		<![CDATA[
 			UPDATE USERS
@@ -228,40 +230,40 @@
 		<if test="birthday != null and birthday != ''">
 			BIRTHDAY = DATE_FORMAT(#{birthday},'%Y-%m-%d'),
 		</if>
-		
+
 		<if test="clientLevel != null">
-			 CLIENTLEVEL = ${clientLevel},
+			CLIENTLEVEL = ${clientLevel},
 		</if>
 		<if test="clientLevel == -1">
-			 CLIENTLEVEL = NULL,
+			CLIENTLEVEL = NULL,
 		</if>
 		<if test="qqUnique != null and qqUnique != ''">
-			 QQUNIQUE = #{qqUnique},
+			QQUNIQUE = #{qqUnique},
 		</if>
-		
+
 		<if test="wbUnique != null and wbUnique != ''">
-			 WBUNIQUE = #{wbUnique},
+			WBUNIQUE = #{wbUnique},
 		</if>
-		
+
 		<if test="wechatUnique != null and wechatUnique != ''">
-			 WECHATUNIQUE = #{wechatUnique},
+			WECHATUNIQUE = #{wechatUnique},
 		</if>
 		<if test="preference != null">
-			 PREFERENCE = ${preference},
+			PREFERENCE = ${preference},
 		</if>
 		<if test="followTime != null and followTime != ''">
-			 FOLLOW_TIME = DATE_FORMAT(#{followTime},'%Y-%m-%d'),
+			FOLLOW_TIME = DATE_FORMAT(#{followTime},'%Y-%m-%d'),
 		</if>
 		<if test="updateTime != null and updateTime != ''">
-			 UPDATE_TIME = CURRENT_TIMESTAMP,
-			
+			UPDATE_TIME = CURRENT_TIMESTAMP,
+
 		</if>
 		<if test="customerSource != null">
-			 CUSTOMERSOURCE = ${customerSource},
-			
+			CUSTOMERSOURCE = ${customerSource},
+
 		</if>
 		<if test="kindlySend != null  and kindlySend != ''">
-			  KINDLY_SEND = #{kindlySend},
+			KINDLY_SEND = #{kindlySend},
 		</if>
 		<![CDATA[
 				   IMGURL = #{imgUrl},
@@ -274,7 +276,7 @@
 			WHERE ID = ${id}
 		]]>
 	</update>
-	
+
 	<select id="findUserByAttr" resultType="User">
 		<![CDATA[
 		   SELECT u.ID AS id,
@@ -302,7 +304,7 @@
 			AND u.TELEPHONE = #{telephone}
 		</if>
 	</select>
-	
+
 	<select id="validationPhone" resultType="int">
 		<![CDATA[
 			SELECT COUNT(1)
@@ -323,7 +325,7 @@
 				WHERE id = ${id}
 		]]>
 	</update>
-	
+
 	<update id="recover">
 		<![CDATA[
 			UPDATE USERS
@@ -332,10 +334,10 @@
 		]]>
 		<if test="userName != null and userName != ''">
 			AND TELEPHONE = #{userName}
-			OR  EMAIL = #{userName}
+			OR EMAIL = #{userName}
 		</if>
 	</update>
-	
+
 	<update id="modifyUserInfo">
 		<![CDATA[
 			UPDATE USERS
@@ -347,11 +349,12 @@
 					WECHAT = #{weChat},
 					UPDATE_TIME = CURRENT_TIMESTAMP,
 					USERCOMPANY = #{userCompany},
-					customerSource = #{customerSource}
+					CUSTOMERSOURCE = ${customerSource},
+					IMGURL = #{imgUrl}
 			WHERE id = ${id}
 		]]>
 	</update>
-	
+
 	<update id="modifyUserPassword">
 		<![CDATA[
 			UPDATE USERS
@@ -360,7 +363,7 @@
 			WHERE id = ${id}
 		]]>
 	</update>
-	
+
 	<update id="modifyUserPhone">
 		<![CDATA[
 			UPDATE USERS
@@ -369,7 +372,7 @@
 			WHERE id = ${id}
 		]]>
 	</update>
-	
+
 	<update id="modifyUserPhoto">
 		<![CDATA[
 			UPDATE USERS
@@ -378,7 +381,7 @@
 			WHERE id = ${id}
 		]]>
 	</update>
-	
+
 	<select id="verificationUserExistByThirdLogin" resultType="User">
 		<![CDATA[
 			SELECT u.ID AS id,
@@ -406,8 +409,9 @@
 			   OR WECHATUNIQUE = #{uniqueId}
 		]]>
 	</select>
-	
-	<insert id="saveByThirdLogin" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+
+	<insert id="saveByThirdLogin" useGeneratedKeys="true"
+		keyProperty="id" parameterType="User">
 		<![CDATA[
 			INSERT INTO USERS(
 				USERNAME,
@@ -428,8 +432,8 @@
 			)
 		]]>
 	</insert>
-	
-	
+
+
 	<select id="findUserByNameOrRealName" resultType="User">
 		<![CDATA[
 			SELECT u.ID AS id,
@@ -441,16 +445,17 @@
 				WHERE 1=1
 		]]>
 		<if test="userName != null and userName != ''">
-			AND u.USERNAME LIKE CONCAT('%',#{userName},'%') 
+			AND u.USERNAME LIKE CONCAT('%',#{userName},'%')
 		</if>
 		<if test="realName != null and realName != ''">
-			AND u.REALNAME LIKE CONCAT('%',#{realName},'%') 
+			AND u.REALNAME LIKE CONCAT('%',#{realName},'%')
 		</if>
-		<if test="(userName == null or userName == '') and (realName == null or realName == '') ">
+		<if
+			test="(userName == null or userName == '') and (realName == null or realName == '') ">
 			AND 1=2
 		</if>
 	</select>
-	
+
 	<select id="findUnlevelUsers" resultType="Long">
 		<![CDATA[
 			SELECT COUNT(1)
@@ -459,7 +464,7 @@
 				AND CLIENTLEVEL IS NULL
 		]]>
 	</select>
-	
+
 	<select id="findUserByPhone" resultType="User">
 		<![CDATA[
 			SELECT u.ID AS id,
@@ -486,7 +491,7 @@
 			FROM USERS u WHERE u.TELEPHONE=#{telephone}
 		]]>
 	</select>
-	
+
 	<select id="findUserByLoginNameAndPwd" resultType="User">
 		<![CDATA[
 			SELECT u.ID AS id,
@@ -511,29 +516,29 @@
 			               AND  u.PASSWORD=#{password}
 		]]>
 	</select>
-	
+
 	<update id="unBindThird">
 		<![CDATA[
 			UPDATE USERS
 			   SET 
 		]]>
 		<if test="lType=='qq'">
-			 QQUNIQUE =''
+			QQUNIQUE =''
 		</if>
-		
+
 		<if test="lType=='wb'">
-			 WBUNIQUE =''
+			WBUNIQUE =''
 		</if>
-		
+
 		<if test="lType=='wechat'">
-			 WECHATUNIQUE =''
+			WECHATUNIQUE =''
 		</if>
 		<![CDATA[
 			WHERE ID = ${id}
 		]]>
 	</update>
-	
-		
+
+
 	<select id="findUserByUserName" resultType="User">
 		<![CDATA[
 			SELECT ID FROM USERS  WHERE USERNAME = #{userName} 

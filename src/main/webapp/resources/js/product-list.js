@@ -21,7 +21,7 @@ $().ready(function(){
 		columns:[[
 					{
 						field : 'productName',
-						title : '项目名称',
+						title : '标题',
 						width : 150,
 						align : 'center' ,
 						editor : {
@@ -63,49 +63,24 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'pDescription' ,
-						title : '描述' ,
+						field : 'visible' ,
+						title : '是否可见 ',
 						align : 'center' ,
-						width : 200,
-						editor : {
-							type : 'validatebox' ,
-							options : {
-								required : false 
-							}
-						}
-					},{
-						field : 'videoUrl' ,
-						title : '视频连接' ,
-						align : 'center' ,
-						width : 180,
-						editor : {
-							type : 'validatebox' ,
-							options : {
-								required : false 
-							}
-						}
-					},{
-						field : 'hret' ,
-						title : '外链' ,
-						align : 'center' ,
-						width : 180,
-						editor : {
-							type : 'validatebox' ,
-							options : {
-								required : false 
-							}
-						}
-					},{
-						field : 'uploadDate' ,
-						title : '上传时间' ,
-						align : 'center' ,
-						width : 100,
+						width : 60,
 						sortable : true ,
+						formatter : function(value , record , index){
+							if(value == 0){
+								return '<span style=color:green; >可见</span>' ;
+							} else if( value == 1){
+								return '<span style=color:red; >不可见</span>' ; 
+							}
+						}
 					},{
 						field : 'tags' ,
 						title : '标签' ,
 						align : 'center' ,
 						width : 120,
+						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -113,10 +88,11 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'videoLength' ,
-						title : '视频长度' ,
+						field : 'teamName' ,
+						title : '团队名称' ,
 						align : 'center' ,
-						width : 80,
+						width : 200,
+						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -127,12 +103,23 @@ $().ready(function(){
 						field : 'recommend' ,
 						title : '推荐值' ,
 						align : 'center' ,
-						width : 50,
+						width : 150,
 						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
 								required : false 
+							}
+						},
+						formatter : function(value , record , index){
+							if(value == 0){
+								return '<span>未推荐</span>' ;
+							} else if( value == 1){
+								return '<span style=color:red; >热门爆款</span>' ; 
+							} else if(value == 2){
+								return '<span style=color:green; >精品案例</span>' ; 
+							}else if(value > 2){
+								return '<span style=color:blue; >推荐视频</span>' ; 
 							}
 						}
 					},{
@@ -148,21 +135,43 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'visible' ,
-						title : '前端显示' ,
+						field : 'hret' ,
+						title : '视频外链' ,
 						align : 'center' ,
 						width : 60,
-						sortable : true ,
+						editor : {
+							type : 'validatebox' ,
+							options : {
+								required : false 
+							}
+						},
 						formatter : function(value , record , index){
-							if(value == 0){
-								return '<span style=color:green; >显示</span>' ;
-							} else if( value == 1){
-								return '<span style=color:red; >隐藏</span>' ; 
+							if(value == '' || value == undefined || value == null){
+								return '<span style=color:red;>无</span>' ;
+							} else{
+								return '<span style=color:blue;>有</span>' ; 
 							}
 						}
 					},{
+						field : 'uploadDate' ,
+						title : '上传时间' ,
+						align : 'center' ,
+						width : 150,
+						sortable : true ,
+					},{
+						field : 'creationTime' ,
+						title : '创作时间' ,
+						align : 'center' ,
+						width : 150
+					},{
+						field : 'submitTime' ,
+						title : '提交审核时间' ,
+						align : 'center' ,
+						width : 150,
+						sortable : true ,
+					},{
 						field : 'picLDUrl' ,
-						title : '海报' ,
+						title : '封面' ,
 						align : 'center' ,
 						width : 180,
 						editor : {
@@ -172,11 +181,35 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'teamName' ,
-						title : '所属团队' ,
+						field : 'pDescription' ,
+						title : '描述' ,
 						align : 'center' ,
 						width : 200,
-						sortable : true ,
+						hidden : true,
+						editor : {
+							type : 'validatebox' ,
+							options : {
+								required : false 
+							}
+						}
+					},{
+						field : 'videoUrl' ,
+						title : '视频连接' ,
+						align : 'center' ,
+						width : 180,
+						hidden : true,
+						editor : {
+							type : 'validatebox' ,
+							options : {
+								required : false 
+							}
+						}
+					},{
+						field : 'videoLength' ,
+						title : '视频长度' ,
+						align : 'center' ,
+						width : 80,
+						hidden : true,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -196,15 +229,11 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'creationTime' ,
-						title : '作品创作时间' ,
-						align : 'center' ,
-						width : 100
-					},{
 						field : 'productId' ,
 						title : '作品链接' ,
 						align : 'center' ,
 						width : 280,
+						hidden : true,
 						formatter : function(value , record , index){
 							//http://www.apaipian.com/play/16_659.html
 							return 'http://www.apaipian.com/play/'+record.teamId + '_' + record.productId+'.html';
@@ -216,29 +245,29 @@ $().ready(function(){
 						width : 100,
 						formatter : function(value , record , index){
 							if(value == 0){
-								return '';
+								return '<span style=color:bule; >否</span>' ; 
 							} else if( value == 1){
-								return '<span style=color:green; >代表作品</span>' ; 
+								return '<span style=color:green; >是</span>' ; 
 							} 
 						}
-					}]] ,
+					}]],
 		pagination: true ,
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
 		toolbar : '#toolbar',
 		onDblClickCell:function(index,field,value){
-			if(field == 'videoUrl'){
+			if(field == 'productName'){
+				var row = $('#gride').datagrid('getData').rows[index];
 				// video
 				$('#picture-condition').removeClass('hide');
 				$('#productVideo').removeClass('hide');
 				$('#productPicture').addClass('hide');
 				$('#youku-player').hide();
 				$('#productVideo').show('fast');
-				var videoPath = getDfsHostName() +  value;
+				var videoPath = getDfsHostName() +  row.videoUrl;
 				destroyPlayer('youku-player');// 销毁优酷播放器
 				$('#productVideo').attr('src',videoPath);
-				
 				$('#p-cancel').on('click',function(){
 					$('#picture-condition').addClass('hide');
 					$('#productVideo').attr('src','');
@@ -344,7 +373,7 @@ function addFuc(){
 	formUrl = getContextPath() + '/portal/product/save';
 	openDialog(null);
 	$('input[name="productId"]').val(0);
-	$('input[name="visible"]').val(1);
+	$('input[name="visible"]').val(0);
 	$('#showType').combobox('setValue','1');
 }
 
@@ -411,13 +440,6 @@ function save(){
 	$('#fm').form('submit',{
 		url : formUrl,
 		onSubmit : function() {
-			//创作时间必填
-			var creationTime = $("#creationTime").val();
-			if(creationTime==null||creationTime==undefined||creationTime==''){
-				$.message('请填写创作时间!');
-				progressClose();
-				return false;
-			}
 			if($("#videoUrl").val()=='' && $("#videoFile").val()==''){
 				$.message('请上传视频文件!');
 				progressClose();
@@ -448,7 +470,7 @@ function openDialog(data){
 	$('#dlg').dialog({
 		title : '作品信息',
 		modal : true,
-		width : 520,
+		width : 620,
 		height : 500,
 		onOpen : function(event, ui) {
 			
@@ -513,7 +535,18 @@ function setMaster(){
 		$.message('只能选择一条记录进行修改!');
 	}
 }
-
+function toPlayHtml(){
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length != 0){
+		for(var i=0;i<rows.length;i++){
+			var teamId = rows[i].teamId;
+			var productId = rows[i].productId;
+			window.open('http://www.apaipian.com/play/'+teamId+'_'+productId+'.html');
+		}
+	}else{
+		$.message('请先选择作品!');
+	}
+}
 function recommendFuc(){
 	$('#recommend-dlg').dialog({
 		title : '作品推荐',
