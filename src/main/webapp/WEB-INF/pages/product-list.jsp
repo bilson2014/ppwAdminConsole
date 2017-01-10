@@ -79,7 +79,7 @@
 					<td>
 						<select name="recommend" class="easyui-combobox" editable="false">
 							<option value="" selected>-- 请选择 --</option>
-							<option value="0">不推荐</option>
+							<option value="0">未推荐</option>
 							<option value="1">热门爆款</option>
 							<option value="2">精品案例</option>
 							<option value="3">推荐视频</option>

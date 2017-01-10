@@ -11,7 +11,7 @@ $().ready(function(){
 		url : getContextPath() + '/portal/product/list',
 		idField : 'productId' ,
 		title : '项目管理列表' ,
-		fitColumns : true ,
+		//fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -113,13 +113,13 @@ $().ready(function(){
 						},
 						formatter : function(value , record , index){
 							if(value == 0){
-								return '<span>不推荐</span>' ;
+								return '<span>未推荐</span>' ;
 							} else if( value == 1){
-								return '<span style=color:bule; >热门爆款</span>' ; 
+								return '<span style=color:red; >热门爆款</span>' ; 
 							} else if(value == 2){
 								return '<span style=color:green; >精品案例</span>' ; 
 							}else if(value > 2){
-								return '<span style=color:yellow; >推荐视频</span>' ; 
+								return '<span style=color:blue; >推荐视频</span>' ; 
 							}
 						}
 					},{
@@ -136,9 +136,9 @@ $().ready(function(){
 						}
 					},{
 						field : 'hret' ,
-						title : '外链' ,
+						title : '视频外链' ,
 						align : 'center' ,
-						width : 180,
+						width : 60,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -147,7 +147,7 @@ $().ready(function(){
 						},
 						formatter : function(value , record , index){
 							if(value == '' || value == undefined || value == null){
-								return '<span>无</span>' ;
+								return '<span style=color:red;>无</span>' ;
 							} else{
 								return '<span style=color:blue;>有</span>' ; 
 							}
@@ -164,17 +164,11 @@ $().ready(function(){
 						align : 'center' ,
 						width : 150
 					},{
-						field : 'masterWork' ,
-						title : '代表作品' ,
+						field : 'submitTime' ,
+						title : '提交审核时间' ,
 						align : 'center' ,
-						width : 100,
-						formatter : function(value , record , index){
-							if(value == 0){
-								return '<span style=color:bule; >否</span>' ; 
-							} else if( value == 1){
-								return '<span style=color:green; >是</span>' ; 
-							} 
-						}
+						width : 150,
+						sortable : true ,
 					},{
 						field : 'picLDUrl' ,
 						title : '封面' ,
@@ -244,7 +238,19 @@ $().ready(function(){
 							//http://www.apaipian.com/play/16_659.html
 							return 'http://www.apaipian.com/play/'+record.teamId + '_' + record.productId+'.html';
 						}
-					}]] ,
+					},{
+						field : 'masterWork' ,
+						title : '代表作' ,
+						align : 'center' ,
+						width : 100,
+						formatter : function(value , record , index){
+							if(value == 0){
+								return '<span style=color:bule; >否</span>' ; 
+							} else if( value == 1){
+								return '<span style=color:green; >是</span>' ; 
+							} 
+						}
+					}]],
 		pagination: true ,
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
