@@ -166,9 +166,11 @@ public class ProductController extends BaseController {
 					fdfsService.delete(videoUrl);
 					//待修改成分解富文本编辑器，删除图片
 					final String description = product.getVideoDescription();
-					List<String>  imgList = JsoupUtil.getImgSrc(description);
-					for(String s : imgList){
-						fdfsService.delete(s);
+					if(ValidateUtil.isValid(description)){
+						List<String>  imgList = JsoupUtil.getImgSrc(description);
+						for(String s : imgList){
+							fdfsService.delete(s);
+						}
 					}
 					// 删除搜索索引
 					solrService.deleteDoc(product.getProductId(), SOLR_URL);

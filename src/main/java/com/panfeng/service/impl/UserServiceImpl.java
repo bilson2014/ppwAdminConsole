@@ -147,7 +147,21 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public long saveByThirdLogin(final User user) {
 
+		// 过滤掉Emoji表情
+		boolean isdefault = false;
+		String filterEmoji = ValidateUtil.filterEmoji(user.getUserName());
+		if (ValidateUtil.isValid(filterEmoji)) {
+			user.setUserName(filterEmoji);
+		} else {
+			// 添加默认 用户名
+			user.setUserName("用户");
+			isdefault = true;
+		}
 		final long ret = mapper.saveByThirdLogin(user);
+		if (isdefault) {
+			user.setUserName(user.getUserName() + user.getId());
+			mapper.update(user);
+		}
 		return ret;
 	}
 
@@ -199,7 +213,21 @@ public class UserServiceImpl implements UserService {
 				} else if (bind.getType().equals("wb")) {
 					user.setWbUnique(bind.getUnique());
 				}
+				// 过滤掉Emoji表情
+				boolean isdefault = false;
+				String filterEmoji = ValidateUtil.filterEmoji(user.getUserName());
+				if (ValidateUtil.isValid(filterEmoji)) {
+					user.setUserName(filterEmoji);
+				} else {
+					// 添加默认 用户名
+					user.setUserName("用户");
+					isdefault = true;
+				}
 				mapper.saveByThirdLogin(user);
+				if (isdefault) {
+					user.setUserName(user.getUserName() + user.getId());
+					mapper.update(user);
+				}
 				map.put("user", user);
 				map.put("msg", "绑定成功");
 			}
@@ -273,22 +301,22 @@ public class UserServiceImpl implements UserService {
 		return mapper.modifyUserLoginName(user);
 	}
 
-	//查询第三方绑定状态
+	// 查询第三方绑定状态
 	@Override
 	public Map<String, Object> thirdStatus(User u) {
-		Map<String, Object> map = new HashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("qq", "0");
-		map.put("wechat","0");
+		map.put("wechat", "0");
 		map.put("wb", "0");
 		User user = mapper.findUserById(u.getId());
-		if(null!=user){
-			if(ValidateUtil.isValid(user.getQqUnique())){
+		if (null != user) {
+			if (ValidateUtil.isValid(user.getQqUnique())) {
 				map.put("qq", "1");
 			}
-			if(ValidateUtil.isValid(user.getWechatUnique())){
+			if (ValidateUtil.isValid(user.getWechatUnique())) {
 				map.put("wechat", "1");
 			}
-			if(ValidateUtil.isValid(user.getWbUnique())){
+			if (ValidateUtil.isValid(user.getWbUnique())) {
 				map.put("wb", "1");
 			}
 		}
@@ -300,26 +328,27 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public boolean userInfoBind(User u) {
-		//查询第三方是不是存在绑定
+		// 查询第三方是不是存在绑定
 		List<User> list = mapper.verificationUserExistByThirdLogin(u);
-		if(list.size()>0){
-			return false;//已经存在绑定
-		}else{
+		if (list.size() > 0) {
+			return false;// 已经存在绑定
+		} else {
 			User user = mapper.findUserById(u.getId());
-			if(u.getlType().equals("qq")){
+			if (u.getlType().equals("qq")) {
 				user.setQqUnique(u.getUniqueId());
-			}else if(u.getlType().equals("weibo")){
+			} else if (u.getlType().equals("weibo")) {
 				user.setWbUnique(u.getUniqueId());
-			}else if(u.getlType().equals("wechat")){
+			} else if (u.getlType().equals("wechat")) {
 				user.setWechatUnique(u.getUniqueId());
 			}
-			if(!ValidateUtil.isValid(user.getUserName())){
+			if (!ValidateUtil.isValid(user.getUserName())) {
 				user.setUserName(u.getUserName());
 			}
 			mapper.update(user);
 			return true;
 		}
 	}
+
 	/**
 	 * 用户个人资料页面解除绑定第三方
 	 */
@@ -331,25 +360,26 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean uniqueUserName(User user) {
-		if(null!=user){
+		if (null != user) {
 			List<User> list = mapper.findUserByUserName(user);
-			if(list.size()==0){
+			if (list.size() == 0) {
 				return true;
 			}
-			if(list.size()==1){
+			if (list.size() == 1) {
 				User u = list.get(0);
-				if(null == u || u.getId()==user.getId()){//是自身
+				if (null == u || u.getId() == user.getId()) {// 是自身
 					return true;
 				}
 			}
 			return false;
-		}return false;
+		}
+		return false;
 	}
 
 	@Override
 	public BaseMsg updateNewphone(User user) {
-		//验证手机号是否存在
-		
+		// 验证手机号是否存在
+
 		return null;
 	}
 }

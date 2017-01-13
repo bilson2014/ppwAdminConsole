@@ -352,8 +352,8 @@ public class ProjectController extends BaseController {
 			// indentProjectService.getReport(list, outputStream);
 			// modify by wanglc 2016-9-19 15:46:08 begin
 			// -->修改导出方法,加快导出速度
-			// indentProjectService.getReportForExport(list, outputStream);
-			indentProjectService.export2Excel(list, outputStream);
+			 indentProjectService.getReportForExport(list, outputStream);
+			//indentProjectService.export2Excel(list, outputStream);
 			// modify by wanglc 2016-9-19 15:46:08 end
 			outputStream.flush();
 			
