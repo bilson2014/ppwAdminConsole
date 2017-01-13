@@ -1,4 +1,4 @@
-package com.panfeng.service;
+/*package com.panfeng.service;
 
 import java.util.List;
 
@@ -10,8 +10,6 @@ public interface IndentService {
 	public List<Indent> listWithPagination(final IndentView view);
 	
 	public long maxSize(final IndentView view);
-	
-	public Indent findIndentById(final long indentId);
 	
 	public long save(final Indent indent);
 	
@@ -28,22 +26,28 @@ public interface IndentService {
 
 	public long checkStatus(final int status);
 	
-	/**
+	*//**
 	 * 根据分销人唯一编号计算订单总额
 	 * @param salesmanUniqueId 分销人唯一编号
 	 * @return 订单总额
-	 */
+	 *//*
 	public Double sumPriceBySalesmanUniqueId(final String salesmanUniqueId);
 	
-	/**
+	*//**
 	 * 根据分销人唯一编号计算订单总数
 	 * @param salesmanUniqueId 分销人唯一编号
 	 * @return 订单总数
-	 */
+	 *//*
 	public long countBySalesmanUniqueId(final String salesmanUniqueId);
 
-	/**
+	*//**
 	 * 成本计算器更新订单信息
-	 */
+	 *//*
 	public long updateForCalculate(Indent indent);
+
+	*//**
+	 * 批量修改订单状态
+	 *//*
+	public boolean changeIndentsType(Indent indent);
 }
+*/

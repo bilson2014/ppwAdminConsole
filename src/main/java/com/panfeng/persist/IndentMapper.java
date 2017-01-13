@@ -13,8 +13,6 @@ public interface IndentMapper {
 	
 	public long maxSize(final IndentView view);
 	
-	public Indent findIndentById(@Param("indentId") final long indentId);
-	
 	public long save(final Indent indent);
 	
 	public long update(final Indent indent);
@@ -37,4 +35,6 @@ public interface IndentMapper {
 	 * 成本计算器更新订单信息
 	 */
 	public long updateForCalculate(Indent indent);
+
+	public long changeIndentsType(Indent indent);
 }

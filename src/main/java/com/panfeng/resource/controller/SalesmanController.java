@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.util.JsonUtil;
+import com.paipianwang.pat.facade.indent.service.PmsIndentFacade;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Salesman;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.SalesmanView;
-import com.panfeng.service.IndentService;
 import com.panfeng.service.SalesmanService;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.HttpUtil;
-import com.panfeng.util.JsonUtil;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
@@ -35,9 +35,8 @@ public class SalesmanController extends BaseController {
 
 	@Autowired
 	final private SalesmanService service = null;
-	
 	@Autowired
-	final private IndentService indentService = null;
+	private PmsIndentFacade pmsIndentFacade = null;
 	
 	@RequestMapping("/salesman-list")
 	public ModelAndView view(){
@@ -60,8 +59,8 @@ public class SalesmanController extends BaseController {
 		// 装载订单总数及总金额
 		for (final Salesman salesman : list) {
 			final String salesmanUniqueId = salesman.getUniqueId();
-			final long total = indentService.countBySalesmanUniqueId(salesmanUniqueId);
-			final Double price = indentService.sumPriceBySalesmanUniqueId(salesmanUniqueId);
+			final long total = pmsIndentFacade.countBySalesmanUniqueId(salesmanUniqueId);
+			final Double price = pmsIndentFacade.sumPriceBySalesmanUniqueId(salesmanUniqueId);
 			if(price != null){
 				salesman.setSumPrice(price);
 			}else{

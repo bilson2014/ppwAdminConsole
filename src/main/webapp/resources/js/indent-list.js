@@ -6,9 +6,9 @@ $().ready(function(){
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/indent/list',
-		idField : 'indentId' ,
+		idField : 'id' ,
 		title : '订单列表' , 
-		// fitColumns : true ,
+		//fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true ,
@@ -21,6 +21,7 @@ $().ready(function(){
 						title : '订单名称',
 						width : 200,
 						align : 'center' ,
+						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -29,11 +30,25 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'indentId',
+						field : 'id',
 						title : '订单编号',
 						width : 150,
 						align : 'center',
+						sortable : true ,
 						sortable : true 
+					},{
+						field : 'orderDate',
+						title : '下单时间',
+						width : 150,
+						align : 'center',
+						sortable : true ,
+						editor : {
+							type : 'datebox' ,
+							options : {
+								required : false ,
+								missingMessage : '请选择下单时间!'
+							}
+						}
 					},{
 						field : 'indentPrice',
 						title : '订单金额',
@@ -54,39 +69,10 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'indent_tele',
-						title : '联系人电话',
-						width : 150,
-						align : 'center',
-						editor : {
-							type : 'numberbox' ,
-							options : {
-								required:true ,
-								missingMessage : '请填写联系人电话!'
-							}
-						}
-					},{
-						field : 'second',
-						title : '影片长度',
-						width : 110,
-						align : 'center',
-						formatter : function(value,row,index){
-							return thousandCount(row.second) + '<span style=color:#999; > 秒</span>' ;
-						},
-						editor : {
-							type : 'numberbox' ,
-							options : {
-								required:true ,
-								min:0 ,
-								max:99999999 ,
-								precision:0,
-								missingMessage : '请填写订单影片长度!'
-							}
-						}
-					},{
 						field : 'indentType' ,
-						title : '订单类型' ,
+						title : '订单状态' ,
 						align : 'center' ,
+						sortable : true ,
 						width : 100,
 						sortable : true ,
 						formatter : function(value , record , index){
@@ -111,23 +97,24 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'orderDate',
-						title : '下单时间',
+						field : 'indent_tele',
+						title : '客户电话',
 						width : 150,
 						align : 'center',
 						sortable : true ,
 						editor : {
-							type : 'datebox' ,
+							type : 'numberbox' ,
 							options : {
-								required : false ,
-								missingMessage : '请选择下单时间!'
+								required:true ,
+								missingMessage : '请填写联系人电话!'
 							}
 						}
 					},{
 						field : 'indent_recomment',
 						title : '订单备注',
-						width : 150,
+						//width : 150,
 						align : 'center',
+						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -140,6 +127,7 @@ $().ready(function(){
 						title : 'CRM备注',
 						width : 150,
 						align : 'center',
+						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
@@ -148,50 +136,11 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'service_name',
-						title : '服务名称',
-						width : 120,
-						align : 'center'
-					},{
-						field : 'service_price',
-						title : '服务价格',
-						width : 80,
-						align : 'center'
-					},{
-						field : 'service_discount',
-						title : '折扣',
-						width : 60,
-						align : 'center'
-					},{
-						field : 'service_realPrice',
-						title : '实付价格',
-						width : 80,
-						align : 'center'
-					},{
-						field : 'product_name',
-						title : '产品名称',
-						width : 120,
-						align : 'center'
-					},{
-						field : 'team_name',
-						title : '团队名称',
-						width : 120,
-						align : 'center'
-					},{
-						field : 'user_name',
-						title : '团队名称',
-						width : 120,
-						align : 'center'
-					},{
-						field : 'user_email',
-						title : '用户邮箱',
-						width : 150,
-						align : 'center'
-					},{
 						field : 'salesmanUniqueId',
-						title : '分销人',
+						title : '分销渠道',
 						width : 150,
 						align : 'center',
+						sortable : true ,
 						formatter : function(value,row,index){
 							if(row.salesmanName == null || row.salesmanName == ''){
 								row.salesmanName = '';
@@ -254,7 +203,7 @@ function delFuc(){
 			if(r){
 				var ids = '';
 				for(var i = 0 ; i < arr.length ; i++){
-					ids += arr[i].indentId + ',';
+					ids += arr[i].id + ',';
 				}
 				ids = ids.substring(0,ids.length-1);
 				$.post(getContextPath() + '/portal/indent/delete', {ids:ids},function(result){
@@ -263,6 +212,49 @@ function delFuc(){
 					datagrid.datagrid('clearSelections');
 					datagrid.datagrid('reload');
 					$.message('操作成功!');
+				});
+			} else {
+				 return ;
+			}
+		});
+	}
+}
+function changeIndentsTypeFuc(){
+	
+	var arr = datagrid.datagrid('getSelections');
+	if(arr.length <= 0 ){
+		$.message('请选择进行批量修改操作!');
+	} else {
+		$('#dlg').dialog({
+			modal : true,
+			onOpen : function(event, ui) {
+			},
+		}).dialog('open').dialog('center');
+	}
+}
+
+function change(){	
+	var arr = datagrid.datagrid('getSelections');
+	if(arr.length <= 0 ){
+		$.message('请选择进行批量修改操作!');
+	} else {
+		$.messager.confirm('提示信息' , '确认修改?' , function(r){
+			if(r){
+				var ids = '';
+				for(var i = 0 ; i < arr.length ; i++){
+					ids += arr[i].id + ',';
+				}
+				ids = ids.substring(0,ids.length-1);
+				$.post(getContextPath() + '/portal/indent/modifyType',
+					{
+						ids:ids,
+						indentType:$("#indentType").combobox("getValue")
+					},function(result){
+						$('#dlg').dialog('close');
+						datagrid.datagrid('clearSelections');
+						datagrid.datagrid('reload');
+						progressClose();
+						$.message('操作成功!');
 				});
 			} else {
 				 return ;
@@ -301,4 +293,17 @@ function cleanFun() {
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {});
 }
+//baobiao
+function exportFun() {
+	$('#searchForm').form('submit',{
+		url : getContextPath() + '/portal/indent/export',
+		onSubmit : function() {
+			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
+		},
+		success : function(result) {
+			
+		}
+	});
+}
+
 

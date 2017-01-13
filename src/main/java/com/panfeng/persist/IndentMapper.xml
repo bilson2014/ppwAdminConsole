@@ -2,120 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panfeng.persist.IndentMapper">
 	
-	<resultMap type="Indent" id="IndentRM">
-		<id property="indentId" column="indentId"/>
-		<result property="indentName" column="indentName"/>
-		<result property="indentNum" column="indentNum"/>
-		<result property="indentPrice" column="indentPrice"/>
-		<result property="second" column="second"/>
-		<result property="indent_tele" column="indent_tele"/>
-		<result property="indent_recomment" column="indent_recomment"/>
-		<result property="indent_description" column="indent_description"/>
-		<result property="indentType" column="indentType"/>
-		<result property="serviceId" column="serviceId"/>
-		<result property="userId" column="userId"/>
-		<result property="orderDate" column="orderDate"/>
-		<result property="service_name" column="service_name"/>
-		<result property="service_price" column="service_price"/>
-		<result property="service_discount" column="service_discount"/>
-		<result property="service_realPrice" column="service_realPrice"/>
-		<result property="product_name" column="product_name"/>
-		<result property="team_name" column="team_name"/>
-		<result property="user_name" column="user_name"/>
-		<result property="user_email" column="user_email"/>
-		<result property="salesmanUniqueId" column="salesmanUniqueId"/>
-		<result property="salesmanName" column="salesmanName"/>
-		<association property="user" javaType="User" column="userId" 
-			resultMap="userRM"/>
-		<association property="service" javaType="Service" column="serviceId"
-			resultMap="serviceRM" />
-		<association property="salesman" javaType="Salesman" column="salesmanUniqueId"
-			resultMap="salesmanRM" />
-	</resultMap>
-	
-	<resultMap type="User" id="userRM">
-		<id property="id" column="id"/>
-		<result property="userName" column="userName"/>
-	</resultMap>
-	
-	<resultMap type="Salesman" id="salesmanRM">
-		<id property="uniqueId" column="salesmanUniqueId"/>
-		<result property="salesmanName" column="salesmanName"/>
-	</resultMap>
-	
-	<resultMap type="Service" id="serviceRM">
-		<id property="serviceId" column="serviceId"/>
-		<result property="serviceName" column="serviceName"/>
-		<result property="serviceDescription" column="serviceDescription"/>
-		<result property="servicePrice" column="servicePrice"/>
-		<result property="serviceRealPrice" column="serviceRealPrice"/>
-		<result property="serviceDiscount" column="serviceDiscount"/>
-		<result property="serviceOd" column="serviceOd"/>
-		<association property="product" javaType="Product" column="productId"
-			resultMap="productRM" />
-	</resultMap>
-	
-	<resultMap type="Product" id="productRM">
-		<id property="productId" column="productId" />
-		<result property="videoUrl" column="videoUrl" />
-		<result property="videoDescription" column="videoDescription" />
-		<result property="pDescription" column="pDescription" />
-		<result property="productName" column="productName" />
-		<result property="picHDUrl" column="picHDUrl" />
-		<result property="picLDUrl" column="picLDUrl" />
-		<result property="productType" column="productType" />
-		<result property="uploadDate" column="uploadDate" />
-		<result property="recommend" column="recommend" />
-		<result property="supportCount" column="supportCount" />
-		<result property="videoLength" column="videoLength" />
-	</resultMap>
 	
 	
-	<select id="listWithPagination" resultMap="IndentRM">
+	<select id="listWithPagination" resultType="Indent">
 		<![CDATA[
 			SELECT ind.INDENTID AS indentId,
-				   ind.INDENTNAME AS indentName,
-				   ind.INDENTNUM AS indentNum,
-				   ind.INDENTPRICE AS indentPrice,
-				   ind.SECOND AS second,
-				   ind.INDENTTYPE AS indentType,
-				   ind.SERVICEID AS serviceId,
-				   ind.USERID AS userId,
-				   ind.INDENT_TELE AS indent_tele,
-				   ind.INDENT_RECOMMENT AS indent_recomment,
-				   ind.INDENT_DESCRIPTION AS indent_description,
-				   ser.SERVICENAME AS service_Name,
-				   ser.SERVICEPRICE AS service_price,
-				   ser.SERVICEDISCOUNT AS service_discount,
-				   ser.SERVICEREALPRICE AS service_realPrice,
-				   pro.PRODUCTNAME AS product_name,
-				   t.teamName AS team_name,
-				   u.USERNAME AS user_name,
-				   u.EMAIL AS user_email,
-				   DATE_FORMAT(ind.ORDERDATE,'%Y-%m-%d %T') AS orderDate,
-				   u.ID AS id,
-				   u.USERNAME AS userName,
-				   u.TELEPHONE AS telephone,
-				   u.EMAIL AS email,
-				   ser.SERVICEID AS serviceId,
-				   ser.SERVICENAME AS serviceName,
-				   ser.SERVICEPRICE AS servicePrice,
-				   ser.SERVICEDISCOUNT AS serviceDiscount,
-				   ser.SERVICEREALPRICE AS serviceRealPrice,
-				   pro.PRODUCTID AS productId,
-				   pro.PRODUCTNAME AS productName,
-				   pro.PRODUCTTYPE AS productType,
-				   DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d %T') AS uploadDate,
-				   pro.RECOMMEND AS recommend,
-				   pro.SUPPORTCOUNT AS supportCount,
-				   ind.SALESMANUNIQUEID AS salesmanUniqueId,
-				   sale.SALESMANNAME AS salesmanName
+			   ind.INDENTNAME AS indentName,
+			   ind.INDENTPRICE AS indentPrice,
+			   DATE_FORMAT(ind.ORDERDATE,'%Y-%m-%d %T') AS orderDate,
+			   ind.INDENTTYPE AS indentType,
+			   ind.INDENT_TELE AS indent_tele,
+			   ind.INDENT_RECOMMENT AS indent_recomment,
+			   ind.INDENT_DESCRIPTION AS indent_description,
+			   ind.SALESMANUNIQUEID AS salesmanUniqueId
 			FROM INDENT ind 
-			LEFT JOIN USERS u ON ind.userId = u.id
-			LEFT JOIN SERVICE ser ON ser.SERVICEID = ind.SERVICEID
-			LEFT JOIN PRODUCT pro ON pro.PRODUCTID = ind.PRODUCTID
-			LEFT JOIN TEAM t ON t.TEAMID = pro.TEAMID
-			LEFT JOIN SALESMAN sale ON ind.salesmanUniqueId = sale.uniqueId
 			WHERE 1 = 1
 		]]>
 		<if test="indentId != null and indentId != ''">
@@ -124,11 +24,8 @@
 		<if test="indentType != null and indentType != ''">
 			AND ind.INDENTTYPE = ${indentType}
 		</if>
-		<if test="userId != null and userId != ''">
-			AND ind.USERID = ${userId}
-		</if>
-		<if test="serviceId != null and serviceId != ''">
-			AND ind.SERVICEID = ${serviceId}
+		<if test="indent_tele != null and indent_tele != ''">
+			AND ind.INDENT_TELE LIKE CONCAT(CONCAT('%',#{indent_tele}),'%')
 		</if>
 		<![CDATA[
 		ORDER BY 
@@ -146,11 +43,6 @@
 		<![CDATA[
 			SELECT COUNT(1) 
 				FROM INDENT ind 
-			LEFT JOIN USERS u ON ind.userId = u.id
-			LEFT JOIN SERVICE ser ON ser.SERVICEID = ind.SERVICEID
-			LEFT JOIN PRODUCT pro ON pro.PRODUCTID = ind.PRODUCTID
-			LEFT JOIN TEAM t ON t.TEAMID = ind.TEAMID
-			LEFT JOIN SALESMAN sale ON ind.salesmanUniqueId = sale.uniqueId
 			WHERE 1 = 1
 		]]>
 		<if test="indentId != null and indentId != ''">
@@ -159,62 +51,11 @@
 		<if test="indentType != null and indentType != ''">
 			AND ind.INDENTTYPE = ${indentType}
 		</if>
-		<if test="userId != null and userId != ''">
-			AND ind.USERID = ${userId}
-		</if>
-		<if test="serviceId != null and serviceId != ''">
-			AND ind.SERVICEID = ${serviceId}
-		</if>
-		<if test="salesmanUniqueId != null and salesmanUniqueId != ''">
-			AND ind.SALESMANUNIQUEID = #{salesmanUniqueId}
+		<if test="indent_tele != null and indent_tele != ''">
+			AND ind.INDENT_TELE LIKE CONCAT(CONCAT('%',#{indent_tele}),'%')
 		</if>
 	</select>
 	
-	<select id="findIndentById" resultMap="IndentRM">
-		<![CDATA[
-			SELECT ind.INDENTID AS indentId,
-				   ind.INDENTNAME AS indentName,
-				   ind.INDENTNUM AS indentNum,
-				   ind.INDENTPRICE AS indentPrice,
-				   ind.SECOND AS second,
-				   ind.INDENTTYPE AS indentType,
-				   ind.SERVICEID AS serviceId,
-				   ind.USERID AS userId,
-				   ind.INDENT_TELE as indent_tele,
-				   ind.INDENT_RECOMMENT AS indent_recomment,
-				   ind.INDENT_DESCRIPTION AS indent_description,
-				   ser.SERVICENAME AS service_Name,
-				   ser.SERVICEPRICE AS service_price,
-				   ser.SERVICEDISCOUNT AS service_discount,
-				   ser.SERVICEREALPRICE AS service_realPrice,
-				   pro.PRODUCTNAME AS product_name,
-				   t.teamName AS team_name,
-				   u.USERNAME AS user_name,
-				   u.EMAIL AS user_email,
-				   DATE_FORMAT(ind.ORDERDATE,'%Y-%m-%d %T') AS orderDate,
-				   u.ID AS id,
-				   u.USERNAME AS userName,
-				   u.TELEPHONE AS telephone,
-				   u.EMAIL AS email,
-				   ser.SERVICEID AS serviceId,
-				   ser.SERVICENAME AS serviceName,
-				   ser.SERVICEPRICE AS servicePrice,
-				   ser.SERVICEDISCOUNT AS serviceDiscount,
-				   ser.SERVICEREALPRICE AS serviceRealPrice,
-				   pro.PRODUCTID AS productId,
-				   pro.PRODUCTNAME AS productName,
-				   pro.PRODUCTTYPE AS productType,
-				   DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d %T') AS uploadDate,
-				   pro.RECOMMEND AS recommend,
-				   pro.SUPPORTCOUNT AS supportCount
-			FROM INDENT ind 
-			LEFT JOIN USERS u ON ind.userId = u.id
-			LEFT JOIN SERVICE ser ON ser.SERVICEID = ind.SERVICEID
-			LEFT JOIN PRODUCT pro ON pro.PRODUCTID = ind.PRODUCTID
-			LEFT JOIN TEAM t ON t.TEAMID = ind.TEAMID
-			WHERE ind.INDENTID = ${indentId}
-		]]>
-	</select>
 	
 	<insert id="save" parameterType="Indent" useGeneratedKeys="true" keyProperty="indentId">
 		<![CDATA[
@@ -347,4 +188,18 @@
 			WHERE ind.SALESMANUNIQUEID = #{salesmanUniqueId}
 		]]>
 	</select>
+	<update id="changeIndentsType">
+		<![CDATA[
+			UPDATE INDENT
+				SET INDENTTYPE = ${indentType}
+				WHERE 1=1
+		]]>
+		<if test="ids != null and ids != ''">
+			AND INDENTID IN
+			<foreach collection="ids" open="(" close=")" item="id"
+				separator=",">
+				${id}
+			</foreach>
+		</if>
+	</update>
 </mapper>

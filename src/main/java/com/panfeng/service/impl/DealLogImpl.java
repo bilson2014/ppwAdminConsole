@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.paipianwang.pat.common.util.JsonUtil;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.DealLogMapper;
@@ -18,7 +19,6 @@ import com.panfeng.service.IndentProjectService;
 import com.panfeng.util.AESUtil;
 import com.panfeng.util.DateUtils;
 import com.panfeng.util.HttpsUtils;
-import com.panfeng.util.JsonUtil;
 import com.panfeng.util.PathFormatUtils;
 import com.panfeng.util.ValidateUtil;
 import com.sun.star.lang.NullPointerException;
