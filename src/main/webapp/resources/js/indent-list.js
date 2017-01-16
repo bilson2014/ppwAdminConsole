@@ -19,7 +19,7 @@ $().ready(function(){
 					{
 						field : 'indentName',
 						title : '订单名称',
-						width : 200,
+						width : 160,
 						align : 'center' ,
 						sortable : true ,
 						editor : {
@@ -32,14 +32,13 @@ $().ready(function(){
 					},{
 						field : 'id',
 						title : '订单编号',
-						width : 150,
+						width : 100,
 						align : 'center',
 						sortable : true ,
 						sortable : true 
 					},{
 						field : 'orderDate',
 						title : '下单时间',
-						width : 150,
 						align : 'center',
 						sortable : true ,
 						editor : {
@@ -52,7 +51,6 @@ $().ready(function(){
 					},{
 						field : 'indentPrice',
 						title : '订单金额',
-						width : 150,
 						align : 'center',
 						sortable : true ,
 						formatter : function(value,row,index){
@@ -73,7 +71,7 @@ $().ready(function(){
 						title : '订单状态' ,
 						align : 'center' ,
 						sortable : true ,
-						width : 100,
+						width : 80,
 						sortable : true ,
 						formatter : function(value , record , index){
 							if(value == 0){
@@ -99,7 +97,7 @@ $().ready(function(){
 					},{
 						field : 'indent_tele',
 						title : '客户电话',
-						width : 150,
+						width : 120,
 						align : 'center',
 						sortable : true ,
 						editor : {
@@ -112,7 +110,6 @@ $().ready(function(){
 					},{
 						field : 'indent_recomment',
 						title : '订单备注',
-						//width : 150,
 						align : 'center',
 						sortable : true ,
 						editor : {
@@ -125,7 +122,6 @@ $().ready(function(){
 					},{
 						field : 'indent_description',
 						title : 'CRM备注',
-						width : 150,
 						align : 'center',
 						sortable : true ,
 						editor : {
@@ -138,15 +134,17 @@ $().ready(function(){
 					},{
 						field : 'salesmanUniqueId',
 						title : '分销渠道',
-						width : 150,
+						width : 100,
 						align : 'center',
 						sortable : true ,
-						formatter : function(value,row,index){
+						/*formatter : function(value,row,index){
 							if(row.salesmanName == null || row.salesmanName == ''){
 								row.salesmanName = '';
 							}
-							return '<span style=color:black; >'+ row.salesmanName +'</span>' ;
-						},
+							//return '<span style=color:black; >'+ row.salesmanName +'</span>' ;
+							//TODO
+							return '<span style=color:black; >'+ row.salesmanUniqueId +'</span>' ;
+						},*/
 						editor : {
 							type : 'combobox' ,
 							options : {

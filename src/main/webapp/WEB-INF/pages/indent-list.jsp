@@ -21,7 +21,7 @@
 			<table>
 				<tr>
 					<th>订单编号:</th>
-					<td><input id="search-indentNum" name="indentId"  placeholder="请输入订单编号"/></td>
+					<td><input id="search-indentNum" name="id"  placeholder="请输入订单编号"/></td>
 					<th>联系电话:</th>
 					<td><input id="search-phone" name="indent_tele"  placeholder="请输入联系电话"/></td>
 					<td>

@@ -173,8 +173,9 @@ public class IndentController extends BaseController {
 	public PmsIndent calculateSave(@RequestBody final PmsIndent indent,HttpServletRequest request) {
 		long ret = 0l;
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		if(indent.getIndentId()==0){
+		if(indent.getId()==0){
 			 ret = pmsIndentFacade.save(indent);
+			 indent.setId(ret);
 			 Log.error("add new order ...", sessionInfo);
 			 String telephone = PropertiesUtils.getProp("service_tel");
 			 smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【未指定具体影片】"});

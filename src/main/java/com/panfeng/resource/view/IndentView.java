@@ -11,12 +11,21 @@ public class IndentView extends Pagination{
 	private String indentNum = null; // 订单编号
 	
 	private String indent_tele = null; //  联系方式
-	
-	private String indentId = null; // 订单ID
+
+	private String id = null; // 订单ID
 	
 	private Integer indentType = null; // 订单状态
 	
 	private String salesmanUniqueId = null; // 分销人唯一编号
+
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getIndent_tele() {
 		return indent_tele;
@@ -48,13 +57,6 @@ public class IndentView extends Pagination{
 
 	public void setIndentNum(String indentNum) {
 		this.indentNum = indentNum;
-	}
-	public String getIndentId() {
-		return indentId;
-	}
-
-	public void setIndentId(String indentId) {
-		this.indentId = indentId;
 	}
 
 	public Integer getIndentType() {

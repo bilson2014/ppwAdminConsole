@@ -4,7 +4,7 @@
 	
 	
 	
-	<select id="listWithPagination" resultType="Indent">
+	<!-- <select id="listWithPagination" resultType="Indent">
 		<![CDATA[
 			SELECT ind.INDENTID AS indentId,
 			   ind.INDENTNAME AS indentName,
@@ -201,5 +201,5 @@
 				${id}
 			</foreach>
 		</if>
-	</update>
+	</update> -->
 </mapper>
