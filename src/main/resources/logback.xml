@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<Target>System.out</Target>
 		<encoder>
 			<pattern>
 				%d %-5level %X{session} %X{username} %-15X{client} %msg%n
@@ -14,6 +15,38 @@
 			</pattern>
 		</encoder>
 	</appender>
+	
+	<appender name="console-info"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/pat_info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/pat_info.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d %-5level %X{session} %X{username} %-15X{client} %n%msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">  
+        <!-- 过滤器，只记录INFO级别的日志 -->  
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">  
+            <level>INFO</level>  
+            <onMatch>ACCEPT</onMatch>  
+            <onMismatch>DENY</onMismatch>  
+        </filter>  
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+            <!-- 按天回滚 daily -->  
+            <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/info-log.log  
+            </fileNamePattern>  
+            <!-- 日志最大的历史 60天 -->  
+            <maxHistory>30</maxHistory>  
+        </rollingPolicy>  
+        <encoder>  
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>  
+        </encoder>  
+    </appender>  
+	
 	<appender name="sql-file"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>logs/pat_sql.log</file>
@@ -59,6 +92,11 @@
 	<logger name="service" level="info" additivity="false">
 		<appender-ref ref="console" />
 		<appender-ref ref="service-file" />
+	</logger>
+	<logger name="info" level="info" additivity="false">
+		<appender-ref ref="console" />
+		<appender-ref ref="console-info" />
+		<appender-ref ref="INFO" />
 	</logger>
 	<logger name="error" level="warn" additivity="false">
 		<appender-ref ref="console" />

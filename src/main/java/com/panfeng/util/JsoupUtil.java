@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,21 +18,27 @@ public class JsoupUtil {
 	 */
 	public static List<String> getImgSrc(String content) {
 		List<String> list = new ArrayList<>();
-		try {
-			byte[] b = content.getBytes("UTF-8");
-			content = new String(Base64Utils.decode(b),"UTF-8");
-			Document document = Jsoup.parse(content);
-			Elements elements = document.select("img");
-			for(Element e : elements){
-				String src = e.attr("src");
-				if(src.contains("@.@")){
-					src = src.replace("@.@", "");
+		if (StringUtils.isNotBlank(content)) {
+			try {
+				byte[] b = content.getBytes("UTF-8");
+				content = new String(Base64Utils.decode(b), "UTF-8");
+				Document document = Jsoup.parse(content);
+				Elements elements = document.select("img");
+				if (elements != null && elements.size() > 0) {
+					for (Element e : elements) {
+						String src = e.attr("src");
+						if (src.contains("@.@"))
+							src = src.replace("@.@", "");
+
+						list.add(src);
+					}
 				}
-				list.add(src);
+
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
 			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
 		}
+
 		return list;
 	}
 }

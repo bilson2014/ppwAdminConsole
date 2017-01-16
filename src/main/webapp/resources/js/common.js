@@ -355,7 +355,6 @@ function Encrypt(word){
 	var encrypted = CryptoJS.AES.encrypt(srcs, key, { iv: iv,mode:CryptoJS.mode.CBC});  
 	return encrypted.toString();
 }
-
 /**
  * 提示信息
  */

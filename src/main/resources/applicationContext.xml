@@ -18,6 +18,8 @@
 	<import resource="RedisConfig.xml" />
 
 	<import resource="spring-mq.xml" />
+	
+	<import resource="dubbo/dubbo-consumer.xml"/>
 
 	<context:property-placeholder
 		location="classpath:jdbc.properties,classpath:redis.properties,
@@ -29,8 +31,8 @@
 					  com.panfeng.fs,
 					  com.panfeng.listener,
 					  com.panfeng.mq.service,
-					  com.panfeng.flow
-					  " />
+					  com.panfeng.flow,
+					  com.paipianwang.pat" />
 
 	<context:annotation-config />
 

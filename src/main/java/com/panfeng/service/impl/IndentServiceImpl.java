@@ -1,4 +1,4 @@
-package com.panfeng.service.impl;
+/*package com.panfeng.service.impl;
 
 import java.util.List;
 
@@ -28,13 +28,6 @@ public class IndentServiceImpl implements IndentService {
 		
 		final long total = mapper.maxSize(view);
 		return total;
-	}
-
-	@Override
-	public Indent findIndentById(final long indentId) {
-		
-		final Indent indent = mapper.findIndentById(indentId);
-		return indent;
 	}
 
 	@Override
@@ -106,12 +99,23 @@ public class IndentServiceImpl implements IndentService {
 		return total;
 	}
 
-	/**
+	*//**
 	 * 成本计算器更新订单信息
-	 */
+	 *//*
 	@Override
 	public long updateForCalculate(Indent indent) {
 		 return mapper.updateForCalculate(indent);
 	}
 
+	*//**
+	 * 批量修改订单状态
+	 *//*
+	@Override
+	public boolean changeIndentsType(Indent indent) {
+			
+		long l = mapper.changeIndentsType(indent);
+		return l>=0l;
+	}
+
 }
+*/

@@ -72,6 +72,16 @@ public class Indent extends BaseObject {
 	
 	private Boolean sendToUser = true;//订单给客户发短信
 	
+	private long[] ids;//订单数组
+	
+	public long[] getIds() {
+		return ids;
+	}
+
+	public void setIds(long[] ids) {
+		this.ids = ids;
+	}
+
 	public long getIndentId() {
 		return indentId;
 	}
