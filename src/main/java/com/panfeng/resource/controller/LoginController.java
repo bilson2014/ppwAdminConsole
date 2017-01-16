@@ -101,7 +101,7 @@ public class LoginController extends BaseController {
 			map.put(GlobalConstant.SESSION_INFO, info);
 			final boolean ret = sessionService.addSession(request, map);
 			
-			addCookies(request,response);
+			// addCookies(request,response);
 			result.setRet(ret);
 			result.setMessage("您当前已登录，如要切换账号，请登出后再进行登陆操作!");
 			return result;
@@ -117,7 +117,7 @@ public class LoginController extends BaseController {
 		
 		//HttpSession session = request.getSession();
 		//session.setAttribute(GlobalConstant.SESSION_INFO, null);
-		logOutCookie(request,response);
+		// logOutCookie(request,response);
 		// 删除
 		sessionService.removeSession(request);
 		return true;
