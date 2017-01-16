@@ -107,9 +107,9 @@ public class SecurityInterceptor implements HandlerInterceptor {
 		
 		final Right right = dao.getRightFromRedis(uri);
 		SessionInfo info = (SessionInfo) sessionService.getSessionWithField(req, GlobalConstant.SESSION_INFO); // 获取session
-		if(null == info){
+		/*if(null == info){
 			info = checkAutoLogin(req,resp);
-		}
+		}*/
 		// 首先验证是否是公共资源
 		if(ValidateUtil.hasRight(uri, req, sc,right,resp,info)){
 			// 公共资源

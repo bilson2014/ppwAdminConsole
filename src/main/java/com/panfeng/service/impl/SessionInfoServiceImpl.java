@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import com.panfeng.util.ValidateUtil;
 @Service(value = "sessionInfoService")
 public class SessionInfoServiceImpl implements SessionInfoService {
 
+	private final Logger logger = LoggerFactory.getLogger(SessionInfoServiceImpl.class);
 	@Autowired
 	private final SessionInfoDao dao = null;
 
@@ -28,6 +31,7 @@ public class SessionInfoServiceImpl implements SessionInfoService {
 		if (!dao.exitSession(request)) {
 			if (ValidateUtil.isValid(map)) {
 				final Map<String, String> destMap = RedisUtils.mapToJson(map);
+				logger.error("User "+ ((SessionInfo)map.get(GlobalConstant.SESSION_INFO)).getLoginName() +" Login ID " + request.getSession().getId());
 				return dao.addSession(request, destMap);
 			}
 		}
