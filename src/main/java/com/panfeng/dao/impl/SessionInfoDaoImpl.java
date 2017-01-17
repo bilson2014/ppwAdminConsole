@@ -141,7 +141,6 @@ public class SessionInfoDaoImpl implements SessionInfoDao {
 		return null;
 	}
 
-	@Override
 	public String getSessionWithToken(HttpServletRequest request, String token) {
 		Jedis jedis = null;
 		try {
@@ -177,7 +176,6 @@ public class SessionInfoDaoImpl implements SessionInfoDao {
 		return null;
 	}
 
-	@Override
 	public void removeSessionByToken(HttpServletRequest request, String token) {
 		Jedis jedis = null;
 		try {

@@ -1,9 +1,7 @@
 package com.panfeng.resource.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,7 +19,6 @@ import com.panfeng.resource.model.Role;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
-import com.panfeng.service.SessionInfoService;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
@@ -41,9 +38,6 @@ public class VersionManagerController extends BaseController {
 
 	@Autowired
 	private final EmployeeService service = null;
-
-	@Autowired
-	private final SessionInfoService infoService = null;
 
 	@Autowired
 	private final RoleService roleService = null;
@@ -149,7 +143,8 @@ public class VersionManagerController extends BaseController {
 			if (e != null) {
 				// 登陆成功
 				// 设置权限
-				infoService.removeSession(request);
+				// infoService.removeSession(request);
+				request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 				return initSessionInfo(e, request);
 			}
 		}
@@ -173,7 +168,8 @@ public class VersionManagerController extends BaseController {
 				if (ValidateUtil.isValid(list.get(0).getPhoneNumber())) {
 					// 绑定账户
 					// 清除当前session
-					infoService.removeSession(request);
+					// infoService.removeSession(request);
+					request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 					final Employee empl = list.get(0);
 					// 存入session中
 					return initSessionInfo(empl, request);
@@ -278,9 +274,10 @@ public class VersionManagerController extends BaseController {
 		long[] sum = e.getRightSum();
 		info.setSum(sum);
 		info.setSuperAdmin(e.isSuperAdmin()); // 判断是否是超级管理员
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(GlobalConstant.SESSION_INFO, info);
-		//return infoService.addSession(request, map);
-		return infoService.addSessionSeveralTime(request, map, 60*60*24*7);
+		/*Map<String, Object> map = new HashMap<String, Object>();
+		map.put(GlobalConstant.SESSION_INFO, info);*/
+		request.getSession().setAttribute(GlobalConstant.SESSION_INFO, info);
+		// return infoService.addSessionSeveralTime(request, map, 60*60*24*7);
+		return true;
 	}
 }

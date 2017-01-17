@@ -21,10 +21,12 @@ public class OutNameTag extends TagSupport {
 
 	public int doStartTag() throws JspException {
 		final ServletContext sc = pageContext.getServletContext();
-		WebApplicationContext  wc = WebApplicationContextUtils.findWebApplicationContext(sc);
-		final SessionInfoService sessionService = (SessionInfoService) wc.getBean("sessionInfoService");
+		// WebApplicationContext  wc = WebApplicationContextUtils.findWebApplicationContext(sc);
+		// final SessionInfoService sessionService = (SessionInfoService) wc.getBean("sessionInfoService");
 		
-		final SessionInfo info = (SessionInfo) sessionService.getSessionWithField((HttpServletRequest)pageContext.getRequest(), GlobalConstant.SESSION_INFO);
+		// final SessionInfo info = (SessionInfo) sessionService.getSessionWithField((HttpServletRequest)pageContext.getRequest(), GlobalConstant.SESSION_INFO);
+		final SessionInfo info = (SessionInfo) pageContext.getSession().getAttribute(GlobalConstant.SESSION_INFO);
+		
 		if(info != null){
 			final String realName = info.getRealName();
 			if(ValidateUtil.isValid(realName)){

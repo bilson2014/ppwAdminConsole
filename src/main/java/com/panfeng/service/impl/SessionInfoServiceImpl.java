@@ -22,6 +22,7 @@ import com.panfeng.util.ValidateUtil;
 public class SessionInfoServiceImpl implements SessionInfoService {
 
 	private final Logger logger = LoggerFactory.getLogger(SessionInfoServiceImpl.class);
+	
 	@Autowired
 	private final SessionInfoDao dao = null;
 
@@ -32,6 +33,8 @@ public class SessionInfoServiceImpl implements SessionInfoService {
 			if (ValidateUtil.isValid(map)) {
 				final Map<String, String> destMap = RedisUtils.mapToJson(map);
 				logger.error("User "+ ((SessionInfo)map.get(GlobalConstant.SESSION_INFO)).getLoginName() +" Login ID " + request.getSession().getId());
+				request.getSession().setAttribute("info", map);
+				System.err.println(request.getSession().getAttribute("info"));
 				return dao.addSession(request, destMap);
 			}
 		}

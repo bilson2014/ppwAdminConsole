@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,6 @@ import com.panfeng.resource.model.Role;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
-import com.panfeng.service.SessionInfoService;
 import com.panfeng.util.AESUtil;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.ValidateUtil;
@@ -43,9 +43,6 @@ public class LoginController extends BaseController {
 	
 	@Autowired
 	private final RightService rightService = null;
-	
-	@Autowired
-	private final SessionInfoService sessionService = null;
 	
 	@RequestMapping("/doLogin")
 	public Result doLogin(final Employee employee,final HttpServletRequest request,
@@ -99,7 +96,18 @@ public class LoginController extends BaseController {
 			//session.setAttribute(GlobalConstant.SESSION_INFO, info);
 			final Map<String,Object> map = new HashMap<String, Object>();
 			map.put(GlobalConstant.SESSION_INFO, info);
-			final boolean ret = sessionService.addSession(request, map);
+			final HttpSession session = request.getSession();
+			System.err.println("Login Session ID is " + session.getId());
+			
+			boolean ret = true;
+			if(session.getAttribute(GlobalConstant.SESSION_INFO) != null) {
+				// 如果已经登录，那么提示登出后在登录
+				ret = false;
+			} else {
+				session.setAttribute(GlobalConstant.SESSION_INFO, info);
+			}
+			
+			//final boolean ret = sessionService.addSession(request, map);
 			
 			// addCookies(request,response);
 			result.setRet(ret);
@@ -119,7 +127,9 @@ public class LoginController extends BaseController {
 		//session.setAttribute(GlobalConstant.SESSION_INFO, null);
 		// logOutCookie(request,response);
 		// 删除
-		sessionService.removeSession(request);
+		// sessionService.removeSession(request);
+		System.err.println("Logout Session ID is " + request.getSession().getId());
+		request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 		return true;
 	}
 }

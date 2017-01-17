@@ -6,13 +6,13 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -37,7 +37,6 @@ import com.panfeng.resource.view.TeamView;
 import com.panfeng.service.FDFSService;
 import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
-import com.panfeng.service.SessionInfoService;
 import com.panfeng.service.TeamService;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.Log;
@@ -79,9 +78,6 @@ public class TeamController extends BaseController {
 
 	@Autowired
 	private final RightService rightService = null;
-
-	@Autowired
-	private final SessionInfoService sessionService = null;
 
 	@Autowired
 	private final FDFSService fdfsService = null;
@@ -743,7 +739,8 @@ public class TeamController extends BaseController {
 				if (ValidateUtil.isValid(list.get(0).getPhoneNumber())) {
 					// 绑定账户
 					// 清除当前session
-					sessionService.removeSession(request);
+					// sessionService.removeSession(request);
+					request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 					final Team team = list.get(0);
 					// 存入session中
 					return initSessionInfo(team, request);
@@ -769,7 +766,9 @@ public class TeamController extends BaseController {
 	public boolean initSessionInfo(final Team team, HttpServletRequest request) {
 
 		// 清空session
-		sessionService.removeSession(request);
+		// sessionService.removeSession(request);
+		final HttpSession session = request.getSession();
+		session.removeAttribute(GlobalConstant.SESSION_INFO);
 		// 存入session中
 		final String sessionId = request.getSession().getId();
 		final SessionInfo info = new SessionInfo();
@@ -795,10 +794,11 @@ public class TeamController extends BaseController {
 		info.setSum(team.getRightSum());
 		info.setEmail(team.getEmail());
 		info.setSuperAdmin(team.isSuperAdmin()); // 判断是否是超级管理员
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(GlobalConstant.SESSION_INFO, info);
-		// return sessionService.addSession(request, map);
-		return sessionService.addSessionSeveralTime(request, map, 60 * 60 * 24 * 7);
+		/*Map<String, Object> map = new HashMap<String, Object>();
+		map.put(GlobalConstant.SESSION_INFO, info);*/
+		session.setAttribute(GlobalConstant.SESSION_INFO, info);
+		// return sessionService.addSessionSeveralTime(request, map, 60 * 60 * 24 * 7);
+		return true;
 	}
 
 	@RequestMapping("/team/static/data/add/account")
@@ -810,7 +810,8 @@ public class TeamController extends BaseController {
 		long count = service.updateTeamAccount(team);
 		if (count >= 0) {
 			Team t = service.findTeamById(team.getTeamId());
-			sessionService.removeSession(request);
+			// sessionService.removeSession(request);
+			request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 			initSessionInfo(t, request);
 			return true;
 		}
