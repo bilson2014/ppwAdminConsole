@@ -1,6 +1,5 @@
 package com.panfeng.taglib;
 
-import javax.servlet.ServletContext;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -22,11 +21,6 @@ public class IdentityTag extends TagSupport{
 
 	public int doStartTag() throws JspException {
 		if(ValidateUtil.isValid(role)){
-			final ServletContext sc = pageContext.getServletContext();
-			// WebApplicationContext  wc = WebApplicationContextUtils.findWebApplicationContext(sc);
-			// final SessionInfoService sessionService = (SessionInfoService) wc.getBean("sessionInfoService");
-			
-			// final SessionInfo info = (SessionInfo) sessionService.getSessionWithField((HttpServletRequest)pageContext.getRequest(), GlobalConstant.SESSION_INFO);
 			final SessionInfo info = (SessionInfo) pageContext.getSession().getAttribute(GlobalConstant.SESSION_INFO);
 			if(info != null){
 				final String currentRole = info.getSessionType();

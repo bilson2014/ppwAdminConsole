@@ -162,7 +162,6 @@ public class SecurityInterceptor implements HandlerInterceptor {
 						info.setToken(com.panfeng.util.DataUtil.md5(request.getSession().getId()));
 						Map<String, Object> map = new HashMap<String, Object>();
 						map.put(GlobalConstant.SESSION_INFO, info);
-						// sessionService.addSessionSeveralTime(request, map,60*60*24*7);//登陆用户存放七天
 						
 						Cookie cookieUsername = new Cookie("token", request.getSession().getId());
 						cookieUsername.setPath("/");

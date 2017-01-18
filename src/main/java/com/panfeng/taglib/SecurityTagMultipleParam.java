@@ -1,7 +1,6 @@
 package com.panfeng.taglib;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -12,7 +11,6 @@ import com.panfeng.dao.RightDao;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Right;
-import com.panfeng.service.SessionInfoService;
 import com.panfeng.util.UrlResourceUtils;
 import com.panfeng.util.ValidateUtil;
 
@@ -35,9 +33,6 @@ public class SecurityTagMultipleParam extends TagSupport {
 		final ServletContext sc = pageContext.getServletContext();
 		WebApplicationContext  wc = WebApplicationContextUtils.findWebApplicationContext(sc);
 		final RightDao dao = (RightDao) wc.getBean("rightDao");
-		// final SessionInfoService sessionService = (SessionInfoService) wc.getBean("sessionInfoService");
-		
-		// final SessionInfo info = (SessionInfo) sessionService.getSessionWithField((HttpServletRequest)pageContext.getRequest(), GlobalConstant.SESSION_INFO);
 		final SessionInfo info = (SessionInfo) pageContext.getSession().getAttribute(GlobalConstant.SESSION_INFO);
 		
 		final String contextPath = sc.getContextPath();

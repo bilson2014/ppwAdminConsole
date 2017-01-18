@@ -22,7 +22,6 @@ import com.panfeng.util.ValidateUtil;
 public class SessionInfoServiceImpl implements SessionInfoService {
 
 	private final Logger logger = LoggerFactory.getLogger(SessionInfoServiceImpl.class);
-	
 	@Autowired
 	private final SessionInfoDao dao = null;
 

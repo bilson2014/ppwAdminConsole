@@ -26,10 +26,8 @@ public class SecurityTag extends TagSupport{
 			final ServletContext sc = pageContext.getServletContext();
 			WebApplicationContext  wc = WebApplicationContextUtils.findWebApplicationContext(sc);
 			final RightDao dao = (RightDao) wc.getBean("rightDao");
-			// final SessionInfoService sessionService = (SessionInfoService) wc.getBean("sessionInfoService");
 			final String url = UrlResourceUtils.URLResolver(uri, sc.getContextPath());
 			
-			//final SessionInfo info = (SessionInfo) sessionService.getSessionWithField((HttpServletRequest)pageContext.getRequest(), GlobalConstant.SESSION_INFO);
 			final SessionInfo info = (SessionInfo) pageContext.getSession().getAttribute(GlobalConstant.SESSION_INFO);
 			
 			if(info != null){
