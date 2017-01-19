@@ -162,6 +162,7 @@ $().ready(function(){
 						field : 'creationTime' ,
 						title : '创作时间' ,
 						align : 'center' ,
+						sortable : true ,
 						width : 150
 					},{
 						field : 'submitTime' ,
@@ -174,6 +175,7 @@ $().ready(function(){
 						title : '封面' ,
 						align : 'center' ,
 						width : 180,
+						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {

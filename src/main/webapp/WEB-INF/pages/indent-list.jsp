@@ -49,7 +49,7 @@
 			<a onclick="saveFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">保存</a>
 		</r:permission>
 		
-		<r:permission uri="/portal/indent/changeIndentsType">
+		<r:permission uri="/portal/indent/modifyType">
 			<a onclick="changeIndentsTypeFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">修改状态</a>
 		</r:permission>
 		<r:permission uri="/portal/indent/export">
@@ -84,7 +84,7 @@
 	        </form>
 	    </div>
 	     <div id="dlg-buttons">
-	    	<r:permission uri="/portal/indent/changeIndentsType">
+	    	<r:permission uri="/portal/indent/modifyType">
 		        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="change()" >保存</a>
 	    	</r:permission>
 	    	

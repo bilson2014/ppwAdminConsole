@@ -58,10 +58,13 @@ $().ready(function(){
 						width : 200,
 						align : 'center'
 					},{
-						field : 'teamProvinceName',
+						field : 'pmsProvince',
 						title : '所在省',
 						width : 100,
-						align : 'center'
+						align : 'center',
+						formatter : function(value , record , index){
+							return record.pmsProvince.provinceID;
+						}
 					},{
 						field : 'teamCityName',
 						title : '所在城市',

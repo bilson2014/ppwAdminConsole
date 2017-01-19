@@ -42,7 +42,6 @@ import com.panfeng.service.ProductService;
 import com.panfeng.service.ServiceService;
 import com.panfeng.service.SolrService;
 import com.panfeng.service.TeamService;
-import com.panfeng.util.DataUtil;
 import com.panfeng.util.JsoupUtil;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
@@ -101,17 +100,16 @@ public class ProductController extends BaseController {
 		return new ModelAndView("product-list", model);
 	}
 
-	@RequestMapping(value = "/product/sessionId", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	/*@RequestMapping(value = "/product/sessionId", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public Product getSessionId(final ModelMap map) {
 		final String sessionId = DataUtil.getUuid();
 		Product product = new Product();
 		product.setSessionId(sessionId);
 		return product;
-	}
+	}*/
 
 	@RequestMapping(value = "/product/init", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public List<Team> init() {
-
 		final List<Team> list = teamService.getAll();
 		return list;
 	}

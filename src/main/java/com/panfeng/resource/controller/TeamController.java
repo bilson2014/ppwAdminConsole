@@ -25,14 +25,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.entity.DataGrid;
+import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.facade.team.entity.PmsTeam;
+import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Role;
 import com.panfeng.resource.model.Team;
-import com.panfeng.resource.view.DataGrid;
-import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.TeamView;
 import com.panfeng.service.FDFSService;
 import com.panfeng.service.RightService;
@@ -88,6 +90,9 @@ public class TeamController extends BaseController {
 
 	@Autowired
 	private final SmsMQService smsMQService = null;
+	
+	@Autowired
+	private final PmsTeamFacade pmsTeamFacade = null;
 
 	@RequestMapping("team-list")
 	public ModelAndView view(final HttpServletRequest request, final ModelMap model) {
@@ -95,26 +100,29 @@ public class TeamController extends BaseController {
 		model.addAttribute("param", "team-list");
 		return new ModelAndView("team-list", model);
 	}
-
 	/**
 	 * 分页检索 team
-	 * 
 	 * @param view
 	 *            team-条件视图
 	 */
 	@RequestMapping(value = "/team/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public DataGrid<Team> listWithPagination(final TeamView view, PageFilter pf) {
-
-		final long page = pf.getPage();
-		final long rows = pf.getRows();
-		view.setBegin((page - 1) * rows);
-		view.setLimit(rows);
-
-		DataGrid<Team> dataGrid = new DataGrid<Team>();
-		final List<Team> list = service.listWithPagination(view);
-		final long total = service.maxSize(view);
-		dataGrid.setRows(list);
-		dataGrid.setTotal(total);
+	public DataGrid<PmsTeam> listWithPagination(final TeamView view, PageParam pageParam) {
+		//封装分页参数
+		final long page = pageParam.getPage();
+		final long rows = pageParam.getRows();
+		pageParam.setBegin((page - 1) * rows);
+		pageParam.setLimit(rows);
+		//封装查询参数
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("teamId", view.getTeamId());
+		paramMap.put("flag", view.getFlag());
+		paramMap.put("phoneNumber",view.getPhoneNumber());
+		paramMap.put("loginName", view.getLoginName());
+		paramMap.put("priceRange",view.getPriceRange());
+		paramMap.put("business", view.getBusiness());
+		paramMap.put("teamName", view.getTeamName());
+		paramMap.put("recommend", view.isRecommend());
+		final DataGrid<PmsTeam> dataGrid = pmsTeamFacade.listWithPagination(pageParam,paramMap);
 		return dataGrid;
 	}
 
