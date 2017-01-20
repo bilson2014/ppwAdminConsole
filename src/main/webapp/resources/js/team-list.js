@@ -15,7 +15,7 @@ $().ready(function(){
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/team/list',
-		idField : 'teamId' ,
+		idField : 'id' ,
 		title : '供应商管理列表' , 
 		//fitColumns : true ,
 		striped : true ,
@@ -63,13 +63,22 @@ $().ready(function(){
 						width : 100,
 						align : 'center',
 						formatter : function(value , record , index){
-							return record.pmsProvince.provinceID;
+							if(value){
+								return value.provinceName;
+							}return "";
+							
 						}
 					},{
-						field : 'teamCityName',
+						field : 'pmsCity',
 						title : '所在城市',
 						width : 100,
-						align : 'center'
+						align : 'center',
+						formatter : function(value , record , index){
+							if(value){
+								return value.city;
+							}return "";
+							
+						}
 					},{
 						field : 'linkman',
 						title : '联系人',
@@ -168,7 +177,6 @@ $().ready(function(){
 								return '' ;
 							}
 						},
-						hidden : true
 					},{
 						field : 'scale',
 						title : '公司规模',
@@ -542,9 +550,9 @@ function recommendFuc(){
 						formatter : function(value,row,index){
 							var all = "";
 							var totalCount = $('#recommend-gride').datagrid('getData').total;
-							var up  = '<a class="sort" data-target="up" data-id="'+row.teamId+'" href="javascript:void(0)">上移</a>';
-							var down = '<a class="sort" data-target="down" data-id="'+row.teamId+'" href="javascript:void(0)">下移</a>';
-							var del = '<a class="sort" data-target="del" data-id="'+row.teamId+'" href="javascript:void(0)">移除</a>';
+							var up  = '<a class="sort" data-target="up" data-id="'+row.id+'" href="javascript:void(0)">上移</a>';
+							var down = '<a class="sort" data-target="down" data-id="'+row.id+'" href="javascript:void(0)">下移</a>';
+							var del = '<a class="sort" data-target="del" data-id="'+row.id+'" href="javascript:void(0)">移除</a>';
 							if(totalCount<=1){
 								return del;
 							}

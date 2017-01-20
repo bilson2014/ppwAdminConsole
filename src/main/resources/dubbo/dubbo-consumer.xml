@@ -14,5 +14,6 @@
 	<!-- 作品服务接口 -->
 	<dubbo:reference interface="com.paipianwang.pat.facade.indent.service.PmsIndentFacade" id="pmsIndentFacade" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.team.service.PmsTeamFacade" id="pmsTeamFacade" check="false" timeout="5000"/>
-
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductFacade" id="pmsProductFacade" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductModuleFacade" id="pmsProductModuleFacade" check="false" timeout="5000"/>
 </beans>  

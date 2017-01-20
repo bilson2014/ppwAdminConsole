@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.facade.product.entity.PmsProductModule;
+import com.paipianwang.pat.facade.product.service.PmsProductModuleFacade;
 import com.panfeng.resource.model.ProductModule;
 import com.panfeng.service.ProductModuleService;
 
@@ -28,6 +30,8 @@ public class ProductModuleController extends BaseController {
 
 	@Autowired
 	private ProductModuleService pmService;
+	@Autowired
+	private PmsProductModuleFacade pmsProductModuleFacade;
 
 	@RequestMapping(value = "/module-list")
 	public ModelAndView view(final ModelMap model) {
@@ -60,11 +64,12 @@ public class ProductModuleController extends BaseController {
 	}
 
 	@RequestMapping(value = "/get/productModules")
-	public List<ProductModule> getproductModules(HttpServletRequest request,@RequestBody Map<String, Long[]> idMap) {
+	public List<PmsProductModule> getproductModules(HttpServletRequest request,@RequestBody Map<String, Long[]> idMap) {
 		if (idMap != null && idMap.size() > 0) {
 			Long[] ids = idMap.get("ids");
 			if (ids != null && ids.length > 0) {
-				return pmService.findListByIds(ids);
+				//return pmService.findListByIds(ids);
+				return pmsProductModuleFacade.findListByIds(ids);
 			}
 		}
 		return new ArrayList<>();

@@ -165,7 +165,7 @@ public interface TeamService {
 	
 	public Team getTeamInfo(Long teamId);
 	
-	public List<String> getTags(List<Integer> ids);
+	//public List<String> getTags(List<Integer> ids);
 
 	/**
 	 * 更新供应商备注信息

@@ -1,6 +1,5 @@
 package com.panfeng.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,6 @@ import com.panfeng.resource.model.Team;
 import com.panfeng.resource.model.TeamTmp;
 import com.panfeng.resource.view.TeamView;
 import com.panfeng.service.TeamService;
-import com.panfeng.util.TeamBusiness;
 import com.panfeng.util.ValidateUtil;
 
 @Service
@@ -387,14 +385,14 @@ public class TeamServiceImpl implements TeamService {
 		return mapper.getTeamInfo(teamId);
 	}
 
-	@Override
+	/*@Override
 	public List<String> getTags(final List<Integer> ids) {
 		List<String> tags = new ArrayList<>();
 		for (int i = 0; i < ids.size(); i++) {
 			tags.add(TeamBusiness.get(ids.get(i)));
 		}
 		return tags;
-	}
+	}*/
 
 	@Override
 	public long updateTeamDescription(Team team) {

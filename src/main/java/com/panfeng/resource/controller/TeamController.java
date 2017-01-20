@@ -256,9 +256,9 @@ public class TeamController extends BaseController {
 	 * @return 团队信息
 	 */
 	@RequestMapping("/team/static/data/{teamId}")
-	public Team loadData(@PathVariable("teamId") final Long teamId) {
+	public PmsTeam loadData(@PathVariable("teamId") final Long teamId) {
 
-		final Team team = service.findTeamById(teamId);
+		final PmsTeam team = pmsTeamFacade.findTeamById(teamId);
 		team.setPassword(null);
 		return team;
 	}
@@ -864,13 +864,14 @@ public class TeamController extends BaseController {
 	}
 
 	@RequestMapping("/team/info/{teamId}")
-	public Team getTeamInfo(@PathVariable("teamId") Long teamId, HttpServletRequest request) {
+	public PmsTeam getTeamInfo(@PathVariable("teamId") Long teamId, HttpServletRequest request) {
 		if (teamId == null || teamId <= 0) {
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("teamId is null ...", sessionInfo);
 			return null;
 		}
-		Team team = service.getTeamInfo(teamId);
+		//Team team = service.getTeamInfo(teamId);
+		PmsTeam team = pmsTeamFacade.getTeamInfo(teamId);
 		if (team == null) {
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("team is null ...", sessionInfo);
@@ -881,7 +882,8 @@ public class TeamController extends BaseController {
 	@RequestMapping("/team/tags")
 	public List<String> getTags(@RequestBody List<Integer> ids, HttpServletRequest request) {
 		if (ValidateUtil.isValid(ids)) {
-			List<String> tags = service.getTags(ids);
+			//List<String> tags = service.getTags(ids);
+			List<String> tags = pmsTeamFacade.getTags(ids);
 			return tags;
 		} else {
 			SessionInfo sessionInfo = getCurrentInfo(request);
