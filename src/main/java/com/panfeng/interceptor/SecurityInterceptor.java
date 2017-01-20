@@ -8,6 +8,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -19,7 +20,6 @@ import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Right;
 import com.panfeng.service.FDFSService;
-import com.panfeng.service.SessionInfoService;
 import com.panfeng.util.Constants;
 import com.panfeng.util.UrlResourceUtils;
 import com.panfeng.util.ValidateUtil;
@@ -36,9 +36,6 @@ public class SecurityInterceptor implements HandlerInterceptor {
 	
 	@Autowired
 	private final StorageLocateDao storageDao = null;
-	
-	@Autowired
-	private final SessionInfoService sessionService = null;
 	
 	private List<String> excludeUrls;
 	
@@ -106,7 +103,8 @@ public class SecurityInterceptor implements HandlerInterceptor {
 		}
 		
 		final Right right = dao.getRightFromRedis(uri);
-		SessionInfo info = (SessionInfo) sessionService.getSessionWithField(req, GlobalConstant.SESSION_INFO); // 获取session
+		//SessionInfo info = (SessionInfo) sessionService.getSessionWithField(req, GlobalConstant.SESSION_INFO); // 获取session
+		final SessionInfo info = (SessionInfo) req.getSession().getAttribute(GlobalConstant.SESSION_INFO);
 		/*if(null == info){
 			info = checkAutoLogin(req,resp);
 		}*/
@@ -156,20 +154,23 @@ public class SecurityInterceptor implements HandlerInterceptor {
 					}
 				}
 				if(null!=token){
-					info = (SessionInfo) sessionService.getSessionInfoWithToken(request,token);
+					HttpSession session = request.getSession();
+					// info = (SessionInfo) sessionService.getSessionInfoWithToken(request,token);
+					info = (SessionInfo) session.getAttribute(GlobalConstant.SESSION_INFO);
 					if(info != null){
 						//将info重新放入session redis键改为当前sessionId
 						info.setToken(com.panfeng.util.DataUtil.md5(request.getSession().getId()));
 						Map<String, Object> map = new HashMap<String, Object>();
 						map.put(GlobalConstant.SESSION_INFO, info);
-						sessionService.addSessionSeveralTime(request, map,60*60*24*7);//登陆用户存放七天
 						
 						Cookie cookieUsername = new Cookie("token", request.getSession().getId());
 						cookieUsername.setPath("/");
 						cookieUsername.setDomain(Constants.COOKIES_SCOPE);
 						cookieUsername.setMaxAge(60 * 60 * 24 * 7); /* 设置cookie的有效期为 7 天 */
 						response.addCookie(cookieUsername);
-						sessionService.removeSessionByToken(request,token);
+						// sessionService.removeSessionByToken(request,token);
+						session.removeAttribute("GlobalConstant.SESSION_INFO");
+						
 					}
 				}
 			}

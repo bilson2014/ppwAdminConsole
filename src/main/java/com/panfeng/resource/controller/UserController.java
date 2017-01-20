@@ -34,7 +34,6 @@ import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.UserView;
 import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
-import com.panfeng.service.SessionInfoService;
 import com.panfeng.service.UserService;
 import com.panfeng.util.Constants.loginType;
 import com.panfeng.util.DataUtil;
@@ -54,9 +53,6 @@ public class UserController extends BaseController {
 
 	@Autowired
 	private final UserService userService = null;
-
-	@Autowired
-	private final SessionInfoService sessionService = null;
 
 	@Autowired
 	private final RoleService roleService = null;
@@ -171,7 +167,8 @@ public class UserController extends BaseController {
 			}
 			if (orignUser != null) {
 				// 清空当前session
-				sessionService.removeSession(request);
+				// sessionService.removeSession(request);
+				request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 				return initSessionInfo(orignUser, request);
 			}
 		}
@@ -193,7 +190,8 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping("/user/loginout")
 	public boolean loginout(final HttpServletRequest request) {
-		sessionService.removeSession(request);
+		// sessionService.removeSession(request);
+		request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 		return true;
 	}
 
@@ -246,7 +244,8 @@ public class UserController extends BaseController {
 			smsMQService.sendMessage("132269", user.getTelephone(), null);
 			//end
 			// 清空当前session
-			sessionService.removeSession(request);
+			// sessionService.removeSession(request);
+			request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("save user...",sessionInfo);
 			// 新增session
@@ -292,7 +291,8 @@ public class UserController extends BaseController {
 				if (user.getId() != 0){
 					userService.modifyUserInfo(user);
 					//add by wanglc 修改个人资料后,更新缓存 2016-7-26 19:27:47 begin
-					sessionService.removeSession(request);
+					// sessionService.removeSession(request);
+					request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 					initSessionInfo(user, request);
 					//add by wanglc 修改个人资料后,更新缓存 2016-7-26 19:27:47 end
 					
@@ -404,7 +404,8 @@ public class UserController extends BaseController {
 				final User u = users.get(0);
 				if (null != u.getTelephone() && !"".equals(u.getTelephone())) {// 手机号存在,直接登录
 					// 清除当前session
-					sessionService.removeSession(request);
+					// sessionService.removeSession(request);
+					request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 					// 存入session中
 					initSessionInfo(u, request);
 					map.put("code", "2");
@@ -418,33 +419,6 @@ public class UserController extends BaseController {
 		}
 		return map;
 	}
-	/**
-	 * 查询三方登录的用户是否存在 如果存在，则返回 如果不存在，则创建
-	 */
-	/*
-	 * @RequestMapping("/user/thirdLogin/isExist") public boolean
-	 * verificationUserExist(@RequestBody final User user,final
-	 * HttpServletRequest request){
-	 * 
-	 * if(user != null){ final List<User> users =
-	 * userService.verificationUserExistByThirdLogin(user); if(users.size() <
-	 * 1){ // 用户不存在 try { // 创建新用户 User createUser = user;
-	 * createUser.setUserName(URLDecoder.decode(user.getUserName(), "UTF-8"));
-	 * 
-	 * userService.saveByThirdLogin(createUser); return true; } catch
-	 * (UnsupportedEncodingException e) { logger.error(
-	 * "Decode UserName ON LOGIN PROCESS BY JUDGE THIRD LOGIN USER EXIST ... ");
-	 * e.printStackTrace(); } }else if(users.size() > 1){ // 用户存在多个 // 返回错误信息
-	 * logger.error("Existing More Users Problem By User Login ,telephone=" +
-	 * user.getTelephone() + ",password=" + user.getPassword()); return false;
-	 * }else if(users.size() == 1){ // 有且仅有一个 // 清除当前session
-	 * sessionService.removeSession(request); final User u = users.get(0); //
-	 * 存入session中 return initSessionInfo(u, request);
-	 * 
-	 * } }
-	 * 
-	 * return false; }
-	 */
 
 	/**
 	 * 根据客户名搜索客户
@@ -509,9 +483,11 @@ public class UserController extends BaseController {
 		info.setPhoto(user.getImgUrl());
 		info.setSuperAdmin(user.isSuperAdmin()); // 判断是否是超级管理员
 
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(GlobalConstant.SESSION_INFO, info);
-		return sessionService.addSessionSeveralTime(request, map,60*60*24*7);//登陆用户存放七天
+		/*Map<String, Object> map = new HashMap<String, Object>();
+		map.put(GlobalConstant.SESSION_INFO, info);*/
+		request.getSession().setAttribute(GlobalConstant.SESSION_INFO, info);
+		// return sessionService.addSessionSeveralTime(request, map,60*60*24*7);//登陆用户存放七天
+		return true;
 	}
 
 	// add by wanglc 2016-7-6 15:13:47 第三方登录绑定页面验证手机号码 begin

@@ -3,14 +3,12 @@ package com.panfeng.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.ResourceToken;
 import com.panfeng.domain.SessionInfo;
-import com.panfeng.service.SessionInfoService;
 
 /**
  * 搜索提示资源拦截器
@@ -19,9 +17,6 @@ import com.panfeng.service.SessionInfoService;
  */
 public class SuggestResourceInterceptor implements HandlerInterceptor {
 
-	@Autowired
-	private final SessionInfoService sessionService = null; // 获取身份验证
-	
 	/**
 	 * 在调用 controller 具体方法前调用
 	 */
@@ -29,7 +24,8 @@ public class SuggestResourceInterceptor implements HandlerInterceptor {
 			throws Exception {
 		
 		// 判断身份
-		final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO); // 获取session
+		//final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO); // 获取session
+		final SessionInfo info = (SessionInfo) request.getSession().getAttribute(GlobalConstant.SESSION_INFO);
 		
 		boolean flag = false;
 		String solrUrl = null;

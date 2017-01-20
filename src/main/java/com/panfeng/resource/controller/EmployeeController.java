@@ -25,7 +25,6 @@ import com.panfeng.resource.view.EmployeeView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.FDFSService;
-import com.panfeng.service.SessionInfoService;
 import com.panfeng.util.AESUtil;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.FileUtils;
@@ -46,8 +45,6 @@ public class EmployeeController extends BaseController{
 	@Autowired
 	private final EmployeeService service = null;
 	
-	@Autowired
-	private final SessionInfoService infoService = null;
 	@Autowired
 	private final FDFSService fdfsService = null;
 	
@@ -70,7 +67,8 @@ public class EmployeeController extends BaseController{
 	@RequestMapping("/editEmpwd")
 	public boolean editPassword(final HttpServletRequest request,final String oldPwd,final String pwd){
 		
-		final SessionInfo info = (SessionInfo) infoService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
+		//final SessionInfo info = (SessionInfo) infoService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
+		final SessionInfo info = (SessionInfo) request.getSession().getAttribute(GlobalConstant.SESSION_INFO);
 		
 		if(info != null){
 			// 验证password

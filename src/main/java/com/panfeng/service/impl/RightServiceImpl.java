@@ -23,7 +23,6 @@ import com.panfeng.resource.model.Right;
 import com.panfeng.resource.model.Tree;
 import com.panfeng.resource.view.RightView;
 import com.panfeng.service.RightService;
-import com.panfeng.service.SessionInfoService;
 import com.panfeng.util.ListSort;
 import com.panfeng.util.ValidateUtil;
 
@@ -35,9 +34,6 @@ public class RightServiceImpl implements RightService,ServletContextAware {
 	
 	@Autowired
 	private final RightDao dao = null;
-	
-	@Autowired
-	private final SessionInfoService sessionService = null;
 	
 	public ServletContext sc = null;
 	
@@ -165,7 +161,9 @@ public class RightServiceImpl implements RightService,ServletContextAware {
 	public List<Tree> menu(final HttpServletRequest request) {
 		
 		// 从session缓存中获取登录信息
-		final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
+		//final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
+		final SessionInfo info = (SessionInfo) request.getSession().getAttribute(GlobalConstant.SESSION_INFO);
+		
 		final List<Tree> treeList = new ArrayList<Tree>();
 		
 		if(info != null){

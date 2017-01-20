@@ -17,7 +17,6 @@ import com.panfeng.resource.model.Right;
 import com.panfeng.resource.model.Tree;
 import com.panfeng.resource.view.RightView;
 import com.panfeng.service.RightService;
-import com.panfeng.service.SessionInfoService;
 
 /**
  * 权限相关
@@ -30,9 +29,6 @@ public class RightController extends BaseController {
 
 	@Autowired
 	private final RightService service = null;
-	
-	@Autowired
-	private final SessionInfoService sessionService = null;
 	
 	@RequestMapping("/right-list")
 	public ModelAndView view(){
@@ -78,7 +74,9 @@ public class RightController extends BaseController {
 	@RequestMapping("/right/menu")
 	public List<Tree> menu(final HttpServletRequest request){
 		
-		final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
+		//final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
+		final SessionInfo info = (SessionInfo) request.getSession().getAttribute(GlobalConstant.SESSION_INFO);
+		
 		if(info != null){
 			if(GlobalConstant.ROLE_EMPLOYEE.equals(info.getSessionType())){
 				final List<Tree> list = service.menu(request);

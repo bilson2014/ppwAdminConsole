@@ -14,10 +14,6 @@
   	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
   
-  <!-- <listener>
-  	<listener-class>com.panfeng.listener.SessionListener</listener-class>
-  </listener> -->
-  
   <filter>
   	<filter-name>encodingFilter</filter-name>
   	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -65,7 +61,7 @@
   </jsp-config>
   
   <session-config>
-  	<session-timeout>90</session-timeout>
+  	<session-timeout>720</session-timeout>
   </session-config>
   
   <welcome-file-list>

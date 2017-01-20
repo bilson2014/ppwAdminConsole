@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.util.JsonUtil;
@@ -67,7 +68,7 @@ public class IndentController extends BaseController {
 		final long rows = param.getRows();
 		param.setBegin((page - 1) * rows);
 		param.setLimit(rows);
-		final DataGrid<PmsIndent> dataGrid = pmsIndentFacade.listWithPagination(param,JsonUtil.objectToMap(view));
+		final DataGrid<PmsIndent> dataGrid = pmsIndentFacade.listWithPagination(param, JsonUtil.objectToMap(view));
 		return dataGrid;
 	}
 	@RequestMapping(value = "/indent/save", method = RequestMethod.POST)

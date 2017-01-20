@@ -5,12 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.User;
-import com.panfeng.service.SessionInfoService;
 import com.panfeng.util.Constants;
 import com.panfeng.util.Log;
 
@@ -23,8 +20,6 @@ import com.panfeng.util.Log;
 public abstract class BaseController {
 
 	//private static Logger logger = LoggerFactory.getLogger("error");
-	@Autowired
-	final SessionInfoService sessionService = null;
 	// get current user
 	protected User getUser (final HttpServletRequest request){
 		
@@ -45,7 +40,8 @@ public abstract class BaseController {
 	
 	
 	protected SessionInfo getCurrentInfo(final HttpServletRequest request){
-		final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
+		//final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
+		final SessionInfo info = (SessionInfo) request.getSession().getAttribute(GlobalConstant.SESSION_INFO);
 		return info;
 	}
 	protected void addCookies(HttpServletRequest request, HttpServletResponse response) {
@@ -62,7 +58,8 @@ public abstract class BaseController {
 				if(cookie.length>0){
 					for (Cookie c : cookie) {
 						if ("token".equals(c.getName())) {
-							sessionService.removeSessionByToken(request, c.getValue());
+							request.getSession().removeAttribute(c.getValue());
+							//sessionService.removeSessionByToken(request, c.getValue());
 							Cookie cookieUsername = new Cookie("token", null);
 							cookieUsername.setPath("/");
 							cookieUsername.setDomain(Constants.COOKIES_SCOPE);

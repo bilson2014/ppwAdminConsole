@@ -17,3 +17,4 @@
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductFacade" id="pmsProductFacade" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductModuleFacade" id="pmsProductModuleFacade" check="false" timeout="5000"/>
 </beans>  
+
