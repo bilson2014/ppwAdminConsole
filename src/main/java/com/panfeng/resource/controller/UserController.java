@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
@@ -168,7 +169,6 @@ public class UserController extends BaseController {
 			if (orignUser != null) {
 				// 清空当前session
 				// sessionService.removeSession(request);
-				request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 				return initSessionInfo(orignUser, request);
 			}
 		}
@@ -245,9 +245,7 @@ public class UserController extends BaseController {
 			//end
 			// 清空当前session
 			// sessionService.removeSession(request);
-			request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("save user...",sessionInfo);
+			Log.error("save user...",null);
 			// 新增session
 			return initSessionInfo(result, request);
 		}
@@ -292,7 +290,7 @@ public class UserController extends BaseController {
 					userService.modifyUserInfo(user);
 					//add by wanglc 修改个人资料后,更新缓存 2016-7-26 19:27:47 begin
 					// sessionService.removeSession(request);
-					request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
+					
 					initSessionInfo(user, request);
 					//add by wanglc 修改个人资料后,更新缓存 2016-7-26 19:27:47 end
 					
@@ -405,7 +403,6 @@ public class UserController extends BaseController {
 				if (null != u.getTelephone() && !"".equals(u.getTelephone())) {// 手机号存在,直接登录
 					// 清除当前session
 					// sessionService.removeSession(request);
-					request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
 					// 存入session中
 					initSessionInfo(u, request);
 					map.put("code", "2");
@@ -457,14 +454,18 @@ public class UserController extends BaseController {
 	 * @return
 	 */
 	public boolean initSessionInfo(final User user, HttpServletRequest request) {
+		final HttpSession session = request.getSession();
+		
+		// 清空session
+		session.removeAttribute(GlobalConstant.SESSION_INFO);
+		
 		// 存入session中
-		final String sessionId = request.getSession().getId();
 		final SessionInfo info = new SessionInfo();
 		info.setLoginName(user.getLoginName());
 		info.setRealName(user.getRealName());
 		info.setSessionType(GlobalConstant.ROLE_CUSTOMER);
 		//info.setSuperAdmin(false);
-		info.setToken(DataUtil.md5(sessionId));
+		info.setToken(DataUtil.md5(session.getId()));
 		info.setReqiureId(user.getId());
 		info.setClientLevel(user.getClientLevel()); // 客户级别
 		info.setTelephone(user.getTelephone());
@@ -485,7 +486,7 @@ public class UserController extends BaseController {
 
 		/*Map<String, Object> map = new HashMap<String, Object>();
 		map.put(GlobalConstant.SESSION_INFO, info);*/
-		request.getSession().setAttribute(GlobalConstant.SESSION_INFO, info);
+		session.setAttribute(GlobalConstant.SESSION_INFO, info);
 		// return sessionService.addSessionSeveralTime(request, map,60*60*24*7);//登陆用户存放七天
 		return true;
 	}

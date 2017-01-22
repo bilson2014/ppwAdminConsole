@@ -23,7 +23,7 @@
 			<groupId>com.paipianwang.pat</groupId>
 			<artifactId>pat-facade-indent</artifactId>
 			<version>1.0-SNAPSHOT</version>
-		</dependency> 
+		</dependency>
 
 		<!-- Common Dependency Begin -->
 		<dependency>
@@ -296,11 +296,8 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.5</version>
 		</dependency>
-	<!-- 	<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.5</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-log4j12</artifactId> 
+			<version>1.7.5</version> </dependency> -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
