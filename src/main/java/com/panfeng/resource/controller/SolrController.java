@@ -39,22 +39,23 @@ public class SolrController extends BaseController {
 		
 		try {
 			final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
-			String condition = URLDecoder.decode(view.getCondition(), "UTF-8");
+			String condition = view.getCondition();
+			
+			// TODO 对查询的词进行权重的分配
+			
+			if(StringUtils.isNotBlank(condition))
+				condition = URLDecoder.decode(condition, "UTF-8");
 			
 			final SolrQuery query = new SolrQuery();
 			query.set("defType", "edismax");
 			query.set("qf", "productName^2.3 tags teamName^0.4");
 			query.set("q.alt", "*:*");
 			
-			if("*".equals(condition)){
-				// 查询全部
-				condition = "";
-			}
-			
 			query.setQuery(condition);
 			query.set("pf", "productName tags teamName");
 			query.set("tie", "0.1");
 			query.setFields("teamId,productId,productName,orignalPrice,price,picLDUrl,tags");
+			
 			query.setStart(Integer.parseInt(String.valueOf(view.getBegin())));
 			query.setRows(Integer.parseInt(String.valueOf(view.getLimit())));
 			
@@ -71,7 +72,7 @@ public class SolrController extends BaseController {
 			// 如果标签为空，则设置为全部
 			if(view.getTagsFq() != null && !"".equals(view.getTagsFq().trim())){
 				// 按空格及,分词
-				String tags = view.getTagsFq();
+				String tags = URLDecoder.decode(view.getTagsFq(), "UTF-8");
 				tags = tags.replaceAll("(\\s*)(,|，)(\\s*)", " ");
 				String[] tagArr = tags.split("\\s+");
 				if(tagArr != null) {
