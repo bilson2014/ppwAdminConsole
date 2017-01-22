@@ -545,10 +545,11 @@ public class ProductController extends BaseController {
 	 * @return 服务ID
 	 */
 	@RequestMapping("/product/static/data/update/info")
-	public boolean updateProductInfo(@RequestBody final Product product, HttpServletRequest request) {
+	public boolean updateProductInfo(@RequestBody final PmsProduct product, HttpServletRequest request) {
 		// 解码
 		try {
-			Product oldProduct = proService.findProductById(product.getProductId());
+			//Product oldProduct = proService.findProductById(product.getProductId());
+			PmsProduct oldProduct = pmsProductFacade.findProductById(product.getProductId());
 			oldProduct.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
 			oldProduct.setCreationTime(product.getCreationTime());
 			if (StringUtils.isNotEmpty(product.getTags())) {
@@ -562,7 +563,7 @@ public class ProductController extends BaseController {
 					fdfsService.delete(oldProduct.getPicLDUrl());
 				}
 			}
-			long l = proService.updateProductInfo(oldProduct); // 更新视频信息
+			long l = pmsProductFacade.updateProductInfo(oldProduct); // 更新视频信息
 			// ghost审核通过的自动创建service记录
 			List<Service> list = serService.loadService((int) product.getProductId());
 			if (product.getFlag() == 1) {
