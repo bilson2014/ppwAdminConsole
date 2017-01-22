@@ -135,7 +135,7 @@ public class SolrController extends BaseController {
 			
 			// 如果视频类型不为空，则设置为全部
 			// TODO 手机端改版之后，需要将 视频类型 换成 标签类型
-			if(view.getItemFq() != null || !"".equals(view.getItemFq())){
+			if(view.getItemFq() != null && !"".equals(view.getItemFq())){
 				query.addFilterQuery("productType:" + view.getItemFq());
 			}
 			
