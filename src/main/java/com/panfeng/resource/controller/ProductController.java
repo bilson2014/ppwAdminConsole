@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.paipianwang.pat.facade.product.entity.PmsProduct;
+import com.paipianwang.pat.facade.product.entity.PmsService;
 import com.paipianwang.pat.facade.product.service.PmsProductFacade;
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
@@ -565,10 +566,11 @@ public class ProductController extends BaseController {
 			}
 			long l = pmsProductFacade.updateProductInfo(oldProduct); // 更新视频信息
 			// ghost审核通过的自动创建service记录
-			List<Service> list = serService.loadService((int) product.getProductId());
+			//List<Service> list = serService.loadService((int) product.getProductId());
+			List<PmsService> list = pmsProductFacade.loadService((int) product.getProductId());
 			if (product.getFlag() == 1) {
 				if (null == list || list.size() == 0) {
-					Service service = new Service();
+					PmsService service = new PmsService();
 					service.setProductId(product.getProductId());
 					service.setProductName(product.getProductName());
 					service.setServiceDiscount(1);
@@ -577,7 +579,8 @@ public class ProductController extends BaseController {
 					service.setServicePrice(0d);
 					service.setServiceRealPrice(0d);
 					service.setMcoms(Long.parseLong(product.getVideoLength()));
-					serService.save(service);
+					//serService.save(service);
+					pmsProductFacade.save(service);
 				}
 			}
 			SessionInfo sessionInfo = getCurrentInfo(request);
