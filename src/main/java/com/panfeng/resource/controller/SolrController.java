@@ -77,15 +77,16 @@ public class SolrController extends BaseController {
 				String[] tagArr = tags.split("\\s+");
 				if(tagArr != null) {
 					for (final String tag : tagArr) {
-						query.addFilterQuery("tags:" + tag);
+						query.addFilterQuery("tags:" + "\""+ tag +"\"");
 					}
 				}
 			}
 			
 			// 开启高亮
 			query.setHighlight(true);
-			query.addHighlightField("productName");
+			/*query.addHighlightField("productName");*/
 			query.set("hl.highlightMultiTerm", true);
+			query.setParam("hl.fl", "productName,tags");
 			query.setHighlightFragsize(30);
 			query.setHighlightSimplePre("<font color=\"red\">");
 			query.setHighlightSimplePost("</font>");
@@ -93,7 +94,6 @@ public class SolrController extends BaseController {
 			final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
 			
 			return list;
-			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
