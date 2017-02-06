@@ -1,4 +1,4 @@
-package com.panfeng.util;
+/*package com.panfeng.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,12 +6,14 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-/**
+import com.paipianwang.pat.common.util.FileUtils;
+
+*//**
  * 文件验证工具
  * 
  * @author WangLM
  *
- */
+ *//*
 public final class VerifyFileUtils {
 	// 定义允许上传的文件扩展名
 	private final static HashMap<String, String> extMap = new HashMap<String, String>();
@@ -37,7 +39,7 @@ public final class VerifyFileUtils {
 		return extDocList.contains(extName);
 	}
 
-	/**
+	*//**
 	 * 验证文件
 	 * 
 	 * @param multipartFile
@@ -47,7 +49,7 @@ public final class VerifyFileUtils {
 	 * @param size
 	 *            文件大小
 	 * @return 返回结果“”为正常
-	 */
+	 *//*
 	public static String verifyFile(MultipartFile multipartFile, String type) {
 		if (multipartFile == null)
 			return "请选择上传文件。";
@@ -68,3 +70,4 @@ public final class VerifyFileUtils {
 		return "";
 	}
 }
+*/

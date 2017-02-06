@@ -21,7 +21,7 @@ import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.StaffView;
 import com.panfeng.service.FDFSService;
 import com.panfeng.service.StaffService;
-import com.panfeng.util.FileUtils;
+import com.paipianwang.pat.common.util.FileUtils;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 

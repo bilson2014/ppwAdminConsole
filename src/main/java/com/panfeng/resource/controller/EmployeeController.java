@@ -27,7 +27,7 @@ import com.panfeng.service.EmployeeService;
 import com.panfeng.service.FDFSService;
 import com.panfeng.util.AESUtil;
 import com.panfeng.util.DataUtil;
-import com.panfeng.util.FileUtils;
+import com.paipianwang.pat.common.util.FileUtils;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 

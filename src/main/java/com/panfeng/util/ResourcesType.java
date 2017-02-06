@@ -1,5 +1,8 @@
 package com.panfeng.util;
 
+import com.paipianwang.pat.common.util.Constants;
+import com.paipianwang.pat.common.util.PathFormatUtils;
+
 /**
  * 资源文件类型枚举
  * 

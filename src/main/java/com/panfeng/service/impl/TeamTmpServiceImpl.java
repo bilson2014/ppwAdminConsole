@@ -11,7 +11,7 @@ import com.panfeng.resource.model.Team;
 import com.panfeng.resource.model.TeamTmp;
 import com.panfeng.resource.view.Pagination;
 import com.panfeng.service.TeamTmpService;
-import com.panfeng.util.Constants;
+import com.paipianwang.pat.common.util.Constants;
 
 @Service
 public class TeamTmpServiceImpl implements TeamTmpService{

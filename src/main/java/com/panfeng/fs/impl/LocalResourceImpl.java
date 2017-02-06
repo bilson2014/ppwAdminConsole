@@ -12,8 +12,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.paipianwang.pat.common.util.FileUtils;
 import com.panfeng.fs.ResourceInterface;
-import com.panfeng.util.FileUtils;
 
 @Component
 public class LocalResourceImpl implements ResourceInterface {

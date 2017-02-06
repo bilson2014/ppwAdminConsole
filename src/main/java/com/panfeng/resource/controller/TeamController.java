@@ -1,6 +1,5 @@
 package com.panfeng.resource.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
@@ -56,8 +56,6 @@ public class TeamController extends BaseController {
 
 	private static String INIT_PASSWORD;
 
-	private static String FILE_PROFIX = null; // 文件前缀
-
 	public TeamController() {
 		if (INIT_PASSWORD == null || "".equals(INIT_PASSWORD)) {
 			final InputStream is = this.getClass().getClassLoader().getResourceAsStream("jdbc.properties");
@@ -65,7 +63,6 @@ public class TeamController extends BaseController {
 				Properties propertis = new Properties();
 				propertis.load(is);
 				INIT_PASSWORD = propertis.getProperty("initPassw0rd");
-				FILE_PROFIX = propertis.getProperty("file.prefix");
 			} catch (IOException e) {
 				Log.error("load Properties fail ...", null);
 				e.printStackTrace();
@@ -125,18 +122,21 @@ public class TeamController extends BaseController {
 
 	@RequestMapping(value = "/team/save", method = RequestMethod.POST)
 	public BaseMsg save(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam("file") final MultipartFile file, final Team team) {
+			@RequestParam("file") final MultipartFile file, final PmsTeam team) {
 		BaseMsg baseMsg = new BaseMsg();
 		response.setContentType("text/html;charset=UTF-8");
 		// 先保存获取ID，然后更新
 		team.setPassword(DataUtil.md5(INIT_PASSWORD));
-		service.save(team);
+		//service.save(team);
+		long teamId = pmsTeamFacade.save(team);
+		team.setTeamId(teamId);
 		try {
 			if (!file.isEmpty()) {
 				String path = fdfsService.upload(file);
 				team.setTeamPhotoUrl(path);
 			}
-			service.saveTeamPhotoUrl(team);
+			//service.saveTeamPhotoUrl(team);
+			pmsTeamFacade.saveTeamPhotoUrl(team);
 		} catch (Exception e) {
 			baseMsg.setErrorCode(BaseMsg.ERROR);
 			baseMsg.setErrorMsg("更新logo失败！");
@@ -154,55 +154,28 @@ public class TeamController extends BaseController {
 
 	@RequestMapping(value = "/team/update", method = RequestMethod.POST)
 	public BaseMsg update(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam("file") final MultipartFile file, final Team team) throws Exception {
+			@RequestParam("file") final MultipartFile file, final PmsTeam team) throws Exception {
 		BaseMsg baseMsg = new BaseMsg();
 		response.setContentType("text/html;charset=UTF-8");
 
 		// 如果上传文件不为空时，更新 url;反之亦然
 		if (!file.isEmpty()) {
-			// 团队logo全路径
-			// final String imagePath = FILE_PROFIX + TEAM_IMAGE_PATH;
-
-			// save file
-			/*
-			 * File imageDir = new File(imagePath); if (!imageDir.exists())
-			 * imageDir.mkdir(); StringBuffer fileName = new StringBuffer();
-			 * final String extName =
-			 * FileUtils.getExtName(file.getOriginalFilename(), ".");
-			 * fileName.append("team" + team.getTeamId()); fileName.append("-");
-			 * final Calendar calendar = new GregorianCalendar();
-			 * fileName.append(calendar.get(Calendar.YEAR));
-			 * fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0" +
-			 * (calendar.get(Calendar.MONTH) + 1) :
-			 * (calendar.get(Calendar.MONTH) + 1));
-			 * fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0" +
-			 * calendar.get(Calendar.DAY_OF_MONTH) :
-			 * calendar.get(Calendar.DAY_OF_MONTH));
-			 * fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
-			 * fileName.append(calendar.get(Calendar.MINUTE));
-			 * fileName.append(calendar.get(Calendar.SECOND));
-			 * fileName.append(calendar.get(Calendar.MILLISECOND));
-			 * fileName.append("."); fileName.append(extName); // get file path
-			 * final String path = TEAM_IMAGE_PATH + "/" + fileName; File
-			 * imageFile = new File(FILE_PROFIX + path);
-			 * file.transferTo(imageFile);
-			 */
-
 			String path = fdfsService.upload(file);
-
 			// 删除 原文件
-			final Team originalTeam = service.findTeamById(team.getTeamId());
+			//final Team originalTeam = service.findTeamById(team.getTeamId());
+			final PmsTeam originalTeam = pmsTeamFacade.findTeamById(team.getTeamId());
 			if (originalTeam != null) {
 				final String originalPath = originalTeam.getTeamPhotoUrl();
-				// FileUtils.deleteFile(FILE_PROFIX + originalPath);
 				fdfsService.delete(originalPath);
 			}
 			team.setTeamPhotoUrl(path);
 			// save photo path
-			service.saveTeamPhotoUrl(team);
+			//service.saveTeamPhotoUrl(team);
+			pmsTeamFacade.saveTeamPhotoUrl(team);
 		}
 
-		long ret = service.update(team);
+		//long ret = service.update(team);
+		long ret = pmsTeamFacade.update(team);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update team ...", sessionInfo);
 		if (ret > 0) {
@@ -219,16 +192,13 @@ public class TeamController extends BaseController {
 	public long delete(final long[] ids, HttpServletRequest request) {
 
 		if (ids.length > 0) {
-			final List<Team> list = service.delete(ids);
+			//final List<Team> list = service.delete(ids);
+			final List<PmsTeam> list = pmsTeamFacade.delete(ids);
 			// delete file in disk
 			if (!list.isEmpty() && list.size() > 0) {
-				for (final Team team : list) {
+				for (final PmsTeam team : list) {
 					if (team.getTeamPhotoUrl() != null && !"".equals(team.getTeamPhotoUrl())) {
-						final String imagePath = FILE_PROFIX + team.getTeamPhotoUrl();
-						File file = new File(imagePath);
-						if (file.isFile() && file.exists()) {
-							file.delete();
-						}
+						fdfsService.delete(team.getTeamPhotoUrl());
 					}
 				}
 			}
@@ -288,7 +258,7 @@ public class TeamController extends BaseController {
 	 * @return 结果
 	 */
 	@RequestMapping("/team/static/data/updateTeamInformation")
-	public boolean updateTeamInformation(@RequestBody final Team team, HttpServletRequest request) {
+	public boolean updateTeamInformation(@RequestBody final PmsTeam team, HttpServletRequest request) {
 		if (team != null) {
 			try {
 				// 解码
@@ -351,7 +321,8 @@ public class TeamController extends BaseController {
 				if(team.getFlag() == 2)
 					team.setFlag(0);
 				
-				final long ret = service.updateTeamInfomation(team);
+				//final long ret = service.updateTeamInfomation(team);
+				final long ret = pmsTeamFacade.updateTeamInfomation(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);
 				Log.error("update team ...", sessionInfo);
 				if (ret == 1) {
@@ -376,7 +347,7 @@ public class TeamController extends BaseController {
 	 * @return 结果
 	 */
 	@RequestMapping("/team/static/data/registerteam")
-	public boolean registerTeam(@RequestBody final Team team, HttpServletRequest request) {
+	public boolean registerTeam(@RequestBody final PmsTeam team, HttpServletRequest request) {
 		if (team != null) {
 			try {
 				// 解码
@@ -436,14 +407,19 @@ public class TeamController extends BaseController {
 					team.setDescription(URLDecoder.decode(description, "UTF-8"));
 				}
 
-				Team dbteam = service.register(team);
+				//->modify to dubbo 2017-2-4 11:33:58 begin
+				//Team dbteam = service.register(team);
+				PmsTeam dbteam = pmsTeamFacade.register(team);
+				//->modify to dubbo 2017-2-4 11:33:58 end
 				SessionInfo sessionInfo = getCurrentInfo(request);
 				Log.error("save team ...", sessionInfo);
 				if (dbteam != null && dbteam.getTeamId() > 0) {
 					// add by wlc 2016-11-11 11:19:36
 					// 供应商注册短信，发送短信 begin
 					smsMQService.sendMessage("132269", team.getPhoneNumber(), null);
-					return initSessionInfo(dbteam, request);
+					Gson gson = new Gson();
+					String json = gson.toJson(dbteam);
+					return initSessionInfo(gson.fromJson(json, Team.class), request);
 				}
 			} catch (UnsupportedEncodingException e) {
 				SessionInfo sessionInfo = getCurrentInfo(request);
@@ -541,16 +517,20 @@ public class TeamController extends BaseController {
 	 * @return 供应商信息
 	 */
 	@RequestMapping("/team/static/data/doLogin")
-	public boolean doLogin(@RequestBody final Team original, final HttpServletRequest request) {
-		Team team = null;
+	public boolean doLogin(@RequestBody final PmsTeam original, final HttpServletRequest request) {
+		PmsTeam team = null;
 		if (null != original && null != original.getPhoneNumber() && !"".equals(original.getPhoneNumber())) {
-			team = service.doLogin(original.getPhoneNumber());
+			//team = service.doLogin(original.getPhoneNumber());
+			team = pmsTeamFacade.doLogin(original.getPhoneNumber());
 		} else {
-			team = service.findTeamByLoginNameAndPwd(original);
+			//team = service.findTeamByLoginNameAndPwd(original);
+			team = pmsTeamFacade.findTeamByLoginNameAndPwd(original);
 		}
 		if (team != null) {
 			// 存入session
-			return initSessionInfo(team, request);
+			Gson gson = new Gson();
+			String json = gson.toJson(team);
+			return initSessionInfo(gson.fromJson(json, Team.class), request);
 		}
 		return false;
 	}
@@ -586,7 +566,7 @@ public class TeamController extends BaseController {
 	 * @return 如果唯一则返回 true ；反之则返回 false
 	 */
 	@RequestMapping("/team/static/checkIsExist")
-	public boolean checkExist(@RequestBody final Team team, HttpServletRequest request) {
+	public boolean checkExist(@RequestBody final PmsTeam team, HttpServletRequest request) {
 
 		try {
 			if (team.getLoginName() != null && !"".equals(team.getLoginName())) {
@@ -595,7 +575,10 @@ public class TeamController extends BaseController {
 				team.setLoginName(loginName);
 			}
 
-			final long count = service.checkExist(team);
+			//->modify to dubbo begin 2017-2-4 10:42:31
+			//final long count = service.checkExist(team);
+			final long count = pmsTeamFacade.checkExist(team);
+			//->modify to dubbo end 2017-2-4 10:42:31
 			if (count == 0)
 				return true;
 
@@ -674,7 +657,7 @@ public class TeamController extends BaseController {
 	}
 
 	@RequestMapping("/team/static/updatePasswordByLoginName")
-	public boolean recoverPasswordByLoginName(@RequestBody final Team team, HttpServletRequest request) {
+	public boolean recoverPasswordByLoginName(@RequestBody final PmsTeam team, HttpServletRequest request) {
 		if (team != null && team.getLoginName() != null && !"".equals(team.getLoginName()) && team.getPassword() != null
 				&& !"".equals(team.getPassword())) {
 			// 转码
@@ -683,7 +666,8 @@ public class TeamController extends BaseController {
 				final String password = URLDecoder.decode(team.getPassword(), "UTF-8");
 				team.setLoginName(loginName);
 				team.setPassword(password);
-				final long ret = service.updatePasswordByLoginName(team);
+				//final long ret = service.updatePasswordByLoginName(team);
+				final long ret = pmsTeamFacade.updatePasswordByLoginName(team);
 				SessionInfo sessionInfo = getCurrentInfo(request);
 				Log.error("update team ...", sessionInfo);
 				if (ret > 0)
@@ -809,19 +793,25 @@ public class TeamController extends BaseController {
 		// return sessionService.addSessionSeveralTime(request, map, 60 * 60 * 24 * 7);
 		return true;
 	}
+	
+
 
 	@RequestMapping("/team/static/data/add/account")
-	public boolean addAccount(@RequestBody final Team team, HttpServletRequest request) {
+	public boolean addAccount(@RequestBody final PmsTeam team, HttpServletRequest request) {
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		if (null != sessionInfo) {
 			team.setTeamId(sessionInfo.getReqiureId());
 		}
-		long count = service.updateTeamAccount(team);
+		//long count = service.updateTeamAccount(team);
+		long count = pmsTeamFacade.updateTeamAccount(team);
 		if (count >= 0) {
-			Team t = service.findTeamById(team.getTeamId());
+			//Team t = service.findTeamById(team.getTeamId());
+			PmsTeam t = pmsTeamFacade.findTeamById(team.getTeamId());
 			// sessionService.removeSession(request);
+			Gson gson = new Gson();
+			String json = gson.toJson(t);
 			request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
-			initSessionInfo(t, request);
+			initSessionInfo(gson.fromJson(json, Team.class), request);
 			return true;
 		}
 		return false;
@@ -895,13 +885,15 @@ public class TeamController extends BaseController {
 	}
 
 	@RequestMapping("/team/update/newphone")
-	public BaseMsg updateNewphone(@RequestBody Team team, HttpServletRequest request) {
+	public BaseMsg updateNewphone(@RequestBody PmsTeam team, HttpServletRequest request) {
 
-		final long count = service.checkExist(team);
+		//final long count = service.checkExist(team);
+		final long count = pmsTeamFacade.checkExist(team);
 		if (count > 0) {
 			return new BaseMsg(0, "手机号码已被占用");
 		}
-		final long ret = service.modifyTeamPhone(team);
+		//final long ret = service.modifyTeamPhone(team);
+		final long ret = pmsTeamFacade.modifyTeamPhone(team);
 		if (ret > 0) {
 			return new BaseMsg(1, "success");
 		}
@@ -910,20 +902,18 @@ public class TeamController extends BaseController {
 
 	/**
 	 * 处理team临时表,更新team备注
-	 * 
-	 * @param team
-	 * @param request
-	 * @return
 	 */
 	@RequestMapping("/team/deal/teamTmpAndTeamDesc")
-	public boolean dealTeamTmpAndUpdateTeamDesc(@RequestBody Team team, HttpServletRequest request) {
+	public boolean dealTeamTmpAndUpdateTeamDesc(@RequestBody PmsTeam team, HttpServletRequest request) {
 		try {
 			if (null != team) {
 				String description = null == team.getDescription() ? "" : team.getDescription();
 				team.setDescription(description);
 				// 更新备注信息
-				service.updateTeamDescription(team);
-				service.dealTeamTmp(team);
+				//service.updateTeamDescription(team);
+				//service.dealTeamTmp(team);
+				pmsTeamFacade.updateTeamDescription(team);
+				pmsTeamFacade.dealTeamTmp(team);
 				return true;
 			}
 		} catch (Exception e) {
@@ -941,8 +931,9 @@ public class TeamController extends BaseController {
 	 * @return 团队信息
 	 */
 	@RequestMapping("/team/static/latest/{teamId}")
-	public Team loadLatestData(@PathVariable("teamId") final Long teamId) {
-		final Team team = service.findLatestTeamById(teamId);
+	public PmsTeam loadLatestData(@PathVariable("teamId") final Long teamId) {
+		//final Team team = service.findLatestTeamById(teamId);
+		final PmsTeam team = pmsTeamFacade.findLatestTeamById(teamId);
 		team.setPassword(null);
 		return team;
 	}
@@ -956,13 +947,16 @@ public class TeamController extends BaseController {
 		long id = Long.valueOf(teamId);
 		switch (action) {
 		case "up":
-			flag = service.moveUp(id);
+			//flag = service.moveUp(id);
+			flag = pmsTeamFacade.moveUp(id);
 			break;
 		case "down":
-			flag = service.moveDown(id);
+			//flag = service.moveDown(id);
+			flag = pmsTeamFacade.moveDown(id);
 			break;
 		case "del":
-			flag = service.delRecommend(id);
+			//flag = service.delRecommend(id);
+			flag = pmsTeamFacade.delRecommend(id);
 			break;
 		}
 		return flag;
@@ -972,8 +966,9 @@ public class TeamController extends BaseController {
 	 * 获取所有没有被推荐到首页的供应商
 	 */
 	@RequestMapping(value = "/team/all/norecommend", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<Team> getAllTeamNoRecommend() {
-		final List<Team> list = service.getAllNoRecommend();
+	public List<PmsTeam> getAllTeamNoRecommend() {
+		//final List<PmsTeam> list = service.getAllNoRecommend();
+		final List<PmsTeam> list = pmsTeamFacade.getAllNoRecommend();
 		return list;
 	}
 
@@ -982,15 +977,17 @@ public class TeamController extends BaseController {
 	 */
 	@RequestMapping(value = "/team/addrecommend")
 	public boolean addRecommend(long teamId) {
-		return service.addRecommend(teamId);
+		//return service.addRecommend(teamId);
+		return pmsTeamFacade.addRecommend(teamId);
 	}
 
 	/**
 	 * 获取首页供应商推荐
 	 */
 	@RequestMapping(value = "/team/recommend", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<Team> teamRecommendList() {
-		return service.teamRecommendList();
+	public List<PmsTeam> teamRecommendList() {
+		//return service.teamRecommendList();
+		return pmsTeamFacade.teamRecommendList();
 	}
 
 }

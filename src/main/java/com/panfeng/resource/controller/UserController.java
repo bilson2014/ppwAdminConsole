@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.util.Constants.loginType;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
@@ -35,7 +36,6 @@ import com.panfeng.resource.view.UserView;
 import com.panfeng.service.RightService;
 import com.panfeng.service.RoleService;
 import com.panfeng.service.UserService;
-import com.panfeng.util.Constants.loginType;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.DateUtils;
 import com.panfeng.util.Log;

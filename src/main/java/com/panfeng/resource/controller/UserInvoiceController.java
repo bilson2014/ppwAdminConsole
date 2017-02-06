@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.util.Constants;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.UserInvoice;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.InvoiceView;
 import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.UserInvoiceService;
-import com.panfeng.util.Constants;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 

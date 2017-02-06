@@ -15,11 +15,11 @@ import com.panfeng.resource.model.IndentResource;
 import com.panfeng.service.FDFSService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.OnlineDocService;
-import com.panfeng.util.Constants;
-import com.panfeng.util.FileUtils;
+import com.paipianwang.pat.common.util.Constants;
+import com.paipianwang.pat.common.util.FileUtils;
 import com.panfeng.util.HttpUtil;
-import com.panfeng.util.PathFormatUtils;
-import com.panfeng.util.VerifyFileUtils;
+import com.paipianwang.pat.common.util.PathFormatUtils;
+import com.paipianwang.pat.common.util.VerifyFileUtils;
 
 @Service
 public class OnlineDocServiceImpl implements OnlineDocService {

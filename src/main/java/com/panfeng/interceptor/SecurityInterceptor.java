@@ -20,7 +20,7 @@ import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Right;
 import com.panfeng.service.FDFSService;
-import com.panfeng.util.Constants;
+import com.paipianwang.pat.common.util.Constants;
 import com.panfeng.util.UrlResourceUtils;
 import com.panfeng.util.ValidateUtil;
 

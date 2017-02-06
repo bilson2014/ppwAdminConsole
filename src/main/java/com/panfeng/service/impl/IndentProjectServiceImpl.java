@@ -44,7 +44,7 @@ import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.SynergyService;
 import com.panfeng.service.UserService;
 import com.panfeng.service.UserTempService;
-import com.panfeng.util.PathFormatUtils;
+import com.paipianwang.pat.common.util.PathFormatUtils;
 import com.panfeng.util.ValidateUtil;
 
 @Service

@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paipianwang.pat.facade.team.entity.PmsCity;
+import com.paipianwang.pat.facade.team.entity.PmsProvince;
+import com.paipianwang.pat.facade.team.service.PmsCityFacade;
+import com.paipianwang.pat.facade.team.service.PmsProvinceFacade;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.City;
 import com.panfeng.resource.model.Province;
@@ -34,16 +38,22 @@ public class CityPickerController extends BaseController {
 	private ProvinceService provinceService;
 	@Autowired
 	private CityService cityService;
-
+	@Autowired
+	private PmsProvinceFacade pmsProvinceFacade;
+	@Autowired
+	private PmsCityFacade pmsCityFacade;
+	
 	@RequestMapping("/get/provinces")
-	public List<Province> getAllProvince() {
-		return provinceService.getAll();
+	public List<PmsProvince> getAllProvince() {
+		//return provinceService.getAll();
+		return pmsProvinceFacade.getAll();
 	}
 
 	@RequestMapping("/get/citys/{provinceId}")
-	public List<City> getCitys(@PathVariable("provinceId") String provinceId,HttpServletRequest request) {
+	public List<PmsCity> getCitys(@PathVariable("provinceId") String provinceId,HttpServletRequest request) {
 		if (ValidateUtil.isValid(provinceId)) {
-			return cityService.findCitysByProvinceId(provinceId);
+			//return cityService.findCitysByProvinceId(provinceId);
+			return pmsCityFacade.findCitysByProvinceId(provinceId);
 		} else {
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("provinceId is null ...",sessionInfo);

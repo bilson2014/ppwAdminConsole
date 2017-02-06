@@ -1,26 +1,26 @@
-package com.panfeng.util;
+/*package com.panfeng.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
+*//**
  * 文件名生成工具
  * 
  * @author WangLM
  *
- */
-/* {filename} 会替换成原文件名,配置这项需要注意中文乱码问题 */
-/*
+ *//*
+ {filename} 会替换成原文件名,配置这项需要注意中文乱码问题 
+
  * /* /*
- */
-/* */
-/*  */
-/*  */
-/* */
-/*  */
-/*  */
+ 
+ 
+  
+  
+ 
+  
+  
 public class PathFormatUtils {
 	private static final String TIME = "time";
 	private static final String FULL_YEAR = "yyyy";
@@ -34,7 +34,7 @@ public class PathFormatUtils {
 
 	private static Date currentDate = null;
 
-	/**
+	*//**
 	 * 根据输入的表达式生成文件名
 	 * <p>
 	 * {rand:6} 会替换成随机数,后面的数字是随机数的位数
@@ -58,7 +58,7 @@ public class PathFormatUtils {
 	 * 
 	 * @param input
 	 * @return
-	 */
+	 *//*
 	public static String parse(String input) {
 
 		Pattern pattern = Pattern.compile("\\{([^\\}]+)\\}",
@@ -81,20 +81,20 @@ public class PathFormatUtils {
 		return sb.toString();
 	}
 
-	/**
+	*//**
 	 * 格式化路径, 把windows路径替换成标准路径
 	 * 
 	 * @param input
 	 *            待格式化的路径
 	 * @return 格式化后的路径
-	 */
+	 *//*
 	public static String format(String input) {
 
 		return input.replace("\\", "/");
 
 	}
 
-	/**
+	*//**
 	 * 根据输入表达式生成文件名，或者消除文件名内特殊字符
 	 * <p>
 	 * 如果 input内包含{filename} 属性则根据参数filename
@@ -105,7 +105,7 @@ public class PathFormatUtils {
 	 * @param input
 	 * @param filename
 	 * @return
-	 */
+	 *//*
 	public static String parse(String input, String filename) {
 
 		Pattern pattern = Pattern.compile("\\{([^\\}]+)\\}",
@@ -213,4 +213,4 @@ public class PathFormatUtils {
 		System.out.println(parse("{time}{rand:6}_{ss}.mp4"));
 	}
 
-}
+}*/

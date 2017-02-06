@@ -1,4 +1,4 @@
-package com.panfeng.util;
+/*package com.panfeng.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -13,12 +13,12 @@ import java.util.Properties;
 
 public class FileUtils {
 
-	/**
+	*//**
 	 * 获取文件后缀名
 	 * @param fileName 文件名
 	 * @param split 分隔符
 	 * @return 文件后缀名
-	 */
+	 *//*
 	public static String getExtName(final String fileName,final String split){
 		
 		if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0) {
@@ -28,12 +28,12 @@ public class FileUtils {
 		}
 	}
 	
-	/**
+	*//**
 	 * 获取文件上传地址
 	 * @param demand
 	 * @param is
 	 * @return
-	 */
+	 *//*
 	public static String getServerUploadPath(final String demand,final InputStream is){
 		try {
 			Properties propertis = new Properties();
@@ -57,13 +57,13 @@ public class FileUtils {
 		}
 	}
 	
-	/**
+	*//**
 	 * 根据后缀名分辨 视频/图片 文件
 	 * @param extName 文件后缀名
  	 * @param imageType 图片类型
 	 * @param videoType 视频类型
 	 * @return 0 视频文件 / 1  图片文件 / 2 其他文件
-	 */
+	 *//*
 	public static short divideIntoGroup(final String extName,
 										 final String imageType,
 										 final String videoType){
@@ -82,13 +82,13 @@ public class FileUtils {
 		return 2;
 	}
 	
-	/**
+	*//**
 	 * 保存文件流到硬盘
 	 * 
 	 * @param is
 	 * @param path
 	 * @return
-	 */
+	 *//*
 	public static boolean saveFileByInputStream(final InputStream is,
 			final String path) {
 		boolean state = false;
@@ -128,12 +128,12 @@ public class FileUtils {
 		return b;
 	}
 
-	/**
+	*//**
 	 * 删除文件夹
 	 * 
 	 * @param filePath
 	 * @param deleteThisPath
-	 */
+	 *//*
 	public static void deleteFolderFile(String filePath, boolean deleteThisPath) {
 		try {
 			File file = new File(filePath);
@@ -183,3 +183,4 @@ public class FileUtils {
 	    }  
 	}
 }
+*/

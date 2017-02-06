@@ -15,7 +15,7 @@ $().ready(function(){
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/team/list',
-		idField : 'id' ,
+		idField : 'teamId' ,
 		title : '供应商管理列表' , 
 		//fitColumns : true ,
 		striped : true ,
@@ -58,27 +58,15 @@ $().ready(function(){
 						width : 200,
 						align : 'center'
 					},{
-						field : 'pmsProvince',
+						field : 'teamProvinceName',
 						title : '所在省',
 						width : 100,
-						align : 'center',
-						formatter : function(value , record , index){
-							if(value){
-								return value.provinceName;
-							}return "";
-							
-						}
+						align : 'center'
 					},{
-						field : 'pmsCity',
+						field : 'teamCityName',
 						title : '所在城市',
 						width : 100,
-						align : 'center',
-						formatter : function(value , record , index){
-							if(value){
-								return value.city;
-							}return "";
-							
-						}
+						align : 'center'
 					},{
 						field : 'linkman',
 						title : '联系人',
@@ -177,6 +165,7 @@ $().ready(function(){
 								return '' ;
 							}
 						},
+						hidden : true
 					},{
 						field : 'scale',
 						title : '公司规模',
@@ -550,9 +539,9 @@ function recommendFuc(){
 						formatter : function(value,row,index){
 							var all = "";
 							var totalCount = $('#recommend-gride').datagrid('getData').total;
-							var up  = '<a class="sort" data-target="up" data-id="'+row.id+'" href="javascript:void(0)">上移</a>';
-							var down = '<a class="sort" data-target="down" data-id="'+row.id+'" href="javascript:void(0)">下移</a>';
-							var del = '<a class="sort" data-target="del" data-id="'+row.id+'" href="javascript:void(0)">移除</a>';
+							var up  = '<a class="sort" data-target="up" data-id="'+row.teamId+'" href="javascript:void(0)">上移</a>';
+							var down = '<a class="sort" data-target="down" data-id="'+row.teamId+'" href="javascript:void(0)">下移</a>';
+							var del = '<a class="sort" data-target="del" data-id="'+row.teamId+'" href="javascript:void(0)">移除</a>';
 							if(totalCount<=1){
 								return del;
 							}
@@ -594,39 +583,26 @@ function sort(){
 		var action = $(this).attr("data-target");
 		var teamId = $(this).attr("data-id");
 		//TODO 移除提示
-		if(action == 'del'){
-			$.messager.confirm('提示信息' , '确认删除?' , function(r){
-				if(r){
-					sortAjax(action,teamId);
-				}
-			});
-		}else{
-			sortAjax(action,teamId);
-		}
-		
-		
-	})
-}
-
-function sortAjax(action,teamId){
-	$.ajax({
-		url : getContextPath() + '/portal/team/recommend/sort',
-		type : 'POST',
-		data : {
-			'action' : action,
-			'teamId' : teamId,
-		},
-		success : function(data){
-			if(data){
-				recommend_datagrid.datagrid('clearSelections');
-				recommend_datagrid.datagrid('load', {recommend:true});
-				if(action=='del'){//刷新上方选择供应商
-					$('#search-recommend-teamName').combobox('clear');
-					$('#search-recommend-teamName').combobox('reload');
+		$.ajax({
+			url : getContextPath() + '/portal/team/recommend/sort',
+			type : 'POST',
+			data : {
+				'action' : action,
+				'teamId' : teamId,
+			},
+			success : function(data){
+				if(data){
+					recommend_datagrid.datagrid('clearSelections');
+					recommend_datagrid.datagrid('load', {recommend:true});
+					if(action=='del'){//刷新上方选择供应商
+						$('#search-recommend-teamName').combobox('clear');
+						$('#search-recommend-teamName').combobox('reload');
+					}
 				}
 			}
-		}
-	});
+		});
+		
+	})
 }
 function add(){
 	$("#add-recommend").off("click").on("click",function(){

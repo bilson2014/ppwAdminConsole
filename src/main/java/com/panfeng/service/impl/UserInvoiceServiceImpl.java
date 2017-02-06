@@ -9,7 +9,7 @@ import com.panfeng.persist.UserInvoiceMapper;
 import com.panfeng.resource.model.UserInvoice;
 import com.panfeng.resource.view.InvoiceView;
 import com.panfeng.service.UserInvoiceService;
-import com.panfeng.util.Constants;
+import com.paipianwang.pat.common.util.Constants;
 import com.panfeng.util.ValidateUtil;
 
 @Service

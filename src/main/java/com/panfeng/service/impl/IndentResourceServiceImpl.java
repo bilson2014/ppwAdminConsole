@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.paipianwang.pat.common.util.Constants;
 import com.panfeng.fs.impl.LocalResourceImpl;
 import com.panfeng.persist.IndentResourceMapper;
 import com.panfeng.resource.model.ActivitiTask;
@@ -22,7 +23,6 @@ import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.OnlineDocService;
 import com.panfeng.service.UserTempService;
-import com.panfeng.util.Constants;
 import com.panfeng.util.RedisUtils;
 import com.panfeng.util.ResourcesType;
 

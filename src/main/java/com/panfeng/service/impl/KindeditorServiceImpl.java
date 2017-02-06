@@ -8,10 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.JsonObject;
 import com.panfeng.service.KindeditorService;
-import com.panfeng.util.Constants;
-import com.panfeng.util.FileUtils;
-import com.panfeng.util.PathFormatUtils;
-import com.panfeng.util.VerifyFileUtils;
+import com.paipianwang.pat.common.util.Constants;
+import com.paipianwang.pat.common.util.FileUtils;
+import com.paipianwang.pat.common.util.PathFormatUtils;
+import com.paipianwang.pat.common.util.VerifyFileUtils;
 
 @Service
 public class KindeditorServiceImpl implements KindeditorService {
