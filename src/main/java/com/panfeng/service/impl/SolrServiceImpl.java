@@ -10,8 +10,6 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.beans.DocumentObjectBinder;
 import org.apache.solr.client.solrj.impl.BinaryRequestWriter;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.response.FacetField;
-import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
@@ -71,7 +69,8 @@ public class SolrServiceImpl implements SolrService {
 			SolrDocumentList list = response.getResults();
 			Map<String, Map<String, List<String>>> map = response.getHighlighting();
 			
-			FacetField ff = response.getFacetField("itemName");
+			// 分组
+			/*FacetField ff = response.getFacetField("itemName");
 			List<Count> counts = null;
 			if(ff != null){
 				counts = ff.getValues();
@@ -80,7 +79,9 @@ public class SolrServiceImpl implements SolrService {
 						System.err.println(count.getName() + " " + count.getCount());
 					}
 				}
-			}
+			}*/
+			
+			// 高亮设置
 			for (int i = 0; i < list.size(); i++) {
 				final SolrDocument document = list.get(i);
 				document.setField("total", numFound); // 设置总数
@@ -90,9 +91,9 @@ public class SolrServiceImpl implements SolrService {
 						document.setField("productName", pNameList.get(0));
 					}
 					
-					List<String> pDescriptionList = map.get(document.getFieldValue("productId")).get("pDescription");
-					if(pDescriptionList != null && !pDescriptionList.isEmpty()){
-						document.setField("pDescription", pDescriptionList.get(0) + "...");
+					List<String> tagList = map.get(document.getFieldValue("productId")).get("tags");
+					if(tagList != null && !tagList.isEmpty()){
+						document.setField("tags", tagList.get(0) + "...");
 					}
 				}
 				

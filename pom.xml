@@ -34,13 +34,6 @@
 			<artifactId>pat-facade-product</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>com.paipianwang.pat</groupId>
-			<artifactId>pat-facade-product</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-		  --> 
-
 		<!-- Common Dependency Begin -->
 		<dependency>
 			<groupId>xalan</groupId>
@@ -312,11 +305,8 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.5</version>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.5</version>
-		</dependency>
+		<!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-log4j12</artifactId> 
+			<version>1.7.5</version> </dependency> -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>

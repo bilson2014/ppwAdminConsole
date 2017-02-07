@@ -9,6 +9,7 @@
 	<dubbo:application name="edu-web-boss" /> 
 	<!-- 使用zookeeper注册中心暴露服务地址 -->
 	<!-- 注册中心地址 -->
+	<!-- <dubbo:registry protocol="zookeeper" address="106.75.4.197:2181" /> -->
 	<dubbo:registry protocol="zookeeper" address="123.59.75.93:2181" />
 	
 	<!-- 订单服务接口 -->
