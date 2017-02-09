@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +36,11 @@ public class SolrController extends BaseController {
 	@Autowired
 	private final SolrService service = null;
 	
+	private final Logger logger = LoggerFactory.getLogger(SolrController.class);
+	
+	// 权重数据
+	final int[] weightArr = new int[]{10,8,6};
+	
 	@RequestMapping("/solr/query")
 	public List<Solr> search(@RequestBody final SolrView view,final HttpServletRequest request){
 		
@@ -48,6 +55,7 @@ public class SolrController extends BaseController {
 			
 			// 组装 行业 和 类型 业务逻辑
 			condition = mergeQConcition(view);
+			logger.error("pc search keywords : " + condition);
 			
 			final SolrQuery query = new SolrQuery();
 			query.set("defType", "edismax");
@@ -72,19 +80,6 @@ public class SolrController extends BaseController {
 				query.addFilterQuery("length:" + view.getLengthFq());
 			}
 			
-			// 如果标签为空，则设置为全部
-			/*if(view.getTagsFq() != null && !"".equals(view.getTagsFq().trim())){
-				// 按空格及,分词
-				String tags = URLDecoder.decode(view.getTagsFq(), "UTF-8");
-				tags = tags.replaceAll("(\\s*)(,|，)(\\s*)", " ");
-				String[] tagArr = tags.split("\\s+");
-				if(tagArr != null) {
-					for (final String tag : tagArr) {
-						query.addFilterQuery("tags:" + "\""+ tag +"\"");
-					}
-				}
-			}*/
-			
 			// 开启高亮
 			query.setHighlight(true);
 			query.set("hl.highlightMultiTerm", true);
@@ -95,7 +90,6 @@ public class SolrController extends BaseController {
 			query.setHighlightSimplePost("</font>");
 			
 			final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
-			
 			return list;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -127,9 +121,12 @@ public class SolrController extends BaseController {
 			String[] tagArr = genre.split("\\s+");
 			if(tagArr != null) {
 				for (int i = 0;i < tagArr.length; i++) {
-					sb.append("tags:" + "\""+ tagArr[i] +"\"");
-					if(i < tagArr.length - 1)
-						sb.append(" OR ");
+					if(StringUtils.isNotBlank(tagArr[i])) {
+						sb.append("tags:" + "\""+ tagArr[i] +"\"");
+						if(i < tagArr.length - 1)
+							sb.append(" OR ");
+					}
+					
 				}
 			}
 			
@@ -147,9 +144,18 @@ public class SolrController extends BaseController {
 			String[] tagArr = industry.split("\\s+");
 			if(tagArr != null) {
 				for (int i = 0;i < tagArr.length; i++) {
-					sb.append("tags:" + "\""+ tagArr[i] +"\"");
-					if(i < tagArr.length - 1)
-						sb.append(" OR ");
+					if(StringUtils.isNotBlank(tagArr[i])) {
+						sb.append("tags:" + "\""+ tagArr[i] +"\"");
+						// 如果从相关性推荐过来的，那么应该添加权重
+						if(view.isMore()) {
+							if(i < 3){
+								sb.append("^" + weightArr[i]);
+							}
+						}
+							
+						if(i < tagArr.length - 1)
+							sb.append(" OR ");
+					}
 				}
 			}
 			
@@ -166,6 +172,7 @@ public class SolrController extends BaseController {
 			final ResourceToken token = (ResourceToken) request.getAttribute("resourceToken"); // 访问资源库令牌
 			
 			String condition = URLDecoder.decode(view.getCondition(), "UTF-8");
+			logger.error("phone search keywords : " + condition);
 			
 			final SolrQuery query = new SolrQuery();
 			query.set("defType", "edismax");
@@ -215,6 +222,8 @@ public class SolrController extends BaseController {
 			query.setHighlightSimplePost("</font>");
 			
 			final List<Solr> list = service.queryDocs(token.getSolrUrl(), query);
+			
+			
 			return list;
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -326,8 +335,6 @@ public class SolrController extends BaseController {
 	// 分析标签优先级顺序，按顺序权重依次降低
 	private String ReweightingByTags(String condition) {
 		
-		// 权重数据
-		final int[] weightArr = new int[]{10,8,6};
 		// 按照'，'、','、空格 分词
 		condition = condition.replaceAll("(\\s*)(,|，)(\\s*)", " ");
 		String[] tagArr = condition.split("\\s+");
