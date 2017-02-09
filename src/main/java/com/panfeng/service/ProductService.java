@@ -13,14 +13,14 @@ public interface ProductService {
 	 * @param product
 	 * @return list of product
 	 */
-	public List<Product> listWithPagination(final ProductView view);
+	//public List<Product> listWithPagination(final ProductView view);
 	
 	/**
 	 * 保存后返回自动生成的ID
 	 * @param product
 	 * @return productId
 	 */
-	public long save(final Product product);
+	//public long save(final Product product);
 	
 	
 	/**
@@ -28,33 +28,33 @@ public interface ProductService {
 	 * @param ids 编号数组
 	 * @return 团队列表
 	 */
-	public List<Product> delete(final long[] ids);
+	//public List<Product> delete(final long[] ids);
 	
-	public long update(final Product product);
+	//public long update(final Product product);
 	
 	/**
 	 * 获取 product总个数
 	 * @return product的总个数
 	 */
-	public long maxSize(final ProductView view);
+	//public long maxSize(final ProductView view);
 	
 	/**
 	 * 根据 ID 获取 product 信息
 	 * @param id product ID
 	 * @return product
 	 */
-	public Product findProductById(final long productId);
+	//public Product findProductById(final long productId);
 
 	/**
 	 * 保存 路径
 	 * @param product
 	 */
-	public long saveFileUrl(Product product);
+	//public long saveFileUrl(Product product);
 
 	/**
 	 * 获取所有 产品
 	 */
-	public List<Product> all();
+	//public List<Product> all();
 
 	// ---------------------  前端 展示 功能 -----------------------------
 	public List<Product> listWithCondition(final ProductView view);
@@ -86,12 +86,12 @@ public interface ProductService {
 	 * @param teamId 供应商ID
 	 * @return 已审核作品集合
 	 */
-	public List<Product> loadProductByProviderId(final long teamId);
+	//public List<Product> loadProductByProviderId(final long teamId);
 
 	/**
 	 * 更新 视频基本信息，除了 推荐值等外
 	 */
-	public long updateProductInfo(final Product product);
+	//public long updateProductInfo(final Product product);
 
 	/**
 	 * 获取单个作品ID
@@ -105,12 +105,9 @@ public interface ProductService {
 	 * @param view 包含上界及下界
 	 * @return 视频列表
 	 */
-	public List<Product> loadProductByCommend();
+	//public List<Product> loadProductByCommend();
 
-	// add by wliming, 2016/02/24 18:54 begin
-	// -> 增加信息模板的更新方法
-	public void updateVideoDescription(final Product product);
-	// add by wliming, 2016/02/24 18:54 end
+	//public void updateVideoDescription(final Product product);
 
 	/**
 	 * 查询BD产品营销页面产品信息
@@ -124,24 +121,24 @@ public interface ProductService {
 	 */
 	public Map<Long,Product> getProductByRecommend();
 
-	public Product getMasterWork(long teamId);
+	//public Product getMasterWork(long teamId);
 
 	public List<Product> loadActivityProducts();
 
 	/**
 	 * 查询推荐的作品，分页
 	 */
-	public List<Product> searchPageRecommendList(ProductView view);
+	//public List<Product> searchPageRecommendList(ProductView view);
 
-	public long maxRecommendSize(ProductView view);
+	//public long maxRecommendSize(ProductView view);
 
 	/**
 	 * 修改作品的推荐值
 	 */
-	public boolean updateRecommend(Product product);
+	//public boolean updateRecommend(Product product);
 
 	/**
 	 * 修改作品可见性
 	 */
-	public boolean updateProductVisibility(Product product);
+	//public boolean updateProductVisibility(Product product);
 }

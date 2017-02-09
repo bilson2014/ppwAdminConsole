@@ -28,21 +28,21 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private final TeamMapper teamMapper = null;
 
-	@Override
+	/*@Override
 	public List<Product> listWithPagination(final ProductView view) {
 
 		final List<Product> list = mapper.listWithPagination(view);
 		return list;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long save(final Product product) {
 
 		mapper.save(product);
 		return product.getProductId();
-	}
+	}*/
 
-	@Transactional
+	/*@Transactional
 	public List<Product> delete(final long[] ids) {
 		final List<Product> originalList = mapper.findProductByArray(ids);
 		if (ids.length > 0) {
@@ -52,42 +52,42 @@ public class ProductServiceImpl implements ProductService {
 			}
 		}
 		return originalList;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long update(final Product product) {
 
 		final long ret = mapper.update(product);
 		return ret;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long maxSize(final ProductView view) {
 
 		final long total = mapper.maxSize(view);
 		return total;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public Product findProductById(final long productId) {
 
 		final Product product = mapper.findProductById(productId);
 		return product;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long saveFileUrl(final Product product) {
 
 		final long ret = mapper.updateFileUrl(product);
 		return ret;
-	}
+	}*/
 
-	@Override
+/*	@Override
 	public List<Product> all() {
 
 		final List<Product> list = mapper.all();
 		return list;
-	}
+	}*/
 
 	@Override
 	public List<Product> listWithCondition(final ProductView view) {
@@ -162,19 +162,19 @@ public class ProductServiceImpl implements ProductService {
 		return size;
 	}
 
-	@Override
+	/*@Override
 	public List<Product> loadProductByProviderId(final long teamId) {
 
 		final List<Product> list = mapper.loadProductByProviderId(teamId);
 		return list;
 	}
-
-	@Override
+*/
+/*	@Override
 	public long updateProductInfo(final Product product) {
 
 		final long ret = mapper.updateProductInfo(product);
 		return ret;
-	}
+	}*/
 
 	@Override
 	public Product loadSingleProduct(long teamId) {
@@ -183,20 +183,17 @@ public class ProductServiceImpl implements ProductService {
 		return product;
 	}
 
-	@Override
+	/*@Override
 	public List<Product> loadProductByCommend() {
 
 		final List<Product> list = mapper.loadProductByCommend();
 		return list;
 	}
-
-	// add by wliming, 2016/02/24 18:54 begin
-	// -> 增加信息模板的更新方法
-	@Override
+*/
+	/*@Override
 	public void updateVideoDescription(final Product product) {
 		mapper.updateVideoDescription(product);
-	}
-	// add by wliming, 2016/02/24 18:54 end
+	}*/
 
 	@Override
 	public List<Product> loadSalesProduct() {
@@ -218,10 +215,10 @@ public class ProductServiceImpl implements ProductService {
 		return map;
 	}
 
-	@Override
+	/*@Override
 	public Product getMasterWork(long teamId) {
 		return mapper.getMasterWork(teamId);
-	}
+	}*/
 
 	public List<Product> loadActivityProducts() {
 		String product_ids = GlobalConstant.ACTIVITY_PRODUCT_IDS;
@@ -237,32 +234,32 @@ public class ProductServiceImpl implements ProductService {
 	/**
 	 * 查找分页的作品，分页
 	 */
-	@Override
+	/*@Override
 	public List<Product> searchPageRecommendList(ProductView view) {
 		final List<Product> list = mapper.searchPageRecommendList(view);
 		return list;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long maxRecommendSize(ProductView view) {
 		final long total = mapper.maxRecommendSize(view);
 		return total;
-	}
+	}*/
 	/**
 	 * 修改作品的推荐值
 	 */
-	@Override
+	/*@Override				
 	public boolean updateRecommend(Product product) {
 		long l = mapper.updateRecommend(product);
 		return l>=0;
-	}
+	}*/
 
 	/**
 	 * 修改作品可见性
 	 */
-	@Override
+	/*@Override
 	public boolean updateProductVisibility(Product product) {
 		long l = mapper.updateProductVisibility(product);
 		return l>0?true:false;
-	}
+	}*/
 }

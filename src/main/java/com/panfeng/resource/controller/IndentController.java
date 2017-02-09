@@ -21,14 +21,14 @@ import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.facade.indent.entity.PmsIndent;
 import com.paipianwang.pat.facade.indent.service.PmsIndentFacade;
+import com.paipianwang.pat.facade.product.entity.PmsProduct;
+import com.paipianwang.pat.facade.product.service.PmsProductFacade;
 import com.panfeng.domain.Result;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Indent;
-import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Service;
 import com.panfeng.resource.view.IndentView;
-import com.panfeng.service.ProductService;
 import com.panfeng.service.ServiceService;
 import com.panfeng.util.CsvWriter;
 import com.panfeng.util.DateUtils;
@@ -45,9 +45,6 @@ import com.panfeng.util.PropertiesUtils;
 public class IndentController extends BaseController {
 	
 	@Autowired
-	private final ProductService productService = null;
-
-	@Autowired
 	private final ServiceService serService = null;
 	
 	@Autowired
@@ -55,6 +52,8 @@ public class IndentController extends BaseController {
 	
 	@Autowired
 	private PmsIndentFacade pmsIndentFacade = null;
+	@Autowired
+	private PmsProductFacade pmsProductFacade = null;
 
 	@RequestMapping("/indent-list")
 	public ModelAndView view(final ModelMap model) {
@@ -122,7 +121,8 @@ public class IndentController extends BaseController {
 			// 如果按产品下单，那么下单之后的订单信息需要与数据库进行对比
 			if (teamId != -1 && productId != -1 && serviceId != -1) {
 				// 产品下单
-				final Product product = productService.findProductById(productId);
+				//final Product product = productService.findProductById(productId);
+				final PmsProduct product = pmsProductFacade.findProductById(productId);
 				productName = product.getProductName();
 				final Service ser = serService.getServiceById(serviceId);
 				indent.setSecond(ser.getMcoms());

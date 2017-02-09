@@ -12,12 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.panfeng.resource.model.DIffBean;
-import com.panfeng.resource.model.TeamTmp;
-import com.panfeng.resource.view.DataGrid;
-import com.panfeng.resource.view.PageFilter;
-import com.panfeng.resource.view.Pagination;
-import com.panfeng.service.TeamTmpService;
+import com.paipianwang.pat.common.entity.DataGrid;
+import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.facade.team.entity.DIffBean;
+import com.paipianwang.pat.facade.team.entity.PmsTeamTmp;
+import com.paipianwang.pat.facade.team.service.PmsTeamTmpFacade;
 
 /**
  * 供应商审核
@@ -27,7 +26,7 @@ import com.panfeng.service.TeamTmpService;
 public class TeamTmpController extends BaseController {
 
 	@Autowired
-	private final TeamTmpService service = null;
+	private final PmsTeamTmpFacade pmsTeamTmpFacade = null;
 
 	@RequestMapping(value = "/teamTmp-list")
 	public ModelAndView view(final ModelMap model) {
@@ -36,24 +35,19 @@ public class TeamTmpController extends BaseController {
 	}
 
 	@RequestMapping(value = "/teamTmp/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public DataGrid<TeamTmp> list(final Pagination view, final PageFilter pf) {
+	public DataGrid<PmsTeamTmp> list(final PageParam pageParam) {
 
-		final long page = pf.getPage();
-		final long rows = pf.getRows();
-		view.setBegin((page - 1) * rows);
-		view.setLimit(rows);
-
-		DataGrid<TeamTmp> dataGrid = new DataGrid<TeamTmp>();
-		final List<TeamTmp> list = service.listWithPagination(view);
-		dataGrid.setRows(list);
-		final long total = service.maxSize(view);
-		dataGrid.setTotal(total);
+		final long page = pageParam.getPage();
+		final long rows = pageParam.getRows();
+		pageParam.setBegin((page - 1) * rows);
+		pageParam.setLimit(rows);
+		final DataGrid<PmsTeamTmp> dataGrid = pmsTeamTmpFacade.listWithPagination(pageParam);
 		return dataGrid;
 	}
 
 	@RequestMapping(value = "/teamTmp/update", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public void update(TeamTmp teamTmp, HttpServletRequest reqeust) {
-		service.updateTeamTmp(teamTmp);
+	public void update(PmsTeamTmp teamTmp, HttpServletRequest reqeust) {
+		pmsTeamTmpFacade.updateTeamTmp(teamTmp);
 	}
 
 	/**
@@ -61,6 +55,6 @@ public class TeamTmpController extends BaseController {
 	 */
 	@RequestMapping(value = "/teamTmp/find/diff/{teamId}")
 	public List<DIffBean> findDiffTeam(@PathVariable("teamId") Integer teamId, HttpServletRequest reqeust) {
-		return service.findDiffTeam(teamId);
+		return pmsTeamTmpFacade.findDiffTeam(teamId);
 	}
 }

@@ -41,14 +41,12 @@ import com.panfeng.mq.service.FileConvertMQService;
 import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Service;
 import com.panfeng.resource.model.Solr;
-import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.ProductView;
 import com.panfeng.resource.view.SolrView;
 import com.panfeng.service.FDFSService;
 import com.panfeng.service.ProductService;
 import com.panfeng.service.ServiceService;
 import com.panfeng.service.SolrService;
-import com.panfeng.service.TeamService;
 import com.panfeng.util.JsoupUtil;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
@@ -64,9 +62,6 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private final ProductService proService = null;
-
-	@Autowired
-	private final TeamService teamService = null;
 
 	@Autowired
 	private final ServiceService serService = null;
@@ -622,12 +617,12 @@ public class ProductController extends BaseController {
 	 * 更新文件路径
 	 * 
 	 * @param product
-	 *            包含 视频唯一编号、缩略图、封面、视频路径
+	 * 包含 视频唯一编号、缩略图、封面、视频路径
 	 */
-	@RequestMapping("/product/static/data/updateFilePath")
+	/*@RequestMapping("/product/static/data/updateFilePath")
 	public long updateFilePath(@RequestBody final Product product) {
 		return proService.saveFileUrl(product);
-	}
+	}*/
 
 	/**
 	 * 获取单个作品ID
@@ -722,7 +717,7 @@ public class ProductController extends BaseController {
 	/**
 	 * 修改作品可见性
 	 */
-	@RequestMapping(value = "/product/visibility", method = RequestMethod.POST)
+	@RequestMapping(value = "/product/visibility")
 	public boolean productVisibility(@RequestBody final PmsProduct product) {
 		//return proService.updateProductVisibility(product);
 		return pmsProductFacade.updateProductVisibility(product);

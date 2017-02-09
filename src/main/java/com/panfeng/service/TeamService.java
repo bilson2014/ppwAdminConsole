@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Team;
-import com.panfeng.resource.view.TeamView;
 
 public interface TeamService {
 
@@ -16,14 +14,14 @@ public interface TeamService {
 	 * @param team
 	 * @return list of team
 	 */
-	public List<Team> listWithPagination(final TeamView view);
+	//public List<Team> listWithPagination(final TeamView view);
 
-	public long save(final Team team);
+	//public long save(final Team team);
 
 	/**
 	 * 保存 图片路径
 	 */
-	public long saveTeamPhotoUrl(final Team team);
+	//public long saveTeamPhotoUrl(final Team team);
 
 	/**
 	 * 删除后返回信息列表，便于删除文件
@@ -32,16 +30,16 @@ public interface TeamService {
 	 *            编号数组
 	 * @return 团队列表
 	 */
-	public List<Team> delete(final long[] ids);
+	//public List<Team> delete(final long[] ids);
 
-	public long update(final Team team);
+	//public long update(final Team team);
 
 	/**
 	 * 获取team总个数
 	 * 
 	 * @return team的总个数
 	 */
-	public long maxSize(final TeamView view);
+	//public long maxSize(final TeamView view);
 
 	/**
 	 * 根据 ID 获取 team 信息
@@ -50,14 +48,14 @@ public interface TeamService {
 	 *            team ID
 	 * @return team
 	 */
-	public Team findTeamById(final long id);
+	//public Team findTeamById(final long id);
 
 	/**
 	 * 获取所有 team 信息
 	 * 
 	 * @return
 	 */
-	public List<Team> getAll();
+	//public List<Team> getAll();
 
 	/**
 	 * 供应商登录
@@ -66,7 +64,7 @@ public interface TeamService {
 	 *            包含(登录名和密码(已加密))
 	 * @return
 	 */
-	public Team doLogin(final String phoneNumber);
+	//public Team doLogin(final String phoneNumber);
 
 	/**
 	 * 检查手机号唯一性 如果没有,则返回0,有则返回存在的条目数
@@ -75,7 +73,7 @@ public interface TeamService {
 	 *            电话号码
 	 * @return 数据个数
 	 */
-	public long checkExist(final Team original);
+	//public long checkExist(final Team original);
 
 	/**
 	 * 供应商注册
@@ -100,7 +98,7 @@ public interface TeamService {
 	 * 
 	 * @return 数据受影响个数
 	 */
-	public long updateTeamInfomation(final Team team);
+	//public long updateTeamInfomation(final Team team);
 
 	/**
 	 * 根据登录名修改密码
@@ -109,7 +107,7 @@ public interface TeamService {
 	 *            (包含 登录名和密码)
 	 * @return 数据受影响个数
 	 */
-	public long updatePasswordByLoginName(final Team team);
+	//public long updatePasswordByLoginName(final Team team);
 
 	/**
 	 * 更新供应商审核状态为 审核中
@@ -130,7 +128,7 @@ public interface TeamService {
 	 * @param provider
 	 * @return
 	 */
-	public long updateUniqueId(final Team provider);
+	//public long updateUniqueId(final Team provider);
 
 	public BaseMsg bind(final Team provider);
 
@@ -142,9 +140,9 @@ public interface TeamService {
 	 */
 	public Team findTeamByLoginNameAndPwd(Team original);
 
-	public long updateTeamAccount(Team original);
+	//public long updateTeamAccount(Team original);
 	
-	public boolean setMasterWork(final Product product);
+	//public boolean setMasterWork(final Product product);
 
 	/**
 	 * 查询第三方绑定状态
@@ -163,31 +161,31 @@ public interface TeamService {
 
 	public long modifyTeamPhone(Team team);
 	
-	public Team getTeamInfo(Long teamId);
+	//public Team getTeamInfo(Long teamId);
 	
 	//public List<String> getTags(List<Integer> ids);
 
 	/**
 	 * 更新供应商备注信息
 	 */
-	public long updateTeamDescription(Team team);
+	//public long updateTeamDescription(Team team);
 
-	public void dealTeamTmp(Team team);
+	//public void dealTeamTmp(Team team);
 
-	public Team findLatestTeamById(Long teamId);
+	//public Team findLatestTeamById(Long teamId);
 
-	public boolean moveUp(long teamId);
+	//public boolean moveUp(long teamId);
 
-	public boolean moveDown(long teamId);
+	//public boolean moveDown(long teamId);
 
-	public boolean delRecommend(long teamId);
+	//public boolean delRecommend(long teamId);
 
-	public List<Team> getAllNoRecommend();
+	//public List<Team> getAllNoRecommend();
 
-	public boolean addRecommend(long teamId);
+//	public boolean addRecommend(long teamId);
 
 	/**
 	 * 获取首页推荐供应商列表
 	 */
-	public List<Team> teamRecommendList();
+	//public List<Team> teamRecommendList();
 }

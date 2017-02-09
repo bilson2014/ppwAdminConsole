@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paipianwang.pat.facade.team.entity.PmsTeam;
+import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
 import com.panfeng.domain.SessionInfo;
-import com.panfeng.resource.model.Team;
 import com.panfeng.resource.model.User;
-import com.panfeng.service.TeamService;
 import com.panfeng.service.UserService;
 import com.panfeng.util.ValidateUtil;
 
@@ -25,7 +25,7 @@ public class CommonController extends BaseController {
 	@Autowired
 	private final UserService userService = null;
 	@Autowired
-	private final TeamService teamService = null;
+	private final PmsTeamFacade pmsTeamFacade = null;
 	
 	/**
 	 * 验证登录者是否完善登录名,密码
@@ -45,7 +45,8 @@ public class CommonController extends BaseController {
 					return true;
 				}return false;
 			case "role_provider":
-				Team team = teamService.findTeamById(sessionInfo.getReqiureId());
+				//Team team = teamService.findTeamById(sessionInfo.getReqiureId());
+				PmsTeam team = pmsTeamFacade.findTeamById(sessionInfo.getReqiureId());
 				if(ValidateUtil.isValid(team.getLoginName())){
 					return true;
 				}return false;

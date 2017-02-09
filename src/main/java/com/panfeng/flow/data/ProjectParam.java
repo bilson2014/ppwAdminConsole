@@ -11,6 +11,8 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.paipianwang.pat.facade.team.entity.PmsTeam;
+import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.flow.taskchain.EventType;
 import com.panfeng.persist.IndentFlowMapper;
@@ -19,13 +21,11 @@ import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.Synergy;
-import com.panfeng.resource.model.Team;
 import com.panfeng.resource.model.User;
 import com.panfeng.service.ActivitiEngineService;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.SynergyService;
-import com.panfeng.service.TeamService;
 import com.panfeng.service.UserService;
 import com.panfeng.util.ValidateUtil;
 
@@ -39,9 +39,6 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 	private UserService userService;
 
 	@Autowired
-	private TeamService teamService;
-
-	@Autowired
 	private IndentFlowMapper indentFlowMapper;
 
 	@Autowired
@@ -52,6 +49,9 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 
 	@Autowired
 	private SynergyService synergyService;
+
+	@Autowired
+	private PmsTeamFacade pmsTeamFacade;
 
 	final static String teamName = "teamName";
 	final static String teamLinkMan = "teamLinkMan";
@@ -112,7 +112,7 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		LinkedList<String> relevantPersons = fillerParam.getRelevantPersons();
 
 		User user = null;
-		Team team = null;
+		PmsTeam team = null;
 		List<Employee> providerManager = null;
 		List<Employee> manager = null;
 
@@ -125,7 +125,9 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 				case GlobalConstant.ROLE_PROVIDER:
 					// 确定参数
 					if (team == null)
-						team = teamService.findTeamById(indentProject.getTeamId());
+						//team = teamService.findTeamById(indentProject.getTeamId());
+						team = pmsTeamFacade.findTeamById(indentProject.getTeamId());
+					//key = parseKey(team, eventType);
 					key = parseKey(team, eventType);
 					value = new String[fields.size()];
 					for (int i = 0; i < fields.size(); i++) {
@@ -328,7 +330,6 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		}
 		return result;
 	}
-
 	private String parseKey(User user, EventType eventType) {
 		String result = "";
 		switch (eventType) {
@@ -342,7 +343,19 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		return result;
 	}
 
-	private String parseKey(Team team, EventType eventType) {
+	/*private String parseKey(Team team, EventType eventType) {
+		String result = "";
+		switch (eventType) {
+		case MAIL:
+			result = team.getEmail();
+			break;
+		case SMS:
+			result = team.getPhoneNumber();
+			break;
+		}
+		return result;
+	}*/
+	private String parseKey(PmsTeam team, EventType eventType) {
 		String result = "";
 		switch (eventType) {
 		case MAIL:

@@ -13,10 +13,10 @@ public class CityServiceImpl implements CityService {
 	@Autowired
 	private CityMapper cityMapper;
 
-	@Override
+	/*@Override
 	public List<City> findCitysByProvinceId(String ProvinceId) {
 		return cityMapper.findCitysByProvinceId(ProvinceId);
-	}
+	}*/
 
 	@Override
 	public List<City> getAll() {

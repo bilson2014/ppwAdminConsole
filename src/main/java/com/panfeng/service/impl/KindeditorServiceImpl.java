@@ -1,4 +1,4 @@
-package com.panfeng.service.impl;
+/*package com.panfeng.service.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,3 +73,4 @@ public class KindeditorServiceImpl implements KindeditorService {
 	}
 
 }
+*/

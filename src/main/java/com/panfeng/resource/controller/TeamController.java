@@ -231,26 +231,6 @@ public class TeamController extends BaseController {
 	}
 
 	/**
-	 * 更新团队图片路径
-	 * 
-	 * @param team
-	 *            包含(团队ID 和 团队头像路径)
-	 * @return 是否更新成功
-	 */
-	@RequestMapping("/team/static/data/updateTeamPhotoPath")
-	public boolean updateTeamPhotoPath(@RequestBody final Team team, HttpServletRequest request) {
-
-		final long ret = service.saveTeamPhotoUrl(team);
-		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update team ...", sessionInfo);
-		if (ret > 0)
-			return true;
-		else
-			return false;
-
-	}
-
-	/**
 	 * 更新供应商基础信息
 	 * 
 	 * @param team
@@ -590,25 +570,6 @@ public class TeamController extends BaseController {
 		return false;
 	}
 
-	/*
-	 * @RequestMapping("/team/static/register") public boolean
-	 * register(@RequestBody final Team original,final HttpServletRequest
-	 * request){
-	 * 
-	 * try { if(original != null){ // 转码 final String loginName =
-	 * URLDecoder.decode(original.getLoginName(), "UTF-8"); final String
-	 * password = URLDecoder.decode(original.getPassword(), "UTF-8");
-	 * original.setLoginName(loginName); original.setPassword(password);
-	 * 
-	 * final Team team = service.register(original); return
-	 * initSessionInfo(team, request); } } catch (UnsupportedEncodingException
-	 * e) {
-	 * 
-	 * logger.error(
-	 * "Decoder LoginName Or Password Error On Provider Register ...");
-	 * e.printStackTrace(); } return false; }
-	 */
-
 	/**
 	 * 供应商 注册
 	 * 
@@ -796,7 +757,7 @@ public class TeamController extends BaseController {
 	
 
 
-	@RequestMapping("/team/static/data/add/account")
+	@RequestMapping(value="/team/static/data/add/account", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public boolean addAccount(@RequestBody final PmsTeam team, HttpServletRequest request) {
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		if (null != sessionInfo) {

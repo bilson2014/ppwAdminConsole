@@ -8,16 +8,16 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.paipianwang.pat.facade.team.entity.PmsTeam;
+import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
 import com.panfeng.flow.taskchain.EventType;
 import com.panfeng.resource.model.Activity;
 import com.panfeng.resource.model.Activity.param;
 import com.panfeng.resource.model.Employee;
-import com.panfeng.resource.model.Team;
 import com.panfeng.resource.model.User;
 import com.panfeng.service.ActivityService;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.JobParamParser;
-import com.panfeng.service.TeamService;
 import com.panfeng.service.UserService;
 import com.panfeng.util.ValidateUtil;
 
@@ -31,7 +31,7 @@ public class JobParamParserImpl implements JobParamParser {
 	private UserService userService;
 
 	@Autowired
-	private TeamService teamService;
+	private PmsTeamFacade pmsTeamFacade;
 
 	@Autowired
 	private EmployeeService employeeService;
@@ -57,9 +57,10 @@ public class JobParamParserImpl implements JobParamParser {
 					Integer id = Integer.parseInt(string);
 					switch (id) {
 					case Activity.PERSONS_ALL_PROVIDER:
-						List<Team> allTeam = teamService.getAll();
+						//List<Team> allTeam = teamService.getAll();
+						List<PmsTeam> allTeam = pmsTeamFacade.getAll();
 						if (ValidateUtil.isValid(allTeam)) {
-							for (Team team : allTeam) {
+							for (PmsTeam team : allTeam) {
 								String key = parseKey(team, eventType);
 								if (ValidateUtil.isValid(key)) {
 									String[] value = parseParam(paramList, team);
@@ -145,7 +146,7 @@ public class JobParamParserImpl implements JobParamParser {
 		return values;
 	}
 
-	private String[] parseParam(List<param> paramList, Team team) {
+	private String[] parseParam(List<param> paramList, PmsTeam team) {
 		String[] values = new String[paramList.size()];
 		for (int i = 0; i < paramList.size(); i++) {
 			param p = paramList.get(i);
@@ -181,7 +182,7 @@ public class JobParamParserImpl implements JobParamParser {
 		return result;
 	}
 
-	private String parseKey(Team team, EventType eventType) {
+	private String parseKey(PmsTeam team, EventType eventType) {
 		String result = "";
 		switch (eventType) {
 		case MAIL:
