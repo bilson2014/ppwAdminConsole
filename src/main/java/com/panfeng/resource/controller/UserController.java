@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.paipianwang.pat.common.util.Constants.loginType;
+import com.paipianwang.pat.facade.user.entity.PmsUser;
+import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
@@ -63,6 +65,9 @@ public class UserController extends BaseController {
 	
 	@Autowired
 	private final SmsMQService smsMQService = null;
+	
+	@Autowired
+	private final PmsUserFacade pmsUserFacade = null;
 	
 	private static String INIT_PASSWORD;
 	public UserController() {
@@ -204,7 +209,8 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping("/user/valication/phone/{telephone}")
 	public boolean validation(@PathVariable("telephone") final String telephone) {
-		final int count = userService.validationPhone(telephone, null);
+		//final int count = userService.validationPhone(telephone, null);
+		final int count = pmsUserFacade.validationPhone(telephone, null);
 		if (count > 0) {
 			return true;
 		}
@@ -238,10 +244,16 @@ public class UserController extends BaseController {
 
 		if (user != null) {
 			final User result = userService.register(user);
-
+			//final PmsUser result = pmsUserFacade.register(user);
+			
 			smsMQService.sendMessage("132269", user.getTelephone(), null);
 			Log.error("save user...",null);
 			return initSessionInfo(result, request);
+			//Gson gson = new Gson();
+			//String json = gson.toJson(result);
+			//return initSessionInfo(gson.fromJson(json, User.class), request);
+			
+			
 		}
 		return false;
 	}
