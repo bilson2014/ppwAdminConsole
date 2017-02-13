@@ -9,17 +9,17 @@
 	<dubbo:application name="edu-web-boss" /> 
 	<!-- 使用zookeeper注册中心暴露服务地址 -->
 	<!-- 注册中心地址 -->
-	<dubbo:registry protocol="zookeeper" address="106.75.4.197:2181" />
-	<!-- <dubbo:registry protocol="zookeeper" address="123.59.75.93:2181" /> -->
+	<!-- <dubbo:registry protocol="zookeeper" address="106.75.4.197:2181" /> -->
+	<dubbo:registry protocol="zookeeper" address="123.59.75.93:2181" />
 	<!-- 订单服务接口 -->
 	<dubbo:reference interface="com.paipianwang.pat.facade.indent.service.PmsIndentFacade" id="pmsIndentFacade" check="false" timeout="5000"/>
 	<!--作品服务接口 -->
-	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductFacade" id="pmsProductFacade" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductFacade" id="pmsProductFacade" check="false" timeout="15000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsServiceFacade" id="pmsServiceFacade" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsKindeditorFacade" id="pmsKindeditorFacade" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductModuleFacade" id="pmsProductModuleFacade" check="false" timeout="5000"/>
 	<!--供应商服务接口 -->
-	<dubbo:reference interface="com.paipianwang.pat.facade.team.service.PmsTeamFacade" id="pmsTeamFacade" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.team.service.PmsTeamFacade" id="pmsTeamFacade" check="false" timeout="15000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.team.service.PmsTeamTmpFacade" id="pmsTeamTmpFacade" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.team.service.PmsProvinceFacade" id="pmsProvinceFacade" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.team.service.PmsCityFacade" id="pmsCityFacade" check="false" timeout="5000"/>
