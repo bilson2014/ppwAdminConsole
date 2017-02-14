@@ -47,10 +47,10 @@ $().ready(function(){
 							if(value == 0){
 								return '<span style=color:blue; >审核中</span>' ;
 							} else if( value == 1){
-								return '<span style=color:green; >审核通过</span>' ; 
+								return '<span style=color:green; >审核通过</span>' ;
 							} else if( value == 2){
 								return '<span style=color:red; >未通过审核</span>' ;
-							} 
+							}
 						},
 						editor:{
 							type:'combobox' , 

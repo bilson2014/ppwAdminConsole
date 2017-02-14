@@ -18,6 +18,12 @@ public class SolrView extends Pagination{
 	
 	private String sequence = null; // 排序字段
 	
+	private String industry = null; // 行业
+	
+	private String genre = null; // 类型
+	
+	private boolean more = false; // 是否相关性推荐
+	
 	public String getCondition() {
 		return condition;
 	}
@@ -72,6 +78,30 @@ public class SolrView extends Pagination{
 
 	public void setTagsFq(String tagsFq) {
 		this.tagsFq = tagsFq;
+	}
+
+	public String getIndustry() {
+		return industry;
+	}
+
+	public void setIndustry(String industry) {
+		this.industry = industry;
+	}
+
+	public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
+
+	public boolean isMore() {
+		return more;
+	}
+
+	public void setMore(boolean more) {
+		this.more = more;
 	}
 
 }
