@@ -6,7 +6,7 @@ public class Item extends BaseObject{
 
 	private static final long serialVersionUID = 1922925247835036537L;
 
-	private long itemId = 0l;
+	private Long itemId = 0l;
 	
 	private String itemName = null;
 	
@@ -18,11 +18,11 @@ public class Item extends BaseObject{
 	
 	private int isActive = 0; // 0:不是活动分类  1:活动分类
 
-	public long getItemId() {
+	public Long getItemId() {
 		return itemId;
 	}
 
-	public void setItemId(long itemId) {
+	public void setItemId(Long itemId) {
 		this.itemId = itemId;
 	}
 

@@ -34,6 +34,42 @@
 		<table id="gride" data-options="fit:true,border:false"></table>
 	</div>
 	
+	
+		<div id="dlg" class="easyui-dialog" style="width:400px;padding:10px 20px"
+            closed="true" buttons="#dlg-buttons" title="资源信息">
+	        <form id="fm" method="post">
+	        	<input type="hidden" name="itemId" id="itemId"> 
+	        	<div class="fitem">
+	                <label>分类名称:</label>
+	                <input name="itemName" class="easyui-textbox" required="true">
+	            </div>
+	            <div class="fitem">
+	                <label>排序:</label>
+	                <input name="od" class="easyui-textbox" required="true">
+	            </div>
+	            <div class="fitem">
+	            	 <label>活动类型:</label>
+	            	 <select name="isActive" class="easyui-combobox" required="true" style="width: 46%;">
+	                	<option value="0">否</option>
+	                	<option value="1">是</option>
+	                </select>
+	            </div>
+	            <div class="fitem">
+	                <label>描述:</label>
+	                <textarea class="easyui-textbox" id="itemDescription" name="itemDescription" multiline="true" style="width:156px;height: 50px;"></textarea>
+	            </div>
+	        </form>
+	    </div>
+	    <div id="dlg-buttons">
+	    	
+	    	<r:mulparampermission uri2="/portal/item/save" uri="/portal/item/update">
+		        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveFuc()" >保存</a>
+	    	</r:mulparampermission>
+	    	
+	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
+	    </div>
+	
+	
 	<div id="toolbar" style="display: none;">
 		<r:permission uri="/portal/item/save">
 			<a onclick="addFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">添加</a>
@@ -46,10 +82,6 @@
 		<r:permission uri="/portal/item/delete">
 			<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
 		</r:permission>
-		
-		<r:mulparampermission uri2="/portal/item/save" uri="/portal/item/update">
-			<a onclick="saveFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">保存</a>
-		</r:mulparampermission>
 		
 		<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 	</div>

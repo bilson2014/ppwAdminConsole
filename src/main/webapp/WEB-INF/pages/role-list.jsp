@@ -57,15 +57,14 @@
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" 
-            closed="true" buttons="#dlg-buttons" title="资源信息" style="width: 500px; height: 400px;padding: 1px;">
-	        <div class="layout-left" style="position: absolute;width: 70%;height: 80%;left: 20px;top: 40px;overflow: auto;z-index: 2;">
-	        	<form id="roleGrantForm" method="post">
-					
-					<ul id="resourceTree"></ul>
-					<input id="resourceIds" name="resourceIds" type="hidden" />
-					<input id="role-id" name="roleId" type="hidden">
-				</form>
-	        </div>
+           closed="true" buttons="#dlg-buttons" title="资源信息" style="width: 500px; height: 400px;padding: 1px;">
+        <div class="layout-left" style="position: absolute;width: 70%;height: 80%;left: 20px;top: 40px;overflow: auto;z-index: 2;">
+        	<form id="roleGrantForm" method="post">
+				<ul id="resourceTree"></ul>
+				<input id="resourceIds" name="resourceIds" type="hidden" />
+				<input id="role-id" name="roleId" type="hidden">
+			</form>
+        </div>
 	        
 			<div class="layout-right" style="position: absolute;margin: auto;left: 82%;top: 80px;overflow: hidden;z-index: 2">
 				<button class="btn btn-success" onclick="checkAll();">全选</button>

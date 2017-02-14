@@ -65,7 +65,7 @@ public class ItemController extends BaseController {
 		return list;
 	}
 	
-	@RequestMapping(value = "/item/save",method = RequestMethod.POST)
+	@RequestMapping(value = "/item/save")
 	public long save(final Item item,HttpServletRequest request){
 		
 		final long ret = service.save(item);

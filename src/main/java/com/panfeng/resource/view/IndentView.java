@@ -1,24 +1,43 @@
 package com.panfeng.resource.view;
 
-public class IndentView extends Pagination{
+public class IndentView extends Pagination {
 
 	private static final long serialVersionUID = -6378756993311609394L;
 
 	private Long serviceId = null; // 关联服务
-	
+
 	private Long userId = null; // 关联用户
-	
+
 	private String indentNum = null; // 订单编号
-	
-	private String indent_tele = null; //  联系方式
+
+	private String indent_tele = null; // 联系方式
 
 	private String id = null; // 订单ID
-	
+
 	private Integer indentType = null; // 订单状态
-	
+
 	private String salesmanUniqueId = null; // 分销人唯一编号
 
-	
+	private String beginTime = null;// 上传时间搜索 起始时间
+
+	private String endTime = null;// 上传时间搜索 结束时间
+
+	public String getBeginTime() {
+		return beginTime;
+	}
+
+	public void setBeginTime(String beginTime) {
+		this.beginTime = beginTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
 	public String getId() {
 		return id;
 	}
