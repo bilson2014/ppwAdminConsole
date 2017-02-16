@@ -363,17 +363,17 @@ public class TeamServiceImpl implements TeamService {
 		}
 	}
 
-	@Override
+	/*@Override
 	public boolean teamInfoUnBind(Team team) {
 		mapper.unBindThird(team);
 		return true;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long modifyTeamPhone(Team team) {
 		return mapper.modifyTeamPhone(team);
 	}
-
+*/
 	/*@Override
 	public Team getTeamInfo(Long teamId) {
 		return mapper.getTeamInfo(teamId);

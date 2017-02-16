@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.panfeng.resource.model.City;
 
-public interface CityService {
+public interface bak_CityService {
 	
 	/*List<City> findCitysByProvinceId(String ProvinceId);*/
-	List<City> getAll();
+	//List<City> getAll();
 }

@@ -7,21 +7,21 @@ import org.springframework.stereotype.Service;
 
 import com.panfeng.persist.ProvinceMapper;
 import com.panfeng.resource.model.Province;
-import com.panfeng.service.ProvinceService;
+import com.panfeng.service.bak_ProvinceService;
 
 @Service
-public class ProvinceServiceImpi implements ProvinceService {
+public class ProvinceServiceImpi implements bak_ProvinceService {
 
 	@Autowired
 	private ProvinceMapper provinceMapper;
 
-	@Override
+	/*@Override
 	public List<Province> getAll() {
 		return provinceMapper.findAll();
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public Province findProvinceById(String ProvinceId) {
 		return provinceMapper.findProvinceById(ProvinceId);
-	}
+	}*/
 }

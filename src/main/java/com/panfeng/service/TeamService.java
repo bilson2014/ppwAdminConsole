@@ -157,9 +157,9 @@ public interface TeamService {
 	/**
 	 * 基本信息解除绑定第三方
 	 */
-	public boolean teamInfoUnBind(Team team);
+	//public boolean teamInfoUnBind(Team team);
 
-	public long modifyTeamPhone(Team team);
+	//public long modifyTeamPhone(Team team);
 	
 	//public Team getTeamInfo(Long teamId);
 	

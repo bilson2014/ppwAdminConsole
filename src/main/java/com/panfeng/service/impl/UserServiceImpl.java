@@ -1,51 +1,43 @@
 package com.panfeng.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.UserMapper;
-import com.panfeng.resource.model.ThirdBind;
 import com.panfeng.resource.model.User;
-import com.panfeng.resource.view.UserView;
-import com.panfeng.service.UserService;
-import com.panfeng.util.DataUtil;
-import com.panfeng.util.ValidateUtil;
+import com.panfeng.service.bak_UserService;
 
 @Transactional
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements bak_UserService {
 
-	@Autowired
-	private final UserMapper mapper = null;
+	//@Autowired
+	//private final UserMapper mapper = null;
 
-	public List<User> all() {
+	/*public List<User> all() {
 
 		final List<User> list = mapper.all();
 		return list;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public List<User> listWithPagination(final UserView view) {
 
 		final List<User> list = mapper.listWithPagination(view);
 		return list;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long maxSize(final UserView view) {
 
 		final long total = mapper.maxSize(view);
 		return total;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long delete(final long[] ids) {
 
 		if (ids.length > 0) {
@@ -58,93 +50,93 @@ public class UserServiceImpl implements UserService {
 		}
 		return 0l;
 	}
-
-	@Override
+*/
+	/*@Override
 	public long save(final User user) {
 
 		final long ret = mapper.save(user);
 		return ret;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long update(final User user) {
 		final long ret = mapper.update(user);
 		return ret;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public User findUserById(final long id) {
 
 		final User user = mapper.findUserById(id);
 		return user;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public User findUserByAttr(final User user) {
 
 		final User u = mapper.findUserByAttr(user);
 		return u;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public int validationPhone(final String telephone, final String loginName) {
 		// modify by lw
 
 		final int count = mapper.validationPhone(telephone, loginName);
 		return count;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long recover(final User user) {
 
 		final long ret = mapper.recover(user);
 		return ret;
 	}
-
-	@Override
+*/
+	/*@Override
 	public User register(final User user) {
 
 		mapper.save(user);
 		user.setVerification_code("");
 		return user;
 	}
-
-	@Override
+*/
+	/*@Override
 	public long modifyUserInfo(final User user) {
 
 		final long ret = mapper.modifyUserInfo(user);
 		return ret;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long modifyUserPassword(final User user) {
 
 		final long ret = mapper.modifyUserPassword(user);
 		return ret;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long modifyUserPhone(final User user) {
 
 		final long ret = mapper.modifyUserPhone(user);
 		return ret;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long modifyUserPhoto(final User user) {
 
 		final long ret = mapper.modifyUserPhoto(user);
 		return ret;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public List<User> verificationUserExistByThirdLogin(final User user) {
 
 		final List<User> users = mapper.verificationUserExistByThirdLogin(user);
 		return users;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long saveByThirdLogin(final User user) {
 
 		// 过滤掉Emoji表情
@@ -163,39 +155,44 @@ public class UserServiceImpl implements UserService {
 			mapper.update(user);
 		}
 		return ret;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public List<User> findUserByName(final User user) {
 		return mapper.findUserByNameOrRealName(user);
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long simpleSave(final User user) {
 
 		user.setPassword(DataUtil.md5(GlobalConstant.PROJECT_USER_INIT_PASSWORD));
 		final long ret = mapper.simpleSave(user);
 		return ret;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long findUnlevelUsers() {
 		final long count = mapper.findUnlevelUsers();
 		return count;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public User threeLoginPhone(String telephone) {
 		final User user = mapper.findUserByPhone(telephone);
 		return user;
-	}
+	}*/
 
 	/**
-	 * 三方用户不存在 1.手机号没注册过 phoneStatus 2.手机号注册过,但是未绑定第三方 thirdStatus
-	 * 3.手机号注册过,且绑定了第三方 三方用户已经存在 ,但是未绑定手机 4.手机号没注册过 5.手机号注册过,但是未绑定第三方
-	 * 6.手机号注册了,也绑定了第三方
+	 * 三方用户不存在
+	 * 		 1.手机号没注册过 phoneStatus 
+	 * 		 2.手机号注册过,但是未绑定第三方 thirdStatus
+	 * 		 3.手机号注册过,且绑定了第三方
+	 * 三方用户已经存在 ,但是未绑定手机 
+	 * 		 4.手机号没注册过
+	 * 		 5.手机号注册过,但是未绑定第三方
+	 * 		 6.手机号注册了,也绑定了第三方
 	 */
-	@Override
+	/*@Override
 	public Map<String, Object> bindThird(ThirdBind bind) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", "1");
@@ -288,21 +285,21 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		return map;
-	}
+	}*/
 
 	// 根据用户名和密码查询用户
-	@Override
+	/*@Override
 	public User findUserByLoginNameAndPwd(User user) {
 		return mapper.findUserByLoginNameAndPwd(user);
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long modifyUserLoginName(User user) {
 		return mapper.modifyUserLoginName(user);
-	}
+	}*/
 
 	// 查询第三方绑定状态
-	@Override
+	/*@Override
 	public Map<String, Object> thirdStatus(User u) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("qq", "0");
@@ -321,12 +318,12 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		return map;
-	}
+	}*/
 
 	/**
 	 * 用户个人资料页面绑定第三方
 	 */
-	@Override
+	/*@Override
 	public boolean userInfoBind(User u) {
 		// 查询第三方是不是存在绑定
 		List<User> list = mapper.verificationUserExistByThirdLogin(u);
@@ -347,18 +344,18 @@ public class UserServiceImpl implements UserService {
 			mapper.update(user);
 			return true;
 		}
-	}
+	}*/
 
 	/**
 	 * 用户个人资料页面解除绑定第三方
 	 */
-	@Override
+	/*@Override
 	public boolean userInfoUnBind(User u) {
 		mapper.unBindThird(u);
 		return true;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public boolean uniqueUserName(User user) {
 		if (null != user) {
 			List<User> list = mapper.findUserByUserName(user);
@@ -375,11 +372,11 @@ public class UserServiceImpl implements UserService {
 		}
 		return false;
 	}
-
-	@Override
+*/
+	/*@Override
 	public BaseMsg updateNewphone(User user) {
 		// 验证手机号是否存在
 
 		return null;
-	}
+	}*/
 }

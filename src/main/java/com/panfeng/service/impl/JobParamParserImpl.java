@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
+import com.paipianwang.pat.facade.user.entity.PmsUser;
+import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.flow.taskchain.EventType;
 import com.panfeng.resource.model.Activity;
 import com.panfeng.resource.model.Activity.param;
@@ -18,7 +20,7 @@ import com.panfeng.resource.model.User;
 import com.panfeng.service.ActivityService;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.JobParamParser;
-import com.panfeng.service.UserService;
+import com.panfeng.service.bak_UserService;
 import com.panfeng.util.ValidateUtil;
 
 @Service
@@ -28,13 +30,15 @@ public class JobParamParserImpl implements JobParamParser {
 	private ActivityService activityService;
 
 	@Autowired
-	private UserService userService;
+	private bak_UserService userService;
 
 	@Autowired
 	private PmsTeamFacade pmsTeamFacade;
-
+	@Autowired
+	private PmsUserFacade pmsUserFacade;
 	@Autowired
 	private EmployeeService employeeService;
+	
 
 	public Map<String, String[]> parser(Long activityId) throws Exception {
 		Activity activity = activityService.getActivityById(activityId);
@@ -70,9 +74,10 @@ public class JobParamParserImpl implements JobParamParser {
 						}
 						break;
 					case Activity.PERSONS_ALL_USER:
-						List<User> allUser = userService.all();
+						//List<User> allUser = userService.all();
+						List<PmsUser> allUser = pmsUserFacade.all();
 						if (ValidateUtil.isValid(allUser)) {
-							for (User team : allUser) {
+							for (PmsUser team : allUser) {
 								String key = parseKey(team, eventType);
 								if (ValidateUtil.isValid(key)) {
 									String[] value = parseParam(paramList, team);
@@ -100,7 +105,29 @@ public class JobParamParserImpl implements JobParamParser {
 		return resMap;
 	}
 
-	private String[] parseParam(List<param> paramList, User user) {
+	/*private String[] parseParam(List<param> paramList, User user) {
+		String[] values = new String[paramList.size()];
+		for (int i = 0; i < paramList.size(); i++) {
+			param p = paramList.get(i);
+			String value = p.getValue();
+			if (p.getType() == Activity.SYSTEMPARAM) {
+				switch (value) {
+				case "0":
+					// 客户名称
+					values[i] = user.getUserName();
+					break;
+				case "1":
+					// 电话
+					values[i] = user.getTelephone();
+					break;
+				}
+			} else {
+				values[i] = value;
+			}
+		}
+		return values;
+	}*/
+	private String[] parseParam(List<param> paramList, PmsUser user) {
 		String[] values = new String[paramList.size()];
 		for (int i = 0; i < paramList.size(); i++) {
 			param p = paramList.get(i);
@@ -169,7 +196,19 @@ public class JobParamParserImpl implements JobParamParser {
 		return values;
 	}
 
-	private String parseKey(User user, EventType eventType) {
+	/*private String parseKey(User user, EventType eventType) {
+		String result = "";
+		switch (eventType) {
+		case MAIL:
+			result = user.getEmail();
+			break;
+		case SMS:
+			result = user.getTelephone();
+			break;
+		}
+		return result;
+	}*/
+	private String parseKey(PmsUser user, EventType eventType) {
 		String result = "";
 		switch (eventType) {
 		case MAIL:
