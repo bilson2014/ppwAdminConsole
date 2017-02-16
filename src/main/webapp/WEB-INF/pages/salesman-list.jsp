@@ -47,10 +47,6 @@
 			<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
 		</r:permission>
 		
-		<r:mulparampermission uri2="/portal/salesman/save" uri="/portal/salesman/update">
-			<a onclick="saveFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">保存</a>
-		</r:mulparampermission>
-		
 		<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 	</div>
 	
@@ -68,5 +64,26 @@
 			</div>
 		</div>
 	<!-- qrCode list show content end-->
+	
+	<div id="dlg" class="easyui-dialog" style="width:350px;padding:10px 20px"
+            closed="true" buttons="#dlg-buttons" title="分销信息">
+	        <form id="fm" method="post">
+	        	<input type="hidden" name="salesmanId" id="salesmanId"> 
+	        	<div class="fitem">
+	                <label>姓名:</label>
+	                <input name="salesmanName" class="easyui-textbox" required="true">
+	            </div>
+	            <div class="fitem">
+	                <label>备注:</label>
+	                <input name="salesmanDescription" class="easyui-textbox" >
+	            </div>
+	        </form>
+	    </div>
+	    <div id="dlg-buttons">
+	    	<r:mulparampermission uri2="/portal/salesman/save" uri="/portal/salesman/update">
+		        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveFuc()" >保存</a>
+	    	</r:mulparampermission>
+	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
+	    </div>
 </body>
 </html>

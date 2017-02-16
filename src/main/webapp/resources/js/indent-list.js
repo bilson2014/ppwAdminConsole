@@ -21,33 +21,18 @@ $().ready(function(){
 						title : '订单名称',
 						width : 160,
 						align : 'center' ,
-						sortable : true ,
-						editor : {
-							type : 'validatebox' ,
-							options : {
-								required : true , 
-								missingMessage : '请填写订单名称!'
-							}
-						}
+						sortable : true
 					},{
 						field : 'id',
 						title : '订单编号',
 						width : 100,
 						align : 'center',
-						sortable : true ,
 						sortable : true 
 					},{
 						field : 'orderDate',
 						title : '下单时间',
 						align : 'center',
-						sortable : true ,
-						editor : {
-							type : 'datebox' ,
-							options : {
-								required : false ,
-								missingMessage : '请选择下单时间!'
-							}
-						}
+						sortable : true
 					},{
 						field : 'indentPrice',
 						title : '订单金额',
@@ -55,16 +40,6 @@ $().ready(function(){
 						sortable : true ,
 						formatter : function(value,row,index){
 							return thousandCount(row.indentPrice) + '<span style=color:#999; > 元</span>' ;
-						},
-						editor : {
-							type : 'numberbox' ,
-							options : {
-								required:true ,
-								min:0 ,
-								max:99999999 ,
-								precision:2,
-								missingMessage : '请填写订单金额!'
-							}
 						}
 					},{
 						field : 'indentType' ,
@@ -83,60 +58,29 @@ $().ready(function(){
 							} else if( value == 3){
 								return '<span style=color:black; >停滞</span>' ;
 							}
-						},
-						editor:{
-							type:'combobox' , 
-							options:{
-								data:[{id:0 , val:'新订单'},{id:1 , val:'处理中'},{id:2 , val:'完成'},{id:3 , val:'停滞'}] ,
-								valueField:'id' , 
-								textField:'val' ,
-								required:false , 
-								editable : false
-							}
 						}
 					},{
 						field : 'indent_tele',
 						title : '客户电话',
 						width : 120,
 						align : 'center',
-						sortable : true ,
-						editor : {
-							type : 'numberbox' ,
-							options : {
-								required:true ,
-								missingMessage : '请填写联系人电话!'
-							}
-						}
+						sortable : true 
 					},{
 						field : 'indent_recomment',
 						title : '订单备注',
 						align : 'center',
-						sortable : true ,
-						editor : {
-							type : 'validatebox' ,
-							options : {
-								required:false ,
-								missingMessage : '请填写订单备注!'
-							}
-						}
+						sortable : true 
 					},{
 						field : 'indent_description',
 						title : 'CRM备注',
 						align : 'center',
-						sortable : true ,
-						editor : {
-							type : 'validatebox' ,
-							options : {
-								required:false ,
-								missingMessage : '请填写订单备注!'
-							}
-						}
+						sortable : true
 					},{
 						field : 'salesmanUniqueId',
 						title : '分销渠道',
 						width : 100,
 						align : 'center',
-						sortable : true ,
+						sortable : true 
 						/*formatter : function(value,row,index){
 							if(row.salesmanName == null || row.salesmanName == ''){
 								row.salesmanName = '';
@@ -145,32 +89,12 @@ $().ready(function(){
 							//TODO
 							return '<span style=color:black; >'+ row.salesmanUniqueId +'</span>' ;
 						},*/
-						editor : {
-							type : 'combobox' ,
-							options : {
-								url : getContextPath() + '/portal/salesman/all',
-								valueField:'uniqueId',
-								textField:'salesmanName',
-								required : false ,
-								missingMessage : '请选择分销人!'
-							}
-						}
 					}]],
 		pagination: true ,
 		pageSize : 20,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar',
-		onAfterEdit:function(index , record){
-			delete record.service;
-			delete record.user;
-			delete record.salesman;
-			$.post(flag =='add' ? getContextPath() + '/portal/indent/save' : getContextPath() + '/portal/indent/update', record , function(result){
-				datagrid.datagrid('clearSelections');
-				datagrid.datagrid('reload');
-				$.message('操作成功!');
-			});
-		}
+		toolbar : '#toolbar'
 	});
 	
 });
@@ -181,13 +105,9 @@ function editFuc(){
 	if(arr.length != 1){
 		$.message('只能选择一条记录进行修改!');
 	} else {
-		if(editing == undefined){
-			flag = 'edit';
-			//根据行记录对象获取该行的索引位置
-			editing = datagrid.datagrid('getRowIndex' , arr[0]);
-			//开启编辑状态
-			datagrid.datagrid('beginEdit',editing);
-		}
+		$('#fm2').form('clear');
+		$('#fm2').form('load',arr[0]);
+		openDialog('dlg2');
 	}
 }
 
@@ -304,4 +224,22 @@ function exportFun() {
 	});
 }
 
-
+function openDialog(id){
+	$('#' + id).dialog({
+		modal : true,
+		onOpen : function(event, ui) {}
+	}).dialog('open').dialog('center');
+}
+function saveFun(){
+	progressLoad();
+	$('#fm2').form('submit',{
+		url : getContextPath() + '/portal/indent/update',
+		success : function(result) {
+			$('#dlg2').dialog('close');
+			datagrid.datagrid('clearSelections');
+			datagrid.datagrid('reload');
+			progressClose();
+			$.message('操作成功!');
+		}
+	});
+}
