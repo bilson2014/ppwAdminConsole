@@ -39,4 +39,5 @@ public interface NewsMapper {
 
 	List<News> searchAllNews();
 	
+	long showMaxSize();
 }

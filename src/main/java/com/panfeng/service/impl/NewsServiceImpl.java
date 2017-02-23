@@ -102,4 +102,10 @@ public class NewsServiceImpl implements NewsService {
 		return mapper.searchAllNews();
 	}
 
+	@Override
+	public long showMaxSize() {
+		long showMaxSize = mapper.showMaxSize();
+		return showMaxSize;
+	}
+
 }

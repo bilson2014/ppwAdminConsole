@@ -24,6 +24,13 @@
 			WHERE 1 = 1
 		]]>
 	</select>
+	<select id="showMaxSize" resultType="long">
+		<![CDATA[
+			SELECT COUNT(1)
+				FROM NEWS
+			WHERE STATUS = 1
+		]]>
+	</select>
 
 	<select id="getMaxIndex" resultType="int">
 		<![CDATA[
