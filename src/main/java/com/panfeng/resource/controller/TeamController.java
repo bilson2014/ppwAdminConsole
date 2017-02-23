@@ -799,14 +799,15 @@ public class TeamController extends BaseController {
 	 * 用户资料页面解除绑定第三方
 	 */
 	@RequestMapping("/team/info/unbind")
-	public boolean userInfoUnBind(@RequestBody final Team team, HttpServletRequest request) {
-		return service.teamInfoUnBind(team);
+	public boolean userInfoUnBind(@RequestBody final PmsTeam team, HttpServletRequest request) {
+		//return service.teamInfoUnBind(team);
+		return pmsTeamFacade.teamInfoUnBind(team);
 	}
 
 	/**
 	 * 供应商信息-修改供应商手机号码
 	 */
-	@RequestMapping("/team/modify/phone")
+	/*@RequestMapping("/team/modify/phone")
 	public boolean modifyUserPhone(@RequestBody final Team team) {
 		boolean result = false;
 		final long ret = service.modifyTeamPhone(team);
@@ -814,7 +815,7 @@ public class TeamController extends BaseController {
 			result = true;
 		}
 		return result;
-	}
+	}*/
 
 	@RequestMapping("/team/info/{teamId}")
 	public PmsTeam getTeamInfo(@PathVariable("teamId") Long teamId, HttpServletRequest request) {

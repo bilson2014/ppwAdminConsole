@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
+import com.paipianwang.pat.facade.user.entity.PmsUser;
+import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.flow.taskchain.EventType;
 import com.panfeng.persist.IndentFlowMapper;
@@ -21,12 +23,10 @@ import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.Synergy;
-import com.panfeng.resource.model.User;
 import com.panfeng.service.ActivitiEngineService;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.SynergyService;
-import com.panfeng.service.UserService;
 import com.panfeng.util.ValidateUtil;
 
 @Component
@@ -34,9 +34,6 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 
 	@Autowired
 	private IndentProjectService indentProjectService;
-
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	private IndentFlowMapper indentFlowMapper;
@@ -52,6 +49,8 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 
 	@Autowired
 	private PmsTeamFacade pmsTeamFacade;
+	@Autowired
+	private PmsUserFacade pmsUserFacade;
 
 	final static String teamName = "teamName";
 	final static String teamLinkMan = "teamLinkMan";
@@ -111,7 +110,7 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		LinkedList<String> fields = fillerParam.getFields();
 		LinkedList<String> relevantPersons = fillerParam.getRelevantPersons();
 
-		//User user = null;
+		PmsUser user = null;
 		PmsTeam team = null;
 		List<Employee> providerManager = null;
 		List<Employee> manager = null;
@@ -124,11 +123,13 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 				switch (string) {
 				case GlobalConstant.ROLE_PROVIDER:
 					// 确定参数
-					//if (team == null)
-						//team = teamService.findTeamById(indentProject.getTeamId());
-						//team = pmsTeamFacade.findTeamById(indentProject.getTeamId());
-					//key = parseKey(team, eventType);
-					//key = parseKey(team, eventType);
+					// if (team == null)
+					// team =
+					// teamService.findTeamById(indentProject.getTeamId());
+					// team =
+					// pmsTeamFacade.findTeamById(indentProject.getTeamId());
+					// key = parseKey(team, eventType);
+					// key = parseKey(team, eventType);
 					key = indentProject.getTeamPhone();
 					value = new String[fields.size()];
 					for (int i = 0; i < fields.size(); i++) {
@@ -144,10 +145,12 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 					result.put(key, value);
 					break;
 				case GlobalConstant.ROLE_CUSTOMER:
-					//if (user == null)
-					//	user = userService.findUserById(indentProject.getCustomerId());
-					//key = parseKey(user, eventType);
-					key = indentProject.getUserPhone();
+					// if (user == null)
+					// user =
+					// userService.findUserById(indentProject.getCustomerId());
+					// user =
+					// pmsUserFacade.findUserById(indentProject.getCustomerId());
+					key = parseKey(user, eventType);
 					value = new String[fields.size()];
 					for (int i = 0; i < fields.size(); i++) {
 						String field = fields.get(i);
@@ -332,7 +335,13 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		}
 		return result;
 	}
-	private String parseKey(User user, EventType eventType) {
+
+	/*
+	 * private String parseKey(User user, EventType eventType) { String result =
+	 * ""; switch (eventType) { case MAIL: result = user.getEmail(); break; case
+	 * SMS: result = user.getTelephone(); break; } return result; }
+	 */
+	private String parseKey(PmsUser user, EventType eventType) {
 		String result = "";
 		switch (eventType) {
 		case MAIL:
@@ -345,18 +354,11 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		return result;
 	}
 
-	/*private String parseKey(Team team, EventType eventType) {
-		String result = "";
-		switch (eventType) {
-		case MAIL:
-			result = team.getEmail();
-			break;
-		case SMS:
-			result = team.getPhoneNumber();
-			break;
-		}
-		return result;
-	}*/
+	/*
+	 * private String parseKey(Team team, EventType eventType) { String result =
+	 * ""; switch (eventType) { case MAIL: result = team.getEmail(); break; case
+	 * SMS: result = team.getPhoneNumber(); break; } return result; }
+	 */
 	private String parseKey(PmsTeam team, EventType eventType) {
 		String result = "";
 		switch (eventType) {

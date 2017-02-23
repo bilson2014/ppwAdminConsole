@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
+import com.paipianwang.pat.facade.user.entity.PmsUser;
+import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.domain.SessionInfo;
-import com.panfeng.resource.model.User;
-import com.panfeng.service.UserService;
 import com.panfeng.util.ValidateUtil;
 
 /**
@@ -23,9 +23,9 @@ import com.panfeng.util.ValidateUtil;
 public class CommonController extends BaseController {
 
 	@Autowired
-	private final UserService userService = null;
-	@Autowired
 	private final PmsTeamFacade pmsTeamFacade = null;
+	@Autowired
+	private final PmsUserFacade pmsUserFacade = null;
 	
 	/**
 	 * 验证登录者是否完善登录名,密码
@@ -40,7 +40,8 @@ public class CommonController extends BaseController {
 			String type = sessionInfo.getSessionType();
 			switch (type) { 
 			case "role_customer":
-				User user = userService.findUserById(sessionInfo.getReqiureId());
+				//User user = userService.findUserById(sessionInfo.getReqiureId());
+				PmsUser user = pmsUserFacade.findUserById(sessionInfo.getReqiureId());
 				if(ValidateUtil.isValid(user.getLoginName())){
 					return true;
 				}return false;

@@ -64,7 +64,7 @@
 		<property name="schedulerName" value="TestScheduler1" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="configLocation" value="classpath:quartz.properties" />
-		<property name="startupDelay" value="30"></property><!-- 延迟30秒启动scheduling -->
+		<property name="startupDelay" value="30"></property>
 		<property name="applicationContextSchedulerContextKey" value="applicationContextKey" />
 	</bean>
 </beans>

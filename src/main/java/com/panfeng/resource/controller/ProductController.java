@@ -111,7 +111,7 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = "/product/init", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public List<PmsTeam> init() {
 		//final List<Team> list = teamService.getAll();
-		final List<PmsTeam> list = pmsTeamFacade.getAll();
+		final List<PmsTeam> list = pmsTeamFacade.getAllTeamName();
 		return list;
 	}
 

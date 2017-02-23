@@ -12,9 +12,9 @@ public class Employee extends Customer {
 
 	private static final long serialVersionUID = -2956477405160485997L;
 
-	private long employeeId = 0l; // 职工ID
-
 	private String employeeLoginName = null; // 职工登录名
+	
+	private long employeeId = 0l; // 职工ID
 
 	private String employeeRealName = null; // 职工姓名
 
