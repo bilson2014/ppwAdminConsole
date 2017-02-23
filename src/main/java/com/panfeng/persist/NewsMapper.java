@@ -11,7 +11,7 @@ public interface NewsMapper {
 
 	List<News> listWithPagination(Pagination pagination);
 
-	long maxSize(Pagination pagination);
+	long maxSize();
 
 	int getMaxIndex();
 
@@ -38,4 +38,5 @@ public interface NewsMapper {
 	News info(@Param("newId") Integer newId);
 
 	List<News> searchAllNews();
+	
 }

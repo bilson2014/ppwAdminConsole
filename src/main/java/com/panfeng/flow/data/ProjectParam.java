@@ -111,7 +111,7 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		LinkedList<String> fields = fillerParam.getFields();
 		LinkedList<String> relevantPersons = fillerParam.getRelevantPersons();
 
-		User user = null;
+		//User user = null;
 		PmsTeam team = null;
 		List<Employee> providerManager = null;
 		List<Employee> manager = null;
@@ -124,11 +124,12 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 				switch (string) {
 				case GlobalConstant.ROLE_PROVIDER:
 					// 确定参数
-					if (team == null)
+					//if (team == null)
 						//team = teamService.findTeamById(indentProject.getTeamId());
-						team = pmsTeamFacade.findTeamById(indentProject.getTeamId());
+						//team = pmsTeamFacade.findTeamById(indentProject.getTeamId());
 					//key = parseKey(team, eventType);
-					key = parseKey(team, eventType);
+					//key = parseKey(team, eventType);
+					key = indentProject.getTeamPhone();
 					value = new String[fields.size()];
 					for (int i = 0; i < fields.size(); i++) {
 						String field = fields.get(i);
@@ -143,9 +144,10 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 					result.put(key, value);
 					break;
 				case GlobalConstant.ROLE_CUSTOMER:
-					if (user == null)
-						user = userService.findUserById(indentProject.getCustomerId());
-					key = parseKey(user, eventType);
+					//if (user == null)
+					//	user = userService.findUserById(indentProject.getCustomerId());
+					//key = parseKey(user, eventType);
+					key = indentProject.getUserPhone();
 					value = new String[fields.size()];
 					for (int i = 0; i < fields.size(); i++) {
 						String field = fields.get(i);

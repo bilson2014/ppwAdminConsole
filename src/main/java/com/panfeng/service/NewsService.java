@@ -9,7 +9,7 @@ public interface NewsService {
 
 	List<News> listWithPagination(Pagination pagination);
 
-	long maxSize(Pagination pagination);
+	long maxSize();
 
 	void save(News news);
 
