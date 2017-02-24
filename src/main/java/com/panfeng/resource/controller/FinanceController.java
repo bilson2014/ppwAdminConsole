@@ -1,6 +1,7 @@
 package com.panfeng.resource.controller;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,14 +12,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.paipianwang.pat.common.entity.DataGrid;
+import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.facade.finance.entity.PmsDealLog;
+import com.paipianwang.pat.facade.finance.service.PmsFinanceFacade;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.DealLog;
-import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.FinanceView;
-import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.DealLogService;
-import com.panfeng.service.FinanceService;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
@@ -28,11 +31,14 @@ public class FinanceController extends BaseController{
 
 	//private static final Logger logger = LoggerFactory.getLogger("error");
 
-	@Autowired
-	private final FinanceService service = null;
+	//@Autowired
+	//private final FinanceService service = null;
 	
 	@Autowired
 	private final DealLogService dealLogService = null; 
+	
+	@Autowired
+	private final PmsFinanceFacade pmsFinanceFacade = null; 
 	
 	
 	@RequestMapping("/finance-list")
@@ -49,18 +55,17 @@ public class FinanceController extends BaseController{
 	
 	@RequestMapping(value = "/finance/list",method = RequestMethod.POST,
 					produces = "application/json; charset=UTF-8")
-	public DataGrid<DealLog> list(final FinanceView view,final PageFilter pf){
+	public DataGrid<PmsDealLog> list(final FinanceView view,final PageParam pageParam){
 		
-		final long page = pf.getPage();
-		final long rows = pf.getRows();
-		view.setBegin((page - 1) * rows);
-		view.setLimit(rows);
+		final long page = pageParam.getPage();
+		final long rows = pageParam.getRows();
+		pageParam.setBegin((page - 1) * rows);
+		pageParam.setLimit(rows);
 		
-		final List<DealLog> list = service.listWithPagination(view);
-		final long total = service.maxSize(view);
-		final DataGrid<DealLog> dataGrid = new DataGrid<DealLog>();
-		dataGrid.setRows(list);
-		dataGrid.setTotal(total);
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("logType", view.getLogType());
+		paramMap.put("dealLogSource",view.getDealLogSource());
+		final DataGrid<PmsDealLog> dataGrid = pmsFinanceFacade.listWithPagination(pageParam,paramMap);
 		return dataGrid;
 	}
 	
@@ -69,19 +74,19 @@ public class FinanceController extends BaseController{
 	 */
 	@RequestMapping(value = "/finance-offline/list",method = RequestMethod.POST,
 			produces = "application/json; charset=UTF-8")
-	public DataGrid<DealLog> offlineList(final FinanceView view,final PageFilter pf){
+	public DataGrid<PmsDealLog> offlineList(final FinanceView view,final PageParam pageParam){
 	
-	final long page = pf.getPage();
-	final long rows = pf.getRows();
-	view.setBegin((page - 1) * rows);
-	view.setLimit(rows);
-	view.setDealLogSource(1);
+	final long page = pageParam.getPage();
+	final long rows = pageParam.getRows();
+	pageParam.setBegin((page - 1) * rows);
+	pageParam.setLimit(rows);
 	
-	final List<DealLog> list = service.listWithPagination(view);
-	final long total = service.maxSize(view);
-	final DataGrid<DealLog> dataGrid = new DataGrid<DealLog>();
-	dataGrid.setRows(list);
-	dataGrid.setTotal(total);
+	Map<String, Object> paramMap = new HashMap<>();
+	paramMap.put("dealLogSource",1);		
+	paramMap.put("logType", view.getLogType());
+	paramMap.put("beginTime", view.getBeginTime());
+	paramMap.put("endTime", view.getEndTime());
+	final DataGrid<PmsDealLog> dataGrid = pmsFinanceFacade.listWithPagination(pageParam,paramMap);
 	return dataGrid;
 	}
 	
@@ -97,21 +102,25 @@ public class FinanceController extends BaseController{
 			final DealLog newDealLog = dealLogService.getDefaultDeal(projectId);
 			dealLog.setBillNo(newDealLog.getBillNo());
 		}
+		 //TODO
+		//此处有支付服务(还没开始写)，暂时处理成json转换
+		Gson gson = new Gson();
+		String json = gson.toJson(dealLog);
+		final long ret = pmsFinanceFacade.save(gson.fromJson(json, PmsDealLog.class));
 		
-		final long ret = service.save(dealLog);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("finance save :"+ dealLog.toString(), sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping(value = "/finance/update", method = RequestMethod.POST)
-	public long update(final DealLog dealLog,HttpServletRequest request){
+	public long update(final PmsDealLog dealLog,HttpServletRequest request){
 		
 		dealLog.setDealLogSource(1); // 线下支付
 		dealLog.setDealStatus(1); // 线下支付默认支付成功
 		dealLog.setUserType(GlobalConstant.ROLE_CUSTOMER);
 		
-		final long ret = service.update(dealLog);
+		final long ret = pmsFinanceFacade.update(dealLog);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("finance update :"+ dealLog.toString(), sessionInfo);
 		return ret;
@@ -122,7 +131,7 @@ public class FinanceController extends BaseController{
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		if(ValidateUtil.isValid(ids)){
 			Log.error("finance delete ids:"+ ids.toString() , sessionInfo);
-			return service.deleteByArray(ids);
+			return pmsFinanceFacade.deleteByArray(ids);
 		} else {
 			Log.error("finance Delete Error ...",sessionInfo);
 			throw new RuntimeException("finance Delete Error ...");

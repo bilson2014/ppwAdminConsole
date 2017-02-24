@@ -1,4 +1,4 @@
-package com.panfeng.service;
+/*package com.panfeng.service;
 
 import java.util.List;
 
@@ -23,9 +23,10 @@ public interface SalesmanService {
 
 	public Salesman findSalesmanById(final long id);
 	
-	/**
+	*//**
 	 * 根据唯一身份表示获取分销人
 	 * @param uniqueId 分销人唯一身份标示
-	 */
+	 *//*
 	public Salesman findSalesmanByUniqueId(@Param("uniqueId") final String uniqueId);
 }
+*/

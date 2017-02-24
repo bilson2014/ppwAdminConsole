@@ -178,7 +178,7 @@
 				<div class="online">
 					<div class="lable l-width">封面图片</div>
 					<div class="d-float f-width" style="margin-top:0px !important;">
-						<input type="file" id="picLDFile" style="width:100%" class="p-file" />
+						<input type="file" id="picLDFile" style="width:100%" name="uploadFiles" class="p-file" />
 					</div>
 				</div>
 				

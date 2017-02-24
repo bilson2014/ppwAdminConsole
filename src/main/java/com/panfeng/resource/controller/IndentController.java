@@ -68,6 +68,18 @@ public class IndentController extends BaseController {
 		param.setBegin((page - 1) * rows);
 		param.setLimit(rows);
 		final DataGrid<PmsIndent> dataGrid = pmsIndentFacade.listWithPagination(param, JsonUtil.objectToMap(view));
+	/*
+	 * 该查询会导致salesman不能搜索
+	 * List<PmsIndent> list = dataGrid.getRows();
+		for(PmsIndent p : list){
+			String salesmanUniqueId = p.getSalesmanUniqueId();
+			if(StringUtils.isNotBlank(salesmanUniqueId)){
+				PmsSalesman Salesman = pmsSalesmanFacade.findSalesmanByUniqueId(salesmanUniqueId);
+				if(null != Salesman){
+					p.setSalesmanName(Salesman.getSalesmanName());
+				}
+			}
+		}*/
 		return dataGrid;
 	}
 	@RequestMapping(value = "/indent/save", method = RequestMethod.POST)

@@ -25,5 +25,13 @@
 	<dubbo:reference interface="com.paipianwang.pat.facade.team.service.PmsCityFacade" id="pmsCityFacade" check="false" timeout="5000"/>
 	<!--用户服务接口 -->
 	<dubbo:reference interface="com.paipianwang.pat.facade.user.service.PmsUserFacade" id="pmsUserFacade" check="false" timeout="10000"/>
+	<!--财务服务接口 -->
+	<dubbo:reference interface="com.paipianwang.pat.facade.finance.service.PmsUserInvoiceFacade" id="pmsUserInvoiceFacade" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.finance.service.PmsTeamInvoiceFacade" id="pmsTeamInvoiceFacade" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.finance.service.PmsFinanceFacade" id="pmsFinanceFacade" check="false" timeout="5000"/>
+	<!--分销服务接口 -->
+	<dubbo:reference interface="com.paipianwang.pat.facade.sales.service.PmsSalesmanFacade" id="pmsSalesmanFacade" check="false" timeout="5000"/>
+	<!--员工服务接口 -->
+	<dubbo:reference interface="com.paipianwang.pat.facade.employee.service.PmsEmployeeFacade" id="pmsEmployeeFacade" check="false" timeout="5000"/>
 </beans>  
 

@@ -68,6 +68,7 @@ $().ready(function(){
 					},{
 						field : 'indent_recomment',
 						title : '订单备注',
+						width : 220,
 						align : 'center',
 						sortable : true 
 					},{
@@ -77,18 +78,21 @@ $().ready(function(){
 						sortable : true
 					},{
 						field : 'salesmanUniqueId',
+						title : '分销ID',
+						align : 'center',
+						hidden: true
+					},{
+						field : 'salesmanName',
 						title : '分销渠道',
 						width : 100,
 						align : 'center',
-						sortable : true 
-						/*formatter : function(value,row,index){
+						sortable : true ,
+						formatter : function(value,row,index){
 							if(row.salesmanName == null || row.salesmanName == ''){
 								row.salesmanName = '';
 							}
-							//return '<span style=color:black; >'+ row.salesmanName +'</span>' ;
-							//TODO
-							return '<span style=color:black; >'+ row.salesmanUniqueId +'</span>' ;
-						},*/
+							return '<span style=color:black; >'+ row.salesmanName +'</span>' ;
+						},
 					}]],
 		pagination: true ,
 		pageSize : 20,
@@ -108,6 +112,13 @@ function editFuc(){
 		$('#fm2').form('clear');
 		$('#fm2').form('load',arr[0]);
 		openDialog('dlg2');
+		
+		$('#salesmanUnique').combobox({
+			url : getContextPath() + '/portal/salesman/all',
+			valueField:'uniqueId',
+			textField:'salesmanName',
+		});	
+		$('#salesmanUnique').combobox('setValue',arr[0].salesmanUniqueId);
 	}
 }
 
@@ -227,7 +238,8 @@ function exportFun() {
 function openDialog(id){
 	$('#' + id).dialog({
 		modal : true,
-		onOpen : function(event, ui) {}
+		onOpen : function(event, ui) {
+		}
 	}).dialog('open').dialog('center');
 }
 function saveFun(){

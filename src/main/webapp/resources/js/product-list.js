@@ -32,12 +32,6 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'checkDetails' ,
-						title : '审核详情' ,
-						align : 'center' ,
-						width : 100,
-						hidden : true
-					},{
 						field : 'flag' ,
 						title : '审核状态' ,
 						align : 'center' ,
@@ -62,6 +56,12 @@ $().ready(function(){
 								editable : false
 							}
 						}
+					},{
+						field : 'checkDetails' ,
+						title : '审核详情' ,
+						align : 'center' ,
+						width : 100,
+						hidden : false
 					},{
 						field : 'visible' ,
 						title : '是否可见 ',

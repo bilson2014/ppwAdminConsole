@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,14 +18,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.entity.DataGrid;
+import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.facade.indent.service.PmsIndentFacade;
+import com.paipianwang.pat.facade.sales.entity.PmsSalesman;
+import com.paipianwang.pat.facade.sales.service.PmsSalesmanFacade;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Salesman;
-import com.panfeng.resource.view.DataGrid;
-import com.panfeng.resource.view.PageFilter;
 import com.panfeng.resource.view.SalesmanView;
-import com.panfeng.service.SalesmanService;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.HttpUtil;
 import com.panfeng.util.Log;
@@ -32,32 +35,32 @@ import com.panfeng.util.ValidateUtil;
 @RequestMapping("/portal")
 @RestController
 public class SalesmanController extends BaseController {
-
-	@Autowired
-	final private SalesmanService service = null;
+	
+	
 	@Autowired
 	private PmsIndentFacade pmsIndentFacade = null;
-	
+	@Autowired
+	private PmsSalesmanFacade pmsSalesmanFacade = null;
 	@RequestMapping("/salesman-list")
 	public ModelAndView view(){
-		
 		return new ModelAndView("salesman-list");
 	}
 	
 	@RequestMapping(value = "/salesman/list",method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
-	public DataGrid<Salesman> list(final SalesmanView view,final PageFilter pf){
+	public DataGrid<PmsSalesman> list(final SalesmanView view,final PageParam pageParam){
 		
-		final long page = pf.getPage();
-		final long rows = pf.getRows();
-		view.setBegin((page - 1) * rows);
-		view.setLimit(rows);
+		final long page = pageParam.getPage();
+		final long rows = pageParam.getRows();
+		pageParam.setBegin((page - 1) * rows);
+		pageParam.setLimit(rows);
 		
-		DataGrid<Salesman> dataGrid = new DataGrid<Salesman>();
-		
-		final List<Salesman> list = service.listWithPagination(view);
-		
-		// 装载订单总数及总金额
-		for (final Salesman salesman : list) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("uniqueId", view.getUniqueId());
+		paramMap.put("salesmanName", view.getSalesmanName());
+		final DataGrid<PmsSalesman> dataGrid = pmsSalesmanFacade.listWithPagination(paramMap,pageParam);
+		List<PmsSalesman> list = dataGrid.getRows();
+ 		// 装载订单总数及总金额
+		for (final PmsSalesman salesman : list) {
 			final String salesmanUniqueId = salesman.getUniqueId();
 			final long total = pmsIndentFacade.countBySalesmanUniqueId(salesmanUniqueId);
 			final Double price = pmsIndentFacade.sumPriceBySalesmanUniqueId(salesmanUniqueId);
@@ -68,28 +71,26 @@ public class SalesmanController extends BaseController {
 			}
 			salesman.setTotal(total);
 		}
-		
 		dataGrid.setRows(list);
-		final long total = service.maxSize(view);
-		dataGrid.setTotal(total);
 		return dataGrid;
 	}
-	
 	@RequestMapping("/salesman/update")
-	public long update(final Salesman salesman,HttpServletRequest request){
+	public long update(final PmsSalesman salesman,HttpServletRequest request){
 		
-		final long ret = service.update(salesman);
+		//final long ret = service.update(salesman);
+		final long ret = pmsSalesmanFacade.update(salesman);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update Salesman ...",sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping("/salesman/save")
-	public long save(final Salesman salesman,HttpServletRequest request){
+	public long save(final PmsSalesman salesman,HttpServletRequest request){
 		
 		final String uniqueId = DataUtil.getUuid();
 		salesman.setUniqueId(uniqueId);
-		final long ret = service.save(salesman);
+		//final long ret = service.save(salesman);
+		final long ret = pmsSalesmanFacade.save(salesman);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save Salesman ...",sessionInfo);
 		return ret;
@@ -98,16 +99,16 @@ public class SalesmanController extends BaseController {
 	@RequestMapping("/salesman/delete")
 	public long delete(final long[] ids,HttpServletRequest request){
 		
-		final long ret = service.delete(ids);
+		//final long ret = service.delete(ids);
+		final long ret = pmsSalesmanFacade.delete(ids);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("delete Salesmans ... ids:"+ids.toString(),sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping("/salesman/all")
-	public List<Salesman> all(){
-		
-		final List<Salesman> list = service.list();
+	public List<PmsSalesman> all(){
+		final List<PmsSalesman> list = pmsSalesmanFacade.list();
 		return list;
 	}
 	
@@ -198,12 +199,13 @@ public class SalesmanController extends BaseController {
 	 * @return true or false
 	 */
 	@RequestMapping(value = "/salesman/valid",method = RequestMethod.POST)
-	public Boolean isSalesmanValid(@RequestBody final Salesman man){
+	public Boolean isSalesmanValid(@RequestBody final PmsSalesman man){
 		
 		if(man != null){
 			final String uniqueId = man.getUniqueId();
 			if(ValidateUtil.isValid(uniqueId)){
-				final Salesman salesman = service.findSalesmanByUniqueId(uniqueId);
+				//final Salesman salesman = service.findSalesmanByUniqueId(uniqueId);
+				final PmsSalesman salesman = pmsSalesmanFacade.findSalesmanByUniqueId(uniqueId);
 				if(salesman != null)
 					return true;
 			}

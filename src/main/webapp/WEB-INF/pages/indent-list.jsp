@@ -160,7 +160,7 @@
 	        </div>
 	        <div class="fitem">
                 <label>分销渠道:</label>
-                <input name="salesmanUniqueId" class="easyui-textbox">
+                <input name="salesmanUniqueId" id='salesmanUnique' class="easyui-combobox">
 	        </div>
 		</form>
 	</div>

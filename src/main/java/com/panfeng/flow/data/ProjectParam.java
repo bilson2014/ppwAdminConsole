@@ -123,11 +123,12 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 				switch (string) {
 				case GlobalConstant.ROLE_PROVIDER:
 					// 确定参数
-					if (team == null)
-						//team = teamService.findTeamById(indentProject.getTeamId());
-						team = pmsTeamFacade.findTeamById(indentProject.getTeamId());
+					//if (team == null)
+						//team = teamService.findTeamById(key);
+						//team = pmsTeamFacade.findTeamById(indentProject.getTeamId());
 					//key = parseKey(team, eventType);
-					key = parseKey(team, eventType);
+					//key = parseKey(team, eventType);
+					key = indentProject.getTeamPhone();
 					value = new String[fields.size()];
 					for (int i = 0; i < fields.size(); i++) {
 						String field = fields.get(i);
@@ -142,10 +143,11 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 					result.put(key, value);
 					break;
 				case GlobalConstant.ROLE_CUSTOMER:
-					if (user == null)
+					//if (user == null)
 						//user = userService.findUserById(indentProject.getCustomerId());
-						user = pmsUserFacade.findUserById(indentProject.getCustomerId());
-					key = parseKey(user, eventType);
+					//	user = pmsUserFacade.findUserById(indentProject.getCustomerId());
+					//key = parseKey(user, eventType);
+					key = indentProject.getUserPhone();
 					value = new String[fields.size()];
 					for (int i = 0; i < fields.size(); i++) {
 						String field = fields.get(i);

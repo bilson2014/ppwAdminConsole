@@ -170,5 +170,4 @@
 				WHERE INVOICE_ID = ${invoiceId}
 		]]>
 	</update>
-	
 </mapper>

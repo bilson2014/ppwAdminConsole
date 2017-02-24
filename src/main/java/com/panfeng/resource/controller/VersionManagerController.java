@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+import com.paipianwang.pat.facade.employee.entity.PmsEmployee;
+import com.paipianwang.pat.facade.employee.service.PmsEmployeeFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
@@ -44,6 +47,9 @@ public class VersionManagerController extends BaseController {
 
 	@Autowired
 	private final RightService rightService = null;
+	
+	@Autowired
+	private final PmsEmployeeFacade pmsEmployeeFacade = null;
 
 	/**
 	 * 跳转
@@ -134,18 +140,19 @@ public class VersionManagerController extends BaseController {
 	 * 前端登陆验证
 	 */
 	@RequestMapping("/manager/static/encipherment")
-	public boolean doLogin(final HttpServletRequest request, @RequestBody final Employee employee) {
+	public boolean doLogin(final HttpServletRequest request, @RequestBody final PmsEmployee employee) {
 
 		if (employee != null) {
-			// final VersionManager vManager =
-			// service.doLogin(manager.getManagerLoginName(),manager.getManagerPassword());
-			final Employee e = service.doLogin(employee.getEmployeeLoginName(), employee.getEmployeePassword());
+			//final Employee e = service.doLogin(employee.getEmployeeLoginName(), employee.getEmployeePassword());
+			final PmsEmployee e = pmsEmployeeFacade.doLogin(employee.getEmployeeLoginName(), employee.getEmployeePassword());
 			if (e != null) {
 				// 登陆成功
 				// 设置权限
 				// infoService.removeSession(request);
 				request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
-				return initSessionInfo(e, request);
+				Gson gson = new Gson();
+				String json = gson.toJson(e);
+				return initSessionInfo(gson.fromJson(json, Employee.class), request);
 			}
 		}
 

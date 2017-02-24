@@ -1,4 +1,4 @@
-package com.panfeng.service.impl;
+/*package com.panfeng.service.impl;
 
 import java.util.List;
 
@@ -64,3 +64,4 @@ public class UserInvoiceServiceImpl implements UserInvoiceService{
 	}
 
 }
+*/
