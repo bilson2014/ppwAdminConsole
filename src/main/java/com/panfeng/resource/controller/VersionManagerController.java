@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-import com.paipianwang.pat.facade.employee.entity.PmsEmployee;
-import com.paipianwang.pat.facade.employee.service.PmsEmployeeFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
@@ -48,8 +45,14 @@ public class VersionManagerController extends BaseController {
 	@Autowired
 	private final RightService rightService = null;
 	
-	@Autowired
-	private final PmsEmployeeFacade pmsEmployeeFacade = null;
+	//@Autowired
+//	private final PmsEmployeeFacade pmsEmployeeFacade = null;
+	
+	//@Autowired
+//	private final PmsRightFacade pmsRightFacade = null;
+	
+	//@Autowired
+	//private final PmsRoleFacade pmsRoleFacade = null;
 
 	/**
 	 * 跳转
@@ -140,22 +143,21 @@ public class VersionManagerController extends BaseController {
 	 * 前端登陆验证
 	 */
 	@RequestMapping("/manager/static/encipherment")
-	public boolean doLogin(final HttpServletRequest request, @RequestBody final PmsEmployee employee) {
+	public boolean doLogin(final HttpServletRequest request, @RequestBody final Employee employee) {
 
 		if (employee != null) {
-			//final Employee e = service.doLogin(employee.getEmployeeLoginName(), employee.getEmployeePassword());
-			final PmsEmployee e = pmsEmployeeFacade.doLogin(employee.getEmployeeLoginName(), employee.getEmployeePassword());
+			final Employee e = service.doLogin(employee.getEmployeeLoginName(), employee.getEmployeePassword());
+			//final PmsEmployee e = pmsEmployeeFacade.doLogin(employee.getEmployeeLoginName(), employee.getEmployeePassword());
 			if (e != null) {
-				// 登陆成功
-				// 设置权限
+				//填充角色
+				//List<PmsRole> roles = pmsRoleFacade.getRolesByEmployId(e.getEmployeeId());
+				//List<PmsRole> roles = pmsRoleFacade.getRolesByEmployId(e.getEmployeeId());
+				//e.setRoles(roles);
 				// infoService.removeSession(request);
 				request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
-				Gson gson = new Gson();
-				String json = gson.toJson(e);
-				return initSessionInfo(gson.fromJson(json, Employee.class), request);
+				return initSessionInfo(e, request);
 			}
 		}
-
 		return false;
 	}
 
@@ -287,4 +289,44 @@ public class VersionManagerController extends BaseController {
 		// return infoService.addSessionSeveralTime(request, map, 60*60*24*7);
 		return true;
 	}
+	
+	/**
+	 * 初始化 sessionInfo 信息
+	 */
+/*	public boolean initSessionInfo(final PmsEmployee e, final HttpServletRequest request) {
+		// 存入session中
+		final String sessionId = request.getSession().getId();
+		final SessionInfo info = new SessionInfo();
+		info.setLoginName(e.getEmployeeLoginName());
+		info.setRealName(e.getEmployeeRealName());
+		info.setSessionType(GlobalConstant.ROLE_EMPLOYEE);
+		// info.setSuperAdmin(false);
+		info.setToken(DataUtil.md5(sessionId));
+		info.setReqiureId(e.getEmployeeId());
+		info.setPhoto(e.getEmployeeImg());
+
+		// 计算权限码
+		// 替换带有权限的角色
+		final List<PmsRole> roles = new ArrayList<PmsRole>();
+		for (final PmsRole r : e.getRoles()) {
+			final PmsRole role = pmsRoleFacade.findRoleById(r.getRoleId());
+			roles.add(role);
+		}
+		e.setRoles(roles);
+
+		// 计算权限码总和
+		final long maxPos = pmsRightFacade.getMaxPos();
+		final long[] rightSum = new long[(int) (maxPos + 1)];
+
+		e.setRightSum(rightSum);
+		e.calculateRightSum();
+		long[] sum = e.getRightSum();
+		info.setSum(sum);
+		info.setSuperAdmin(e.isSuperAdmin()); // 判断是否是超级管理员
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(GlobalConstant.SESSION_INFO, info);
+		request.getSession().setAttribute(GlobalConstant.SESSION_INFO, info);
+		// return infoService.addSessionSeveralTime(request, map, 60*60*24*7);
+		return true;
+	}*/
 }
