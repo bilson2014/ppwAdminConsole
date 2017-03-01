@@ -3,13 +3,13 @@ package com.panfeng.service;
 import java.util.List;
 
 import com.panfeng.resource.model.News;
-import com.panfeng.resource.view.Pagination;
+import com.panfeng.resource.view.NewsView;
 
 public interface NewsService {
 
-	List<News> listWithPagination(Pagination pagination);
+	List<News> listWithPagination(NewsView newsView);
 
-	long maxSize();
+	long maxSize(NewsView newsView);
 
 	void save(News news);
 
@@ -26,7 +26,5 @@ public interface NewsService {
 	News info(Integer newId);
 
 	List<News> searchAllNews();
-	
-	long showMaxSize();
 
 }

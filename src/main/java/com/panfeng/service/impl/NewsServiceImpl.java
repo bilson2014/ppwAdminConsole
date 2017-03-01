@@ -6,9 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.panfeng.persist.NewsMapper;
 import com.panfeng.resource.model.News;
-import com.panfeng.resource.view.Pagination;
+import com.panfeng.resource.view.NewsView;
 import com.panfeng.service.FDFSService;
 import com.panfeng.service.NewsService;
 
@@ -23,13 +24,13 @@ public class NewsServiceImpl implements NewsService {
 	private final FDFSService fdfsService = null;
 
 	@Override
-	public List<News> listWithPagination(Pagination pagination) {
-		return mapper.listWithPagination(pagination);
+	public List<News> listWithPagination(NewsView newsView) {
+		return mapper.listWithPagination(newsView);
 	}
 
 	@Override
-	public long maxSize() {
-		return mapper.maxSize();
+	public long maxSize(NewsView newsView) {
+		return mapper.maxSize(newsView);
 	}
 
 	@Override
@@ -100,12 +101,6 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public List<News> searchAllNews() {
 		return mapper.searchAllNews();
-	}
-
-	@Override
-	public long showMaxSize() {
-		long showMaxSize = mapper.showMaxSize();
-		return showMaxSize;
 	}
 
 }

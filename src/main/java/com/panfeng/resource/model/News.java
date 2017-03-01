@@ -17,6 +17,7 @@ public class News extends BaseObject {
 
 	private String tags;
 	private String picLDUrl;
+	private Integer category;
 
 	public Integer getId() {
 		return id;
@@ -96,6 +97,14 @@ public class News extends BaseObject {
 
 	public void setPicLDUrl(String picLDUrl) {
 		this.picLDUrl = picLDUrl;
+	}
+
+	public Integer getCategory() {
+		return category;
+	}
+
+	public void setCategory(Integer category) {
+		this.category = category;
 	}
 
 }

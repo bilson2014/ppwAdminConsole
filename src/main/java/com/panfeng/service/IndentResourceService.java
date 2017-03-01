@@ -1,7 +1,5 @@
 package com.panfeng.service;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -25,14 +23,6 @@ public interface IndentResourceService {
 	void removeResource(IndentResource indent_Resource);
 
 	void updateResource(IndentResource indent_Resource);
-
-	byte[] getBytes(IndentResource indent_Resource);
-
-	InputStream getInputStream(IndentResource indent_Resource);
-
-	File getFile(IndentResource indent_Resource);
-
-	List<File> getPDFFileList();
 
 	List<String> getTags();
 	

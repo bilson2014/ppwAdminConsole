@@ -5,13 +5,13 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.panfeng.resource.model.News;
-import com.panfeng.resource.view.Pagination;
+import com.panfeng.resource.view.NewsView;
 
 public interface NewsMapper {
 
-	List<News> listWithPagination(Pagination pagination);
+	List<News> listWithPagination(NewsView newsView);
 
-	long maxSize();
+	long maxSize(NewsView newsView);
 
 	int getMaxIndex();
 
@@ -38,6 +38,5 @@ public interface NewsMapper {
 	News info(@Param("newId") Integer newId);
 
 	List<News> searchAllNews();
-	
-	long showMaxSize();
+
 }

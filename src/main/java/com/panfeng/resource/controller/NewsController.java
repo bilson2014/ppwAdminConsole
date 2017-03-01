@@ -15,8 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.resource.model.News;
 import com.panfeng.resource.view.DataGrid;
+import com.panfeng.resource.view.NewsView;
 import com.panfeng.resource.view.PageFilter;
-import com.panfeng.resource.view.Pagination;
 import com.panfeng.service.FDFSService;
 import com.panfeng.service.NewsService;
 
@@ -40,17 +40,17 @@ public class NewsController extends BaseController {
 	}
 
 	@RequestMapping(value = "/news/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public DataGrid<News> list(final Pagination pagination, final PageFilter pf) {
+	public DataGrid<News> list(final NewsView newsView, final PageFilter pf) {
 
 		final long page = pf.getPage();
 		final long rows = pf.getRows();
-		pagination.setBegin((page - 1) * rows);
-		pagination.setLimit(rows);
+		newsView.setBegin((page - 1) * rows);
+		newsView.setLimit(rows);
 
 		DataGrid<News> dataGrid = new DataGrid<News>();
-		final List<News> list = newsService.listWithPagination(pagination);
+		final List<News> list = newsService.listWithPagination(newsView);
 		dataGrid.setRows(list);
-		final long total = newsService.maxSize();
+		final long total = newsService.maxSize(newsView);
 		dataGrid.setTotal(total);
 		return dataGrid;
 	}
@@ -131,20 +131,24 @@ public class NewsController extends BaseController {
 	// ------------------------------前台分页 -----------------------------
 
 	@RequestMapping("/news/pagelist")
-	public List<News> newsList(@RequestBody PageFilter pf) {
-		Pagination pagination = new Pagination();
-		final long page = pf.getPage();
-		final long rows = pf.getRows();
-		pagination.setBegin((page - 1) * rows);
-		pagination.setLimit(rows);
-
-		final List<News> list = newsService.listWithPagination(pagination);
+	public List<News> newsList(@RequestBody NewsView newsView) {
+		if (newsView != null) {
+			if (newsView.getCategory() == -1) {
+				newsView.setCategory(null);
+			}
+		}
+		List<News> list = newsService.listWithPagination(newsView);
 		return list;
 	}
 
 	@RequestMapping("/news/pagesize")
-	public long maxSize() {
-		final long total = newsService.showMaxSize();
+	public long maxSize(@RequestBody NewsView newsView) {
+		if (newsView != null) {
+			if (newsView.getCategory() == -1) {
+				newsView.setCategory(null);
+			}
+		}
+		final long total = newsService.maxSize(newsView);
 		return total;
 	}
 

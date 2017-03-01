@@ -9,9 +9,13 @@
 			sort_index sortIndex,
 			`status`,
 			TAGS AS tags,
-			PICLDURL AS picLDUrl
+			PICLDURL AS picLDUrl,
+			CATEGORY AS category
 			FROM NEWS WHERE 1=1
 		]]>
+		<if test="category != null">
+			AND CATEGORY = ${category}
+		</if>
 		<![CDATA[
 			ORDER BY create_time desc
 			LIMIT ${begin} , ${limit}
@@ -23,13 +27,9 @@
 				FROM NEWS
 			WHERE 1 = 1
 		]]>
-	</select>
-	<select id="showMaxSize" resultType="long">
-		<![CDATA[
-			SELECT COUNT(1)
-				FROM NEWS
-			WHERE STATUS = 1
-		]]>
+		<if test="category != null">
+			AND CATEGORY = ${category}
+		</if>
 	</select>
 
 	<select id="getMaxIndex" resultType="int">
@@ -50,7 +50,8 @@
 				SORT_INDEX,
 				`STATUS`,
 				TAGS,
-				PICLDURL
+				PICLDURL,
+				CATEGORY
 			) VALUES(
 				#{title},
 				#{discription},
@@ -60,7 +61,8 @@
 				${sortIndex},
 				${status},
 				#{tags},
-				#{picLDUrl}
+				#{picLDUrl},
+				${category}
 			)
 		]]>
 	</insert>
@@ -73,7 +75,8 @@
 		      n.DISCRIPTION = #{discription},
 		      n.UPDATE_TIME = CURRENT_TIMESTAMP,
 		      n.STATUS = ${status},
-		      n.TAGS = #{tags}
+		      n.TAGS = #{tags},
+		      n.CATEGORY = ${category}
 		]]>
 
 		<if test="picLDUrl != null and picLDUrl != '' ">
@@ -98,7 +101,8 @@
 			,UPDATE_TIME updateTime,IFNULL(SORT_INDEX,0) sortIndex
 			,`status` ,
 			TAGS AS tags,
-			PICLDURL AS picLDUrl
+			PICLDURL AS picLDUrl,
+			CATEGORY AS category
 			FROM NEWS 
 			WHERE ID= ${id}
 		]]>
@@ -144,7 +148,8 @@
 				sort_index sortIndex,
 				`status`,
 				TAGS AS tags,
-				PICLDURL AS picLDUrl
+				PICLDURL AS picLDUrl,
+				CATEGORY AS category
 			FROM NEWS ORDER BY create_time DESC
 		]]>
 	</select>
@@ -157,7 +162,8 @@
 			sort_index sortIndex,
 			`status`,
 			TAGS AS tags,
-			PICLDURL AS picLDUrl
+			PICLDURL AS picLDUrl,
+			CATEGORY AS category
 			FROM NEWS WHERE id = ${newId}
 		]]>
 	</select>
