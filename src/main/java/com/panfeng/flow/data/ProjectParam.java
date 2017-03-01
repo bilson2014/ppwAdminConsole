@@ -123,11 +123,6 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 				switch (string) {
 				case GlobalConstant.ROLE_PROVIDER:
 					// 确定参数
-					//if (team == null)
-						//team = teamService.findTeamById(key);
-						//team = pmsTeamFacade.findTeamById(indentProject.getTeamId());
-					//key = parseKey(team, eventType);
-					//key = parseKey(team, eventType);
 					key = indentProject.getTeamPhone();
 					value = new String[fields.size()];
 					for (int i = 0; i < fields.size(); i++) {
@@ -143,10 +138,6 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 					result.put(key, value);
 					break;
 				case GlobalConstant.ROLE_CUSTOMER:
-					//if (user == null)
-						//user = userService.findUserById(indentProject.getCustomerId());
-					//	user = pmsUserFacade.findUserById(indentProject.getCustomerId());
-					//key = parseKey(user, eventType);
 					key = indentProject.getUserPhone();
 					value = new String[fields.size()];
 					for (int i = 0; i < fields.size(); i++) {
@@ -332,18 +323,12 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		}
 		return result;
 	}
-	/*private String parseKey(User user, EventType eventType) {
-		String result = "";
-		switch (eventType) {
-		case MAIL:
-			result = user.getEmail();
-			break;
-		case SMS:
-			result = user.getTelephone();
-			break;
-		}
-		return result;
-	}*/
+
+	/*
+	 * private String parseKey(User user, EventType eventType) { String result =
+	 * ""; switch (eventType) { case MAIL: result = user.getEmail(); break; case
+	 * SMS: result = user.getTelephone(); break; } return result; }
+	 */
 	private String parseKey(PmsUser user, EventType eventType) {
 		String result = "";
 		switch (eventType) {
@@ -357,18 +342,11 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		return result;
 	}
 
-	/*private String parseKey(Team team, EventType eventType) {
-		String result = "";
-		switch (eventType) {
-		case MAIL:
-			result = team.getEmail();
-			break;
-		case SMS:
-			result = team.getPhoneNumber();
-			break;
-		}
-		return result;
-	}*/
+	/*
+	 * private String parseKey(Team team, EventType eventType) { String result =
+	 * ""; switch (eventType) { case MAIL: result = team.getEmail(); break; case
+	 * SMS: result = team.getPhoneNumber(); break; } return result; }
+	 */
 	private String parseKey(PmsTeam team, EventType eventType) {
 		String result = "";
 		switch (eventType) {
