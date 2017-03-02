@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.ResourceToken;
+import com.panfeng.resource.model.NewsSolr;
 import com.panfeng.resource.model.Solr;
 import com.panfeng.resource.view.SolrView;
 import com.panfeng.service.SolrService;
@@ -55,7 +57,6 @@ public class SolrController extends BaseController {
 			
 			// 组装 行业 和 类型 业务逻辑
 			condition = mergeQConcition(view);
-			logger.error("pc search keywords : " + condition);
 			
 			final SolrQuery query = new SolrQuery();
 			query.set("defType", "edismax");
@@ -98,6 +99,43 @@ public class SolrController extends BaseController {
 		return null;
 	}
 	
+	
+	@RequestMapping("/solr/query/news")
+	public List<NewsSolr> searchNews(@RequestBody final SolrView view,final HttpServletRequest request){
+		
+		try {
+			String condition = view.getCondition();
+			
+			if(StringUtils.isNotBlank(condition)){
+				condition = URLDecoder.decode(condition, "UTF-8");
+				view.setCondition(condition);
+			}
+			
+			// 组装 行业 和 类型 业务逻辑
+			condition = mergeQConcition(view);
+			
+			final SolrQuery query = new SolrQuery();
+			query.set("defType", "edismax");
+			query.set("qf", "tags");
+			query.set("q.alt", "*:*");
+			
+			query.setQuery(condition);
+			query.set("pf", "tags");
+			query.set("tie", "0.1");
+			query.setFields("id title tags creationTime discription picLDUrl");
+			
+			query.setStart(Integer.parseInt(String.valueOf(view.getBegin())));
+			query.setRows(Integer.parseInt(String.valueOf(view.getLimit())));
+			
+			final List<NewsSolr> list = service.queryNewDocs(GlobalConstant.SOLR_NEWS_URL, query);
+			return list;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	// 整合行业 和 类型，作为q值出现
 	private String mergeQConcition(SolrView view) throws UnsupportedEncodingException {
 		String q = view.getCondition();
@@ -107,6 +145,10 @@ public class SolrController extends BaseController {
 		
 		if(!StringUtils.isNotBlank(q))
 			q = "*";
+		else {
+			String cdn = q.trim().replaceAll("(\\s*)(,|，|\\s+)(\\s*)", ",");
+			logger.error("q=" + cdn);
+		}
 		
 		sb.append(q);
 		

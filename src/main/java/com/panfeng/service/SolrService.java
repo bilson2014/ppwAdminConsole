@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import com.panfeng.domain.BaseObject;
+import com.panfeng.resource.model.NewsSolr;
 import com.panfeng.resource.model.Solr;
 
 public interface SolrService {
@@ -31,6 +32,8 @@ public interface SolrService {
 	 * @return 符合条件的 集合
 	 */
 	public List<Solr> queryDocs(final String solrUrl,final SolrQuery query);
+	
+	public List<NewsSolr> queryNewDocs(final String solrUrl,final SolrQuery query);
 	
 	public void deleteDoc(final long productId,final String solrUrl);
 	
