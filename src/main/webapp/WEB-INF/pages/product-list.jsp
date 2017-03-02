@@ -170,15 +170,15 @@
 				<input id="videoUrl"  type="hidden"/>
 				<input id="picLDUrl"  type="hidden"/>
 				<div class="online">
-					<div class="lable l-width">视频文件</div>
-					<div class="d-float f-width">
-						<input type="file" id="videoFile" name="uploadFiles" class="p-file" />
+					<div class="lable l-width" >视频文件</div>
+					<div class="d-float f-width" style="margin-top:0px !important;">
+						<input type="file" id="videoFile" style="width:100%" name="uploadFiles" class="p-file" />
 					</div>
 				</div>
 				<div class="online">
 					<div class="lable l-width">封面图片</div>
-					<div class="d-float f-width">
-						<input type="file" id="picLDFile" name="uploadFiles" class="p-file" />
+					<div class="d-float f-width" style="margin-top:0px !important;">
+						<input type="file" id="picLDFile" style="width:100%" name="uploadFiles" class="p-file" />
 					</div>
 				</div>
 				

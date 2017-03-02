@@ -7,9 +7,15 @@
 			create_time createTime,
 			update_time updateTime,
 			sort_index sortIndex,
-			`status`
+			`status`,
+			TAGS AS tags,
+			PICLDURL AS picLDUrl,
+			RECOMMEND AS recommend
 			FROM NEWS WHERE 1=1
 		]]>
+		<if test="category != null">
+			AND CATEGORY = ${category}
+		</if>
 		<![CDATA[
 			ORDER BY create_time desc
 			LIMIT ${begin} , ${limit}
@@ -21,37 +27,46 @@
 				FROM NEWS
 			WHERE 1 = 1
 		]]>
+		<if test="category != null">
+			AND CATEGORY = ${category}
+		</if>
 	</select>
-	
+
 	<select id="getMaxIndex" resultType="int">
 		<![CDATA[
 			SELECT IFNULL(MAX(sort_index),0) maxIndex
 			FROM NEWS
 		]]>
 	</select>
-	
+
 	<insert id="save">
 		<![CDATA[
 			INSERT INTO NEWS(
-			title,
-			DISCRIPTION,
-			CONTENT,
-			CREATE_TIME,
-			UPDATE_TIME,
-			SORT_INDEX,
-			`STATUS`
-		) VALUES(
-			#{title},
-			#{discription},
-			#{content},
-			CURRENT_TIMESTAMP,
-			CURRENT_TIMESTAMP,
-			${sortIndex},
-			${status}
-		)
+				title,
+				DISCRIPTION,
+				CONTENT,
+				CREATE_TIME,
+				UPDATE_TIME,
+				SORT_INDEX,
+				`STATUS`,
+				TAGS,
+				PICLDURL,
+				RECOMMEND
+			) VALUES(
+				#{title},
+				#{discription},
+				#{content},
+				CURRENT_TIMESTAMP,
+				CURRENT_TIMESTAMP,
+				${sortIndex},
+				${status},
+				#{tags},
+				#{picLDUrl},
+				${recommend}
+			)
 		]]>
 	</insert>
-	
+
 	<update id="update">
 		<![CDATA[
 			UPDATE NEWS n
@@ -59,11 +74,20 @@
 		      n.CONTENT = #{content},
 		      n.DISCRIPTION = #{discription},
 		      n.UPDATE_TIME = CURRENT_TIMESTAMP,
-		      n.STATUS = ${status}    
-		WHERE n.ID = ${id}
+		      n.STATUS = ${status},
+		      n.TAGS = #{tags},
+		      n.RECOMMEND = ${recommend}
+		]]>
+
+		<if test="picLDUrl != null and picLDUrl != '' ">
+			,n.PICLDURL = #{picLDUrl}
+		</if> 
+		
+		<![CDATA[
+			WHERE n.ID = ${id}
 		]]>
 	</update>
-	
+
 	<delete id="delete">
 		<![CDATA[
 			DELETE FROM NEWS
@@ -75,7 +99,10 @@
 			SELECT ID,TITLE,DISCRIPTION
 			,CONTENT,CREATE_TIME createTime
 			,UPDATE_TIME updateTime,IFNULL(SORT_INDEX,0) sortIndex
-			,`status` 
+			,`status` ,
+			TAGS AS tags,
+			PICLDURL AS picLDUrl,
+			RECOMMEND AS recommend
 			FROM NEWS 
 			WHERE ID= ${id}
 		]]>
@@ -112,23 +139,31 @@
 			 ORDER BY create_time DESC LIMIT 0,6
 		]]>
 	</select>
+
 	<select id="searchAllNews" resultType="News">
 		<![CDATA[
 			SELECT id ,title,discription ,content,
 				create_time createTime,
 				update_time updateTime,
 				sort_index sortIndex,
-				`status`
+				`status`,
+				TAGS AS tags,
+				PICLDURL AS picLDUrl,
+				RECOMMEND AS recommend
 			FROM NEWS ORDER BY create_time DESC
 		]]>
 	</select>
+
 	<select id="info" resultType="News">
 		<![CDATA[
 			SELECT id ,title,discription ,content ,
 			create_time createTime,
 			update_time updateTime,
 			sort_index sortIndex,
-			`status`
+			`status`,
+			TAGS AS tags,
+			PICLDURL AS picLDUrl,
+			RECOMMEND AS recommend
 			FROM NEWS WHERE id = ${newId}
 		]]>
 	</select>

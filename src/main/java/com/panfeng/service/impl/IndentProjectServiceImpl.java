@@ -42,9 +42,11 @@ import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.SynergyService;
-import com.panfeng.service.UserService;
+import com.panfeng.service.bak_UserService;
 import com.panfeng.service.UserTempService;
-import com.panfeng.util.PathFormatUtils;
+import com.paipianwang.pat.common.util.PathFormatUtils;
+import com.paipianwang.pat.facade.user.entity.PmsUser;
+import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.util.ValidateUtil;
 
 @Service
@@ -81,7 +83,11 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	IndentResourceService indentResourceService;
 
 	@Autowired
-	UserService userService;
+	bak_UserService userService;
+	
+	@Autowired
+	PmsUserFacade pmsUserFacade;
+
 
 	@Autowired
 	DealLogMapper dealLogMapper;
@@ -739,7 +745,8 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	private boolean isSLevel(IndentProject indentProject) {
 		Long userId = indentProject.getCustomerId();
-		User user = userService.findUserById(userId);
+		//User user = userService.findUserById(userId);
+		PmsUser user = pmsUserFacade.findUserById(userId);
 		if (user.getClientLevel() != null) {
 			int userClientLevel = user.getClientLevel();
 			return userClientLevel == User.S;

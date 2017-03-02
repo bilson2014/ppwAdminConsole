@@ -25,6 +25,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
+import com.paipianwang.pat.common.util.PathFormatUtils;
 
 public class HttpUtil {
 

@@ -1,4 +1,4 @@
-package com.panfeng.util;
+/*package com.panfeng.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,10 +6,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
-/**
+*//**
  * 
  * @author dawn 常量类
- */
+ *//*
 public final class Constants {
 
 	public static String FILE_PROFIX;
@@ -129,9 +129,9 @@ public final class Constants {
 	
 	
 	
-	/**
+	*//**
 	 * 登录方式
-	 */
+	 *//*
 	public enum loginType {
 		phone("phone", 1), // 手机登录
 		account("loginName", 2);// 账号登录
@@ -168,3 +168,4 @@ public final class Constants {
 		REGESTER;
 	}
 }
+*/

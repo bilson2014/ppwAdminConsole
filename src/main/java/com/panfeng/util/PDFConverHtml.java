@@ -6,6 +6,7 @@ import org.artofsolving.jodconverter.OfficeDocumentConverter;
 import org.artofsolving.jodconverter.office.DefaultOfficeManagerConfiguration;
 import org.artofsolving.jodconverter.office.OfficeManager;
 import org.springframework.stereotype.Component;
+import com.paipianwang.pat.common.util.Constants;
 
 @Component
 public class PDFConverHtml {

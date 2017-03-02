@@ -10,7 +10,7 @@ public class Salesman extends BaseObject {
 
 	private static final long serialVersionUID = -8360251575797625256L;
 
-	private long salesmanId = 0l;
+	private Long salesmanId = null;
 	
 	private String salesmanName = null; // 分销人名称
 	
@@ -28,11 +28,11 @@ public class Salesman extends BaseObject {
 	
 	private double sumPrice = 0.0d;
 
-	public long getSalesmanId() {
+	public Long getSalesmanId() {
 		return salesmanId;
 	}
 
-	public void setSalesmanId(long salesmanId) {
+	public void setSalesmanId(Long salesmanId) {
 		this.salesmanId = salesmanId;
 	}
 

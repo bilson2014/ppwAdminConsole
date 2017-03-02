@@ -1,6 +1,5 @@
 package com.panfeng.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,13 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.persist.TeamMapper;
-import com.panfeng.persist.TeamTmpMapper;
-import com.panfeng.resource.model.Product;
 import com.panfeng.resource.model.Team;
-import com.panfeng.resource.model.TeamTmp;
-import com.panfeng.resource.view.TeamView;
 import com.panfeng.service.TeamService;
-import com.panfeng.util.TeamBusiness;
 import com.panfeng.util.ValidateUtil;
 
 @Service
@@ -27,20 +21,18 @@ public class TeamServiceImpl implements TeamService {
 	private static Logger logger = LoggerFactory.getLogger("error");
 	@Autowired
 	private final TeamMapper mapper = null;
-	@Autowired
-	private final TeamTmpMapper teamTmpMapper = null;
 
-	public List<Team> listWithPagination(final TeamView view) {
+	/*public List<Team> listWithPagination(final TeamView view) {
 
 		final List<Team> list = mapper.listWithPagination(view);
 		return list;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long save(final Team team) {
 		mapper.save(team);
 		return team.getTeamId();
-	}
+	}*/
 
 	@Transactional
 	public List<Team> delete(final long[] ids) {
@@ -58,41 +50,41 @@ public class TeamServiceImpl implements TeamService {
 		return lists;
 	}
 
-	@Override
+	/*@Override
 	public long update(final Team team) {
 
 		return mapper.update(team);
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long maxSize(final TeamView view) {
 
 		final long size = mapper.maxSize(view);
 		return size;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public Team findTeamById(final long id) {
 
 		final Team team = mapper.findTeamById(id);
 		return team;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long saveTeamPhotoUrl(final Team team) {
 
 		final long ret = mapper.saveTeamPhotoUrl(team);
 		return ret;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public List<Team> getAll() {
 
 		final List<Team> list = mapper.getAll();
 		return list;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public Team doLogin(final String phoneNumber) {
 
 		final List<Team> team = mapper.checkTeam(phoneNumber);
@@ -106,9 +98,9 @@ public class TeamServiceImpl implements TeamService {
 			logger.error("数据库中不存在该供应商 手机号：" + phoneNumber);
 		}
 		return null;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long checkExist(final Team team) {
 
 		final TeamView view = new TeamView();
@@ -124,7 +116,7 @@ public class TeamServiceImpl implements TeamService {
 
 		final long count = mapper.checkExist(view);
 		return count;
-	}
+	}*/
 
 	@Override
 	public Team register(final Team original) {
@@ -143,19 +135,19 @@ public class TeamServiceImpl implements TeamService {
 		return ret;
 	}
 
-	@Override
+	/*@Override
 	public long updateTeamInfomation(final Team team) {
 
 		final long ret = mapper.updateTeamInfomation(team);
 		return ret;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long updatePasswordByLoginName(final Team team) {
 
 		final long ret = mapper.updatePasswordByLoginName(team);
 		return ret;
-	}
+	}*/
 
 	@Override
 	public long updateTeamStatus(final long teamId) {
@@ -177,12 +169,12 @@ public class TeamServiceImpl implements TeamService {
 		return list;
 	}
 
-	@Override
+	/*@Override
 	public long updateUniqueId(final Team provider) {
 
 		final long ret = mapper.updateUniqueId(provider);
 		return ret;
-	}
+	}*/
 
 	@Override
 	public BaseMsg bind(Team provider) {
@@ -313,12 +305,12 @@ public class TeamServiceImpl implements TeamService {
 		return team;
 	}
 
-	@Override
+	/*@Override
 	public long updateTeamAccount(Team original) {
 		return mapper.updateTeamAccount(original);
 	}
-
-	@Override
+*/
+	/*@Override
 	@Transactional
 	public boolean setMasterWork(Product product) {
 		// 重置所有代表作初始值
@@ -326,7 +318,7 @@ public class TeamServiceImpl implements TeamService {
 		// 更新当前作品master
 		mapper.setMasterWork(product);
 		return true;
-	}
+	}*/
 
 	public Map<String, Object> thirdStatus(Team t) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -371,37 +363,37 @@ public class TeamServiceImpl implements TeamService {
 		}
 	}
 
-	@Override
+	/*@Override
 	public boolean teamInfoUnBind(Team team) {
 		mapper.unBindThird(team);
 		return true;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long modifyTeamPhone(Team team) {
 		return mapper.modifyTeamPhone(team);
 	}
-
-	@Override
+*/
+	/*@Override
 	public Team getTeamInfo(Long teamId) {
 		return mapper.getTeamInfo(teamId);
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public List<String> getTags(final List<Integer> ids) {
 		List<String> tags = new ArrayList<>();
 		for (int i = 0; i < ids.size(); i++) {
 			tags.add(TeamBusiness.get(ids.get(i)));
 		}
 		return tags;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public long updateTeamDescription(Team team) {
 		return  mapper.updateTeamDescription(team);
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public void dealTeamTmp(Team team) {
 		TeamTmp tmp = new TeamTmp();
 		tmp.setCheckStatus(0);
@@ -462,9 +454,9 @@ public class TeamServiceImpl implements TeamService {
 		teamTmpMapper.delTeamMapperByTeamId(tmp);
 		//增加一条记录
 		teamTmpMapper.addTeamTmp(tmp);
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public Team findLatestTeamById(Long teamId) {
 		//查询是否有待审核的供应商
 		List<TeamTmp> list = teamTmpMapper.doesHaveLatestEnableTmpByTeamId(teamId);
@@ -476,10 +468,10 @@ public class TeamServiceImpl implements TeamService {
 			//返回team信息
 			return mapper.findTeamById(teamId);
 		}
-	}
+	}*/
 
 	
-	@Override
+	/*@Override
 	public boolean moveUp(long teamId) {
 		Team team = mapper.findTeamById(teamId);
 		int index = team.getRecommendSort();
@@ -488,9 +480,9 @@ public class TeamServiceImpl implements TeamService {
 		//2.提升当前id的排序
 		int flag2 =mapper.upSortByTeamId(teamId);
 		return flag1>0 && flag2>0;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public boolean moveDown(long teamId) {
 		Team team = mapper.findTeamById(teamId);
 		int index = team.getRecommendSort();
@@ -499,8 +491,8 @@ public class TeamServiceImpl implements TeamService {
 		//2.降低当前id的排序
 		int flag2 =mapper.downSortByTeamId(teamId);
 		return flag1>0 && flag2>0;
-	}
-
+	}*/
+/*
 	@Override
 	public boolean delRecommend(long teamId) {
 		Team team = mapper.findTeamById(teamId);
@@ -510,9 +502,9 @@ public class TeamServiceImpl implements TeamService {
 		//2.提升index之下的所有排序
 		int flag2 = mapper.upAllAboveIndex(index);
 		return flag1>0 && flag2>=0;
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public List<Team> getAllNoRecommend() {
 		return mapper.getAllNoRecommend();
 	}
@@ -525,6 +517,6 @@ public class TeamServiceImpl implements TeamService {
 	@Override
 	public List<Team> teamRecommendList() {
 		return mapper.teamRecommendList();
-	}
+	}*/
 	
 }

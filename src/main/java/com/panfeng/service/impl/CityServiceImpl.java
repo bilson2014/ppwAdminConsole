@@ -7,19 +7,19 @@ import org.springframework.stereotype.Service;
 
 import com.panfeng.persist.CityMapper;
 import com.panfeng.resource.model.City;
-import com.panfeng.service.CityService;
+import com.panfeng.service.bak_CityService;
 @Service
-public class CityServiceImpl implements CityService {
+public class CityServiceImpl implements bak_CityService {
 	@Autowired
 	private CityMapper cityMapper;
 
-	@Override
+	/*@Override
 	public List<City> findCitysByProvinceId(String ProvinceId) {
 		return cityMapper.findCitysByProvinceId(ProvinceId);
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public List<City> getAll() {
 		return cityMapper.getAll();
-	}
+	}*/
 }

@@ -1,7 +1,7 @@
 var editing ; //判断用户是否处于编辑状态 
 var flag  ;	  //判断新增和修改方法
 var datagrid;
-
+var formUrl;
 $().ready(function(){
 
 	// 初始化DataGrid
@@ -83,15 +83,7 @@ $().ready(function(){
 		pageSize : 20,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar',
-		onAfterEdit:function(index , record){
-			$.post(flag =='add' ? getContextPath() + '/portal/item/save' : getContextPath() + '/portal/item/update', record , function(result){
-				
-				datagrid.datagrid('clearSelections');
-				datagrid.datagrid('reload');
-				$.message('操作成功!');
-			});
-		}
+		toolbar : '#toolbar'
 	});
 	
 	item.dataInit();
@@ -109,32 +101,21 @@ var item = {
 
 //增加
 function addFuc(){
-	if(editing == undefined){
-		flag = 'add';
-		//1 先取消所有的选中状态
-		datagrid.datagrid('unselectAll');
-		//2追加一行
-		datagrid.datagrid('appendRow',{});
-		//3获取当前页的行号
-		editing = datagrid.datagrid('getRows').length -1;
-		//4开启编辑状态
-		datagrid.datagrid('beginEdit', editing);
-	}
+	openDialog('dlg');
+	$('#fm').form('clear');
+	formUrl = getContextPath() + '/portal/item/save';
 }
 
 //修改
 function editFuc(){
-	var arr = datagrid.datagrid('getSelections');
-	if(arr.length != 1){
-		$.message('只能选择一条记录进行修改!');
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length == 1){
+		$('#fm').form('clear');
+		$('#fm').form('load',rows[0]);
+		formUrl = getContextPath() + '/portal/item/update';
+		openDialog('dlg');
 	} else {
-		if(editing == undefined){
-			flag = 'edit';
-			//根据行记录对象获取该行的索引位置
-			editing = datagrid.datagrid('getRowIndex' , arr[0]);
-			//开启编辑状态
-			datagrid.datagrid('beginEdit',editing);
-		}
+		$.message('只能选择一条记录进行修改!');
 	}
 }
 
@@ -166,12 +147,17 @@ function delFuc(){
 
 //保存
 function saveFuc(){
-	//保存之前进行数据的校验 , 然后结束编辑并释放编辑状态字段 
-	datagrid.datagrid('beginEdit', editing);
-	if(datagrid.datagrid('validateRow',editing)){
-		datagrid.datagrid('endEdit', editing);
-		editing = undefined;
-	}
+	progressLoad();
+	$('#fm').form('submit',{
+		url : formUrl,
+		success : function(result) {
+			$('#dlg').dialog('close');
+			datagrid.datagrid('clearSelections');
+			datagrid.datagrid('reload');
+			progressClose();
+			$.message('操作成功!');
+		}
+	});
 }
 
 // 取消
@@ -190,4 +176,11 @@ function searchFun(){
 function cleanFun() {
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {});
+}
+
+function openDialog(id){
+	$('#' + id).dialog({
+		modal : true,
+		onOpen : function(event, ui) {}
+	}).dialog('open').dialog('center');
 }

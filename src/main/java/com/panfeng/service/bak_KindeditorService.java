@@ -1,4 +1,5 @@
 package com.panfeng.service;
+/*package com.panfeng.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,3 +16,4 @@ public interface KindeditorService {
 	public void deleteImageDir(final String path);
 
 }
+*/

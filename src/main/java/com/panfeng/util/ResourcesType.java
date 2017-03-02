@@ -1,5 +1,8 @@
 package com.panfeng.util;
 
+import com.paipianwang.pat.common.util.Constants;
+import com.paipianwang.pat.common.util.PathFormatUtils;
+
 /**
  * 资源文件类型枚举
  * 
@@ -26,9 +29,4 @@ public enum ResourcesType {
 		}
 		return result;
 	}
-
-	public static void main(String[] args) {
-		System.out.println(ResourcesType.INDENT_MEDIA.getName()+ResourcesType.INDENT_MEDIA.getPath());
-	}
-
 }

@@ -80,13 +80,14 @@
             closed="true" buttons="#dlg-buttons" title="新闻信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input id="newsId" name="id" type="hidden">
+	        	<input type="hidden" name="picLDUrl" />
 	            <div class="online">
 					<label class="lable l-width">新闻标题</label>
 					<input id="title" name="title" class="easyui-textbox" required="true" />
 					<label class="lable l-width">是否显示到主页</label>
 					<select id="status" name="status" required="true" editable="false" class="easyui-combobox" style="width: 158px;">
 						<option value="1" selected>显示</option>
-	          				<option value="0" >不显示</option>
+	          			<option value="0" >不显示</option>
 					</select>
 				</div>
 				<br>
@@ -94,9 +95,25 @@
 					<label class="lable l-width">新闻描述</label>
 					<input id="discription" name="discription" multiline="true" class="easyui-textbox text-area" required="true" style="height: 100px;width: 82%;"/>
 				</div>
+				<br>
+				<div class="online">
+					<label class="lable l-width">新闻标签</label>
+					<input id="tags" name="tags" class="easyui-textbox" style="width: 82%"/>
+				</div>
+				<br>
+				<div class="online">
+					<label class="lable l-width">新闻封面</label>
+					<input type="file" id="picLDUrlFile" name="picLDUrlFile"/>
+				</div>
+				<br>
+				<div class="online">
+					<label class="lable l-width">新闻推荐值</label>
+					<input type="text" id="recommend" class="easyui-textbox" name="recommend"/>
+				</div>
+				<br>
 				<div class="textarea-position">
 					<div class="lable l-width">新闻内容</div>
-					<input name="content" class="ta-content" required="true" />
+					<input name="content" class="ta-content"  required="true" />
 				</div>
 	            
 	        </form>

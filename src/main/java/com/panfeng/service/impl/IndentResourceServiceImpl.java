@@ -1,7 +1,5 @@
 package com.panfeng.service.impl;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.panfeng.fs.impl.LocalResourceImpl;
 import com.panfeng.persist.IndentResourceMapper;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.IndentProject;
@@ -22,9 +19,7 @@ import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.OnlineDocService;
 import com.panfeng.service.UserTempService;
-import com.panfeng.util.Constants;
 import com.panfeng.util.RedisUtils;
-import com.panfeng.util.ResourcesType;
 
 /**
  * 订单资源存储服务
@@ -38,9 +33,6 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	private IndentResourceMapper indent_ResourceMapper;
 
 	@Autowired
-	private LocalResourceImpl localResourceImpl;
-
-	@Autowired
 	private IndentActivitiService indentActivitiService;
 	@Autowired
 	private IndentCommentService indentCommentService;
@@ -51,7 +43,6 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	@Autowired
 	private UserTempService userTempService;
 
-	private static ResourcesType resourcesIndentMedia = ResourcesType.INDENT_MEDIA;
 	@Autowired
 	private FileStatusService fileStatusService;
 	@Autowired
@@ -166,37 +157,9 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 		indent_ResourceMapper.update(indent_Resource);
 	}
 
-	// ///////////////////////////////////////////////////////////////////
-	private String formatPath(IndentResource indentResource, ResourcesType resourcesType) {
-		return resourcesType.getPath() + indentResource.getIrIndentId() + File.separator;
-	}
-
-	@Override
-	public byte[] getBytes(IndentResource indent_Resource) {
-		String filepath = formatPath(indent_Resource, resourcesIndentMedia);
-		return localResourceImpl.getBytes(filepath, indent_Resource.getIrFormatName());
-	}
-
-	@Override
-	public InputStream getInputStream(IndentResource indent_Resource) {
-		String filepath = formatPath(indent_Resource, resourcesIndentMedia);
-		return localResourceImpl.getInputStream(filepath, indent_Resource.getIrFormatName());
-	}
-
-	@Override
-	public File getFile(IndentResource indent_Resource) {
-		String filepath = formatPath(indent_Resource, resourcesIndentMedia);
-		return localResourceImpl.getFile(filepath, indent_Resource.getIrFormatName());
-	}
-
 	@Override
 	public List<IndentResource> findIndentListByTaskId(ActivitiTask activitiTask) {
 		return indent_ResourceMapper.findIndentListByTaskId(activitiTask);
-	}
-
-	@Override
-	public List<File> getPDFFileList() {
-		return localResourceImpl.getFileList(Constants.PROJECT_PDF);
 	}
 
 	@Override
@@ -232,4 +195,5 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 		fileStatusService.save(RedisUtils.getRedisKey(indentResource), String.valueOf(indentResource.getIrId()), state);
 	}
 	// add by laowang 2016.5.17 12.20 end
+
 }

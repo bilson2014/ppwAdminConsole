@@ -1,8 +1,9 @@
 package com.panfeng.resource.model;
+/*package com.panfeng.resource.model;
 
-/**
+*//**
  * team审核零时表 用于供应商修改信息后信息暂存 2016-10-17 12:06:39
- */
+ *//*
 public class TeamTmp {
 
 	private Integer id;
@@ -242,3 +243,4 @@ public class TeamTmp {
 	}
 
 }
+*/

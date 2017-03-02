@@ -19,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.SessionInfo;
-import com.panfeng.flow.taskchain.event.Pay;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.FlowTemplate;
 import com.panfeng.resource.model.IndentFlow;
@@ -283,13 +282,5 @@ public class FlowController extends BaseController {
 	}
 
 	// -------------------------------------------test------------------------------------------
-
-	@RequestMapping("/test/pay")
-	public BaseMsg testPay(String processId, HttpServletRequest request) {
-		Pay p = new Pay();
-		SessionInfo sessionInfo = getCurrentInfo(request);
-		p.execute(sessionInfo, processId);
-		return new BaseMsg(BaseMsg.NORMAL, "", Pay.status);
-	}
 
 }
