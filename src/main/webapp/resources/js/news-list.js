@@ -38,6 +38,11 @@ $().ready(function(){
 						align : 'center' ,
 						width : 200,
 					},{
+						field : 'recommend' ,
+						title : '新闻推荐值' ,
+						align : 'center' ,
+						width : 200,
+					},{
 						field : 'status' ,
 						title : '是否显示到首页' ,
 						align : 'center' ,

@@ -19,6 +19,7 @@ import org.apache.solr.common.SolrDocumentList;
 import org.springframework.stereotype.Service;
 
 import com.panfeng.domain.BaseObject;
+import com.panfeng.resource.model.NewsSolr;
 import com.panfeng.resource.model.Solr;
 import com.panfeng.service.SolrService;
 
@@ -102,6 +103,31 @@ public class SolrServiceImpl implements SolrService {
 			
 			DocumentObjectBinder binder = new DocumentObjectBinder();
 			List<Solr> lists = binder.getBeans(Solr.class, list);
+			return lists;
+		} catch (SolrServerException | IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("resource")
+	public List<NewsSolr> queryNewDocs(final String solrUrl,final SolrQuery query) {
+		final HttpSolrClient client = new HttpSolrClient(solrUrl);
+		client.setConnectionTimeout(5000);
+		
+		try {
+			QueryResponse response = client.query(query);
+			final long numFound = response.getResults().getNumFound();
+			SolrDocumentList list = response.getResults();
+			
+			for (int i = 0; i < list.size(); i++) {
+				final SolrDocument document = list.get(i);
+				document.setField("total", numFound); // 设置总数
+				list.set(i, document);
+			}
+			
+			DocumentObjectBinder binder = new DocumentObjectBinder();
+			List<NewsSolr> lists = binder.getBeans(NewsSolr.class, list);
 			return lists;
 		} catch (SolrServerException | IOException e) {
 			e.printStackTrace();
