@@ -111,8 +111,6 @@ public class SolrController extends BaseController {
 				view.setCondition(condition);
 			}
 			
-			// 组装 行业 和 类型 业务逻辑
-			condition = mergeQConcition(view);
 			
 			final SolrQuery query = new SolrQuery();
 			query.set("defType", "edismax");
