@@ -22,14 +22,14 @@ import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.facade.indent.entity.PmsIndent;
 import com.paipianwang.pat.facade.indent.service.PmsIndentFacade;
 import com.paipianwang.pat.facade.product.entity.PmsProduct;
+import com.paipianwang.pat.facade.product.entity.PmsService;
 import com.paipianwang.pat.facade.product.service.PmsProductFacade;
+import com.paipianwang.pat.facade.product.service.PmsServiceFacade;
 import com.panfeng.domain.Result;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Indent;
-import com.panfeng.resource.model.Service;
 import com.panfeng.resource.view.IndentView;
-import com.panfeng.service.ServiceService;
 import com.panfeng.util.CsvWriter;
 import com.panfeng.util.DateUtils;
 import com.panfeng.util.Log;
@@ -45,15 +45,14 @@ import com.panfeng.util.PropertiesUtils;
 public class IndentController extends BaseController {
 	
 	@Autowired
-	private final ServiceService serService = null;
-	
-	@Autowired
 	private final SmsMQService smsMQService = null;
 	
 	@Autowired
 	private PmsIndentFacade pmsIndentFacade = null;
 	@Autowired
 	private PmsProductFacade pmsProductFacade = null;
+	@Autowired
+	private PmsServiceFacade pmsServiceFacade = null;
 
 	@RequestMapping("/indent-list")
 	public ModelAndView view(final ModelMap model) {
@@ -136,7 +135,8 @@ public class IndentController extends BaseController {
 				//final Product product = productService.findProductById(productId);
 				final PmsProduct product = pmsProductFacade.findProductById(productId);
 				productName = product.getProductName();
-				final Service ser = serService.getServiceById(serviceId);
+				//final Service ser = serService.getServiceById(serviceId);
+				final PmsService ser = pmsServiceFacade.getServiceById(serviceId);
 				indent.setSecond(ser.getMcoms());
 				indent.setIndentPrice(ser.getServiceRealPrice());
 			}

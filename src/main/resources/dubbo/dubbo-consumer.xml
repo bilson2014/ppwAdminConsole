@@ -31,11 +31,11 @@
 	<dubbo:reference interface="com.paipianwang.pat.facade.finance.service.PmsFinanceFacade" id="pmsFinanceFacade" check="false" timeout="5000"/>
 	<!--分销服务接口 -->
 	<dubbo:reference interface="com.paipianwang.pat.facade.sales.service.PmsSalesmanFacade" id="pmsSalesmanFacade" check="false" timeout="5000"/>
-	<!--员工服务接口 -->
-	<dubbo:reference interface="com.paipianwang.pat.facade.employee.service.PmsEmployeeFacade" id="pmsEmployeeFacade" check="false" timeout="5000"/>
-	<!--权限服务接口 -->
+	<!--员工服务接口 
+	<dubbo:reference interface="com.paipianwang.pat.facade.employee.service.PmsEmployeeFacade" id="pmsEmployeeFacade" check="false" timeout="5000"/>-->
+	<!--权限服务接口 
 	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsRightFacade" id="pmsRightFacade" check="false" timeout="5000"/>
-	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsRoleFacade" id="pmsRoleFacade" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsRoleFacade" id="pmsRoleFacade" check="false" timeout="5000"/>-->
 
 </beans>  
 
