@@ -10,7 +10,7 @@
 			`status`,
 			TAGS AS tags,
 			PICLDURL AS picLDUrl,
-			CATEGORY AS category
+			RECOMMEND AS recommend
 			FROM NEWS WHERE 1=1
 		]]>
 		<if test="category != null">
@@ -51,7 +51,7 @@
 				`STATUS`,
 				TAGS,
 				PICLDURL,
-				CATEGORY
+				RECOMMEND
 			) VALUES(
 				#{title},
 				#{discription},
@@ -62,7 +62,7 @@
 				${status},
 				#{tags},
 				#{picLDUrl},
-				${category}
+				${recommend}
 			)
 		]]>
 	</insert>
@@ -76,7 +76,7 @@
 		      n.UPDATE_TIME = CURRENT_TIMESTAMP,
 		      n.STATUS = ${status},
 		      n.TAGS = #{tags},
-		      n.CATEGORY = ${category}
+		      n.RECOMMEND = ${recommend}
 		]]>
 
 		<if test="picLDUrl != null and picLDUrl != '' ">
@@ -102,7 +102,7 @@
 			,`status` ,
 			TAGS AS tags,
 			PICLDURL AS picLDUrl,
-			CATEGORY AS category
+			RECOMMEND AS recommend
 			FROM NEWS 
 			WHERE ID= ${id}
 		]]>
@@ -149,7 +149,7 @@
 				`status`,
 				TAGS AS tags,
 				PICLDURL AS picLDUrl,
-				CATEGORY AS category
+				RECOMMEND AS recommend
 			FROM NEWS ORDER BY create_time DESC
 		]]>
 	</select>
@@ -163,7 +163,7 @@
 			`status`,
 			TAGS AS tags,
 			PICLDURL AS picLDUrl,
-			CATEGORY AS category
+			RECOMMEND AS recommend
 			FROM NEWS WHERE id = ${newId}
 		]]>
 	</select>

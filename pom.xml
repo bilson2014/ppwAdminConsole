@@ -49,7 +49,7 @@
 			<artifactId>pat-facade-sales</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>com.paipianwang.pat</groupId>
 			<artifactId>pat-facade-employee</artifactId>
 			<version>1.0-SNAPSHOT</version>
@@ -58,7 +58,7 @@
 			<groupId>com.paipianwang.pat</groupId>
 			<artifactId>pat-facade-right</artifactId>
 			<version>1.0-SNAPSHOT</version>
-		</dependency>
+		</dependency> -->
 		<!-- Common Dependency Begin -->
 		<dependency>
 			<groupId>xalan</groupId>

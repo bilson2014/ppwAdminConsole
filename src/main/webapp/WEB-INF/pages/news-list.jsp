@@ -104,23 +104,16 @@
 				<div class="online">
 					<label class="lable l-width">新闻封面</label>
 					<input type="file" id="picLDUrlFile" name="picLDUrlFile"/>
-					
 				</div>
 				<br>
 				<div class="online">
-					<label class="lable l-width">新闻类别</label>
-					<select id="category" name="category" required="true" editable="false" class="easyui-combobox" style="width: 158px;">
-						<option value="0" selected>最热咨询</option>
-	          			<option value="1" >案例分享</option>
-	          			<option value="2" >企业活动</option>
-	          			<option value="3" >行业资讯</option>
-	          			<option value="4" >人物访谈</option>
-					</select>
+					<label class="lable l-width">新闻推荐值</label>
+					<input type="text" id="recommend" class="easyui-textbox" name="recommend"/>
 				</div>
 				<br>
 				<div class="textarea-position">
 					<div class="lable l-width">新闻内容</div>
-					<input name="content" class="ta-content" required="true" />
+					<input name="content" class="ta-content"  required="true" />
 				</div>
 	            
 	        </form>
