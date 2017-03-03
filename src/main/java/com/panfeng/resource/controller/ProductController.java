@@ -647,9 +647,10 @@ public class ProductController extends BaseController {
 	 * @return 分销列表
 	 */
 	@RequestMapping("/product/static/data/salesproduct")
-	public List<Product> salesProject(final HttpServletRequest request) {
+	public List<PmsProduct> salesProject(final HttpServletRequest request) {
 
-		final List<Product> list = proService.loadSalesProduct();
+		//final List<Product> list = proService.loadSalesProduct();
+		final List<PmsProduct> list = pmsProductFacade.loadSalesProduct();
 		return list;
 	}
 

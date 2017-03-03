@@ -64,6 +64,8 @@ public final class GlobalConstant extends BaseObject {
 	public static String SOLR_EMPLOYEE_URL; // 内部员工SOLR URL 入口
 
 	public static String SOLR_PORTAL_URL; // 未审核的供应商及未分级的客户的SOLR URL 入口
+	
+	public static String SOLR_NEWS_URL; // 新闻SOLR NEW 入口
 
 	public static String FILE_PROFIX; // 文件前缀
 
@@ -116,6 +118,7 @@ public final class GlobalConstant extends BaseObject {
 				SOLR_URL = propertis.getProperty("solr.url");
 				SOLR_EMPLOYEE_URL = propertis.getProperty("solr.employee.url");
 				SOLR_PORTAL_URL = propertis.getProperty("solr.portal.url");
+				SOLR_NEWS_URL = propertis.getProperty("solr.news.url");
 				FILE_PROFIX = propertis.getProperty("file.prefix");
 				EMPLOYEE_IMAGE_PATH = propertis.getProperty("upload.server.employee.image");
 				STAFF_IMAGE_PATH = propertis.getProperty("upload.server.staff.image");
