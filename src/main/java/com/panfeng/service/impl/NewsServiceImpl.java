@@ -37,11 +37,17 @@ public class NewsServiceImpl implements NewsService {
 	public void save(News news) {
 		int maxIndex = mapper.getMaxIndex();
 		news.setSortIndex(maxIndex + 1);
+		if (news.getRecommend() == null) {
+			news.setRecommend(0);
+		}
 		mapper.save(news);
 	}
 
 	@Override
 	public void update(News news) {
+		if (news.getRecommend() == null) {
+			news.setRecommend(0);
+		}
 		mapper.update(news);
 	}
 
