@@ -8,7 +8,7 @@ $().ready(function(){
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/news/list',
 		idField : 'id' ,
-		title : '邮件管理列表' ,
+		title : '新闻列表' ,
 		fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
@@ -201,7 +201,7 @@ function save(){
 
 function openDialog(data){
 	$('#dlg').dialog({
-		title : '邮件信息',
+		title : '新闻信息',
 		modal : true,
 		width : 700,
 		height : 500,
