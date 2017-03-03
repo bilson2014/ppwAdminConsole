@@ -111,7 +111,6 @@ public class SolrController extends BaseController {
 				view.setCondition(condition);
 			}
 			
-			
 			final SolrQuery query = new SolrQuery();
 			query.set("defType", "edismax");
 			query.set("qf", "tags");
@@ -120,7 +119,12 @@ public class SolrController extends BaseController {
 			query.setQuery(condition);
 			query.set("pf", "tags");
 			query.set("tie", "0.1");
-			query.setFields("id title tags creationTime discription picLDUrl");
+			query.setFields("id title tags creationTime discription picLDUrl recommend");
+			
+			// 设置推荐区间
+			if(view.getRecomendFq() != null && !"".equals(view.getRecomendFq())){
+				query.addFilterQuery("recommend:" + view.getRecomendFq());
+			}
 			
 			query.setStart(Integer.parseInt(String.valueOf(view.getBegin())));
 			query.setRows(Integer.parseInt(String.valueOf(view.getLimit())));
