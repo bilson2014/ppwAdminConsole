@@ -17,7 +17,7 @@ public class News extends BaseObject {
 
 	private String tags;
 	private String picLDUrl;
-	private Integer recommend;
+	private Integer recommend = 0;
 
 	public Integer getId() {
 		return id;

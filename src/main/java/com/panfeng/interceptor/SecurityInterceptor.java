@@ -14,13 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.util.Constants;
 import com.panfeng.dao.RightDao;
 import com.panfeng.dao.StorageLocateDao;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Right;
 import com.panfeng.service.FDFSService;
-import com.paipianwang.pat.common.util.Constants;
 import com.panfeng.util.UrlResourceUtils;
 import com.panfeng.util.ValidateUtil;
 

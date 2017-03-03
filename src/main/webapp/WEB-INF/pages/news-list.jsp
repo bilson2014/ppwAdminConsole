@@ -108,7 +108,7 @@
 				<br>
 				<div class="online">
 					<label class="lable l-width">新闻推荐值</label>
-					<input type="text" id="recommend" class="easyui-textbox" name="recommend"/>
+					<input type="text" id="recommend" class="easyui-numberbox" name="recommend"/>
 				</div>
 				<br>
 				<div class="textarea-position">

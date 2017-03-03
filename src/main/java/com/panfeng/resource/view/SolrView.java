@@ -24,6 +24,8 @@ public class SolrView extends Pagination{
 	
 	private boolean more = false; // 是否相关性推荐
 	
+	private String recomendFq = null; // 推荐值筛选字段
+	
 	public String getCondition() {
 		return condition;
 	}
@@ -102,6 +104,14 @@ public class SolrView extends Pagination{
 
 	public void setMore(boolean more) {
 		this.more = more;
+	}
+
+	public String getRecomendFq() {
+		return recomendFq;
+	}
+
+	public void setRecomendFq(String recomendFq) {
+		this.recomendFq = recomendFq;
 	}
 
 }
