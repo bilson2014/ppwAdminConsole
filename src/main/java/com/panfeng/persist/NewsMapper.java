@@ -39,4 +39,8 @@ public interface NewsMapper {
 
 	List<News> searchAllNews();
 
+	News getNext(@Param("newsId") Integer newId);
+
+	News getPrev(@Param("newsId") Integer newId);
+	
 }

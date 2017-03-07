@@ -152,4 +152,13 @@ public class NewsController extends BaseController {
 		return total;
 	}
 
+	@RequestMapping("/news/next")
+	public News getNext(@RequestBody News news) {
+		return newsService.getNext(news.getId());
+	}
+
+	@RequestMapping("/news/prev")
+	public News getPrev(@RequestBody News news) {
+		return newsService.getPrev(news.getId());
+	}
 }

@@ -26,5 +26,9 @@ public interface NewsService {
 	News info(Integer newId);
 
 	List<News> searchAllNews();
+	
+	News getNext( Integer newId);
+
+	News getPrev( Integer newId);
 
 }
