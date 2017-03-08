@@ -23,12 +23,12 @@ public interface NewsService {
 
 	List<News> RecommendNews();
 
-	News info(Integer newId);
+	News info(News news);
 
 	List<News> searchAllNews();
 	
-	News getNext( Integer newId);
+	News getNext(News news);
 
-	News getPrev( Integer newId);
+	News getPrev(News news);
 
 }

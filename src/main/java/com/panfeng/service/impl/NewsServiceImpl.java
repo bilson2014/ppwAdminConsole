@@ -23,6 +23,8 @@ public class NewsServiceImpl implements NewsService {
 	@Autowired
 	private final FDFSService fdfsService = null;
 
+	private static final String HOTTEST_NEWS = "最热资讯";
+
 	@Override
 	public List<News> listWithPagination(NewsView newsView) {
 		return mapper.listWithPagination(newsView);
@@ -100,9 +102,10 @@ public class NewsServiceImpl implements NewsService {
 	}
 
 	@Override
-	public News info(Integer newId) {
-		News info = mapper.info(newId);
+	public News info(News n) {
+		News info = mapper.info(n);
 		if (info != null) {
+			info.setQ(n.getQ());
 			info = adjustMorePage(info);
 		}
 		return info;
@@ -114,28 +117,41 @@ public class NewsServiceImpl implements NewsService {
 	}
 
 	@Override
-	public News getNext(Integer newId) {
-
-		News next = mapper.getNext(newId);
-		if (next != null) {
-			next = adjustMorePage(next);
+	public News getNext(News news) {
+		News next;
+		if (HOTTEST_NEWS.equals(news.getQ())) {
+			next = mapper.getHottestNext(news);
+			next.setQ(news.getQ());
+			if (next != null)
+				next = adjustHottestMorePage(next);
+		} else {
+			next = mapper.getNext(news);
+			next.setQ(news.getQ());
+			if (next != null)
+				next = adjustMorePage(next);
 		}
 		return next;
 	}
 
 	@Override
-	public News getPrev(Integer newId) {
-
-		News prev = mapper.getPrev(newId);
-		if (prev != null) {
-			prev = adjustMorePage(prev);
+	public News getPrev(News news) {
+		News prev;
+		if (HOTTEST_NEWS.equals(news.getQ())) {
+			prev = mapper.getHottestPrev(news);
+			prev.setQ(news.getQ());
+			if (prev != null)
+				prev = adjustHottestMorePage(prev);
+		} else {
+			prev = mapper.getPrev(news);
+			prev.setQ(news.getQ());
+			if (prev != null)
+				prev = adjustMorePage(prev);
 		}
 		return prev;
 	}
 
 	private News adjustMorePage(News news) {
-		Integer id = news.getId();
-		News next2 = mapper.getNext(id);
+		News next2 = mapper.getNext(news);
 		// 用户前台下一页按钮控制
 		if (next2 != null) {
 			news.setNext(true);
@@ -143,7 +159,32 @@ public class NewsServiceImpl implements NewsService {
 			news.setNext(false);
 		}
 
-		News next3 = mapper.getPrev(id);
+		News next3 = mapper.getPrev(news);
+		// 用户前台上一页按钮控制
+		if (next3 != null) {
+			news.setPrev(true);
+		} else {
+			news.setPrev(false);
+		}
+		return news;
+	}
+
+	/**
+	 * 调整最热的上一页下一页，配置
+	 * 
+	 * @param news
+	 * @return
+	 */
+	private News adjustHottestMorePage(News news) {
+		News next2 = mapper.getHottestNext(news);
+		// 用户前台下一页按钮控制
+		if (next2 != null) {
+			news.setNext(true);
+		} else {
+			news.setNext(false);
+		}
+
+		News next3 = mapper.getHottestPrev(news);
 		// 用户前台上一页按钮控制
 		if (next3 != null) {
 			news.setPrev(true);

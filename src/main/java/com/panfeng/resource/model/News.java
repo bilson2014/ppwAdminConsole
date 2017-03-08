@@ -109,6 +109,7 @@ public class News extends BaseObject {
 
 	private boolean next = false;
 	private boolean prev = false;
+	private String q;
 
 	public boolean isNext() {
 		return next;
@@ -124,6 +125,14 @@ public class News extends BaseObject {
 
 	public void setPrev(boolean prev) {
 		this.prev = prev;
+	}
+
+	public String getQ() {
+		return q;
+	}
+
+	public void setQ(String q) {
+		this.q = q;
 	}
 
 }

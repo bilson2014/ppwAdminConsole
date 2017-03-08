@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -113,9 +112,9 @@ public class NewsController extends BaseController {
 	/**
 	 * 根据id获取新闻资讯
 	 */
-	@RequestMapping("/news/info/{newId}")
-	public News info(@PathVariable("newId") final Integer newId) {
-		News news = newsService.info(newId);
+	@RequestMapping("/news/info")
+	public News info(@RequestBody News n) {
+		News news = newsService.info(n);
 		return news;
 	}
 
@@ -154,11 +153,11 @@ public class NewsController extends BaseController {
 
 	@RequestMapping("/news/next")
 	public News getNext(@RequestBody News news) {
-		return newsService.getNext(news.getId());
+		return newsService.getNext(news);
 	}
 
 	@RequestMapping("/news/prev")
 	public News getPrev(@RequestBody News news) {
-		return newsService.getPrev(news.getId());
+		return newsService.getPrev(news);
 	}
 }
