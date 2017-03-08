@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.domain.ResourceToken;
+import com.panfeng.logger.keywords.KeywordUtils;
 import com.panfeng.resource.model.NewsSolr;
 import com.panfeng.resource.model.Solr;
 import com.panfeng.resource.view.SolrView;
@@ -40,9 +41,6 @@ public class SolrController extends BaseController {
 	
 	private final Logger logger = LoggerFactory.getLogger(SolrController.class);
 	
-	// 权重数据
-	final int[] weightArr = new int[]{10,8,6};
-	
 	@RequestMapping("/solr/query")
 	public List<Solr> search(@RequestBody final SolrView view,final HttpServletRequest request){
 		
@@ -56,7 +54,7 @@ public class SolrController extends BaseController {
 			}
 			
 			// 组装 行业 和 类型 业务逻辑
-			condition = mergeQConcition(view);
+			condition = KeywordUtils.mergeQConcition(view);
 			
 			final SolrQuery query = new SolrQuery();
 			query.set("defType", "edismax");
@@ -120,6 +118,7 @@ public class SolrController extends BaseController {
 			query.set("pf", "tags");
 			query.set("tie", "0.1");
 			query.setFields("id title tags creationTime discription picLDUrl recommend");
+			query.setSort("creationTime", ORDER.desc);
 			
 			// 设置推荐区间
 			if(view.getRecomendFq() != null && !"".equals(view.getRecomendFq())){
@@ -138,77 +137,6 @@ public class SolrController extends BaseController {
 		return null;
 	}
 	
-	// 整合行业 和 类型，作为q值出现
-	private String mergeQConcition(SolrView view) throws UnsupportedEncodingException {
-		String q = view.getCondition();
-		String industry = view.getIndustry();
-		String genre = view.getGenre();
-		StringBuffer sb = new StringBuffer();
-		
-		if(!StringUtils.isNotBlank(q))
-			q = "*";
-		else {
-			String cdn = q.trim().replaceAll("(\\s*)(,|，|\\s+)(\\s*)", ",");
-			logger.error("q=" + cdn);
-		}
-		
-		sb.append(q);
-		
-		// 类型
-		if(StringUtils.isNotBlank(genre)) {
-			genre = URLDecoder.decode(genre, "UTF-8");
-			// 行业不为空时，那么条件应该有 AND
-			sb.append(" AND (");
-			
-			// 按空格及,分词
-			genre = genre.replaceAll("(\\s*)(,|，)(\\s*)", " ");
-			String[] tagArr = genre.split("\\s+");
-			if(tagArr != null) {
-				for (int i = 0;i < tagArr.length; i++) {
-					if(StringUtils.isNotBlank(tagArr[i])) {
-						sb.append("tags:" + "\""+ tagArr[i] +"\"");
-						if(i < tagArr.length - 1)
-							sb.append(" OR ");
-					}
-					
-				}
-			}
-			
-			sb.append(" )");
-		}
-		
-		// 行业
-		if(StringUtils.isNotBlank(industry)) {
-			industry = URLDecoder.decode(industry, "UTF-8");
-			// 行业不为空时，那么条件应该有 AND
-			sb.append(" AND (");
-			
-			// 按空格及,分词
-			industry = industry.replaceAll("(\\s*)(,|，)(\\s*)", " ");
-			String[] tagArr = industry.split("\\s+");
-			if(tagArr != null) {
-				for (int i = 0;i < tagArr.length; i++) {
-					if(StringUtils.isNotBlank(tagArr[i])) {
-						sb.append("tags:" + "\""+ tagArr[i] +"\"");
-						// 如果从相关性推荐过来的，那么应该添加权重
-						if(view.isMore()) {
-							if(i < 3){
-								sb.append("^" + weightArr[i]);
-							}
-						}
-							
-						if(i < tagArr.length - 1)
-							sb.append(" OR ");
-					}
-				}
-			}
-			
-			sb.append(" )");
-		}
-		
-		return sb.toString();
-	}
-
 	@RequestMapping("/solr/phone/query")
 	public List<Solr> phoneSearch(@RequestBody final SolrView view,final HttpServletRequest request){
 		
@@ -390,7 +318,7 @@ public class SolrController extends BaseController {
 				if(i < 3){
 					// 如果标签数量小于三个，那么不做处理
 					sb.append("^");
-					sb.append(weightArr[i]);
+					sb.append(GlobalConstant.weightArr[i]);
 				}
 				if(i < tagArr.length - 1)
 					sb.append(" OR ");

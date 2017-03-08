@@ -80,6 +80,19 @@
 			<pattern>%d %-5level %X{session} %X{username} %-15X{client} %n%msg%n</pattern>
 		</encoder>
 	</appender>
+	
+    <appender name="keywords" level="info"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/pat_keywords.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/pat_keywords.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d %-5level %X{session} %X{username} %-15X{client} %msg%n</pattern>
+		</encoder>
+	</appender>
+	
 	<!-- jdbc.resultsettable jdbc.sqlonly jdbc.sqltiming jdbc.audit jdbc.resultset 
 		jdbc.connection -->
 	<logger name="jdbc.sqltiming" level="info" additivity="false">
@@ -101,6 +114,9 @@
 	<logger name="error" level="warn" additivity="false">
 		<appender-ref ref="console" />
 		<appender-ref ref="error-file" />
+	</logger>
+	<logger name="com.panfeng.logger.keywords" level="error" additivity="false">
+		<appender-ref ref="keywords" />
 	</logger>
 	<root level="error">
 		<appender-ref ref="console" />
