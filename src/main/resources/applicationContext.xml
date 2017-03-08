@@ -33,7 +33,8 @@
 					  com.panfeng.listener,
 					  com.panfeng.mq.service,
 					  com.panfeng.flow,
-					  com.paipianwang.pat" />
+					  com.paipianwang.pat,
+					  com.panfeng.logger.keywords" />
 
 	<context:annotation-config />
 

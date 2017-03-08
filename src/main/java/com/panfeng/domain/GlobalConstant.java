@@ -15,6 +15,9 @@ import com.panfeng.util.ValidateUtil;
 public final class GlobalConstant extends BaseObject {
 
 	private static final long serialVersionUID = -7702371618133614803L;
+	
+	// 权重数据
+	public static final int[] weightArr = new int[]{10,8,6};
 
 	public static final String CONTEXT_RIGHT_MAP = "context_right_map"; // 权限集合
 
