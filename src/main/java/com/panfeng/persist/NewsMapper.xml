@@ -183,6 +183,9 @@
 		<if test="q !=null and q != ''">
 			TAGS LIKE CONCAT(CONCAT('%',#{q}),'%') AND
 		</if>
+		<if test="status != null and status != ''">
+			`STATUS` = status AND
+		</if>
 		<![CDATA[
 			id > ${id}
 			ORDER BY CREATE_TIME ASC limit 1
@@ -202,6 +205,9 @@
 		]]>
 		<if test="q !=null and q != ''">
 			TAGS LIKE CONCAT(CONCAT('%',#{q}),'%') AND
+		</if>
+		<if test="status != null and status != ''">
+			`STATUS` = status AND
 		</if>
 		<![CDATA[ id < ${id}
 			ORDER BY CREATE_TIME DESC limit 1

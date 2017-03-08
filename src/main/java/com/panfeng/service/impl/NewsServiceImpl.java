@@ -24,6 +24,7 @@ public class NewsServiceImpl implements NewsService {
 	private final FDFSService fdfsService = null;
 
 	private static final String HOTTEST_NEWS = "最热资讯";
+	private static final String INDEX_NEWS = "index";
 
 	@Override
 	public List<News> listWithPagination(NewsView newsView) {
@@ -103,10 +104,20 @@ public class NewsServiceImpl implements NewsService {
 
 	@Override
 	public News info(News n) {
+		String q = n.getQ();
 		News info = mapper.info(n);
 		if (info != null) {
-			info.setQ(n.getQ());
-			info = adjustMorePage(info);
+			if (INDEX_NEWS.equals(q)) { // 主页
+				info.setQ("");
+				info.setStatus(true);
+				info = adjustMorePage(info);
+			} else if (HOTTEST_NEWS.equals(q)) { // 最热
+				info.setQ(n.getQ());
+				info = adjustHottestMorePage(info);
+			} else { // 其他
+				info.setQ(n.getQ());
+				info = adjustMorePage(info);
+			}
 		}
 		return info;
 	}
@@ -124,6 +135,14 @@ public class NewsServiceImpl implements NewsService {
 			next.setQ(news.getQ());
 			if (next != null)
 				next = adjustHottestMorePage(next);
+		} else if (INDEX_NEWS.equals(news.getQ())) {
+			news.setQ("");
+			news.setStatus(true);
+			next = mapper.getNext(news);
+			next.setQ("");
+			next.setStatus(true);
+			if (next != null)
+				next = adjustMorePage(next);
 		} else {
 			next = mapper.getNext(news);
 			next.setQ(news.getQ());
@@ -141,6 +160,14 @@ public class NewsServiceImpl implements NewsService {
 			prev.setQ(news.getQ());
 			if (prev != null)
 				prev = adjustHottestMorePage(prev);
+		} else if (INDEX_NEWS.equals(news.getQ())) {
+			news.setQ("");
+			news.setStatus(true);
+			prev = mapper.getPrev(news);
+			prev.setQ("");
+			prev.setStatus(true);
+			if (prev != null)
+				prev = adjustMorePage(prev);
 		} else {
 			prev = mapper.getPrev(news);
 			prev.setQ(news.getQ());
