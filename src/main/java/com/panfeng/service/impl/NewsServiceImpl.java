@@ -101,7 +101,11 @@ public class NewsServiceImpl implements NewsService {
 
 	@Override
 	public News info(Integer newId) {
-		return mapper.info(newId);
+		News info = mapper.info(newId);
+		if (info != null) {
+			info = adjustMorePage(info);
+		}
+		return info;
 	}
 
 	@Override
@@ -109,4 +113,43 @@ public class NewsServiceImpl implements NewsService {
 		return mapper.searchAllNews();
 	}
 
+	@Override
+	public News getNext(Integer newId) {
+
+		News next = mapper.getNext(newId);
+		if (next != null) {
+			next = adjustMorePage(next);
+		}
+		return next;
+	}
+
+	@Override
+	public News getPrev(Integer newId) {
+
+		News prev = mapper.getPrev(newId);
+		if (prev != null) {
+			prev = adjustMorePage(prev);
+		}
+		return prev;
+	}
+
+	private News adjustMorePage(News news) {
+		Integer id = news.getId();
+		News next2 = mapper.getNext(id);
+		// 用户前台下一页按钮控制
+		if (next2 != null) {
+			news.setNext(true);
+		} else {
+			news.setNext(false);
+		}
+
+		News next3 = mapper.getPrev(id);
+		// 用户前台上一页按钮控制
+		if (next3 != null) {
+			news.setPrev(true);
+		} else {
+			news.setPrev(false);
+		}
+		return news;
+	}
 }
