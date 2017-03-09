@@ -164,24 +164,10 @@
 			TAGS AS tags,
 			PICLDURL AS picLDUrl,
 			RECOMMEND AS recommend
-			FROM NEWS WHERE id = ${newId}
+			FROM NEWS WHERE id = ${id}
 		]]>
 	</select>
 
-	<select id="getNext" resultType="News">
-		<![CDATA[
-			SELECT id ,title,discription ,content ,
-			create_time createTime,
-			update_time updateTime,
-			sort_index sortIndex,
-			`status`,
-			TAGS AS tags,
-			PICLDURL AS picLDUrl,
-			RECOMMEND AS recommend
-			FROM NEWS WHERE STATUS = 1 AND id > ${newsId}
-			ORDER BY ID ASC limit 1
-		]]>
-	</select>
 	<select id="getPrev" resultType="News">
 		<![CDATA[
 			SELECT id ,title,discription ,content ,
@@ -192,8 +178,71 @@
 			TAGS AS tags,
 			PICLDURL AS picLDUrl,
 			RECOMMEND AS recommend
-			FROM NEWS WHERE STATUS = 1 AND id < ${newsId}
-			ORDER BY ID DESC limit 1
+			FROM NEWS WHERE
+		]]>
+		<if test="q !=null and q != ''">
+			TAGS LIKE CONCAT(CONCAT('%',#{q}),'%') AND
+		</if>
+		<if test="status != null and status != ''">
+			`STATUS` = status AND
+		</if>
+		<![CDATA[
+			id > ${id}
+			ORDER BY CREATE_TIME ASC limit 1
+		]]>
+	</select>
+	<select id="getNext" resultType="News">
+		<![CDATA[
+			SELECT id ,title,discription ,content ,
+			create_time createTime,
+			update_time updateTime,
+			sort_index sortIndex,
+			`status`,
+			TAGS AS tags,
+			PICLDURL AS picLDUrl,
+			RECOMMEND AS recommend
+			FROM NEWS WHERE 
+		]]>
+		<if test="q !=null and q != ''">
+			TAGS LIKE CONCAT(CONCAT('%',#{q}),'%') AND
+		</if>
+		<if test="status != null and status != ''">
+			`STATUS` = status AND
+		</if>
+		<![CDATA[ id < ${id}
+			ORDER BY CREATE_TIME DESC limit 1
+		]]>
+	</select>
+	<select id="getHottestPrev" resultType="News">
+		<![CDATA[
+			SELECT id ,title,discription ,content ,
+			create_time createTime,
+			update_time updateTime,
+			sort_index sortIndex,
+			`status`,
+			TAGS AS tags,
+			PICLDURL AS picLDUrl,
+			RECOMMEND AS recommend
+			FROM NEWS WHERE
+			RECOMMEND > 0 AND 
+			id > ${id}
+			ORDER BY CREATE_TIME ASC limit 1
+		]]>
+	</select>
+	<select id="getHottestNext" resultType="News">
+		<![CDATA[
+			SELECT id ,title,discription ,content ,
+			create_time createTime,
+			update_time updateTime,
+			sort_index sortIndex,
+			`status`,
+			TAGS AS tags,
+			PICLDURL AS picLDUrl,
+			RECOMMEND AS recommend
+			FROM NEWS WHERE
+			RECOMMEND > 0 AND 
+			id < ${id}
+			ORDER BY CREATE_TIME DESC limit 1
 		]]>
 	</select>
 

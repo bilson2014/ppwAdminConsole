@@ -35,12 +35,22 @@ public interface NewsMapper {
 
 	List<News> RecommendNews();
 
-	News info(@Param("newId") Integer newId);
+	News info(News news);
 
 	List<News> searchAllNews();
 
-	News getNext(@Param("newsId") Integer newId);
+	News getNext(News news);
 
-	News getPrev(@Param("newsId") Integer newId);
-	
+	News getPrev(News news);
+
+	/**
+	 * 获取最热的下一条新闻
+	 * 
+	 * @param newId
+	 * @return
+	 */
+	News getHottestNext(News news);
+
+	News getHottestPrev(News news);
+
 }
