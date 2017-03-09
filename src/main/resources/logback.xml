@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+
+	<property name="logDir" value="/data/logs" />
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<Target>System.out</Target>
 		<encoder>
@@ -20,7 +22,6 @@
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>logs/pat_info.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>logs/pat_info.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<maxHistory>31</maxHistory>
 		</rollingPolicy>
 		<encoder>
@@ -37,10 +38,10 @@
         </filter>  
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
             <!-- 按天回滚 daily -->  
-            <fileNamePattern>${log_dir}/%d{yyyy-MM-dd}/info-log.log  
+            <fileNamePattern>logs/%d{yyyy-MM-dd}/info-log.log  
             </fileNamePattern>  
-            <!-- 日志最大的历史 60天 -->  
-            <maxHistory>30</maxHistory>  
+            <!-- 日志最大的历史 31天 -->  
+            <maxHistory>31</maxHistory>  
         </rollingPolicy>  
         <encoder>  
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>  
@@ -94,11 +95,33 @@
 	</appender>
 	
 	<!-- jdbc.resultsettable jdbc.sqlonly jdbc.sqltiming jdbc.audit jdbc.resultset 
-		jdbc.connection -->
+		jdbc.connection have action time -->
 	<logger name="jdbc.sqltiming" level="info" additivity="false">
 		<appender-ref ref="sql" />
 		<appender-ref ref="sql-file" />
 	</logger>
+	
+	<!-- no action time -->
+	<!-- <logger name="jdbc.sqlonly" level="info" additivity="false">
+		<appender-ref ref="sql" />
+		<appender-ref ref="sql-file" />
+	</logger> -->
+	
+	<!-- connection information -->
+	<logger name="java.sql.Connection" additivity="false">    
+        <level value="warn" />    
+    </logger>
+    
+    <!-- sql information -->
+    <logger name="java.sql.PreparedStatement" additivity="false">    
+        <level value="info" />    
+    </logger>
+    
+    <!-- ResultSet information -->
+     <logger name="java.sql.ResultSet" additivity="false">    
+        <level value="warn" />    
+    </logger>  
+	
 	<logger name="debug" level="info" additivity="false">
 		<appender-ref ref="console" />
 	</logger>
@@ -112,14 +135,17 @@
 		<appender-ref ref="INFO" />
 	</logger>
 	<logger name="error" level="warn" additivity="false">
-		<appender-ref ref="console" />
 		<appender-ref ref="error-file" />
 	</logger>
-	<logger name="com.panfeng.logger.keywords" level="error" additivity="false">
+	<logger name="com.panfeng.logger.keywords" level="info" additivity="false">
 		<appender-ref ref="keywords" />
 	</logger>
-	<root level="error">
+	<root level="WARN">
 		<appender-ref ref="console" />
+		<appender-ref ref="console-info" />
+		<appender-ref ref="INFO" />
+		<appender-ref ref="sql-file" />
 		<appender-ref ref="error-file" />
+		<appender-ref ref="keywords" />
 	</root>
 </configuration>
