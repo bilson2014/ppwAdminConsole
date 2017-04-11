@@ -15,10 +15,6 @@ import com.paipianwang.pat.facade.team.entity.PmsProvince;
 import com.paipianwang.pat.facade.team.service.PmsCityFacade;
 import com.paipianwang.pat.facade.team.service.PmsProvinceFacade;
 import com.panfeng.domain.SessionInfo;
-import com.panfeng.resource.model.City;
-import com.panfeng.resource.model.Province;
-import com.panfeng.service.bak_CityService;
-import com.panfeng.service.bak_ProvinceService;
 import com.panfeng.util.Log;
 import com.panfeng.util.ValidateUtil;
 
@@ -34,8 +30,8 @@ public class CityPickerController extends BaseController {
 
 	//private static Logger logger = LoggerFactory.getLogger("error");
 
-	@Autowired
-	private bak_ProvinceService provinceService;
+//	@Autowired
+//	private bak_ProvinceService provinceService;
 	@Autowired
 	private PmsProvinceFacade pmsProvinceFacade;
 	@Autowired

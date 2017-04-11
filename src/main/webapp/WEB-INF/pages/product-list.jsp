@@ -120,6 +120,8 @@
 			<a onclick="recommendFuc()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">首页推荐</a>
 			
 			<a onclick="toPlayHtml()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">作品链接</a>
+			
+			<a onclick="chanpinDlg()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">设置标准化</a>
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 6500px;height: 500px;"
@@ -252,8 +254,32 @@
 		<div id="recommend-dlg" class="easyui-dialog" style="width:430px; height:480px;padding:10px 20px"
            closed="true" buttons="#recommend-dlg-buttons" title="首页推荐">
 			<table id="recommend-gride" data-options="fit:true,border:false"></table>
-    </div>
-     <div id="recommend-dlg-buttons">
-    </div>
+    	</div>
+     	<div id="recommend-dlg-buttons">
+    	</div>
+    	
+    	<!-- 产品标准化配置 弹出框 begin -->
+    	<div id="dlg-c" class="easyui-dialog"
+            closed="true" buttons="#dlg-buttons-c" title="作品信息">
+	        <form id="fmx-c" method="post">
+	        	<input id="fmxproductId" name="productId" type="hidden" />
+	        	<div style="margin-left: 10%;margin-top: 15px">
+	        		选择场景：<div class="sceneTag" name ="sceneTag">
+	            			 </div>
+	        	</div>
+	        	<div style="margin-left: 10%;margin-top: 15px">
+	        		选择产品：<select id="chanpinId" name="chanpinId" style="width: 130px"  class="easyui-combobox" required="true" ></select>
+	        	</div>
+	        	<div style="margin-left: 10%;margin-top: 15px">
+	        		选择配置：<select id="config" name="configId"  class="easyui-combobox" style="width: 130px" required="true"></select>
+	        	</div>
+	        </form>
+	    </div>
+	    <div id="dlg-buttons-c">
+		    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="updateChanPin()" >保存</a>
+	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg-c').dialog('close')" >取消</a>
+	    </div>
+	    <!-- 产品标准化配置 弹出框  end-->
+    	
 </body>
 </html>

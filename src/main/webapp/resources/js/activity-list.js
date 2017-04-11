@@ -41,7 +41,7 @@ $().ready(function() {
 					if(row.acticityTempleteType == 0){
 						return '<span>短信</span>' ;
 					}else{
-						return '<span>右键</span>' ;
+						return '<span>邮件</span>' ;
 					}
 				}
 			}

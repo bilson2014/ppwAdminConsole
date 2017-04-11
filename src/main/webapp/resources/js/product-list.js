@@ -674,3 +674,75 @@ function delCommend(){
 		});
 	})
 }
+
+function chanpinDlg(){
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length == 1){
+		$('#dlg-c').dialog({
+			title : '标准化产品设置',
+			modal : true,
+			width : 430,
+			height : 380,
+			onOpen : function(event, ui) {
+				$('#fmxproductId').val(rows[0].productId);
+				syncLoadData(function(res) {
+					var chanpincache = res.rows;
+					$('#chanpinId').combobox({
+						valueField : 'chanpinId',
+						textField : 'chanpinName',
+						data : chanpincache,
+						onSelect : function(){
+						var cId = $('#chanpinId').combobox('getValue');
+							$('#config').combobox({
+								valueField : 'chanpinconfigurationId',
+								textField : 'chanpinconfigurationName',
+								url : getContextPath() + '/portal/config/chanpin?chanpinId='+cId
+							});
+						}
+					});
+				}, getContextPath() + "/portal/chanpin/list", null);
+				
+				$('#chanpinId').combobox('select', rows[0].chanpinId);
+				$('#config').combobox('select', rows[0].chanPinConfigurationId);
+			}
+		}).dialog('open').dialog('center');
+		initScene(rows[0].productId);
+	}else{
+		$.message('只能选择一条记录进行修改!');
+	}
+}
+function initScene(id) {
+	var root = $(".sceneTag");
+	root.html("");
+	getData(function(res){
+		if(res != null && res != undefined){
+			var array = res.result.rows;
+			for (var int = 0; int < array.length; int++) {
+				var checked ="";
+				var a= array[int];
+				if(a.checked){
+					checked = 'checked="checked"';
+				}
+				var ele = '<input type="checkbox" name="sceneTag"  '+checked+'  value="'+a.sceneName+'">' + a.sceneName;
+				root.append(ele);
+			}
+		}
+	}, getContextPath()+"/portal/product/scene/list?productId="+id);
+}
+
+function updateChanPin(){
+	progressLoad();
+	$('#fmx-c').form('submit',{
+		url : getContextPath() + '/portal/product/updateChanPin',
+		success : function(result) {
+			var res = $.evalJSON(result);
+			progressClose();
+			$('#dlg-c').dialog('close');
+			var msg = res.result == 1 ||  res.result == '1' ? '操作成功':'操作失败';
+			$.message(msg);
+			// 刷新数据
+			datagrid.datagrid('clearSelections');
+			datagrid.datagrid('reload');
+		}
+	});
+}

@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
-import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
 import com.paipianwang.pat.facade.user.entity.PmsUser;
-import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.domain.GlobalConstant;
 import com.panfeng.flow.taskchain.EventType;
 import com.panfeng.persist.IndentFlowMapper;
@@ -47,10 +45,10 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 	@Autowired
 	private SynergyService synergyService;
 
-	@Autowired
-	private PmsTeamFacade pmsTeamFacade;
-	@Autowired
-	private PmsUserFacade pmsUserFacade;
+//	@Autowired
+//	private PmsTeamFacade pmsTeamFacade;
+//	@Autowired
+//	private PmsUserFacade pmsUserFacade;
 
 	final static String teamName = "teamName";
 	final static String teamLinkMan = "teamLinkMan";
@@ -110,8 +108,8 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		LinkedList<String> fields = fillerParam.getFields();
 		LinkedList<String> relevantPersons = fillerParam.getRelevantPersons();
 
-		PmsUser user = null;
-		PmsTeam team = null;
+		//PmsUser user = null;
+		//PmsTeam team = null;
 		List<Employee> providerManager = null;
 		List<Employee> manager = null;
 

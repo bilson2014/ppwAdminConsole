@@ -30,8 +30,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.facade.product.entity.PmsProduct;
+import com.paipianwang.pat.facade.product.entity.PmsScene;
 import com.paipianwang.pat.facade.product.entity.PmsService;
 import com.paipianwang.pat.facade.product.service.PmsProductFacade;
+import com.paipianwang.pat.facade.product.service.PmsSceneFacade;
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
 import com.panfeng.domain.BaseMsg;
@@ -69,13 +71,17 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private final FileConvertMQService fileConvertMQService = null;
-	
+
 	@Autowired
 	private final PmsProductFacade pmsProductFacade = null;
+
 	@Autowired
 	private final PmsTeamFacade pmsTeamFacade = null;
 	
-
+	@Autowired
+	private PmsSceneFacade pmsSceneFacade;
+	
+	
 	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
 
 	private static String SOLR_URL = null;
@@ -105,7 +111,7 @@ public class ProductController extends BaseController {
 
 	@RequestMapping(value = "/product/init", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public List<PmsTeam> init() {
-		//final List<Team> list = teamService.getAll();
+		// final List<Team> list = teamService.getAll();
 		final List<PmsTeam> list = pmsTeamFacade.getAllTeamName();
 		return list;
 	}
@@ -123,7 +129,7 @@ public class ProductController extends BaseController {
 		final long rows = param.getRows();
 		param.setBegin((page - 1) * rows);
 		param.setLimit(rows);
-		
+
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("teamName", view.getTeamName());
 		paramMap.put("productName", view.getProductName());
@@ -133,7 +139,7 @@ public class ProductController extends BaseController {
 		paramMap.put("visible", view.getVisible());
 		paramMap.put("hret", view.getHret());
 		paramMap.put("recommend", view.getRecommend());
-		final DataGrid<PmsProduct> dataGrid = pmsProductFacade.listWithPagination(param,paramMap);
+		final DataGrid<PmsProduct> dataGrid = pmsProductFacade.listWithPagination(param, paramMap);
 		return dataGrid;
 	}
 
@@ -147,9 +153,9 @@ public class ProductController extends BaseController {
 	public long delete(final long[] ids, HttpServletRequest request) {
 
 		if (ids.length > 0) {
-			//-> modify to dubbo 2017-2-3 13:59:38 begin
+			// -> modify to dubbo 2017-2-3 13:59:38 begin
 			final List<PmsProduct> list = pmsProductFacade.delete(ids);
-			//-> modify to dubbo 2017-2-3 13:59:38 end
+			// -> modify to dubbo 2017-2-3 13:59:38 end
 			// delete file
 			if (!list.isEmpty() && list.size() > 0) {
 
@@ -206,7 +212,7 @@ public class ProductController extends BaseController {
 		product.setPicLDUrl(pathList.get(1));
 		// 保存路径
 		pmsProductFacade.saveFileUrl(product);
-		//创建service数据
+		// 创建service数据
 		final double servicePrice = product.getServicePrice(); // 保存服务信息
 		PmsService service = new PmsService();
 		service.setProductId(product.getProductId());
@@ -230,10 +236,11 @@ public class ProductController extends BaseController {
 			@RequestParam final MultipartFile[] uploadFiles, final PmsProduct product) {
 
 		final long productId = product.getProductId(); // product id
-		//->2017-2-3 13:27:15 modify to dubbo begin
-		//final Product originalProduct = proService.findProductById(productId);
+		// ->2017-2-3 13:27:15 modify to dubbo begin
+		// final Product originalProduct =
+		// proService.findProductById(productId);
 		final PmsProduct originalProduct = pmsProductFacade.findProductById(productId);
-		//->2017-2-3 13:27:15 modify to dubbo end
+		// ->2017-2-3 13:27:15 modify to dubbo end
 
 		// 获取未更改前的product对象,用于删除修改过的文件
 		final List<String> pathList = new ArrayList<String>(); // 路径集合
@@ -250,7 +257,7 @@ public class ProductController extends BaseController {
 			}
 			product.setVideoUrl(pathList.get(0));
 			product.setPicLDUrl(pathList.get(1));
-			//proService.update(product);
+			// proService.update(product);
 			pmsProductFacade.update(product);
 			if (originalProduct != null) {
 				// 删除 原文件
@@ -435,7 +442,8 @@ public class ProductController extends BaseController {
 	@RequestMapping("/product/static/data/loadProducts/{providerId}")
 	public List<PmsProduct> loadProductByProviderId(@PathVariable("providerId") final long teamId) {
 
-		//final List<Product> list = proService.loadProductByProviderId(teamId);
+		// final List<Product> list =
+		// proService.loadProductByProviderId(teamId);
 		final List<PmsProduct> list = pmsProductFacade.loadProductByProviderId(teamId);
 		return list;
 	}
@@ -452,7 +460,7 @@ public class ProductController extends BaseController {
 
 		long[] ids = new long[1];
 		ids[0] = productId;
-		//List<Product> list = proService.delete(ids); // 删除视频信息
+		// List<Product> list = proService.delete(ids); // 删除视频信息
 		List<PmsProduct> list = pmsProductFacade.delete(ids); // 删除视频信息
 
 		// 删除搜索索引
@@ -508,7 +516,7 @@ public class ProductController extends BaseController {
 	@RequestMapping("/product/static/data/{videoId}")
 	public PmsProduct findProductById(@PathVariable("videoId") final long productId) {
 
-		//final Product product = proService.findProductById(productId);
+		// final Product product = proService.findProductById(productId);
 		final PmsProduct product = pmsProductFacade.findProductById(productId);
 		return product;
 	}
@@ -522,7 +530,8 @@ public class ProductController extends BaseController {
 	public boolean updateProductInfo(@RequestBody final PmsProduct product, HttpServletRequest request) {
 		// 解码
 		try {
-			//Product oldProduct = proService.findProductById(product.getProductId());
+			// Product oldProduct =
+			// proService.findProductById(product.getProductId());
 			PmsProduct oldProduct = pmsProductFacade.findProductById(product.getProductId());
 			oldProduct.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
 			oldProduct.setCreationTime(product.getCreationTime());
@@ -557,12 +566,12 @@ public class ProductController extends BaseController {
 		try {
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			product.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
-			//proService.save(product); // 保存视频信息
+			// proService.save(product); // 保存视频信息
 			long proId = pmsProductFacade.save(product); // 保存视频信息
 			product.setProductId(proId);
 			final PmsTeam team = pmsTeamFacade.findTeamById(sessionInfo.getReqiureId());
-			if(team.getFlag() != 4){//ghost不需要添加service
-				//添加service信息
+			if (team.getFlag() != 4) {// ghost不需要添加service
+				// 添加service信息
 				PmsService service = new PmsService();
 				service.setProductId(product.getProductId());
 				service.setProductName(product.getProductName());
@@ -588,12 +597,13 @@ public class ProductController extends BaseController {
 	 * 更新文件路径
 	 * 
 	 * @param product
-	 * 包含 视频唯一编号、缩略图、封面、视频路径
+	 *            包含 视频唯一编号、缩略图、封面、视频路径
 	 */
-	/*@RequestMapping("/product/static/data/updateFilePath")
-	public long updateFilePath(@RequestBody final Product product) {
-		return proService.saveFileUrl(product);
-	}*/
+	/*
+	 * @RequestMapping("/product/static/data/updateFilePath") public long
+	 * updateFilePath(@RequestBody final Product product) { return
+	 * proService.saveFileUrl(product); }
+	 */
 
 	/**
 	 * 获取单个作品ID
@@ -620,7 +630,7 @@ public class ProductController extends BaseController {
 	@RequestMapping("/product/static/data/salesproduct")
 	public List<PmsProduct> salesProject(final HttpServletRequest request) {
 
-		//final List<Product> list = proService.loadSalesProduct();
+		// final List<Product> list = proService.loadSalesProduct();
 		final List<PmsProduct> list = pmsProductFacade.loadSalesProduct();
 		return list;
 	}
@@ -637,7 +647,7 @@ public class ProductController extends BaseController {
 			Log.error("productId is null ...", sessionInfo);
 			return null;
 		}
-		//Product product = proService.getMasterWork(teamId);
+		// Product product = proService.getMasterWork(teamId);
 		PmsProduct product = pmsProductFacade.getMasterWork(teamId);
 		if (product == null) {
 			List<PmsProduct> products = pmsProductFacade.loadProductByTeam(teamId);
@@ -691,7 +701,43 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/product/visibility")
 	public boolean productVisibility(@RequestBody final PmsProduct product) {
-		//return proService.updateProductVisibility(product);
 		return pmsProductFacade.updateProductVisibility(product);
 	}
+
+	@RequestMapping(value = "/product/updateChanPin")
+	public BaseMsg updateChanpin(Long chanpinId, Long configId, Long productId, HttpServletRequest request) {
+		Map<String, String[]> sceneTag = request.getParameterMap();
+		String[] tags = sceneTag.get("sceneTag");
+		if (tags != null && tags.length > 0) {
+			String join = org.apache.commons.lang3.StringUtils.join(tags, ',');
+			pmsProductFacade.setupScene(join, productId);
+		}
+		pmsProductFacade.setupChanpinAndConfig(chanpinId, configId, productId);
+		return new BaseMsg(BaseMsg.NORMAL, "更新成功！");
+	}
+
+	@RequestMapping("/product/scene/list")
+	public BaseMsg getScene(Long productId) {
+		BaseMsg baseMsg = new BaseMsg();
+		DataGrid<PmsScene> allScene = pmsSceneFacade.getAllScene();
+		PmsProduct product = pmsProductFacade.findProductById(productId);
+		String sceneTag = product.getSceneTag();
+		if(ValidateUtil.isValid(sceneTag)){
+			String[] split = sceneTag.split("\\,");
+			if(split!=null && split.length >0){
+				for (int i = 0; i < split.length; i++) {
+					for (PmsScene pmsScene : allScene.getRows()) {
+						if(pmsScene.getSceneName().equals(split[i])){
+							pmsScene.setChecked(true);
+							break;
+						}
+					}
+				}
+			}
+		}
+		baseMsg.setErrorCode(BaseMsg.NORMAL);
+		baseMsg.setResult(allScene);
+		return baseMsg;
+	}
+
 }
