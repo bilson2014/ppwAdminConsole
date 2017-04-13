@@ -31,15 +31,14 @@ import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.product.entity.PmsProduct;
 import com.paipianwang.pat.facade.product.entity.PmsService;
 import com.paipianwang.pat.facade.product.service.PmsProductFacade;
+import com.paipianwang.pat.facade.product.service.PmsServiceFacade;
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.mq.service.FileConvertMQService;
 import com.panfeng.resource.model.Product;
-import com.panfeng.resource.model.Service;
 import com.panfeng.resource.view.ProductView;
 import com.panfeng.service.ProductService;
-import com.panfeng.service.ServiceService;
 import com.panfeng.service.SolrService;
 import com.panfeng.util.JsoupUtil;
 import com.panfeng.util.Log;
@@ -57,10 +56,10 @@ public class ProductController extends BaseController {
 	private final ProductService proService = null;
 
 	@Autowired
-	private final ServiceService serService = null;
-
-	@Autowired
 	private SolrService solrService = null;
+	
+	@Autowired
+	private final PmsServiceFacade pmsServiceFacade = null;
 
 	@Autowired
 	private final FileConvertMQService fileConvertMQService = null;
@@ -177,22 +176,20 @@ public class ProductController extends BaseController {
 		product.setPicLDUrl(pathList.get(1));
 		// 保存路径
 		pmsProductFacade.saveFileUrl(product);
-		// 增加审核通过时，创建service数据
-		if (product.getFlag() == 1) {
-			final double servicePrice = product.getServicePrice(); // 保存服务信息
-			PmsService service = new PmsService();
-			service.setProductId(product.getProductId());
-			service.setProductName(product.getProductName());
-			service.setServiceDiscount(1);
-			service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
-			service.setServiceOd(0);
-			service.setServicePrice(servicePrice);
-			service.setServiceRealPrice(servicePrice);
-			service.setMcoms(Long.parseLong(product.getVideoLength()));
-			pmsProductFacade.save(service);
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("add product ... ", sessionInfo);
-		}
+		//创建service数据
+		final double servicePrice = product.getServicePrice(); // 保存服务信息
+		PmsService service = new PmsService();
+		service.setProductId(product.getProductId());
+		service.setProductName(product.getProductName());
+		service.setServiceDiscount(1);
+		service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
+		service.setServiceOd(0);
+		service.setServicePrice(servicePrice);
+		service.setServiceRealPrice(servicePrice);
+		service.setMcoms(Long.parseLong(product.getVideoLength()));
+		pmsProductFacade.save(service);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("add product ... ", sessionInfo);
 		// 加入文件转换队列
 		fileConvertMQService.sendMessage(product.getProductId(), product.getVideoUrl());
 
@@ -222,7 +219,7 @@ public class ProductController extends BaseController {
 			product.setPicLDUrl(pathList.get(1));
 			pmsProductFacade.update(product);
 			// 增加审核通过时，创建service数据
-			List<Service> list = serService.loadService((int) product.getProductId());
+			List<PmsService> list = pmsServiceFacade.loadService((int) product.getProductId());
 			if (product.getFlag() == 1) {
 				if (null == list || list.size() == 0) {
 					PmsService service = new PmsService();
@@ -497,24 +494,6 @@ public class ProductController extends BaseController {
 				}
 			}
 			long l = pmsProductFacade.updateProductInfo(oldProduct); // 更新视频信息
-			// ghost审核通过的自动创建service记录
-			//List<Service> list = serService.loadService((int) product.getProductId());
-			List<PmsService> list = pmsProductFacade.loadService((int) product.getProductId());
-			if (product.getFlag() == 1) {
-				if (null == list || list.size() == 0) {
-					PmsService service = new PmsService();
-					service.setProductId(product.getProductId());
-					service.setProductName(product.getProductName());
-					service.setServiceDiscount(1);
-					service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
-					service.setServiceOd(0);
-					service.setServicePrice(0d);
-					service.setServiceRealPrice(0d);
-					service.setMcoms(Long.parseLong(product.getVideoLength()));
-					//serService.save(service);
-					pmsProductFacade.save(service);
-				}
-			}
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("update product ... ", sessionInfo);
 			return l >= 0;
@@ -532,11 +511,25 @@ public class ProductController extends BaseController {
 	@RequestMapping("/product/static/data/save/info")
 	public long saveProductInfo(@RequestBody final PmsProduct product, HttpServletRequest request) {
 		try {
+			SessionInfo sessionInfo = getCurrentInfo(request);
 			product.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
 			//proService.save(product); // 保存视频信息
 			long proId = pmsProductFacade.save(product); // 保存视频信息
 			product.setProductId(proId);
-			SessionInfo sessionInfo = getCurrentInfo(request);
+			final PmsTeam team = pmsTeamFacade.findTeamById(sessionInfo.getReqiureId());
+			if(team.getFlag() != 4){//ghost不需要添加service
+				//添加service信息
+				PmsService service = new PmsService();
+				service.setProductId(product.getProductId());
+				service.setProductName(product.getProductName());
+				service.setServiceDiscount(1);
+				service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
+				service.setServiceOd(0);
+				service.setServicePrice(0d);
+				service.setServiceRealPrice(0d);
+				service.setMcoms(Long.parseLong(product.getVideoLength()));
+				pmsProductFacade.save(service);
+			}
 			// 加入文件转换队列
 			fileConvertMQService.sendMessage(product.getProductId(), product.getVideoUrl());
 			Log.error("save product ... ", sessionInfo);
