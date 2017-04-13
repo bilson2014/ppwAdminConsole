@@ -1,13 +1,13 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
 /**
  * 数据库元数据
  * @author Jack
  *
  */
-public class MetaDataColumn extends BaseObject {
+public class MetaDataColumn extends BaseEntity {
 
 	private static final long serialVersionUID = 3845010065273927089L;
 

@@ -1,6 +1,6 @@
 package com.panfeng.flow.core;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 import com.panfeng.resource.model.FlowNode;
 
 /**
@@ -9,7 +9,7 @@ import com.panfeng.resource.model.FlowNode;
  * @author wang
  *
  */
-public class BaseFlowModel extends BaseObject {
+public class BaseFlowModel extends BaseEntity {
 
 	private static final long serialVersionUID = -5438515831300783189L;
 	private String flowId = "";

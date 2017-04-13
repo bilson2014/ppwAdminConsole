@@ -4,20 +4,23 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.config.PublicConfig;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.facade.indent.entity.PmsIndent;
 import com.paipianwang.pat.facade.indent.service.PmsIndentFacade;
@@ -26,14 +29,13 @@ import com.paipianwang.pat.facade.product.entity.PmsService;
 import com.paipianwang.pat.facade.product.service.PmsProductFacade;
 import com.paipianwang.pat.facade.product.service.PmsServiceFacade;
 import com.panfeng.domain.Result;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Indent;
 import com.panfeng.resource.view.IndentView;
 import com.panfeng.util.CsvWriter;
 import com.panfeng.util.DateUtils;
 import com.panfeng.util.Log;
-import com.panfeng.util.PropertiesUtils;
+
 /**
  * 订单相关
  * 
@@ -43,10 +45,10 @@ import com.panfeng.util.PropertiesUtils;
 @RestController
 @RequestMapping("/portal")
 public class IndentController extends BaseController {
-	
+
 	@Autowired
 	private final SmsMQService smsMQService = null;
-	
+
 	@Autowired
 	private PmsIndentFacade pmsIndentFacade = null;
 	@Autowired
@@ -66,23 +68,13 @@ public class IndentController extends BaseController {
 		final long rows = param.getRows();
 		param.setBegin((page - 1) * rows);
 		param.setLimit(rows);
+
 		final DataGrid<PmsIndent> dataGrid = pmsIndentFacade.listWithPagination(param, JsonUtil.objectToMap(view));
-	/*
-	 * 该查询会导致salesman不能搜索
-	 * List<PmsIndent> list = dataGrid.getRows();
-		for(PmsIndent p : list){
-			String salesmanUniqueId = p.getSalesmanUniqueId();
-			if(StringUtils.isNotBlank(salesmanUniqueId)){
-				PmsSalesman Salesman = pmsSalesmanFacade.findSalesmanByUniqueId(salesmanUniqueId);
-				if(null != Salesman){
-					p.setSalesmanName(Salesman.getSalesmanName());
-				}
-			}
-		}*/
 		return dataGrid;
 	}
+
 	@RequestMapping(value = "/indent/save", method = RequestMethod.POST)
-	public long save(final PmsIndent pmsIndent,HttpServletRequest request) {
+	public long save(final PmsIndent pmsIndent, HttpServletRequest request) {
 
 		final long ret = pmsIndentFacade.save(pmsIndent);
 		SessionInfo sessionInfo = getCurrentInfo(request);
@@ -91,7 +83,7 @@ public class IndentController extends BaseController {
 	}
 
 	@RequestMapping(value = "/indent/update", method = RequestMethod.POST)
-	public long update(final PmsIndent pmsIndent,HttpServletRequest request) {
+	public long update(final PmsIndent pmsIndent, HttpServletRequest request) {
 		final long ret = pmsIndentFacade.update(pmsIndent);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update order ...", sessionInfo);
@@ -103,7 +95,7 @@ public class IndentController extends BaseController {
 		if (ids.length > 0) {
 			pmsIndentFacade.delIndentByIds(ids);
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("delete orders ...  ids:"+ids.toString(), sessionInfo);
+			Log.error("delete orders ...  ids:" + ids.toString(), sessionInfo);
 		} else {
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			Log.error("Indent Delete Error ...", sessionInfo);
@@ -132,10 +124,11 @@ public class IndentController extends BaseController {
 			// 如果按产品下单，那么下单之后的订单信息需要与数据库进行对比
 			if (teamId != -1 && productId != -1 && serviceId != -1) {
 				// 产品下单
-				//final Product product = productService.findProductById(productId);
+				// final Product product =
+				// productService.findProductById(productId);
 				final PmsProduct product = pmsProductFacade.findProductById(productId);
 				productName = product.getProductName();
-				//final Service ser = serService.getServiceById(serviceId);
+				// final Service ser = serService.getServiceById(serviceId);
 				final PmsService ser = pmsServiceFacade.getServiceById(serviceId);
 				indent.setSecond(ser.getMcoms());
 				indent.setIndentPrice(ser.getServiceRealPrice());
@@ -144,16 +137,18 @@ public class IndentController extends BaseController {
 			boolean res = pmsIndentFacade.saveOrder(indent);
 			if (res) {
 				result.setRet(true);
-				String telephone = PropertiesUtils.getProp("service_tel");
-				if(indent.getSendToStaff()){
-					if(StringUtils.isBlank(productName)){
-						smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【未指定具体影片】"});
-					}else{
-						smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【" + productName + "】"});
+				String telephone = PublicConfig.PHONENUMBER_ORDER;
+				if (indent.getSendToStaff()) {
+					if (StringUtils.isBlank(productName)) {
+						smsMQService.sendMessage("131844", telephone,
+								new String[] { indent.getIndent_tele(), DateUtils.nowTime(), "【未指定具体影片】" });
+					} else {
+						smsMQService.sendMessage("131844", telephone,
+								new String[] { indent.getIndent_tele(), DateUtils.nowTime(), "【" + productName + "】" });
 					}
 				}
-				//发送短信给用户下单成功
-				if(indent.getSendToUser()){
+				// 发送短信给用户下单成功
+				if (indent.getSendToUser()) {
 					smsMQService.sendMessage("131329", indent.getIndent_tele(), null);
 				}
 			}
@@ -178,52 +173,7 @@ public class IndentController extends BaseController {
 		final long count = pmsIndentFacade.checkStatus(0);
 		return count;
 	}
-	
-	/**
-	 * 成本计算器，保存订单后返回订单
-	 */
-	@RequestMapping(value = "/indent/cost/save", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public PmsIndent calculateSave(@RequestBody final PmsIndent indent,HttpServletRequest request) {
-		long ret = 0l;
-		SessionInfo sessionInfo = getCurrentInfo(request);
-		if(indent.getId()==0){
-			 ret = pmsIndentFacade.save(indent);
-			 indent.setId(ret);
-			 Log.error("add new order ...", sessionInfo);
-			 String telephone = PropertiesUtils.getProp("service_tel");
-			 smsMQService.sendMessage("131844", telephone, new String[]{indent.getIndent_tele(),DateUtils.nowTime(),"【未指定具体影片】"});
-		}else{//更新操作
-			ret = pmsIndentFacade.updateForCalculate(indent);
-			Log.error("update order ...", sessionInfo);
-		}
-		return ret>0?indent:null;
-	}
-	/**
-	 * 首页预约接通视频管家，下单
-	 */
-	@RequestMapping("/indent/appointment/{telephone}")
-	public boolean mQsendSms(@PathVariable("telephone") final String telephone) {
-		//发送短信给业务部门
-		smsMQService.sendMessage("131895", PropertiesUtils.getProp("service_tel"), 
-				new String[]{telephone,DateUtils.nowTime()});
-		//发送给客户
-		smsMQService.sendMessage("134080", telephone, null);
-		//创建新订单
-		PmsIndent indent = new PmsIndent();
-		indent.setIndent_tele(telephone);
-		indent.setIndentName("新订单");
-		indent.setIndentType(0);
-		indent.setServiceId(-1l);
-		indent.setIndentPrice(0d);
-		indent.setProductId(-1);
-		indent.setTeamId(-1);
-		indent.setSecond(0l);
-		indent.setProductId(-1l);
-		indent.setIndentNum(" ");
-		long ret = pmsIndentFacade.save(indent);
-		return ret>0;
-	}
-	
+
 	/**
 	 * 批量修改订单状态
 	 */
@@ -231,32 +181,23 @@ public class IndentController extends BaseController {
 	public boolean changeIndentsType(final Indent indent) {
 		return pmsIndentFacade.changeIndentsType(indent.getIds(), indent.getIndentType());
 	}
-	
+
 	@RequestMapping(value = "/indent/export", method = RequestMethod.POST)
-	public void export(final IndentView view, final HttpServletResponse response,final HttpServletRequest request) {
-		
+	public void export(final IndentView view, final HttpServletResponse response, final HttpServletRequest request) {
+
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		final List<PmsIndent> list = pmsIndentFacade.listWithCondition(JsonUtil.objectToMap(view));
-		  // 完成数据csv文件的封装  
-        String displayColNames = "订单名称,订单编号,下单时间,订单金额,订单状态,客户电话,订单备注,CRM备注,分销渠道";  
-        String matchColNames = "indentName,indentId,orderDate,indentPrice,indentType,indent_tele,indent_recomment,indent_description,salesmanUniqueId";  
-        String fileName = "indent_report_";  
-        String content = CsvWriter.formatCsvData(JsonUtil.getValueListMap(list), displayColNames, matchColNames);  
-        try {  
-        	Log.error("indent list export success ...", sessionInfo);
-            CsvWriter.exportCsv(fileName, content, response);  
-        } catch (IOException e) {  
-        	Log.error("indent list export error ...", sessionInfo);
-        }  
+		// 完成数据csv文件的封装
+		String displayColNames = "订单名称,订单编号,下单时间,订单金额,订单状态,客户电话,订单备注,CRM备注,分销渠道";
+		String matchColNames = "indentName,indentId,orderDate,indentPrice,indentType,indent_tele,indent_recomment,indent_description,salesmanUniqueId";
+		String fileName = "indent_report_";
+		String content = CsvWriter.formatCsvData(JsonUtil.getValueListMap(list), displayColNames, matchColNames);
+		try {
+			Log.error("indent list export success ...", sessionInfo);
+			CsvWriter.exportCsv(fileName, content, response);
+		} catch (IOException e) {
+			Log.error("indent list export error ...", sessionInfo);
+		}
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

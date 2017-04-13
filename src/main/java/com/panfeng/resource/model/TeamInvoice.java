@@ -1,11 +1,11 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
 /**
  * 供应商发票信息实体
  */
-public class TeamInvoice extends BaseObject {
+public class TeamInvoice extends BaseEntity {
 
 	private static final long serialVersionUID = -6519482800672773697L;
 

@@ -2,9 +2,9 @@ package com.panfeng.flow.data;
 
 import java.util.LinkedList;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
-public class FillerParam extends BaseObject {
+public class FillerParam extends BaseEntity {
 	private static final long serialVersionUID = -6721308021040801276L;
 
 	private LinkedList<String> fields;

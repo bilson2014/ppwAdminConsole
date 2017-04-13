@@ -85,9 +85,14 @@
 					<label class="lable l-width">新闻标题</label>
 					<input id="title" name="title" class="easyui-textbox" required="true" />
 					<label class="lable l-width">是否显示到主页</label>
-					<select id="status" name="status" required="true" editable="false" class="easyui-combobox" style="width: 158px;">
+					<select id="status" name="status"  required="true" editable="false" class="easyui-combobox" style="width: 138px;">
 						<option value="1" selected>显示</option>
 	          			<option value="0" >不显示</option>
+					</select>
+					<label class="lable l-width">是否可见</label>
+					<select id="visible" name="visible" required="true" editable="false" class="easyui-combobox" style="width: 138px;">
+						<option value="0" selected>可见</option>
+	          			<option value="1" >不可见</option>
 					</select>
 				</div>
 				<br>

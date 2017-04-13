@@ -3,9 +3,9 @@ package com.panfeng.taglib;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.SessionInfo;
-import com.panfeng.util.ValidateUtil;
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
 
 /**
  * 该自定义标签用于判断当前登录角色
@@ -21,7 +21,7 @@ public class IdentityTag extends TagSupport{
 
 	public int doStartTag() throws JspException {
 		if(ValidateUtil.isValid(role)){
-			final SessionInfo info = (SessionInfo) pageContext.getSession().getAttribute(GlobalConstant.SESSION_INFO);
+			final SessionInfo info = (SessionInfo) pageContext.getSession().getAttribute(PmsConstant.SESSION_INFO);
 			if(info != null){
 				final String currentRole = info.getSessionType();
 				// 已经登陆,判断角色

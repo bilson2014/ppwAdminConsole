@@ -10,29 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.persist.TeamMapper;
 import com.panfeng.resource.model.Team;
 import com.panfeng.service.TeamService;
-import com.panfeng.util.ValidateUtil;
 
 @Service
 public class TeamServiceImpl implements TeamService {
 	private static Logger logger = LoggerFactory.getLogger("error");
 	@Autowired
 	private final TeamMapper mapper = null;
-
-	/*public List<Team> listWithPagination(final TeamView view) {
-
-		final List<Team> list = mapper.listWithPagination(view);
-		return list;
-	}*/
-
-	/*@Override
-	public long save(final Team team) {
-		mapper.save(team);
-		return team.getTeamId();
-	}*/
 
 	@Transactional
 	public List<Team> delete(final long[] ids) {

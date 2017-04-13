@@ -6,7 +6,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.panfeng.domain.GlobalConstant;
+import com.paipianwang.pat.common.config.PublicConfig;
 import com.panfeng.resource.model.DealLog;
 import com.panfeng.resource.model.PayWebHook;
 import com.panfeng.service.DealLogService;
@@ -24,7 +24,7 @@ public class PayWebHookServiceImpl implements PayWebHookService {
 	@Autowired
 	DealLogService dealLogService;
 
-	static String PAT_HOOK_URL = GlobalConstant.PAY_SERVER + "pay/hook";
+	static String PAT_HOOK_URL = PublicConfig.PAY_SERVER + "pay/hook";
 
 	/**
 	 * 2.消息去重复<br>

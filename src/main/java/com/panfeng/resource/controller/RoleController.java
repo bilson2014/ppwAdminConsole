@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.panfeng.resource.model.Role;
-import com.panfeng.resource.model.Tree;
-import com.panfeng.resource.view.DataGrid;
-import com.panfeng.resource.view.PageFilter;
+import com.paipianwang.pat.common.entity.DataGrid;
+import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.common.util.JsonUtil;
+import com.paipianwang.pat.facade.right.entity.PmsRole;
+import com.paipianwang.pat.facade.right.entity.PmsTree;
+import com.paipianwang.pat.facade.right.service.PmsRightFacade;
+import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
+import com.panfeng.biz.PmsRoleControllerBiz;
 import com.panfeng.resource.view.RoleView;
-import com.panfeng.service.RoleService;
 
 /**
  * 角色相关
@@ -27,7 +30,13 @@ import com.panfeng.service.RoleService;
 public class RoleController extends BaseController {
 
 	@Autowired
-	private final RoleService service = null;
+	private final PmsRoleFacade pmsRoleFacade = null;
+	
+	@Autowired
+	private final PmsRoleControllerBiz pmsRoleControllerBiz = null;
+	
+	@Autowired
+	private final PmsRightFacade pmsRightFacade = null;
 	
 	@RequestMapping("/role-list")
 	public ModelAndView view(){
@@ -36,54 +45,50 @@ public class RoleController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/role/tree")
-	public List<Tree> tree(){
+	public List<PmsTree> tree(){
 		
-		final List<Tree> trees = service.tree();
+		final List<PmsTree> trees = pmsRoleControllerBiz.GetRoleTree();
 		return trees;
 	}
 	
 	@RequestMapping(value = "/role/tree2")
-	public List<Tree> tree_2(){
+	public List<PmsTree> tree_2(){
 		
-		final List<Tree> trees = service.tree_2();
+		final List<PmsTree> trees = pmsRoleControllerBiz.GetRoleTreeWithoutAdmin();
 		return trees;
 	}
 	
 	@RequestMapping(value = "/role/list",method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
-	public DataGrid<Role> list(RoleView view,PageFilter pf){
+	public DataGrid<PmsRole> list(RoleView view,final PageParam pageParam){
 		
-		final long page = pf.getPage();
-		final long rows = pf.getRows();
-		view.setBegin((page - 1) * rows);
-		view.setLimit(rows);
+		final long page = pageParam.getPage();
+		final long rows = pageParam.getRows();
+		pageParam.setBegin((page - 1) * rows);
+		pageParam.setLimit(rows);
 		
-		DataGrid<Role> dataGrid = new DataGrid<Role>();
-		final List<Role> list = service.listWithPagination(view);
+		final DataGrid<PmsRole> dataGrid = pmsRoleFacade.listWithPagination(pageParam,JsonUtil.objectToMap(view));
 		
-		dataGrid.setRows(list);
-		final long total = service.maxSize(view);
-		dataGrid.setTotal(total);
 		return dataGrid;
 	}
 	
 	@RequestMapping("/role/update")
-	public long update(final Role role){
+	public long update(final PmsRole role){
 		
-		final long ret = service.update(role);
+		final long ret = pmsRoleFacade.update(role);
 		return ret;
 	}
 	
 	@RequestMapping("/role/add")
-	public long save(final Role role){
+	public long save(final PmsRole role){
 		
-		final long ret = service.save(role);
+		final long ret = pmsRoleFacade.save(role);
 		return ret;
 	}
 	
 	@RequestMapping("/role/delete")
 	public long delete(final long[] ids){
 		
-		final long ret = service.delete(ids);
+		final long ret = pmsRoleFacade.deleteByIds(ids);
 		return ret;
 	}
 	
@@ -92,7 +97,7 @@ public class RoleController extends BaseController {
 		
 		if(roleId != null){
 			
-			final long ret = service.grant(roleId,resourceIds);
+			final long ret = pmsRoleFacade.grant(roleId,resourceIds);
 			return ret;
 		}
 		
@@ -105,7 +110,7 @@ public class RoleController extends BaseController {
 		List<Long> rights = new ArrayList<Long>();
 		if(roleId != null){
 			
-			rights = service.getRightsByRole(roleId);
+			rights = pmsRightFacade.findRightsByRole(roleId);
 		}
 		return rights;
 	}

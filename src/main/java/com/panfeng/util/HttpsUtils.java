@@ -30,7 +30,7 @@ import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
-import com.panfeng.domain.GlobalConstant;
+import com.paipianwang.pat.common.config.PublicConfig;
 
 public class HttpsUtils {
 	// 静态httpclient对象，保证不需要每次重新创建https
@@ -42,15 +42,14 @@ public class HttpsUtils {
 		SSLContext sslcontext = null;
 		try {
 			// 设置truststore
-			//KeyStore trustStore = KeyStore.getInstance(GlobalConstant.KEY_STORE_TYPE);
-			KeyStore trustStore = KeyStore.getInstance(GlobalConstant.KEY_STORE_TYPE);
+			KeyStore trustStore = KeyStore.getInstance(PublicConfig.KEY_STORE_TYPE);
 			// 设置个人证书
-			KeyStore keyStore = KeyStore.getInstance(GlobalConstant.KEY_STORE_TYPE_P12);
-			InputStream ksIn = new FileInputStream(GlobalConstant.KEY_STORE_CLIENT_PATH);
-			InputStream tsIn = new FileInputStream(new File(GlobalConstant.KEY_STORE_TRUST_PATH));
+			KeyStore keyStore = KeyStore.getInstance(PublicConfig.KEY_STORE_TYPE_P12);
+			InputStream ksIn = new FileInputStream(PublicConfig.KEY_STORE_CLIENT_PATH);
+			InputStream tsIn = new FileInputStream(new File(PublicConfig.KEY_STORE_TRUST_PATH));
 			try {
-				keyStore.load(ksIn, GlobalConstant.KEY_STORE_PASSWORD.toCharArray());
-				trustStore.load(tsIn, GlobalConstant.KEY_STORE_TRUST_PASSWORD.toCharArray());
+				keyStore.load(ksIn, PublicConfig.KEY_STORE_PASSWORD.toCharArray());
+				trustStore.load(tsIn, PublicConfig.KEY_STORE_TRUST_PASSWORD.toCharArray());
 			} finally {
 				try {
 					ksIn.close();
@@ -60,7 +59,7 @@ public class HttpsUtils {
 				}
 			}
 			sslcontext = SSLContexts.custom().loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
-					.loadKeyMaterial(keyStore, GlobalConstant.KEY_STORE_PASSWORD.toCharArray()).build();
+					.loadKeyMaterial(keyStore, PublicConfig.KEY_STORE_PASSWORD.toCharArray()).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -143,7 +142,7 @@ public class HttpsUtils {
 	public static CookieStore buildCookieStore(HttpServletRequest request){
 		CookieStore	cookieStore = new BasicCookieStore();
 		BasicClientCookie cookie = new BasicClientCookie("JSESSIONID", request.getSession().getId());
-		cookie.setDomain(GlobalConstant.COOKIES_SCOPE);
+		cookie.setDomain(PublicConfig.COOKIES_SCOPE);
 		cookie.setPath("/");
 		cookieStore.addCookie(cookie);
 		return cookieStore;

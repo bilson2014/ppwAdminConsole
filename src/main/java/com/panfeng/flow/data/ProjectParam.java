@@ -11,23 +11,19 @@ import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.paipianwang.pat.facade.team.entity.PmsTeam;
-import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
-import com.paipianwang.pat.facade.user.entity.PmsUser;
-import com.paipianwang.pat.facade.user.service.PmsUserFacade;
-import com.panfeng.domain.GlobalConstant;
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsEmployee;
+import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
 import com.panfeng.flow.taskchain.EventType;
 import com.panfeng.persist.IndentFlowMapper;
 import com.panfeng.resource.model.ActivitiTask;
-import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.Synergy;
 import com.panfeng.service.ActivitiEngineService;
-import com.panfeng.service.EmployeeService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.SynergyService;
-import com.panfeng.util.ValidateUtil;
 
 @Component
 public class ProjectParam implements TemplateDateInterface<Map<String, String[]>, String> {
@@ -42,15 +38,10 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 	private ActivitiEngineService activitiEngineService;
 
 	@Autowired
-	private EmployeeService employeeService;
+	private final PmsEmployeeFacade pmsEmployeeFacade = null;
 
 	@Autowired
 	private SynergyService synergyService;
-
-	@Autowired
-	private PmsTeamFacade pmsTeamFacade;
-	@Autowired
-	private PmsUserFacade pmsUserFacade;
 
 	final static String teamName = "teamName";
 	final static String teamLinkMan = "teamLinkMan";
@@ -110,10 +101,8 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		LinkedList<String> fields = fillerParam.getFields();
 		LinkedList<String> relevantPersons = fillerParam.getRelevantPersons();
 
-		PmsUser user = null;
-		PmsTeam team = null;
-		List<Employee> providerManager = null;
-		List<Employee> manager = null;
+		List<PmsEmployee> providerManager = null;
+		List<PmsEmployee> manager = null;
 
 		if (ValidateUtil.isValid(fields) && ValidateUtil.isValid(relevantPersons)) {
 			// 识别人员 --》构造参数
@@ -121,14 +110,14 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 			String[] value = null;
 			for (String string : relevantPersons) {
 				switch (string) {
-				case GlobalConstant.ROLE_PROVIDER:
+				case PmsConstant.ROLE_PROVIDER:
 					// 确定参数
 					key = indentProject.getTeamPhone();
 					value = new String[fields.size()];
 					for (int i = 0; i < fields.size(); i++) {
 						String field = fields.get(i);
 						if (field.indexOf("S_") > -1) {
-							String otherParam = otherParam(field, indentProject, GlobalConstant.ROLE_PROVIDER);
+							String otherParam = otherParam(field, indentProject, PmsConstant.ROLE_PROVIDER);
 							value[i] = otherParam;
 						} else {
 							String basicParam = parseBasicParam(field, indentProject);
@@ -137,13 +126,13 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 					}
 					result.put(key, value);
 					break;
-				case GlobalConstant.ROLE_CUSTOMER:
+				case PmsConstant.ROLE_CUSTOMER:
 					key = indentProject.getUserPhone();
 					value = new String[fields.size()];
 					for (int i = 0; i < fields.size(); i++) {
 						String field = fields.get(i);
 						if (field.indexOf("S_") > -1) {
-							String otherParam = otherParam(field, indentProject, GlobalConstant.ROLE_CUSTOMER);
+							String otherParam = otherParam(field, indentProject, PmsConstant.ROLE_CUSTOMER);
 							value[i] = otherParam;
 						} else {
 							String basicParam = parseBasicParam(field, indentProject);
@@ -153,15 +142,15 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 					}
 					result.put(key, value);
 					break;
-				case GlobalConstant.ROLE_PROVIDERMANAGER:
+				case PmsConstant.ROLE_PROVIDERMANAGER:
 					if (providerManager == null)
-						providerManager = employeeService.findEmployeeByRoleid(4L);
+						providerManager = pmsEmployeeFacade.findEmployeesByRoleId(4l);
 					// 构造所有供应商管家信息
 					if (ValidateUtil.isValid(providerManager)) {
 						fillParam(fields, providerManager, eventType, indentProject, result);
 					}
 					break;
-				case GlobalConstant.ROLE_MANAGER:
+				case PmsConstant.ROLE_MANAGER:
 					if (manager == null)
 						manager = getManager(indentProject);
 
@@ -178,9 +167,9 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		return result;
 	}
 
-	private void fillParam(LinkedList<String> fields, List<Employee> manager, EventType eventType,
+	private void fillParam(LinkedList<String> fields, List<PmsEmployee> manager, EventType eventType,
 			IndentProject indentProject, Map<String, String[]> result) {
-		for (Employee employee : manager) {
+		for (PmsEmployee employee : manager) {
 			String key = parseKey(employee, eventType);
 			String[] value = new String[fields.size()];
 			for (int i = 0; i < fields.size(); i++) {
@@ -197,7 +186,7 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		}
 	}
 
-	private List<Employee> getManager(IndentProject indentProject) {
+	private List<PmsEmployee> getManager(IndentProject indentProject) {
 		List<Long> ids = new ArrayList<>();
 		Long userId = indentProject.getUserId();
 		ids.add(userId); // 添加主负责人
@@ -206,7 +195,7 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		for (Synergy synergy : collectionSynergys) {
 			ids.add(synergy.getUserId());// 添加主协同人
 		}
-		return employeeService.findEmployeeByIds(ids.toArray(new Long[ids.size()]));
+		return pmsEmployeeFacade.findEmployeeByIds(ids.toArray(new Long[ids.size()]));
 	}
 
 	private String parseBasicParam(String field, IndentProject indentProject) {
@@ -249,7 +238,7 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		return result;
 	}
 
-	private String otherParam(String field, Employee employee) {
+	private String otherParam(String field, PmsEmployee employee) {
 		String result = "";
 		switch (field) {
 		case S_UserName:
@@ -264,7 +253,7 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 
 	private String otherParam(String field, IndentProject indentProject, String role) {
 		String result = "";
-		if (role.equals(GlobalConstant.ROLE_CUSTOMER)) {
+		if (role.equals(PmsConstant.ROLE_CUSTOMER)) {
 			switch (field) {
 			case S_UserName:
 				result = indentProject.getUserName();
@@ -273,7 +262,7 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 				result = indentProject.getUserPhone();
 				break;
 			}
-		} else if (role.equals(GlobalConstant.ROLE_PROVIDER)) {
+		} else if (role.equals(PmsConstant.ROLE_PROVIDER)) {
 			switch (field) {
 			case S_UserName:
 				result = indentProject.getTeamName();
@@ -285,33 +274,8 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		}
 		return result;
 	}
-	// private String otherParam(String field, User user) {
-	// String result = "";
-	// switch (field) {
-	// case S_UserName:
-	// result = user.getUserName();
-	// break;
-	// case S_PhoneNumber:
-	// result = user.getTelephone();
-	// break;
-	// }
-	// return result;
-	// }
-	//
-	// private String otherParam(String field, Team team) {
-	// String result = "";
-	// switch (field) {
-	// case S_UserName:
-	// result = team.getTeamName();
-	// break;
-	// case S_PhoneNumber:
-	// result = team.getPhoneNumber();
-	// break;
-	// }
-	// return result;
-	// }
 
-	private String parseKey(Employee employee, EventType eventType) {
+	private String parseKey(PmsEmployee employee, EventType eventType) {
 		String result = "";
 		switch (eventType) {
 		case MAIL:
@@ -324,49 +288,13 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		return result;
 	}
 
-	/*
-	 * private String parseKey(User user, EventType eventType) { String result =
-	 * ""; switch (eventType) { case MAIL: result = user.getEmail(); break; case
-	 * SMS: result = user.getTelephone(); break; } return result; }
-	 */
-	private String parseKey(PmsUser user, EventType eventType) {
-		String result = "";
-		switch (eventType) {
-		case MAIL:
-			result = user.getEmail();
-			break;
-		case SMS:
-			result = user.getTelephone();
-			break;
-		}
-		return result;
-	}
-
-	/*
-	 * private String parseKey(Team team, EventType eventType) { String result =
-	 * ""; switch (eventType) { case MAIL: result = team.getEmail(); break; case
-	 * SMS: result = team.getPhoneNumber(); break; } return result; }
-	 */
-	private String parseKey(PmsTeam team, EventType eventType) {
-		String result = "";
-		switch (eventType) {
-		case MAIL:
-			result = team.getEmail();
-			break;
-		case SMS:
-			result = team.getPhoneNumber();
-			break;
-		}
-		return result;
-	}
-
 	@Override
 	public Map<String, String> personnel() {
 		Map<String, String> personnel = new HashMap<String, String>();
-		personnel.put(GlobalConstant.ROLE_PROVIDER, "供应商");
-		personnel.put(GlobalConstant.ROLE_CUSTOMER, "客户");
-		personnel.put(GlobalConstant.ROLE_PROVIDERMANAGER, "供应商管家");
-		personnel.put(GlobalConstant.ROLE_MANAGER, "项目相关负责人");
+		personnel.put(PmsConstant.ROLE_PROVIDER, "供应商");
+		personnel.put(PmsConstant.ROLE_CUSTOMER, "客户");
+		personnel.put(PmsConstant.ROLE_PROVIDERMANAGER, "供应商管家");
+		personnel.put(PmsConstant.ROLE_MANAGER, "项目相关负责人");
 		return personnel;
 	}
 

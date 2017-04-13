@@ -2,12 +2,13 @@ package com.panfeng.util;
 
 import java.util.Map;
 
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsRight;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
-
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.resource.model.Right;
 
 /**
  * redis 数据相关
@@ -22,13 +23,13 @@ public class RedisDataUtils {
 	 * @param uri 转换之后的uri
 	 * @return 
 	 */
-	public static Right getRightFromRedis(final JedisPool pool,final String uri){
+	public static PmsRight getRightFromRedis(final JedisPool pool,final String uri){
 		Jedis jedis = null;
 		try {
 			System.err.println(pool);
 			jedis = pool.getResource();
-			String str = jedis.hget(GlobalConstant.CONTEXT_RIGHT_MAP, uri);
-			final Right right = RedisUtils.fromJson(str,Right.class);
+			String str = jedis.hget(PmsConstant.CONTEXT_RIGHT_MAP, uri);
+			final PmsRight right = RedisUtils.fromJson(str,PmsRight.class);
 			return right;
 		} catch (Exception e) {
 			
@@ -48,14 +49,14 @@ public class RedisDataUtils {
 	 * @param uri 转换之后的uri
 	 * @return 
 	 */
-	public static Map<String,Right> getRightsFromRedis(final JedisPool pool){
+	public static Map<String,PmsRight> getRightsFromRedis(final JedisPool pool){
 		Jedis jedis = null;
 		try {
 			System.err.println(pool);
 			jedis = pool.getResource();
-			Map<String,String> map = jedis.hgetAll(GlobalConstant.CONTEXT_RIGHT_MAP);
+			Map<String,String> map = jedis.hgetAll(PmsConstant.CONTEXT_RIGHT_MAP);
 			if(ValidateUtil.isValid(map)){
-				final Map<String,Right> rightMap = RedisUtils.fromJson(map);
+				final Map<String,PmsRight> rightMap = RedisUtils.fromJson(map);
 				return rightMap;
 			}
 			
@@ -77,7 +78,7 @@ public class RedisDataUtils {
 	 * @param pool
 	 * @param right 权限实体
 	 */
-	public static void addRightByRedis(final JedisPool pool,final Right right){
+	public static void addRightByRedis(final JedisPool pool,final PmsRight right){
 		if(right != null){
 			Jedis jedis = null;
 			try {
@@ -86,7 +87,7 @@ public class RedisDataUtils {
 				final String str = RedisUtils.toJson(right);
 				if(ValidateUtil.isValid(str)){
 					Transaction t = jedis.multi();
-					jedis.hset(GlobalConstant.CONTEXT_RIGHT_MAP, right.getUrl(), str);
+					jedis.hset(PmsConstant.CONTEXT_RIGHT_MAP, right.getUrl(), str);
 					t.exec();
 				}
 			} catch (Exception e) {
@@ -100,7 +101,7 @@ public class RedisDataUtils {
 		}
 	}
 	
-	public static void resetRightFromRedis(final JedisPool pool,final Map<String,Right> map){
+	public static void resetRightFromRedis(final JedisPool pool,final Map<String,PmsRight> map){
 		if(ValidateUtil.isValid(map)){
 			Jedis jedis = null;
 			try {
@@ -108,7 +109,7 @@ public class RedisDataUtils {
 				jedis = pool.getResource();
 				Transaction tx = jedis.multi();
 				final Map<String,String> rightMap = RedisUtils.toJson(map);
-				jedis.hmset(GlobalConstant.CONTEXT_RIGHT_MAP, rightMap);
+				jedis.hmset(PmsConstant.CONTEXT_RIGHT_MAP, rightMap);
 				tx.exec();
 			} catch (Exception e) {
 				

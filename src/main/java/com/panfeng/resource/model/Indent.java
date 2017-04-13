@@ -1,12 +1,12 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
 /**
  * 订单业务类
  * @author GY
  */
-public class Indent extends BaseObject {
+public class Indent extends BaseEntity {
 
 	private static final long serialVersionUID = 3600890814141989814L;
 

@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.panfeng.domain.BaseObject;
-import com.panfeng.util.ValidateUtil;
+import com.paipianwang.pat.common.entity.BaseEntity;
+import com.paipianwang.pat.common.util.ValidateUtil;
 
-public class IndentFlow extends BaseObject {
+public class IndentFlow extends BaseEntity {
 
 	private static final long serialVersionUID = 927916387241744169L;
 	public static String defaultDate = "1970-01-01";
@@ -20,8 +20,6 @@ public class IndentFlow extends BaseObject {
 	private long ifIndentId;
 	private String ifFlowId;
 	private String ifState;
-	
-	
 
 	public long getIfId() {
 		return ifId;
@@ -55,8 +53,7 @@ public class IndentFlow extends BaseObject {
 		this.ifState = ifState;
 	}
 
-	public IndentFlow(long ifId, long ifIndentId, String ifFlowId,
-			String ifState) {
+	public IndentFlow(long ifId, long ifIndentId, String ifFlowId, String ifState) {
 		super();
 		this.ifId = ifId;
 		this.ifIndentId = ifIndentId;
@@ -109,9 +106,8 @@ public class IndentFlow extends BaseObject {
 	public static List<FlowDate> getFlowDates(List<IndentFlow> flows) {
 		List<FlowDate> lDates = new ArrayList<FlowDate>();
 		for (IndentFlow indentFlow : flows) {
-			lDates.add(new FlowDate(indentFlow.getFdId(), indentFlow
-					.getFdFlowId(), indentFlow.getFdStartTime(), indentFlow
-					.getFdTaskId()));
+			lDates.add(new FlowDate(indentFlow.getFdId(), indentFlow.getFdFlowId(), indentFlow.getFdStartTime(),
+					indentFlow.getFdTaskId()));
 		}
 		return lDates;
 	}
@@ -123,13 +119,12 @@ public class IndentFlow extends BaseObject {
 	 * @param indentProject
 	 * @param lDates
 	 */
-	public static void updateFlowDates(IndentProject indentProject,
-			List<FlowDate> lDates) {
+	public static void updateFlowDates(IndentProject indentProject, List<FlowDate> lDates) {
 		Map<String, String> time = indentProject.getTime();
 		for (FlowDate flowDate : lDates) {
 			// update time
-			String dateStr = time.get(flowDate.getFdTaskId())!=null&&"".equals(time.get(flowDate.getFdTaskId())) ? defaultDate
-					: time.get(flowDate.getFdTaskId());
+			String dateStr = time.get(flowDate.getFdTaskId()) != null && "".equals(time.get(flowDate.getFdTaskId()))
+					? defaultDate : time.get(flowDate.getFdTaskId());
 			flowDate.setFdStartTime(dateStr);
 		}
 	}
@@ -141,18 +136,16 @@ public class IndentFlow extends BaseObject {
 	 * @param indentProject
 	 * @param indentFlows
 	 */
-	public static void indentProjectFillDate(IndentProject indentProject,
-			List<IndentFlow> indentFlows) {
+	public static void indentProjectFillDate(IndentProject indentProject, List<IndentFlow> indentFlows) {
 		Map<String, String> time = new HashMap<>();
-		if(null != indentFlows && indentFlows.size() > 0){
+		if (null != indentFlows && indentFlows.size() > 0) {
 			for (IndentFlow flowDate : indentFlows) {
 				final String firstDate = flowDate.getFdStartTime();
-				if(ValidateUtil.isValid(firstDate)){
-					
-					String dateStr = flowDate.getFdStartTime().equals(defaultDate) ? ""
-							: flowDate.getFdStartTime();
+				if (ValidateUtil.isValid(firstDate)) {
+
+					String dateStr = flowDate.getFdStartTime().equals(defaultDate) ? "" : flowDate.getFdStartTime();
 					time.put(flowDate.getFdTaskId(), dateStr);
-				}else {
+				} else {
 					time.put(flowDate.getFdTaskId(), "");
 				}
 			}
@@ -168,8 +161,7 @@ public class IndentFlow extends BaseObject {
 	 * @param nodes
 	 * @return
 	 */
-	public static List<FlowDate> createFlowDates(String flowId,
-			IndentProject indentProject, List<ActivitiTask> nodes) {
+	public static List<FlowDate> createFlowDates(String flowId, IndentProject indentProject, List<ActivitiTask> nodes) {
 		List<FlowDate> dates = new ArrayList<>();
 		FlowDate flowDate;
 		for (ActivitiTask activitiTask : nodes) {

@@ -1,11 +1,11 @@
 package com.panfeng.resource.model;
 
 
-import com.panfeng.domain.BaseObject;
+import java.io.Serializable;
 /**
  * mail模板
  */
-public class Mail extends BaseObject{
+public class Mail implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	

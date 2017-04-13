@@ -1,11 +1,13 @@
 package com.panfeng.domain;
 
+import com.paipianwang.pat.common.entity.BaseEntity;
+
 /**
  * 数据源
  * @author Jack
  *
  */
-public class DataSource extends BaseObject {
+public class DataSource extends BaseEntity {
 
 	private static final long serialVersionUID = 4566138888831176286L;
 

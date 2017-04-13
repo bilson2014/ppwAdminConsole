@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
-import com.panfeng.service.FDFSService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.util.HttpUtil;
 
@@ -27,8 +27,6 @@ import com.panfeng.util.HttpUtil;
 public class ResourceController extends BaseController {
 	@Autowired
 	private IndentResourceService indentResourceService = null;
-	@Autowired
-	private FDFSService fdfsService = null;
 
 	@RequestMapping(value = "/addResource")
 	public String addResource(@RequestParam final MultipartFile addfile, final IndentProject indentProject) {
@@ -60,11 +58,8 @@ public class ResourceController extends BaseController {
 		indentResource.setIrId(id);
 		indentResource = indentResourceService.findIndentResource(indentResource);
 		try {
-			InputStream in = fdfsService.download(indentResource.getIrFormatName());
+			InputStream in = FastDFSClient.downloadFile(indentResource.getIrFormatName());
 			// 此处设置文件大小
-			// System.err.println(indentResource.getIrOriginalName() + " 文件大小为:
-			// " + in.available());
-			// response.setContentLength(in.available());
 			ServletOutputStream ouputStream = response.getOutputStream();
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("application/octet-stream");

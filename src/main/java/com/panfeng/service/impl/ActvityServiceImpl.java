@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.paipianwang.pat.common.util.JsonUtil;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.domain.BaseJob;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.persist.ActivityMapper;
@@ -19,7 +20,6 @@ import com.panfeng.service.QuartzService;
 import com.panfeng.service.impl.job.SendMailJob;
 import com.panfeng.service.impl.job.SendSmsJob;
 import com.panfeng.util.DateUtils;
-import com.panfeng.util.ValidateUtil;
 
 @Service
 public class ActvityServiceImpl implements ActivityService {

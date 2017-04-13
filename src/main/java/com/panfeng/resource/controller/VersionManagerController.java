@@ -11,17 +11,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsEmployee;
+import com.paipianwang.pat.facade.right.entity.PmsRole;
+import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
+import com.paipianwang.pat.facade.right.service.PmsRightFacade;
+import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.SessionInfo;
-import com.panfeng.resource.model.Employee;
-import com.panfeng.resource.model.Role;
 import com.panfeng.service.EmployeeService;
-import com.panfeng.service.RightService;
-import com.panfeng.service.RoleService;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.Log;
-import com.panfeng.util.ValidateUtil;
 
 /**
  * 视频管家管理
@@ -37,124 +38,30 @@ public class VersionManagerController extends BaseController {
 	// private static Logger logger = LoggerFactory.getLogger("error");
 
 	@Autowired
+	private final PmsEmployeeFacade pmsEmployeeFacade = null;
+	
+	@Autowired
 	private final EmployeeService service = null;
 
 	@Autowired
-	private final RoleService roleService = null;
+	private final PmsRoleFacade pmsRoleFacade = null;
 
 	@Autowired
-	private final RightService rightService = null;
+	private final PmsRightFacade pmsRightFacade = null;
 	
-	//@Autowired
-//	private final PmsEmployeeFacade pmsEmployeeFacade = null;
-	
-	//@Autowired
-//	private final PmsRightFacade pmsRightFacade = null;
-	
-	//@Autowired
-	//private final PmsRoleFacade pmsRoleFacade = null;
-
-	/**
-	 * 跳转
-	 * 
-	 * @return
-	 */
-	/*
-	 * @RequestMapping("/manager-list") public ModelAndView view(){
-	 * 
-	 * return new ModelAndView("manager-list"); }
-	 */
-
-	/**
-	 * 分页查询
-	 * 
-	 * @return 视频管家列表
-	 */
-	/*
-	 * @RequestMapping(value = "/manager/list",method =
-	 * RequestMethod.POST,produces = "application/json; charset=UTF-8") public
-	 * DataGrid<VersionManager> list(final VersionManagerView view,final
-	 * PageFilter pf){
-	 * 
-	 * final long page = pf.getPage(); final long rows = pf.getRows();
-	 * view.setBegin((page - 1) * rows); view.setLimit(rows);
-	 * 
-	 * DataGrid<VersionManager> dataGrid = new DataGrid<VersionManager>(); final
-	 * List<VersionManager> list = service.listWithPagination(view);
-	 * 
-	 * dataGrid.setRows(list); final long total = service.maxSize(view);
-	 * dataGrid.setTotal(total); return dataGrid; }
-	 */
-
-	/**
-	 * 更新
-	 */
-	/*
-	 * @RequestMapping(value = "/manager/update",method = RequestMethod.POST)
-	 * public void update(final HttpServletRequest request,HttpServletResponse
-	 * response, final VersionManager manager){
-	 * response.setContentType("text/html;charset=UTF-8");
-	 * 
-	 * // 判断密码是否为空 final String password = manager.getManagerPassword();
-	 * if(ValidateUtil.isValid(password)){ try { final String ps =
-	 * AESUtil.Decrypt(password, GlobalConstant.UNIQUE_KEY);
-	 * manager.setManagerPassword(DataUtil.md5(ps)); } catch (Exception e) {
-	 * e.printStackTrace(); } }
-	 * 
-	 * service.update(manager);
-	 * 
-	 * }
-	 */
-
-	/**
-	 * 新增
-	 * 
-	 * @param versionManager
-	 */
-	/*
-	 * @RequestMapping(value = "/manager/save",method = RequestMethod.POST)
-	 * public void save(final HttpServletRequest request,final
-	 * HttpServletResponse response, final VersionManager manager){
-	 * response.setContentType("text/html;charset=UTF-8");
-	 * 
-	 * // 判断密码是否为空 final String password = manager.getManagerPassword();
-	 * if(ValidateUtil.isValid(password)){ try { final String ps =
-	 * AESUtil.Decrypt(password, GlobalConstant.UNIQUE_KEY);
-	 * manager.setManagerPassword(DataUtil.md5(ps)); } catch (Exception e) {
-	 * e.printStackTrace(); } }
-	 * 
-	 * service.save(manager);
-	 * 
-	 * }
-	 */
-
-	/**
-	 * 删除
-	 */
-	/*
-	 * @RequestMapping("/manager/delete") public long delete(final long[] ids){
-	 * 
-	 * final long ret = service.delete(ids); return ret; }
-	 */
-
 	// -------------------- 前端方法 ----------------
 
 	/**
 	 * 前端登陆验证
 	 */
 	@RequestMapping("/manager/static/encipherment")
-	public boolean doLogin(final HttpServletRequest request, @RequestBody final Employee employee) {
+	public boolean doLogin(final HttpServletRequest request, @RequestBody final PmsEmployee employee) {
 
 		if (employee != null) {
-			final Employee e = service.doLogin(employee.getEmployeeLoginName(), employee.getEmployeePassword());
-			//final PmsEmployee e = pmsEmployeeFacade.doLogin(employee.getEmployeeLoginName(), employee.getEmployeePassword());
+			final PmsEmployee e = pmsEmployeeFacade.doLogin(employee.getEmployeeLoginName(), employee.getEmployeePassword());
 			if (e != null) {
 				//填充角色
-				//List<PmsRole> roles = pmsRoleFacade.getRolesByEmployId(e.getEmployeeId());
-				//List<PmsRole> roles = pmsRoleFacade.getRolesByEmployId(e.getEmployeeId());
-				//e.setRoles(roles);
-				// infoService.removeSession(request);
-				request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
+				request.getSession().removeAttribute(PmsConstant.SESSION_INFO);
 				return initSessionInfo(e, request);
 			}
 		}
@@ -169,17 +76,17 @@ public class VersionManagerController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/manager/thirdLogin/isExist")
-	public boolean verificationTeamExist(@RequestBody final Employee employee, final HttpServletRequest request) {
+	public boolean verificationTeamExist(@RequestBody final PmsEmployee employee, final HttpServletRequest request) {
 
-		final List<Employee> list = service.verificationEmployeeExist(employee);
+		final List<PmsEmployee> list = pmsEmployeeFacade.verificationEmployeeExist(employee);
 		if (ValidateUtil.isValid(list)) {
 			if (list.size() == 1) {
 				if (ValidateUtil.isValid(list.get(0).getPhoneNumber())) {
 					// 绑定账户
 					// 清除当前session
 					// infoService.removeSession(request);
-					request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
-					final Employee empl = list.get(0);
+					request.getSession().removeAttribute(PmsConstant.SESSION_INFO);
+					final PmsEmployee empl = list.get(0);
 					// 存入session中
 					return initSessionInfo(empl, request);
 				}
@@ -192,7 +99,7 @@ public class VersionManagerController extends BaseController {
 	public long isNumberExist(@PathVariable("phoneNumber") final String phoneNumber, final HttpServletRequest request) {
 
 		if (ValidateUtil.isValid(phoneNumber)) {
-			final long count = service.checkPhoneNumber(phoneNumber);
+			final long count = pmsEmployeeFacade.checkPhoneNumber(phoneNumber);
 			return count;
 		}
 
@@ -200,10 +107,10 @@ public class VersionManagerController extends BaseController {
 	}
 
 	@RequestMapping("/manager/thirdLogin/bind")
-	public BaseMsg bind(@RequestBody final Employee employee, final HttpServletRequest request) {
+	public BaseMsg bind(@RequestBody final PmsEmployee employee, final HttpServletRequest request) {
 		final BaseMsg baseMsg = service.bind(employee);
 		if (baseMsg.getErrorCode().equals(BaseMsg.NORMAL) || baseMsg.getErrorCode().equals(BaseMsg.WARNING)) {
-			boolean login = initSessionInfo((Employee) baseMsg.getResult(), request);
+			boolean login = initSessionInfo((PmsEmployee) baseMsg.getResult(), request);
 			if (!login) {
 				return new BaseMsg(BaseMsg.ERROR, "绑定成功，登录失败", baseMsg.getResult());
 			}
@@ -215,23 +122,22 @@ public class VersionManagerController extends BaseController {
 	 * 修改密码
 	 */
 	@RequestMapping("/manager/static/editPwd")
-	public boolean editPassword(final HttpServletRequest request, @RequestBody final Employee e) {
+	public boolean editPassword(final HttpServletRequest request, @RequestBody final PmsEmployee e) {
 
 		if (e != null) {
 			if (ValidateUtil.isValid(e.getPhoneNumber())) {
 				// 在视频管家范围内查找该手机号码的人员
-				final List<Employee> list = service.getEmployeesWithVersionManager(e.getPhoneNumber());
+				final List<PmsEmployee> list = pmsEmployeeFacade.getEmployeesWithinVersionManager(e.getPhoneNumber());
 				if (ValidateUtil.isValid(list)) {
 					if (list.size() == 1) {
-						final Employee originalEmployee = list.get(0);
+						final PmsEmployee originalEmployee = list.get(0);
 						originalEmployee.setEmployeePassword(e.getEmployeePassword());
-						final long ret = service.editPasswordById(originalEmployee);
+						final long ret = pmsEmployeeFacade.updatePwdById(originalEmployee);
 						if (ret > 0)
 							return true;
 					} else {
 						SessionInfo sessionInfo = getCurrentInfo(request);
-						Log.error(
-								"VersionManagerController method:editPassword() error,becase phoneNumber is not unique ...",
+						Log.error("VersionManagerController method:editPassword() error,becase phoneNumber is not unique ...",
 								sessionInfo);
 					}
 				}
@@ -243,64 +149,13 @@ public class VersionManagerController extends BaseController {
 	/**
 	 * 初始化 sessionInfo 信息
 	 */
-	public boolean initSessionInfo(final Employee e, final HttpServletRequest request) {
+	public boolean initSessionInfo(final PmsEmployee e, final HttpServletRequest request) {
 		// 存入session中
 		final String sessionId = request.getSession().getId();
 		final SessionInfo info = new SessionInfo();
 		info.setLoginName(e.getEmployeeLoginName());
 		info.setRealName(e.getEmployeeRealName());
-		info.setSessionType(GlobalConstant.ROLE_EMPLOYEE);
-		// info.setSuperAdmin(false);
-		info.setToken(DataUtil.md5(sessionId));
-		info.setReqiureId(e.getEmployeeId());
-		info.setPhoto(e.getEmployeeImg());
-
-		/*
-		 * final Role role = roleService.findRoleById(9l); // 获取用户角色 final
-		 * List<Role> roles = new ArrayList<Role>(); roles.add(role);
-		 * manager.setRoles(roles); // 计算权限码总和 final long maxPos =
-		 * rightService.getMaxPos(); final long[] rightSum = new long[(int)
-		 * (maxPos+ 1)]; manager.setRightSum(rightSum);
-		 * manager.calculateRightSum(); info.setSum(manager.getRightSum());
-		 */
-
-		// 计算权限码
-		// 替换带有权限的角色
-		final List<Role> roles = new ArrayList<Role>();
-		for (final Role r : e.getRoles()) {
-
-			final Role role = roleService.findRoleById(r.getRoleId());
-			roles.add(role);
-		}
-		e.setRoles(roles);
-
-		// 计算权限码总和
-		final long maxPos = rightService.getMaxPos();
-		final long[] rightSum = new long[(int) (maxPos + 1)];
-
-		e.setRightSum(rightSum);
-		e.calculateRightSum();
-		long[] sum = e.getRightSum();
-		info.setSum(sum);
-		info.setSuperAdmin(e.isSuperAdmin()); // 判断是否是超级管理员
-		/*Map<String, Object> map = new HashMap<String, Object>();
-		map.put(GlobalConstant.SESSION_INFO, info);*/
-		request.getSession().setAttribute(GlobalConstant.SESSION_INFO, info);
-		// return infoService.addSessionSeveralTime(request, map, 60*60*24*7);
-		return true;
-	}
-	
-	/**
-	 * 初始化 sessionInfo 信息
-	 */
-/*	public boolean initSessionInfo(final PmsEmployee e, final HttpServletRequest request) {
-		// 存入session中
-		final String sessionId = request.getSession().getId();
-		final SessionInfo info = new SessionInfo();
-		info.setLoginName(e.getEmployeeLoginName());
-		info.setRealName(e.getEmployeeRealName());
-		info.setSessionType(GlobalConstant.ROLE_EMPLOYEE);
-		// info.setSuperAdmin(false);
+		info.setSessionType(PmsConstant.ROLE_EMPLOYEE);
 		info.setToken(DataUtil.md5(sessionId));
 		info.setReqiureId(e.getEmployeeId());
 		info.setPhoto(e.getEmployeeImg());
@@ -323,10 +178,8 @@ public class VersionManagerController extends BaseController {
 		long[] sum = e.getRightSum();
 		info.setSum(sum);
 		info.setSuperAdmin(e.isSuperAdmin()); // 判断是否是超级管理员
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put(GlobalConstant.SESSION_INFO, info);
-		request.getSession().setAttribute(GlobalConstant.SESSION_INFO, info);
-		// return infoService.addSessionSeveralTime(request, map, 60*60*24*7);
+		request.getSession().setAttribute(PmsConstant.SESSION_INFO, info);
 		return true;
-	}*/
+	}
+	
 }

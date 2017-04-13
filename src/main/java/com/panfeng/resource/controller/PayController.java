@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.DealLog;
 import com.panfeng.resource.model.PayWebHook;
 import com.panfeng.service.DealLogService;
 import com.panfeng.service.PayWebHookService;
 import com.panfeng.util.Log;
-import com.panfeng.util.ValidateUtil;
 
 @RestController
 @RequestMapping("/pay")

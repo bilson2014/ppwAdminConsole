@@ -20,17 +20,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.JsonUtil;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.facade.indent.service.PmsIndentFacade;
 import com.paipianwang.pat.facade.sales.entity.PmsSalesman;
 import com.paipianwang.pat.facade.sales.service.PmsSalesmanFacade;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.Salesman;
 import com.panfeng.resource.view.SalesmanView;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.HttpUtil;
 import com.panfeng.util.Log;
-import com.panfeng.util.ValidateUtil;
 
 @RequestMapping("/portal")
 @RestController

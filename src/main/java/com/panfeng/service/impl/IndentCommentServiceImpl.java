@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.panfeng.domain.GlobalConstant;
+import com.paipianwang.pat.common.constant.PmsConstant;
 import com.panfeng.persist.IndentCommentMapper;
 import com.panfeng.resource.model.IndentComment;
 import com.panfeng.resource.model.IndentProject;
@@ -58,7 +58,7 @@ public class IndentCommentServiceImpl implements IndentCommentService {
 		// 创建系统消息
 		IndentComment indentComment = new IndentComment();
 		indentComment.setIcUserId(888);
-		indentComment.setIcUserType(GlobalConstant.ROLE_SYSTEM);
+		indentComment.setIcUserType(PmsConstant.ROLE_SYSTEM);
 		if((indentProject.getUserType() == null)||(indentProject.getUserId() == null)){
 			indentComment.setIcContent("");
 		}else{

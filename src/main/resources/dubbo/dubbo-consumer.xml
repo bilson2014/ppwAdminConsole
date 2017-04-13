@@ -9,8 +9,8 @@
 	<dubbo:application name="edu-web-boss" /> 
 	<!-- 使用zookeeper注册中心暴露服务地址 -->
 	<!-- 注册中心地址 -->
-	<!-- <dubbo:registry protocol="zookeeper" address="106.75.4.197:2181" /> -->
-	<dubbo:registry protocol="zookeeper" address="123.59.75.93:2181" />
+	<dubbo:registry protocol="zookeeper" address="106.75.105.16:2181,106.75.105.16:2182,106.75.105.16:2183" />
+	<!-- <dubbo:registry protocol="zookeeper" address="123.59.75.93:2181" /> -->
 	<!-- 订单服务接口 -->
 	<dubbo:reference interface="com.paipianwang.pat.facade.indent.service.PmsIndentFacade" id="pmsIndentFacade" check="false" timeout="5000"/>
 	<!--作品服务接口 -->
@@ -31,11 +31,18 @@
 	<dubbo:reference interface="com.paipianwang.pat.facade.finance.service.PmsFinanceFacade" id="pmsFinanceFacade" check="false" timeout="5000"/>
 	<!--分销服务接口 -->
 	<dubbo:reference interface="com.paipianwang.pat.facade.sales.service.PmsSalesmanFacade" id="pmsSalesmanFacade" check="false" timeout="5000"/>
-	<!--员工服务接口 
-	<dubbo:reference interface="com.paipianwang.pat.facade.employee.service.PmsEmployeeFacade" id="pmsEmployeeFacade" check="false" timeout="5000"/>-->
-	<!--权限服务接口 
+	
+	<!--员工服务接口 -->
+	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsEmployeeFacade" id="pmsEmployeeFacade" check="false" timeout="5000"/>
+	<!--权限服务接口 -->
 	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsRightFacade" id="pmsRightFacade" check="false" timeout="5000"/>
-	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsRoleFacade" id="pmsRoleFacade" check="false" timeout="5000"/>-->
-
-</beans>  
+	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsRoleFacade" id="pmsRoleFacade" check="false" timeout="5000"/>
+	
+	<!-- 员工简介 -->
+	<dubbo:reference interface="com.paipianwang.pat.facade.employee.service.PmsJobFacade" id="pmsJobFacade" check="false" timeout="5000" />
+	<dubbo:reference interface="com.paipianwang.pat.facade.employee.service.PmsStaffFacade" id="pmsStaffFacade" check="false" timeout="5000" />
+	
+	<!-- Solr服务接口 -->
+	<dubbo:reference interface="com.paipianwang.pat.facade.information.service.PmsSolrFacade" id="pmsSolrFacade" check="false" timeout="5000" />
+</beans>
 

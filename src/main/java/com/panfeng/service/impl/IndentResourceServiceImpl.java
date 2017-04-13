@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.panfeng.persist.IndentResourceMapper;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
-import com.panfeng.service.FDFSService;
 import com.panfeng.service.FileStatusService;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentCommentService;
@@ -45,8 +45,6 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 
 	@Autowired
 	private FileStatusService fileStatusService;
-	@Autowired
-	private FDFSService fdfsService;
 
 	@Override
 	public List<IndentResource> findIndentList(IndentProject indentProject) {
@@ -86,16 +84,7 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 	public boolean addResource(IndentProject indentProject,
 			MultipartFile multipartFile) {
 			//注释原因,修改为dfs路径
-			/*InputStream inputStream = multipartFile.getInputStream();
-			  String filename = resourcesIndentMedia.getName()
-					+ "."
-					+ FileUtils.getExtName(multipartFile.getOriginalFilename(),
-							".");
-			String filepath = formatPath(indentProject, resourcesIndentMedia);
-			
-			boolean write = localResourceImpl.writeFile(inputStream, filepath,
-					filename);*/
-			String fileId = fdfsService.upload(multipartFile);
+			String fileId = FastDFSClient.uploadFile(multipartFile);
 			if (StringUtils.isNotBlank(fileId)) {
 				// 添加系统评论
 				indentCommentService.createSystemMsg("上传了文件：" + multipartFile.getOriginalFilename(), indentProject);
@@ -114,7 +103,6 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 				resource.setIrTaskId(at.getTaskDefinitionKey());
 				resource.setIrProcessInstanceId(at.getProcessInstanceId());
 
-				// TODO 添加文件过滤
 				indent_ResourceMapper.save(resource);
 				// 转换文件
 				onlineDocService.convertFile(resource);
@@ -130,11 +118,11 @@ public class IndentResourceServiceImpl implements IndentResourceService {
 			for(IndentResource i : iList){
 				String irFormatName = i.getIrFormatName();
 				if(StringUtils.isNotBlank(irFormatName)){
-					fdfsService.delete(irFormatName);
+					FastDFSClient.deleteFile(irFormatName);
 				}
 				String irViewName = i.getIrViewName();
 				if(StringUtils.isNotBlank(irViewName)){
-					fdfsService.delete(irViewName);
+					FastDFSClient.deleteFile(irViewName);
 				}
 			}
 		}

@@ -15,7 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.panfeng.domain.GlobalConstant;
+import com.paipianwang.pat.common.constant.PmsConstant;
 import com.panfeng.persist.IndentFlowMapper;
 import com.panfeng.persist.IndentProjectMapper;
 import com.panfeng.poi.GenerateExcel;
@@ -53,7 +53,7 @@ public class IndentProjectTest {
 		ProjectPoiAdapter projectPoiAdapter = new ProjectPoiAdapter();
 		GenerateExcel ge = new GenerateExcel();
 		IndentProject ip = new IndentProject();
-		ip.setUserType(GlobalConstant.ROLE_EMPLOYEE);
+		ip.setUserType(PmsConstant.ROLE_EMPLOYEE);
 		ip.setUserId(36L);
 		List<IndentProject> list = indentProjectMapper.findProjectList(ip);
 		UserTempService userTempService=applicationContext.getBean(UserTempService.class);
@@ -95,40 +95,6 @@ public class IndentProjectTest {
 		}
 	}
 
-	// public Map<String,CellStyle> createCellStyle(Workbook wb,List<StationMap>
-	// colorArr){
-	// final Map<String,CellStyle> styles = new HashMap<String, CellStyle>();
-	// final CellStyle style = wb.createCellStyle();
-	// style.setTopBorderColor(IndexedColors.BLACK.index);
-	// style.setBottomBorderColor(IndexedColors.BLACK.index);
-	// style.setLeftBorderColor(IndexedColors.BLACK.index);
-	// style.setBorderTop(CellStyle.BORDER_THIN);
-	// style.setBorderBottom(CellStyle.BORDER_THIN);
-	// style.setBorderLeft(CellStyle.BORDER_THIN);
-	// style.setBorderRight(CellStyle.BORDER_THIN);
-	// styles.put("normar", style); // 未渲染
-	//
-	// for(StationMap sm : colorArr){
-	// final CellStyle colorStyle = wb.createCellStyle();
-	// XSSFCellStyle styleTemp = (XSSFCellStyle) colorStyle;
-	// styleTemp.setTopBorderColor(IndexedColors.BLACK.index);
-	// styleTemp.setBottomBorderColor(IndexedColors.BLACK.index);
-	// styleTemp.setLeftBorderColor(IndexedColors.BLACK.index);
-	// styleTemp.setBorderTop(CellStyle.BORDER_THIN);
-	// styleTemp.setBorderBottom(CellStyle.BORDER_THIN);
-	// styleTemp.setBorderLeft(CellStyle.BORDER_THIN);
-	// styleTemp.setBorderRight(CellStyle.BORDER_THIN);
-	// styleTemp.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
-	// final String color = sm.getColor();
-	// if(color.indexOf("(") > -1 && color.indexOf("") > -1){ // 不为空
-	// String[] str = color.split("\\(")[1].split("\\)")[0].split(",");
-	// styleTemp.setFillForegroundColor(new XSSFColor(new
-	// Color(Integer.valueOf(str[0].trim()),Integer.valueOf(str[1].trim()),Integer.valueOf(str[2].trim()))));
-	// styles.put(String.valueOf(sm.getPrice()), styleTemp);
-	// }
-	// }
-	// return styles;
-	// }
 	@Test
 	public void getProjectCount(){
 		System.out.println(indentProjectMapper2.getProjectCount());

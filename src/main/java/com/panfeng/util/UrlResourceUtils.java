@@ -2,6 +2,8 @@ package com.panfeng.util;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.paipianwang.pat.common.util.ValidateUtil;
+
 /**
  * URL工具类
  * @author Jack

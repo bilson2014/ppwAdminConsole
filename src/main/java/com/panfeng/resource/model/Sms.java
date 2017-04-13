@@ -1,11 +1,11 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import java.io.Serializable;
 
 /**
  *短信模板
  */
-public class Sms extends BaseObject{
+public class Sms implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	

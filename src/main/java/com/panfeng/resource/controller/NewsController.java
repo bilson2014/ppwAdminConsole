@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.panfeng.resource.model.News;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.NewsView;
 import com.panfeng.resource.view.PageFilter;
-import com.panfeng.service.FDFSService;
 import com.panfeng.service.NewsService;
 
 /**
@@ -28,9 +28,6 @@ public class NewsController extends BaseController {
 
 	@Autowired
 	private NewsService newsService;
-
-	@Autowired
-	private final FDFSService fdfsService = null;
 
 	@RequestMapping(value = "/news-list")
 	public ModelAndView view(final ModelMap model) {
@@ -57,7 +54,7 @@ public class NewsController extends BaseController {
 	@RequestMapping(value = "/news/save", method = RequestMethod.POST)
 	public void save(final News news, MultipartFile picLDUrlFile) {
 		if (!picLDUrlFile.isEmpty()) {
-			String path = fdfsService.upload(picLDUrlFile);
+			String path = FastDFSClient.uploadFile(picLDUrlFile);
 			news.setPicLDUrl(path);
 		}
 		newsService.save(news);
@@ -69,9 +66,9 @@ public class NewsController extends BaseController {
 
 			String picLDUrl = news.getPicLDUrl();
 			if (StringUtils.isNotEmpty(picLDUrl)) {
-				fdfsService.delete(picLDUrl);
+				FastDFSClient.deleteFile(picLDUrl);
 			}
-			String path = fdfsService.upload(picLDUrlFile);
+			String path = FastDFSClient.uploadFile(picLDUrlFile);
 			news.setPicLDUrl(path);
 		}
 		newsService.update(news);

@@ -3,9 +3,9 @@ package com.panfeng.resource.model;
 import java.util.List;
 import java.util.Map;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
-public class IndentProject extends BaseObject {
+public class IndentProject extends BaseEntity {
 
 	private static final long serialVersionUID = 4610963805615371485L;
 
@@ -14,7 +14,6 @@ public class IndentProject extends BaseObject {
 	public final static int PROJECT_FINISH = 2;
 	public final static int PROJECT_SUSPEND = 3;
 
-	private long id = 0l; // 项目流程ID
 	private long projectId = 0l; // 项目ID，冗余字段，以id属性为准
 	private String projectName = ""; //
 	private String userName = ""; // 客户公司名称
@@ -117,14 +116,6 @@ public class IndentProject extends BaseObject {
 		this.referrerName = referrerName;
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public String getSource() {
 		return source;
 	}
@@ -193,9 +184,9 @@ public class IndentProject extends BaseObject {
 		super();
 	}
 	
-	public IndentProject(long id) {
+	public IndentProject(Long id) {
 		super();
-		this.id = id;
+		super.setId(id);
 	}
 
 	public String getUserType() {

@@ -1,8 +1,8 @@
 package com.panfeng.resource.view;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
-public class PageFilter extends BaseObject {
+public class PageFilter extends BaseEntity {
 
 	private static final long serialVersionUID = -2068769820893993360L;
 	private int page;// 当前页

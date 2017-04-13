@@ -1,5 +1,6 @@
 package com.panfeng.util;
 
+import com.paipianwang.pat.common.web.security.SHA256Utils;
 import com.panfeng.resource.model.Sign;
 
 public class SignUtils {

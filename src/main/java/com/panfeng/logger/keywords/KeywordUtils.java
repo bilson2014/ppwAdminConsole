@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.panfeng.domain.GlobalConstant;
+import com.paipianwang.pat.common.constant.PmsConstant;
 import com.panfeng.resource.view.SolrView;
 
 /**
@@ -76,7 +76,7 @@ public class KeywordUtils {
 						// 如果从相关性推荐过来的，那么应该添加权重
 						if(view.isMore()) {
 							if(i < 3){
-								sb.append("^" + GlobalConstant.weightArr[i]);
+								sb.append("^" + PmsConstant.WEIGHT_ARR[i]);
 							}
 						}
 							

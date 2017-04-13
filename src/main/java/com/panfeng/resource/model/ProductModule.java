@@ -1,10 +1,11 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import java.io.Serializable;
+
 /**
  * 产品模块化
  */
-public class ProductModule extends BaseObject {
+public class ProductModule implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	

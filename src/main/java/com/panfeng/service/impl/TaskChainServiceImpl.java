@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsTree;
 import com.panfeng.flow.taskchain.EventType;
 import com.panfeng.persist.NodesEventMapper;
 import com.panfeng.persist.TaskChainMapper;
@@ -17,11 +19,9 @@ import com.panfeng.resource.model.NodesEvent;
 import com.panfeng.resource.model.Sms;
 import com.panfeng.resource.model.TaskChain;
 import com.panfeng.resource.model.TaskChainNodesEventLink;
-import com.panfeng.resource.model.Tree;
 import com.panfeng.service.MailService;
 import com.panfeng.service.SMSTemplateService;
 import com.panfeng.service.TaskChainService;
-import com.panfeng.util.ValidateUtil;
 
 @Service
 public class TaskChainServiceImpl implements TaskChainService {
@@ -45,12 +45,12 @@ public class TaskChainServiceImpl implements TaskChainService {
 	}
 
 	@Override
-	public List<Tree> getEventTree() {
+	public List<PmsTree> getEventTree() {
 		List<NodesEvent> list = nodesEventMapper.getAll();
-		List<Tree> tree = new LinkedList<Tree>();
+		List<PmsTree> tree = new LinkedList<PmsTree>();
 		if (ValidateUtil.isValid(list)) {
 			for (NodesEvent event : list) {
-				Tree t = new Tree();
+				PmsTree t = new PmsTree();
 				t.setId(event.getNodesEventId().toString());
 				t.setText(event.getNodesEventName());
 				tree.add(t);
@@ -125,9 +125,9 @@ public class TaskChainServiceImpl implements TaskChainService {
 	 * 
 	 * @return
 	 */
-	public List<Tree> contentTemplateTree() {
-		final List<Tree> tree = new ArrayList<Tree>();
-		Tree tr = new Tree();
+	public List<PmsTree> contentTemplateTree() {
+		final List<PmsTree> tree = new ArrayList<PmsTree>();
+		PmsTree tr = new PmsTree();
 		EventType smsenum = EventType.SMS;
 		tr.setId(smsenum.getId() + "");
 		tr.setPid("null");
@@ -138,14 +138,14 @@ public class TaskChainServiceImpl implements TaskChainService {
 		List<Sms> smsList = smsTemplateService.getAll();
 		if (ValidateUtil.isValid(smsList)) {
 			for (Sms sms : smsList) {
-				Tree t = new Tree();
+				PmsTree t = new PmsTree();
 				t.setId(sms.getTempId());
 				t.setPid("0");
 				t.setText(sms.getTempTitle());
 				tree.add(t);
 			}
 		}
-		tr = new Tree();
+		tr = new PmsTree();
 		EventType mailenum = EventType.MAIL;
 		tr.setId(mailenum.getId() + "");
 		tr.setPid("null");
@@ -156,7 +156,7 @@ public class TaskChainServiceImpl implements TaskChainService {
 		List<Mail> mails = mailService.getAll();
 		if (ValidateUtil.isValid(mails)) {
 			for (Mail mail : mails) {
-				Tree t = new Tree();
+				PmsTree t = new PmsTree();
 				t.setId(mail.getMailType());
 				t.setPid("1");
 				t.setText(mail.getSubject());

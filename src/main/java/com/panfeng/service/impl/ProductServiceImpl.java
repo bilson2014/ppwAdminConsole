@@ -5,9 +5,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.panfeng.domain.GlobalConstant;
+import com.paipianwang.pat.common.config.PublicConfig;
 import com.panfeng.persist.ProductMapper;
 import com.panfeng.persist.ServiceMapper;
 import com.panfeng.persist.TeamMapper;
@@ -28,70 +27,9 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private final TeamMapper teamMapper = null;
 
-	/*@Override
-	public List<Product> listWithPagination(final ProductView view) {
-
-		final List<Product> list = mapper.listWithPagination(view);
-		return list;
-	}*/
-
-	/*@Override
-	public long save(final Product product) {
-
-		mapper.save(product);
-		return product.getProductId();
-	}*/
-
-	/*@Transactional
-	public List<Product> delete(final long[] ids) {
-		final List<Product> originalList = mapper.findProductByArray(ids);
-		if (ids.length > 0) {
-			for (long id : ids) {
-				mapper.delete(id);
-				scMapper.deleteByProduct(id);
-			}
-		}
-		return originalList;
-	}*/
-
-	/*@Override
-	public long update(final Product product) {
-
-		final long ret = mapper.update(product);
-		return ret;
-	}*/
-
-	/*@Override
-	public long maxSize(final ProductView view) {
-
-		final long total = mapper.maxSize(view);
-		return total;
-	}*/
-
-	/*@Override
-	public Product findProductById(final long productId) {
-
-		final Product product = mapper.findProductById(productId);
-		return product;
-	}*/
-
-	/*@Override
-	public long saveFileUrl(final Product product) {
-
-		final long ret = mapper.updateFileUrl(product);
-		return ret;
-	}*/
-
-/*	@Override
-	public List<Product> all() {
-
-		final List<Product> list = mapper.all();
-		return list;
-	}*/
-
 	@Override
 	public List<Product> listWithCondition(final ProductView view) {
-
+		
 		final List<Product> list = mapper.listWithCondition(view);
 		return mergeService(list);
 	}
@@ -162,38 +100,12 @@ public class ProductServiceImpl implements ProductService {
 		return size;
 	}
 
-	/*@Override
-	public List<Product> loadProductByProviderId(final long teamId) {
-
-		final List<Product> list = mapper.loadProductByProviderId(teamId);
-		return list;
-	}
-*/
-/*	@Override
-	public long updateProductInfo(final Product product) {
-
-		final long ret = mapper.updateProductInfo(product);
-		return ret;
-	}*/
-
 	@Override
 	public Product loadSingleProduct(long teamId) {
 
 		final Product product = mapper.loadSingleProduct(teamId);
 		return product;
 	}
-
-	/*@Override
-	public List<Product> loadProductByCommend() {
-
-		final List<Product> list = mapper.loadProductByCommend();
-		return list;
-	}
-*/
-	/*@Override
-	public void updateVideoDescription(final Product product) {
-		mapper.updateVideoDescription(product);
-	}*/
 
 	@Override
 	public List<Product> loadSalesProduct() {
@@ -215,13 +127,8 @@ public class ProductServiceImpl implements ProductService {
 		return map;
 	}
 
-	/*@Override
-	public Product getMasterWork(long teamId) {
-		return mapper.getMasterWork(teamId);
-	}*/
-
 	public List<Product> loadActivityProducts() {
-		String product_ids = GlobalConstant.ACTIVITY_PRODUCT_IDS;
+		String product_ids = PublicConfig.ACTIVITY_PRODUCT_IDS;
 		String[] ids = product_ids.split("\\|");
 		long[] lids = new long[ids.length];
 		for (int i = 0; i < ids.length; i++) {
@@ -230,36 +137,4 @@ public class ProductServiceImpl implements ProductService {
 		return mapper.findProductByIds(lids);
 	}
 
-
-	/**
-	 * 查找分页的作品，分页
-	 */
-	/*@Override
-	public List<Product> searchPageRecommendList(ProductView view) {
-		final List<Product> list = mapper.searchPageRecommendList(view);
-		return list;
-	}*/
-
-	/*@Override
-	public long maxRecommendSize(ProductView view) {
-		final long total = mapper.maxRecommendSize(view);
-		return total;
-	}*/
-	/**
-	 * 修改作品的推荐值
-	 */
-	/*@Override				
-	public boolean updateRecommend(Product product) {
-		long l = mapper.updateRecommend(product);
-		return l>=0;
-	}*/
-
-	/**
-	 * 修改作品可见性
-	 */
-	/*@Override
-	public boolean updateProductVisibility(Product product) {
-		long l = mapper.updateProductVisibility(product);
-		return l>0?true:false;
-	}*/
 }

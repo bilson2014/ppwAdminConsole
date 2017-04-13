@@ -12,10 +12,10 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.Synergy;
 import com.panfeng.util.DateUtils;
-import com.panfeng.util.ValidateUtil;
 
 public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 
@@ -24,12 +24,6 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 	@Override
 	public int createHead(XSSFSheet sheet, XSSFWorkbook workbook) {
 		// 设置合并单元格
-		// CellRangeAddress(起始行号，终止行号， 起始列号，终止列号);
-		// CellRangeAddress(x-begin，x-end， y-begin，y-end);
-		
-		//modify by wanglc 2016年9月18日 16:19:11
-		//-->注释原因:修改导出结构,删除解决方法及下阶段时间 ,当月,次月应回款,添加最后修改时间
-		//sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 27));//拍片网项目统筹表
 		sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 24));//拍片网项目统筹表
 		sheet.addMergedRegion(new CellRangeAddress(2, 4, 0, 0));//项目编号
 		sheet.addMergedRegion(new CellRangeAddress(2, 4, 1, 1));//项目名称
@@ -49,16 +43,10 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 13, 13));//周期
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 14, 14));//预算金额
 		sheet.addMergedRegion(new CellRangeAddress(3, 4, 15, 15));//项目金额
-		//sheet.addMergedRegion(new CellRangeAddress(2, 4, 16, 16));//说明(特殊情况)
 
-		//sheet.addMergedRegion(new CellRangeAddress(2, 2, 17, 27));//基础信息
 		sheet.addMergedRegion(new CellRangeAddress(2, 2, 16, 24));//基础信息
-		//sheet.addMergedRegion(new CellRangeAddress(3, 3, 17, 21));//客户信息及负责人
 		sheet.addMergedRegion(new CellRangeAddress(3, 3, 16, 20));//客户信息及负责人
-		//sheet.addMergedRegion(new CellRangeAddress(3, 3, 22, 25));//制作团队导演
 		sheet.addMergedRegion(new CellRangeAddress(3, 3, 21, 24));//制作团队导演
-		//sheet.addMergedRegion(new CellRangeAddress(3, 4, 26, 26));//当月应会款
-		//sheet.addMergedRegion(new CellRangeAddress(3, 4, 27, 27));//次月应回款
 
 		// 填充数据
 		// 第一行 -- 二行
@@ -315,9 +303,6 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		}
 		xssfRow.createCell(5).setCellValue(stringBuffer.toString());
 		
-		/*if (entity.getTask() != null) {
-			xssfRow.createCell(6).setCellValue(entity.getTask().getName());
-		}*/
 		xssfRow.createCell(6).setCellValue(entity.getStage());
 		// 状态
 		String state = "";
@@ -344,44 +329,8 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		if (xssfCell != null)
 			xssfCell.setCellStyle(xssfCellStyle);
 		xssfCell.setCellValue(state);
-		// 解决方法及下阶段时间点
-		//xssfRow.createCell(8).setCellValue("");
 		// 立项时间
 		xssfRow.createCell(8).setCellValue(DateUtils.getDateByFormat2(entity.getCreateTime(), "yyyy-MM-dd"));
-		/*if (ValidateUtil.isValid(entity.getTime())) {
-			ActivitiTask activitiTask = entity.getTask();
-			if (activitiTask != null && !"已完成".equals(activitiTask.getName())) {
-				String jfDate = entity.getTime().get("jf");
-				if (ValidateUtil.isValid(jfDate)) {
-					// 交付时间
-					xssfRow.createCell(9).setCellValue(jfDate);
-					// 最后更新时间
-					xssfRow.createCell(10).setCellValue(DateUtils.getDateByFormat2(entity.getUpdateTime(), "yyyy-MM-dd"));
-					// 剩余时间
-					Date date1 = DateUtils.getDateByFormat(jfDate, "yyyy-MM-dd");
-					Date date2 = DateUtils.getDateByFormat(new Date(), "yyyy-MM-dd");
-					int c = DateUtils.dateInterval(date1.getTime(), date2.getTime());
-					xssfCellStyle = PoiUtils.getDefaultErrorCellStyle(workbook);
-					xssfCell = xssfRow.createCell(10 + 1);
-					xssfCell.setCellStyle(xssfCellStyle);
-					if (c <= 0)
-						xssfCell.setCellValue("已过期");
-					else
-						xssfCell.setCellValue("剩余" + c + "天");
-
-					date2 = DateUtils.getDateByFormat(entity.getCreateTime(), "yyyy-MM-dd");
-					c = DateUtils.dateInterval(date1.getTime(), date2.getTime());
-					// 包含结束天
-					c++;
-					// 周期（天）
-					xssfRow.createCell(13).setCellValue(c + "天");
-				}
-			} else if ("已完成".equals(activitiTask.getName())) {
-				xssfRow.createCell(9).setCellValue(activitiTask.getCreateTime());
-			}
-
-		}*/
-		// moidify by wanglc 2016-9-19 16:17:02 begin
 		//-->去除ActivitiTask,从sql中获取,加快速度
 		String jfDate = entity.getFdStartTime();
 		if (ValidateUtil.isValid(jfDate)) {
@@ -410,7 +359,6 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 				xssfRow.createCell(13).setCellValue(c + "天");
 			}
 		}
-		// moidify by wanglc 2016-9-19 16:17:02 end
 		// 延期交付时间
 		xssfRow.createCell(12).setCellValue("");
 		// 预算金额（元）
@@ -451,10 +399,6 @@ public class ProjectPoiAdapter extends PoiBaseAdapter<IndentProject> {
 		xssfRow.createCell(23).setCellValue(entity.getTeamPhone());
 		// 实付金额
 		xssfRow.createCell(24).setCellValue(entity.getProviderPayment() + "元");
-		// 当月应回款
-		//xssfRow.createCell(26).setCellValue("");
-		// 次月应回款
-		//xssfRow.createCell(27).setCellValue("");
 	}
 
 	@Override

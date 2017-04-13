@@ -1,8 +1,8 @@
 package com.panfeng.resource.view;
 
-import com.panfeng.domain.BaseObject;
+import java.io.Serializable;
 
-public class Pagination extends BaseObject {
+public class Pagination implements Serializable {
 
 	private static final long serialVersionUID = -4473519214881594462L;
 

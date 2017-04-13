@@ -2,9 +2,9 @@ package com.panfeng.resource.model;
 
 import java.util.Random;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
-public class Sign extends BaseObject {
+public class Sign extends BaseEntity {
 
 	private static final long serialVersionUID = -2140105539445226864L;
 

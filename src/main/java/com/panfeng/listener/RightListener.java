@@ -8,28 +8,22 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import com.panfeng.dao.RightDao;
-import com.panfeng.resource.model.Right;
-import com.panfeng.service.RightService;
+import com.paipianwang.pat.facade.right.entity.PmsRight;
+import com.paipianwang.pat.facade.right.service.PmsRightFacade;
 
 @Component
 @SuppressWarnings("rawtypes")
 public class RightListener implements ApplicationListener {
 
 	@Autowired
-	private final RightService rightService = null;
-	
-	@Autowired
-	private final RightDao dao = null;
-	
+	private final PmsRightFacade pmsRightFacade = null;
+
 	public void onApplicationEvent(final ApplicationEvent event) {
-		
+
 		// 是否是上下文刷新事件
-		if(event instanceof ContextRefreshedEvent){
-			
-			final Map<String,Right> map = rightService.getRights();
-			
-			dao.resetRightFromRedis(map);
+		if (event instanceof ContextRefreshedEvent) {
+			final Map<String, PmsRight> map = pmsRightFacade.getRightsMergeMap();
+			pmsRightFacade.resetRightOnRedis(map);
 		}
 
 	}

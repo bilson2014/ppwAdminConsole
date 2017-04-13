@@ -3,32 +3,34 @@ package com.panfeng.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.panfeng.domain.GlobalConstant;
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.facade.right.entity.PmsEmployee;
+import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
 import com.panfeng.persist.TeamMapper;
 import com.panfeng.persist.UserMapper;
-import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.model.User;
 import com.panfeng.resource.model.UserViewModel;
-import com.panfeng.service.EmployeeService;
 import com.panfeng.service.UserTempService;
 
 @Service
 public class UserTypeServiceImpl implements UserTempService {
 	@Autowired
-	private UserMapper userMapper;
+	private final UserMapper userMapper = null;
+	
 	@Autowired
-	private TeamMapper teamMapper;
+	private final TeamMapper teamMapper = null;
+	
 	@Autowired
-	EmployeeService employeeService;
+	private final PmsEmployeeFacade pmsEmployeeFacade = null;
 
 	// 创建对象
 	public UserViewModel buildObject(String userType, long userId) {
 		UserViewModel userViewModel = new UserViewModel();
 		switch (userType) {
-		case GlobalConstant.ROLE_EMPLOYEE:
+		case PmsConstant.ROLE_EMPLOYEE:
 			// 视频管家
-			Employee employee = employeeService.findEmployerById(userId);
+			PmsEmployee employee = pmsEmployeeFacade.findEmployeeById(userId);
 			// modify by wanglc 2016-7-18 13:59:19 视频管家为空 begin
 			if (null != employee) {
 				userViewModel
@@ -46,7 +48,7 @@ public class UserTypeServiceImpl implements UserTempService {
 			userViewModel.setUserType("内部员工");
 			userViewModel.setOrgName("");
 			break;
-		case GlobalConstant.ROLE_PROVIDER:
+		case PmsConstant.ROLE_PROVIDER:
 			// 供应商
 			Team team = teamMapper.findTeamById(userId);
 			userViewModel.setUserName(
@@ -60,7 +62,7 @@ public class UserTypeServiceImpl implements UserTempService {
 			userViewModel.setUserType("供应商");
 			userViewModel.setOrgName(team.getTeamName());
 			break;
-		case GlobalConstant.ROLE_CUSTOMER:
+		case PmsConstant.ROLE_CUSTOMER:
 			// 客户
 			User user = userMapper.findUserById(userId);
 			userViewModel.setUserName(
@@ -74,7 +76,7 @@ public class UserTypeServiceImpl implements UserTempService {
 			}
 			userViewModel.setOrgName(user.getUserName());
 			break;
-		case GlobalConstant.ROLE_SYSTEM:
+		case PmsConstant.ROLE_SYSTEM:
 			userViewModel.setImgUrl("/resources/images/flow/xitong.png");
 			userViewModel.setUserName("系统");
 			userViewModel.setUserType("系统");

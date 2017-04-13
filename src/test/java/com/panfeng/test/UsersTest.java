@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.panfeng.mq.service.MailMQService;
 import com.panfeng.persist.UserMapper;
 import com.panfeng.resource.model.User;
-import com.panfeng.service.bak_UserService;
 import com.panfeng.util.DataUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -21,9 +20,6 @@ public class UsersTest {
 
 	@Autowired
 	private final UserMapper mapper = null;
-	
-	@Autowired
-	private final bak_UserService service = null;
 	
 	@Autowired
 	private final MailMQService mailMQService = null;

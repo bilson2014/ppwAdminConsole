@@ -1,8 +1,8 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
-public class ThirdBind extends BaseObject{
+public class ThirdBind extends BaseEntity{
 	private static final long serialVersionUID = 1L;
 	private Integer code;//0||1 第三方账户状态,不存在或者存在却无手机号
 	private String type;//qq wechat wb 第三方来源

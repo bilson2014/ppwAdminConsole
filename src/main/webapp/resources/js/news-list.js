@@ -55,6 +55,20 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'visible' ,
+						title : '是否可见' ,
+						align : 'center' ,
+						width : 200,
+						formatter : function(value,row,index){
+							if(row != undefined){
+								if(row.visible != 0){
+									return "<span style=color:red; >不可见</span>";
+								}else{
+									return "<span style=color:green; >可见</span>";
+								}
+							}
+						}
+					},{
 						field : 'sortIndex' ,
 						title : '操作' ,
 						align : 'center' ,

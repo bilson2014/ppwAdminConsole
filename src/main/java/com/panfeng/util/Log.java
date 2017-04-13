@@ -3,7 +3,7 @@ package com.panfeng.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.panfeng.domain.SessionInfo;
+import com.paipianwang.pat.common.entity.SessionInfo;
 
 public class Log {
 	private static Logger logger = LoggerFactory.getLogger("error");

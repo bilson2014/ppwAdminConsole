@@ -1,17 +1,13 @@
 package com.panfeng.resource.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,25 +20,24 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.paipianwang.pat.common.config.PublicConfig;
+import com.paipianwang.pat.common.constant.PmsConstant;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
-import com.paipianwang.pat.common.util.Constants.loginType;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsRole;
+import com.paipianwang.pat.facade.right.service.PmsRightFacade;
+import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
 import com.paipianwang.pat.facade.user.entity.PmsUser;
 import com.paipianwang.pat.facade.user.entity.ThirdBind;
 import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.mq.service.SmsMQService;
-import com.panfeng.resource.model.Role;
-import com.panfeng.resource.model.User;
 import com.panfeng.resource.view.UserView;
-import com.panfeng.service.RightService;
-import com.panfeng.service.RoleService;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.DateUtils;
 import com.panfeng.util.Log;
-import com.panfeng.util.ValidateUtil;
 
 /**
  * 用户相关
@@ -55,31 +50,16 @@ import com.panfeng.util.ValidateUtil;
 public class UserController extends BaseController {
 
 	@Autowired
-	private final RoleService roleService = null;
+	private final PmsRoleFacade pmsRoleFacade = null;
 
 	@Autowired
-	private final RightService rightService = null;
-	
+	private final PmsRightFacade pmsRightFacade = null;
+
 	@Autowired
 	private final SmsMQService smsMQService = null;
-	
+
 	@Autowired
 	private final PmsUserFacade pmsUserFacade = null;
-	
-	private static String INIT_PASSWORD;
-	public UserController() {
-		if (INIT_PASSWORD == null || "".equals(INIT_PASSWORD)) {
-			final InputStream is = this.getClass().getClassLoader().getResourceAsStream("jdbc.properties");
-			try {
-				Properties propertis = new Properties();
-				propertis.load(is);
-				INIT_PASSWORD = propertis.getProperty("initPassw0rd");
-			} catch (IOException e) {
-				Log.error("load Properties fail ...",null);
-				e.printStackTrace();
-			}
-		}
-	}
 
 	@RequestMapping("/user-list")
 	public ModelAndView view(final HttpServletRequest request, final ModelMap map) {
@@ -94,54 +74,55 @@ public class UserController extends BaseController {
 		final long rows = pageParam.getRows();
 		pageParam.setBegin((page - 1) * rows);
 		pageParam.setLimit(rows);
-		//封装查询参数
+
+		// 封装查询参数
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("userName", view.getUserName());
 		paramMap.put("clientLevel", view.getClientLevel());
-		paramMap.put("beginTime",view.getBeginTime());
+		paramMap.put("beginTime", view.getBeginTime());
 		paramMap.put("endTime", view.getEndTime());
-		paramMap.put("telephone",view.getTelephone());
-		final DataGrid<PmsUser> dataGrid = pmsUserFacade.listWithPagination(pageParam,paramMap);
+		paramMap.put("telephone", view.getTelephone());
+		final DataGrid<PmsUser> dataGrid = pmsUserFacade.listWithPagination(pageParam, paramMap);
 		return dataGrid;
 	}
 
 	@RequestMapping(value = "/user/update", method = RequestMethod.POST, produces = "application/json; chartset=UTF-8")
-	public long update(final PmsUser user,HttpServletRequest request) {
+	public long update(final PmsUser user, HttpServletRequest request) {
 
-	//	final long ret = userService.update(user);
+		// final long ret = userService.update(user);
 		final long ret = pmsUserFacade.update(user);
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("user update ...",sessionInfo);
+		Log.error("user update ...", sessionInfo);
 		return ret;
 	}
 
 	@RequestMapping(value = "/user/delete", method = RequestMethod.POST)
-	public long delete(final long[] ids,HttpServletRequest request) {
+	public long delete(final long[] ids, HttpServletRequest request) {
 
 		if (ids.length > 0) {
 
-			//final long ret = userService.delete(ids);
+			// final long ret = userService.delete(ids);
 			final long ret = pmsUserFacade.delete(ids);
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("delete user...",sessionInfo);
+			Log.error("delete user...", sessionInfo);
 			return ret;
 		} else {
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("Delete User error ...",sessionInfo);
+			Log.error("Delete User error ...", sessionInfo);
 			throw new RuntimeException("Delete User error ...");
 		}
 	}
 
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
-	public long save(final PmsUser user,HttpServletRequest request) {
+	public long save(final PmsUser user, HttpServletRequest request) {
 
-		user.setPassword(DataUtil.md5(INIT_PASSWORD));
+		user.setPassword(DataUtil.md5(PublicConfig.INIT_PASSWORD));
 		user.setBirthday(DateUtils.nowDate());
 		user.setUpdateTime(DateUtils.nowTime());
-		//final long ret = userService.save(user);
+		// final long ret = userService.save(user);
 		final long ret = pmsUserFacade.save(user);
 		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("save user...",sessionInfo);
+		Log.error("save user...", sessionInfo);
 		return ret;
 	}
 
@@ -153,7 +134,7 @@ public class UserController extends BaseController {
 	@RequestMapping("/user/getUnLevelUserNotice")
 	public long findUnlevelUsers() {
 
-		//final long count = userService.findUnlevelUsers();
+		// final long count = userService.findUnlevelUsers();
 		final long count = pmsUserFacade.findUnlevelUsers();
 		return count;
 	}
@@ -164,64 +145,11 @@ public class UserController extends BaseController {
 	 * @param user
 	 * @return
 	 */
-	@RequestMapping("/user/encipherment")
-	public boolean encryption(@RequestBody final PmsUser user, final HttpServletRequest request,
-			final HttpServletResponse response) {
-		PmsUser orignUser = null;
-		if (user != null) {
-			if (user.getLoginType().equals(loginType.phone.getKey())) {
-				//orignUser = userService.findUserByAttr(user);
-				orignUser = pmsUserFacade.findUserByAttr(user);
-			} else if (user.getLoginType().equals(loginType.account.getKey())) {
-				//orignUser = userService.findUserByLoginNameAndPwd(user);
-				orignUser = pmsUserFacade.findUserByLoginNameAndPwd(user);
-			}
-			if (orignUser != null) {
-				// 清空当前session
-				// sessionService.removeSession(request);
-				Gson gson = new Gson();
-				String json = gson.toJson(orignUser);
-				return initSessionInfo(gson.fromJson(json, User.class), request);
-			}
-		}
-		return false;
-	}
-	/*@RequestMapping("/user/checkPwd")
-	public boolean chcekLoginNameAndPwd(@RequestBody final User user) {
-		if (user == null)
-			return false;
-		User orignUser = userService.findUserByLoginNameAndPwd(user);
-		return orignUser == null ? false : true;
-	}*/
-
-	/**
-	 * 前台登录验证操作
-	 * 
-	 * @param user
-	 * @return
-	 */
 	@RequestMapping("/user/loginout")
 	public boolean loginout(final HttpServletRequest request) {
 		// sessionService.removeSession(request);
-		request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
+		request.getSession().removeAttribute(PmsConstant.SESSION_INFO);
 		return true;
-	}
-
-	/**
-	 * 验证手机号是否被注册
-	 * 
-	 * @param telephone
-	 *            手机号码
-	 * @return 注册数量
-	 */
-	@RequestMapping("/user/valication/phone/{telephone}")
-	public boolean validation(@PathVariable("telephone") final String telephone) {
-		//final int count = userService.validationPhone(telephone, null);
-		final int count = pmsUserFacade.validationPhone(telephone, null);
-		if (count > 0) {
-			return true;
-		}
-		return false;
 	}
 
 	/**
@@ -236,7 +164,8 @@ public class UserController extends BaseController {
 		if (!ValidateUtil.isValid(loginName)) {
 			return false;
 		}
-		//final int count = userService.validationPhone(null, loginName.get("loginName"));
+		// final int count = userService.validationPhone(null,
+		// loginName.get("loginName"));
 		final int count = pmsUserFacade.validationPhone(null, loginName.get("loginName"));
 		if (count > 0) {
 			return true;
@@ -245,48 +174,10 @@ public class UserController extends BaseController {
 	}
 
 	/**
-	 * 用户注册
-	 */
-	@RequestMapping("/user/register")
-	public boolean register(@RequestBody final PmsUser user, final HttpServletRequest request) {
-
-		if (user != null) {
-			//final User result = userService.register(user);
-			PmsUser result = pmsUserFacade.register(user);
-			smsMQService.sendMessage("132269", user.getTelephone(), null);
-			Log.error("save user...",null);
-			//return initSessionInfo(result, request);
-			Gson gson = new Gson();
-			String json = gson.toJson(result);
-			return initSessionInfo(gson.fromJson(json, User.class), request);
-		}
-		return false;
-	}
-
-	/**
-	 * 密码重置
-	 */
-	/*@RequestMapping("/user/recover")
-	public boolean recover(@RequestBody final User user, final HttpServletRequest request) {
-		// 获取 原用户信息
-		if (user != null) {
-			// 更新用户信息
-			if (user.getUserName() != null || !"".equals(user.getUserName())) {
-
-				userService.recover(user);
-			}
-
-			return true;
-		}
-
-		return false;
-	}*/
-
-	/**
 	 * 用户信息-修改用户基本信息(昵称、性别、真实姓名、电子邮件、QQ)
 	 */
 	@RequestMapping("/user/modify/info")
-	public boolean modifyUserInfo(@RequestBody final PmsUser user,HttpServletRequest request) {
+	public boolean modifyUserInfo(@RequestBody final PmsUser user, HttpServletRequest request) {
 
 		boolean flag = true;
 		try {
@@ -297,19 +188,18 @@ public class UserController extends BaseController {
 				user.setRealName(URLDecoder.decode(user.getRealName(), "UTF-8"));
 				user.setUserName(URLDecoder.decode(user.getUserName(), "UTF-8"));
 
-				if (user.getId() != 0){
-					//userService.modifyUserInfo(user);
+				if (user.getId() != 0) {
+					// userService.modifyUserInfo(user);
 					pmsUserFacade.modifyUserInfo(user);
-					//add by wanglc 修改个人资料后,更新缓存 2016-7-26 19:27:47 begin
+					// add by wanglc 修改个人资料后,更新缓存 2016-7-26 19:27:47 begin
 					// sessionService.removeSession(request);
-					
+
 					Gson gson = new Gson();
 					String json = gson.toJson(user);
-					initSessionInfo(gson.fromJson(json, User.class), request);
-					//add by wanglc 修改个人资料后,更新缓存 2016-7-26 19:27:47 end
-					
-				}
-				else
+					initSessionInfo(gson.fromJson(json, PmsUser.class), request);
+					// add by wanglc 修改个人资料后,更新缓存 2016-7-26 19:27:47 end
+
+				} else
 					flag = false;
 
 			} else {
@@ -318,7 +208,7 @@ public class UserController extends BaseController {
 
 		} catch (UnsupportedEncodingException e) {
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("User modify information decode error ...",sessionInfo);
+			Log.error("User modify information decode error ...", sessionInfo);
 			e.printStackTrace();
 		}
 
@@ -329,15 +219,16 @@ public class UserController extends BaseController {
 	 * 用户信息-登录名，密码
 	 */
 	@RequestMapping("/user/modify/loginName")
-	public boolean modifyLoginName(@RequestBody final PmsUser user,HttpServletRequest request) {
+	public boolean modifyLoginName(@RequestBody final PmsUser user, HttpServletRequest request) {
 		if (user != null) {
 			if (user.getId() != 0)
-				//return userService.modifyUserLoginName(user) > 0 ? true : false;
+				// return userService.modifyUserLoginName(user) > 0 ? true :
+				// false;
 				return pmsUserFacade.modifyUserLoginName(user) > 0 ? true : false;
 
 		} else {
 			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("User is null ..",sessionInfo);
+			Log.error("User is null ..", sessionInfo);
 		}
 		return false;
 	}
@@ -350,7 +241,7 @@ public class UserController extends BaseController {
 
 		boolean flag = true;
 		if (user != null) {
-			//userService.modifyUserPassword(user);
+			// userService.modifyUserPassword(user);
 			pmsUserFacade.modifyUserPassword(user);
 		} else {
 			flag = false;
@@ -362,17 +253,15 @@ public class UserController extends BaseController {
 	/**
 	 * 用户信息-修改用户手机号码
 	 */
-	/*@RequestMapping("/user/modify/phone")
-	public boolean modifyUserPhone(@RequestBody final User user) {
-
-		boolean result = false;
-		final long ret = userService.modifyUserPhone(user);
-		if (ret > 0) {
-			result = true;
-		}
-
-		return result;
-	}*/
+	/*
+	 * @RequestMapping("/user/modify/phone") public boolean
+	 * modifyUserPhone(@RequestBody final User user) {
+	 * 
+	 * boolean result = false; final long ret =
+	 * userService.modifyUserPhone(user); if (ret > 0) { result = true; }
+	 * 
+	 * return result; }
+	 */
 
 	/**
 	 * 用户信息-修改用户头像
@@ -381,7 +270,7 @@ public class UserController extends BaseController {
 	public boolean modifyUserPhoto(@RequestBody final PmsUser user) {
 
 		boolean result = false;
-		//final long ret = userService.modifyUserPhoto(user);
+		// final long ret = userService.modifyUserPhoto(user);
 		final long ret = pmsUserFacade.modifyUserPhoto(user);
 		if (ret > 0) {
 			result = true;
@@ -397,7 +286,6 @@ public class UserController extends BaseController {
 	public PmsUser getUserById(@PathVariable("userId") final Long userId) {
 
 		if (userId != null) {
-			//final User user = userService.findUserById(userId);
 			final PmsUser user = pmsUserFacade.findUserById(userId);
 			return user;
 		}
@@ -408,10 +296,10 @@ public class UserController extends BaseController {
 	 * 查询三方登录的用户是否存在 如果存在，则返回 如果不存在，则创建
 	 */
 	@RequestMapping("/user/thirdLogin/isExist")
-	public Map<String, Object> verificationUserExist(@RequestBody final PmsUser user, final HttpServletRequest request) {
+	public Map<String, Object> verificationUserExist(@RequestBody final PmsUser user,
+			final HttpServletRequest request) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (user != null) {
-			//final List<User> users = userService.verificationUserExistByThirdLogin(user);
 			final List<PmsUser> users = pmsUserFacade.verificationUserExistByThirdLogin(user);
 			if (users.size() < 1) { // 用户不存在
 				map.put("code", "0");
@@ -420,12 +308,11 @@ public class UserController extends BaseController {
 				final PmsUser u = users.get(0);
 				if (null != u.getTelephone() && !"".equals(u.getTelephone())) {// 手机号存在,直接登录
 					// 清除当前session
-					// sessionService.removeSession(request);
 					Gson gson = new Gson();
 					String json = gson.toJson(u);
-					User use = gson.fromJson(json, User.class);
+					PmsUser user1 = gson.fromJson(json, PmsUser.class);
 					// 存入session中
-					initSessionInfo(use, request);
+					initSessionInfo(user1, request);
 					map.put("code", "2");
 					map.put("msg", "用户可直接登录");
 				} else {// 手机号不存在,绑定页
@@ -443,7 +330,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping("/user/search/info")
 	public List<PmsUser> getUserByName(@RequestBody final PmsUser user) {
-		//List<User> users = userService.findUserByName(user);
+		// List<User> users = userService.findUserByName(user);
 		List<PmsUser> users = pmsUserFacade.findUserByName(user);
 		return users != null ? users : new ArrayList<PmsUser>();
 	}
@@ -451,11 +338,13 @@ public class UserController extends BaseController {
 	/**
 	 * 添加简单客户
 	 */
-	/*@RequestMapping("/user/save/simple")
-	public long addSimpleUser(@RequestBody final User user) {
-		return userService.simpleSave(user);
-		
-	}*/
+	/*
+	 * @RequestMapping("/user/save/simple") public long
+	 * addSimpleUser(@RequestBody final User user) { return
+	 * userService.simpleSave(user);
+	 * 
+	 * }
+	 */
 
 	/**
 	 * 获取全部客户
@@ -464,7 +353,7 @@ public class UserController extends BaseController {
 	 */
 	@RequestMapping("/user/all")
 	public List<PmsUser> all() {
-		//List<User> list = userService.all();
+		// List<User> list = userService.all();
 		List<PmsUser> list = pmsUserFacade.all();
 		return list;
 	}
@@ -476,29 +365,29 @@ public class UserController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	public boolean initSessionInfo(final User user, HttpServletRequest request) {
+	public boolean initSessionInfo(final PmsUser user, HttpServletRequest request) {
 		final HttpSession session = request.getSession();
-		
+
 		// 清空session
-		session.removeAttribute(GlobalConstant.SESSION_INFO);
-		
+		session.removeAttribute(PmsConstant.SESSION_INFO);
+
 		// 存入session中
 		final SessionInfo info = new SessionInfo();
 		info.setLoginName(user.getLoginName());
 		info.setRealName(user.getRealName());
-		info.setSessionType(GlobalConstant.ROLE_CUSTOMER);
-		//info.setSuperAdmin(false);
+		info.setSessionType(PmsConstant.ROLE_CUSTOMER);
+		// info.setSuperAdmin(false);
 		info.setToken(DataUtil.md5(session.getId()));
 		info.setReqiureId(user.getId());
 		info.setClientLevel(user.getClientLevel()); // 客户级别
 		info.setTelephone(user.getTelephone());
 
-		final Role role = roleService.findRoleById(3l); // 获取用户角色
-		final List<Role> roles = new ArrayList<Role>();
+		final PmsRole role = pmsRoleFacade.findRoleById(3l); // 获取用户角色
+		final List<PmsRole> roles = new ArrayList<PmsRole>();
 		roles.add(role);
 		user.setRoles(roles);
 		// 计算权限码总和
-		final long maxPos = rightService.getMaxPos();
+		final long maxPos = pmsRightFacade.getMaxPos();
 		final long[] rightSum = new long[(int) (maxPos + 1)];
 		user.setRightSum(rightSum);
 		user.calculateRightSum();
@@ -507,10 +396,7 @@ public class UserController extends BaseController {
 		info.setPhoto(user.getImgUrl());
 		info.setSuperAdmin(user.isSuperAdmin()); // 判断是否是超级管理员
 
-		/*Map<String, Object> map = new HashMap<String, Object>();
-		map.put(GlobalConstant.SESSION_INFO, info);*/
-		session.setAttribute(GlobalConstant.SESSION_INFO, info);
-		// return sessionService.addSessionSeveralTime(request, map,60*60*24*7);//登陆用户存放七天
+		session.setAttribute(PmsConstant.SESSION_INFO, info);
 		return true;
 	}
 
@@ -521,7 +407,7 @@ public class UserController extends BaseController {
 	@RequestMapping("/user/threeLogin/phone/{telephone}")
 	public Map<String, Object> threeLoginPhone(@PathVariable("telephone") final String telephone) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		//final User user = userService.threeLoginPhone(telephone);
+		// final User user = userService.threeLoginPhone(telephone);
 		final PmsUser user = pmsUserFacade.threeLoginPhone(telephone);
 		map.put("qq", "0");
 		map.put("wechat", "0");
@@ -546,82 +432,80 @@ public class UserController extends BaseController {
 
 	// add by wanglc 2016-7-6 17:48:22 第三方 绑定 begin
 	/**
-	 * 三方用户不存在 code:0 
-	 * 1.手机号没注册过 phoneStatus 
-	 * 2.手机号注册过,但是未绑定第三方 thirdStatus
-	 * 3.手机号注册过,且绑定了第三方 三方用户已经存在 code:1,但是未绑定手机 
-	 * 4.手机号没注册过 
-	 * 5.手机号注册过,但是未绑定第三方
+	 * 三方用户不存在 code:0 1.手机号没注册过 phoneStatus 2.手机号注册过,但是未绑定第三方 thirdStatus
+	 * 3.手机号注册过,且绑定了第三方 三方用户已经存在 code:1,但是未绑定手机 4.手机号没注册过 5.手机号注册过,但是未绑定第三方
 	 * 6.手机号注册了,也绑定了第三方
 	 */
 	@RequestMapping("/user/bindthird")
 	public Map<String, Object> bindThird(@RequestBody final ThirdBind bind, HttpServletRequest request) {
-		//Map<String, Object> map = userService.bindThird(bind);
+		// Map<String, Object> map = userService.bindThird(bind);
 		Map<String, Object> map = pmsUserFacade.bindThird(bind);
 		if (map.containsKey("user")) {
 			PmsUser user = (PmsUser) map.get("user");
 			if (user.getId() != 0) {
 				Gson gson = new Gson();
-				initSessionInfo(gson.fromJson(gson.toJson(user), User.class), request);
+				initSessionInfo(gson.fromJson(gson.toJson(user), PmsUser.class), request);
 			}
 		}
-	
+
 		return map;
 	}
-	
+
 	/**
 	 * 查询第三方绑定状态
 	 */
 	@RequestMapping("/user/third/status")
 	public Map<String, Object> thirdStatus(@RequestBody final PmsUser user, HttpServletRequest request) {
-	//	Map<String, Object> map = userService.thirdStatus(user);
+		// Map<String, Object> map = userService.thirdStatus(user);
 		Map<String, Object> map = pmsUserFacade.thirdStatus(user);
 		return map;
 	}
-	
+
 	/**
 	 * 用户资料页面绑定第三方
 	 */
 	@RequestMapping("/user/info/bind")
 	public boolean userInfoBind(@RequestBody final PmsUser user, HttpServletRequest request) {
-		//return userService.userInfoBind(user);
+		// return userService.userInfoBind(user);
 		return pmsUserFacade.userInfoBind(user);
 	}
+
 	/**
 	 * 用户资料页面解除绑定第三方
 	 */
 	@RequestMapping("/user/info/unbind")
 	public boolean userInfoUnBind(@RequestBody final PmsUser user, HttpServletRequest request) {
-		//return userService.userInfoUnBind(user);
+		// return userService.userInfoUnBind(user);
 		return pmsUserFacade.userInfoUnBind(user);
 	}
+
 	/**
-	 * 验证用户名昵称唯一性
-	 * true 可用
-	 * false 不可用
+	 * 验证用户名昵称唯一性 true 可用 false 不可用
 	 */
-	@RequestMapping(value="/user/unique/username",method = RequestMethod.POST)
+	@RequestMapping(value = "/user/unique/username", method = RequestMethod.POST)
 	public boolean uniqueUserName(@RequestBody final PmsUser user, HttpServletRequest request) {
-		//return userService.uniqueUserName(user);
+		// return userService.uniqueUserName(user);
 		return pmsUserFacade.uniqueUserName(user);
 	}
+
 	/**
 	 * 验证手机号是否存在,不存在就更新
 	 */
-	@RequestMapping(value="/user/update/newphone",method = RequestMethod.POST)
+	@RequestMapping(value = "/user/update/newphone", method = RequestMethod.POST)
 	public BaseMsg updateNewphone(@RequestBody final PmsUser user, HttpServletRequest request) {
-		//验证是否存在
-		//final int count = userService.validationPhone(user.getTelephone(), null);
+		// 验证是否存在
+		// final int count = userService.validationPhone(user.getTelephone(),
+		// null);
 		final int count = pmsUserFacade.validationPhone(user.getTelephone(), null);
 		if (count > 0) {
-			return new BaseMsg(2,"手机号被占用");
+			return new BaseMsg(2, "手机号被占用");
 		}
-		//修改手机号
-		//final long ret = userService.modifyUserPhone(user);
+		// 修改手机号
+		// final long ret = userService.modifyUserPhone(user);
 		final long ret = pmsUserFacade.modifyUserPhone(user);
 		if (ret > 0) {
-			return new BaseMsg(3,"success");
+			return new BaseMsg(3, "success");
 		}
-		return new BaseMsg(0,"error");
+		return new BaseMsg(0, "error");
 	}
 }

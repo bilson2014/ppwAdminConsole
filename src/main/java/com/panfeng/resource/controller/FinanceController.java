@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.paipianwang.pat.common.constant.PmsConstant;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.facade.finance.entity.PmsDealLog;
 import com.paipianwang.pat.facade.finance.service.PmsFinanceFacade;
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.DealLog;
 import com.panfeng.resource.view.FinanceView;
 import com.panfeng.service.DealLogService;
 import com.panfeng.util.Log;
-import com.panfeng.util.ValidateUtil;
 
 @RestController
 @RequestMapping("/portal")
@@ -31,9 +31,6 @@ public class FinanceController extends BaseController{
 
 	//private static final Logger logger = LoggerFactory.getLogger("error");
 
-	//@Autowired
-	//private final FinanceService service = null;
-	
 	@Autowired
 	private final DealLogService dealLogService = null; 
 	
@@ -94,7 +91,7 @@ public class FinanceController extends BaseController{
 	public long save(final DealLog dealLog,HttpServletRequest request){
 		dealLog.setDealLogSource(1); // 线下支付
 		dealLog.setDealStatus(1); // 线下支付默认支付成功
-		dealLog.setUserType(GlobalConstant.ROLE_CUSTOMER);
+		dealLog.setUserType(PmsConstant.ROLE_CUSTOMER);
 		final Long projectId = dealLog.getProjectId();
 		
 		if(projectId != null){
@@ -118,7 +115,7 @@ public class FinanceController extends BaseController{
 		
 		dealLog.setDealLogSource(1); // 线下支付
 		dealLog.setDealStatus(1); // 线下支付默认支付成功
-		dealLog.setUserType(GlobalConstant.ROLE_CUSTOMER);
+		dealLog.setUserType(PmsConstant.ROLE_CUSTOMER);
 		
 		final long ret = pmsFinanceFacade.update(dealLog);
 		SessionInfo sessionInfo = getCurrentInfo(request);

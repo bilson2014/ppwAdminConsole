@@ -2,7 +2,7 @@ package com.panfeng.resource.model;
 
 import java.util.List;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
 /**
  * 活动模块实体
@@ -10,7 +10,7 @@ import com.panfeng.domain.BaseObject;
  * @author wang
  *
  */
-public class Activity extends BaseObject {
+public class Activity extends BaseEntity {
 	private static final long serialVersionUID = -6322954280136241826L;
 
 	private Long activityId = null; // 活动ID

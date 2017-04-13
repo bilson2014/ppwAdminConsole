@@ -1,6 +1,6 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
 /**
  * 资源储存实体
@@ -8,7 +8,7 @@ import com.panfeng.domain.BaseObject;
  * @author Wang,LM
  *
  */
-public class IndentResource extends BaseObject {
+public class IndentResource extends BaseEntity {
 
 	private static final long serialVersionUID = 0x7fda5;
 

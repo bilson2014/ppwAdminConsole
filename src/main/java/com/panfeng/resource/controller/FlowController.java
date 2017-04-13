@@ -17,20 +17,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsTree;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.FlowTemplate;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.NodesEvent;
-import com.panfeng.resource.model.Tree;
 import com.panfeng.service.ActivitiEngineService;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.TaskChainService;
 import com.panfeng.service.TemplateDataManage;
 import com.panfeng.util.HttpUtil;
-import com.panfeng.util.ValidateUtil;
 
 @RestController
 public class FlowController extends BaseController {
@@ -220,7 +220,7 @@ public class FlowController extends BaseController {
 	};
 
 	@RequestMapping("/get/event/tree")
-	public List<Tree> getEventTree() {
+	public List<PmsTree> getEventTree() {
 		return taskChainService.getEventTree();
 	}
 
@@ -253,31 +253,31 @@ public class FlowController extends BaseController {
 	// ------------------------------------模板数据填充处理部分----------------------------------
 
 	@RequestMapping("/get/datatemplates")
-	public List<Tree> getDataList() {
-		List<Tree> dataList = templateDataManage.getDataList();
+	public List<PmsTree> getDataList() {
+		List<PmsTree> dataList = templateDataManage.getDataList();
 		return dataList;
 	}
 
 	@RequestMapping("/get/eventHandles")
-	public List<Tree> getEventHandle() {
-		List<Tree> dataList = templateDataManage.getEventHandle();
+	public List<PmsTree> getEventHandle() {
+		List<PmsTree> dataList = templateDataManage.getEventHandle();
 		return dataList;
 	}
 
 	@RequestMapping("/get/fields")
-	public List<Tree> getfield(String templateDataKey) {
-		List<Tree> fields = templateDataManage.optionalFields(templateDataKey);
+	public List<PmsTree> getfield(String templateDataKey) {
+		List<PmsTree> fields = templateDataManage.optionalFields(templateDataKey);
 		return fields;
 	}
 
 	@RequestMapping("/get/personnel")
-	public List<Tree> personnel(String templateDataKey) {
-		List<Tree> personnel = templateDataManage.personnel(templateDataKey);
+	public List<PmsTree> personnel(String templateDataKey) {
+		List<PmsTree> personnel = templateDataManage.personnel(templateDataKey);
 		return personnel;
 	}
 
 	@RequestMapping("/get/template/tree")
-	public List<Tree> contentTemplateTree() {
+	public List<PmsTree> contentTemplateTree() {
 		return taskChainService.contentTemplateTree();
 	}
 

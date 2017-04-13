@@ -33,8 +33,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.JsonArray;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.flow.core.Auth;
 import com.panfeng.flow.core.Resource;
 import com.panfeng.flow.taskchain.TaskChainHandler;
@@ -49,7 +50,6 @@ import com.panfeng.service.ActivitiEngineService;
 import com.panfeng.service.TaskChainService;
 import com.panfeng.service.impl.activiti.JumpActivityCmd;
 import com.panfeng.util.Log;
-import com.panfeng.util.ValidateUtil;
 
 /**
  * 流程引擎操作类

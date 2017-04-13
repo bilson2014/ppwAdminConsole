@@ -1,12 +1,12 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import java.io.Serializable;
 /**
  * 级联“省”
  * @author wang
  *
  */
-public class Province extends BaseObject {
+public class Province implements Serializable {
 
 	private static final long serialVersionUID = -9199573140181925699L;
 

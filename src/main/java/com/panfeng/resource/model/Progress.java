@@ -1,8 +1,8 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
-public class Progress extends BaseObject {
+public class Progress extends BaseEntity {
 
 	private static final long serialVersionUID = -2839198745323604044L;
 

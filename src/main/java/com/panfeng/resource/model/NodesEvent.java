@@ -1,8 +1,8 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
-public class NodesEvent extends BaseObject {
+public class NodesEvent extends BaseEntity {
 
 	private static final long serialVersionUID = 6528926261399387474L;
 

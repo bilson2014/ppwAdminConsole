@@ -18,10 +18,10 @@ import org.activiti.engine.repository.DeploymentBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.resource.model.FlowNode;
 import com.panfeng.resource.model.FlowTemplate;
 import com.panfeng.util.Log;
-import com.panfeng.util.ValidateUtil;
 
 /**
  * activiti 资源深度结合控制类</br>

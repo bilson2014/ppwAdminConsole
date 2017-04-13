@@ -14,15 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.config.PublicConfig;
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.Constants;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.common.web.file.FastDFSClient;
+import com.paipianwang.pat.facade.right.entity.PmsRight;
 import com.panfeng.dao.RightDao;
 import com.panfeng.dao.StorageLocateDao;
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.SessionInfo;
-import com.panfeng.resource.model.Right;
-import com.panfeng.service.FDFSService;
 import com.panfeng.util.UrlResourceUtils;
-import com.panfeng.util.ValidateUtil;
 
 /**
  * 登陆拦截器
@@ -38,9 +39,6 @@ public class SecurityInterceptor implements HandlerInterceptor {
 	private final StorageLocateDao storageDao = null;
 	
 	private List<String> excludeUrls;
-	
-	@Autowired
-	public final FDFSService fdfsService = null;
 	
 	public List<String> getExcludeUrls() {
 		return excludeUrls;
@@ -66,9 +64,9 @@ public class SecurityInterceptor implements HandlerInterceptor {
 			Object obj, ModelAndView mv) throws Exception {
 		if(mv != null) {
 			// 如果不为空，则说明进入视图解析器
-			final Map<String, String> nodeMap = storageDao.getStorageFromRedis(GlobalConstant.STORAGE_NODE_RELATIONSHIP);
+			final Map<String, String> nodeMap = storageDao.getStorageFromRedis(PmsConstant.STORAGE_NODE_RELATIONSHIP);
 			// 获取最优Storage节点
-			final String serviceIP = fdfsService.locateFileStoragePath();
+			final String serviceIP = FastDFSClient.locateSource();
 			String ip = "";
 			final StringBuffer sbf = new StringBuffer();
 			sbf.append("http://");
@@ -79,12 +77,12 @@ public class SecurityInterceptor implements HandlerInterceptor {
 					sbf.append(ip);
 					sbf.append(":8888/");
 				} else {
-					sbf.append(GlobalConstant.FDFS_BACKUP_SERVER_PATH);
+					sbf.append(PublicConfig.FDFS_BACKUP_SERVER_PATH);
 				}
 			} else {
-				sbf.append(GlobalConstant.FDFS_BACKUP_SERVER_PATH);
+				sbf.append(PublicConfig.FDFS_BACKUP_SERVER_PATH);
 			}
-			mv.addObject(GlobalConstant.FILE_LOCATE_STORAGE_PATH, sbf.toString());
+			mv.addObject(PmsConstant.FILE_LOCATE_STORAGE_PATH, sbf.toString());
 		}
 	}
 
@@ -102,9 +100,8 @@ public class SecurityInterceptor implements HandlerInterceptor {
 			return true;
 		}
 		
-		final Right right = dao.getRightFromRedis(uri);
-		//SessionInfo info = (SessionInfo) sessionService.getSessionWithField(req, GlobalConstant.SESSION_INFO); // 获取session
-		final SessionInfo info = (SessionInfo) req.getSession().getAttribute(GlobalConstant.SESSION_INFO);
+		final PmsRight right = dao.getRightFromRedis(uri);
+		final SessionInfo info = (SessionInfo) req.getSession().getAttribute(PmsConstant.SESSION_INFO);
 		/*if(null == info){
 			info = checkAutoLogin(req,resp);
 		}*/
@@ -155,22 +152,19 @@ public class SecurityInterceptor implements HandlerInterceptor {
 				}
 				if(null!=token){
 					HttpSession session = request.getSession();
-					// info = (SessionInfo) sessionService.getSessionInfoWithToken(request,token);
-					info = (SessionInfo) session.getAttribute(GlobalConstant.SESSION_INFO);
+					info = (SessionInfo) session.getAttribute(PmsConstant.SESSION_INFO);
 					if(info != null){
 						//将info重新放入session redis键改为当前sessionId
 						info.setToken(com.panfeng.util.DataUtil.md5(request.getSession().getId()));
 						Map<String, Object> map = new HashMap<String, Object>();
-						map.put(GlobalConstant.SESSION_INFO, info);
+						map.put(PmsConstant.SESSION_INFO, info);
 						
 						Cookie cookieUsername = new Cookie("token", request.getSession().getId());
 						cookieUsername.setPath("/");
 						cookieUsername.setDomain(Constants.COOKIES_SCOPE);
 						cookieUsername.setMaxAge(60 * 60 * 24 * 7); /* 设置cookie的有效期为 7 天 */
 						response.addCookie(cookieUsername);
-						// sessionService.removeSessionByToken(request,token);
-						session.removeAttribute("GlobalConstant.SESSION_INFO");
-						
+						session.removeAttribute("PmsConstant.SESSION_INFO");
 					}
 				}
 			}
