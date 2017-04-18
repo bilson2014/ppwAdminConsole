@@ -172,6 +172,21 @@ public class UserController extends BaseController {
 		}
 		return false;
 	}
+	/**
+	 * 验证手机号是否被注册
+	 * 
+	 * @param telephone
+	 *            手机号码
+	 * @return 注册数量
+	 */
+	@RequestMapping("/user/valication/phone/{telephone}")
+	public boolean validation(@PathVariable("telephone") final String telephone) {
+		final int count = pmsUserFacade.validationPhone(telephone, null);
+		if (count > 0) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * 用户信息-修改用户基本信息(昵称、性别、真实姓名、电子邮件、QQ)
