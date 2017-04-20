@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,10 +75,14 @@ public class SalesmanController extends BaseController {
 		dataGrid.setRows(list);
 		return dataGrid;
 	}
+	
 	@RequestMapping("/salesman/update")
 	public long update(final PmsSalesman salesman,HttpServletRequest request){
-		
-		//final long ret = service.update(salesman);
+		String uniqueId = salesman.getUniqueId(); // 唯一标识，即渠道
+		if(StringUtils.isBlank(uniqueId)) {
+			uniqueId = DataUtil.getUuid();
+		}
+		salesman.setUniqueId(uniqueId);
 		final long ret = pmsSalesmanFacade.update(salesman);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update Salesman ...",sessionInfo);
@@ -86,10 +91,11 @@ public class SalesmanController extends BaseController {
 	
 	@RequestMapping("/salesman/save")
 	public long save(final PmsSalesman salesman,HttpServletRequest request){
-		
-		final String uniqueId = DataUtil.getUuid();
+		String uniqueId = salesman.getUniqueId(); // 唯一标识，即渠道
+		if(StringUtils.isBlank(uniqueId)) {
+			uniqueId = DataUtil.getUuid();
+		}
 		salesman.setUniqueId(uniqueId);
-		//final long ret = service.save(salesman);
 		final long ret = pmsSalesmanFacade.save(salesman);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save Salesman ...",sessionInfo);
@@ -99,7 +105,6 @@ public class SalesmanController extends BaseController {
 	@RequestMapping("/salesman/delete")
 	public long delete(final long[] ids,HttpServletRequest request){
 		
-		//final long ret = service.delete(ids);
 		final long ret = pmsSalesmanFacade.delete(ids);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("delete Salesmans ... ids:"+ids.toString(),sessionInfo);
@@ -124,7 +129,6 @@ public class SalesmanController extends BaseController {
 		
 		final StringBuffer url = new StringBuffer();
 		url.append("http://qr.liantu.com/api.php?text=");
-		//url.append(GlobalConstant.FILE_PROFIX);
 		
 		url.append("http://www.apaipian.com/phone/salesman/order/");
 		url.append(sale.getUniqueId());
