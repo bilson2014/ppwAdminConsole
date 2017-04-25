@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -198,23 +197,4 @@ public class SalesmanController extends BaseController {
 		}
 	}
 	
-	/**
-	 * 验证分销人UniqueId是否为合法
-	 * @return true or false
-	 */
-	@RequestMapping(value = "/salesman/valid",method = RequestMethod.POST)
-	public Boolean isSalesmanValid(@RequestBody final PmsSalesman man){
-		
-		if(man != null){
-			final String uniqueId = man.getUniqueId();
-			if(ValidateUtil.isValid(uniqueId)){
-				//final Salesman salesman = service.findSalesmanByUniqueId(uniqueId);
-				final PmsSalesman salesman = pmsSalesmanFacade.findSalesmanByUniqueId(uniqueId);
-				if(salesman != null)
-					return true;
-			}
-		}
-		
-		return false;
-	}
 }
