@@ -52,23 +52,6 @@ public class VersionManagerController extends BaseController {
 	// -------------------- 前端方法 ----------------
 
 	/**
-	 * 前端登陆验证
-	 */
-	@RequestMapping("/manager/static/encipherment")
-	public boolean doLogin(final HttpServletRequest request, @RequestBody final PmsEmployee employee) {
-
-		if (employee != null) {
-			final PmsEmployee e = pmsEmployeeFacade.doLogin(employee.getEmployeeLoginName(), employee.getEmployeePassword());
-			if (e != null) {
-				//填充角色
-				request.getSession().removeAttribute(PmsConstant.SESSION_INFO);
-				return initSessionInfo(e, request);
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * 三方登录验证
 	 * 
 	 * @param employee

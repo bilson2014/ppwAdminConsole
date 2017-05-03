@@ -352,6 +352,7 @@ function editFuc2(){
 		}
 	}
 }
+
 function exitFuc2() {
 	$('#dlg').dialog('close');
 	editing = undefined;

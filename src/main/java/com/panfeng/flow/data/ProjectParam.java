@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 
 import com.paipianwang.pat.common.constant.PmsConstant;
 import com.paipianwang.pat.common.util.ValidateUtil;
-import com.paipianwang.pat.facade.right.entity.PmsEmployee;
-import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
 import com.panfeng.flow.taskchain.EventType;
 import com.panfeng.persist.IndentFlowMapper;
 import com.panfeng.resource.model.ActivitiTask;
@@ -103,6 +101,7 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 
 		List<PmsEmployee> providerManager = null;
 		List<PmsEmployee> manager = null;
+
 
 		if (ValidateUtil.isValid(fields) && ValidateUtil.isValid(relevantPersons)) {
 			// 识别人员 --》构造参数

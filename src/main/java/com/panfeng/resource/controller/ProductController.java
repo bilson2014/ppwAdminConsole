@@ -1,11 +1,14 @@
 package com.panfeng.resource.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,12 +66,36 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private final FileConvertMQService fileConvertMQService = null;
-	
+
 	@Autowired
 	private final PmsProductFacade pmsProductFacade = null;
+
 	@Autowired
 	private final PmsTeamFacade pmsTeamFacade = null;
 	
+
+	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
+
+	private static String SOLR_URL = null;
+	private static String SOLR_EMPLOYEE_URL = null;
+	private static String SOLR_PORTAL_URL = null;
+
+	public ProductController() {
+		if (PRODUCT_VIDEO_PATH == null || "".equals(PRODUCT_VIDEO_PATH)) {
+			final InputStream is = this.getClass().getClassLoader().getResourceAsStream("jdbc.properties");
+			try {
+				Properties propertis = new Properties();
+				propertis.load(is);
+				PRODUCT_VIDEO_PATH = propertis.getProperty("upload.server.product.video");
+				SOLR_URL = propertis.getProperty("solr.url");
+				SOLR_EMPLOYEE_URL = propertis.getProperty("solr.employee.url");
+				SOLR_PORTAL_URL = propertis.getProperty("solr.portal.url");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	@RequestMapping(value = "/product-list")
 	public ModelAndView view(final ModelMap model) {
 		return new ModelAndView("product-list", model);
@@ -93,7 +120,7 @@ public class ProductController extends BaseController {
 		final long rows = param.getRows();
 		param.setBegin((page - 1) * rows);
 		param.setLimit(rows);
-		
+
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("teamName", view.getTeamName());
 		paramMap.put("productName", view.getProductName());
@@ -103,7 +130,7 @@ public class ProductController extends BaseController {
 		paramMap.put("visible", view.getVisible());
 		paramMap.put("hret", view.getHret());
 		paramMap.put("recommend", view.getRecommend());
-		final DataGrid<PmsProduct> dataGrid = pmsProductFacade.listWithPagination(param,paramMap);
+		final DataGrid<PmsProduct> dataGrid = pmsProductFacade.listWithPagination(param, paramMap);
 		return dataGrid;
 	}
 
@@ -117,9 +144,9 @@ public class ProductController extends BaseController {
 	public long delete(final long[] ids, HttpServletRequest request) {
 
 		if (ids.length > 0) {
-			//-> modify to dubbo 2017-2-3 13:59:38 begin
+			// -> modify to dubbo 2017-2-3 13:59:38 begin
 			final List<PmsProduct> list = pmsProductFacade.delete(ids);
-			//-> modify to dubbo 2017-2-3 13:59:38 end
+			// -> modify to dubbo 2017-2-3 13:59:38 end
 			// delete file
 			if (!list.isEmpty() && list.size() > 0) {
 
@@ -176,7 +203,7 @@ public class ProductController extends BaseController {
 		product.setPicLDUrl(pathList.get(1));
 		// 保存路径
 		pmsProductFacade.saveFileUrl(product);
-		//创建service数据
+		// 创建service数据
 		final double servicePrice = product.getServicePrice(); // 保存服务信息
 		PmsService service = new PmsService();
 		service.setProductId(product.getProductId());
@@ -201,6 +228,7 @@ public class ProductController extends BaseController {
 
 		final long productId = product.getProductId(); // product id
 		final PmsProduct originalProduct = pmsProductFacade.findProductById(productId);
+
 
 		// 获取未更改前的product对象,用于删除修改过的文件
 		final List<String> pathList = new ArrayList<String>(); // 路径集合
@@ -394,7 +422,8 @@ public class ProductController extends BaseController {
 	@RequestMapping("/product/static/data/loadProducts/{providerId}")
 	public List<PmsProduct> loadProductByProviderId(@PathVariable("providerId") final long teamId) {
 
-		//final List<Product> list = proService.loadProductByProviderId(teamId);
+		// final List<Product> list =
+		// proService.loadProductByProviderId(teamId);
 		final List<PmsProduct> list = pmsProductFacade.loadProductByProviderId(teamId);
 		return list;
 	}
@@ -411,7 +440,7 @@ public class ProductController extends BaseController {
 
 		long[] ids = new long[1];
 		ids[0] = productId;
-		//List<Product> list = proService.delete(ids); // 删除视频信息
+		// List<Product> list = proService.delete(ids); // 删除视频信息
 		List<PmsProduct> list = pmsProductFacade.delete(ids); // 删除视频信息
 
 		// 删除搜索索引
@@ -464,7 +493,6 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping("/product/static/data/{videoId}")
 	public PmsProduct findProductById(@PathVariable("videoId") final long productId) {
-
 		final PmsProduct product = pmsProductFacade.findProductById(productId);
 		return product;
 	}
@@ -478,7 +506,8 @@ public class ProductController extends BaseController {
 	public boolean updateProductInfo(@RequestBody final PmsProduct product, HttpServletRequest request) {
 		// 解码
 		try {
-			//Product oldProduct = proService.findProductById(product.getProductId());
+			// Product oldProduct =
+			// proService.findProductById(product.getProductId());
 			PmsProduct oldProduct = pmsProductFacade.findProductById(product.getProductId());
 			oldProduct.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
 			oldProduct.setCreationTime(product.getCreationTime());
@@ -513,12 +542,12 @@ public class ProductController extends BaseController {
 		try {
 			SessionInfo sessionInfo = getCurrentInfo(request);
 			product.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
-			//proService.save(product); // 保存视频信息
+			// proService.save(product); // 保存视频信息
 			long proId = pmsProductFacade.save(product); // 保存视频信息
 			product.setProductId(proId);
 			final PmsTeam team = pmsTeamFacade.findTeamById(sessionInfo.getReqiureId());
-			if(team.getFlag() != 4){//ghost不需要添加service
-				//添加service信息
+			if (team.getFlag() != 4) {// ghost不需要添加service
+				// 添加service信息
 				PmsService service = new PmsService();
 				service.setProductId(product.getProductId());
 				service.setProductName(product.getProductName());
@@ -544,12 +573,13 @@ public class ProductController extends BaseController {
 	 * 更新文件路径
 	 * 
 	 * @param product
-	 * 包含 视频唯一编号、缩略图、封面、视频路径
+	 *            包含 视频唯一编号、缩略图、封面、视频路径
 	 */
-	/*@RequestMapping("/product/static/data/updateFilePath")
-	public long updateFilePath(@RequestBody final Product product) {
-		return proService.saveFileUrl(product);
-	}*/
+	/*
+	 * @RequestMapping("/product/static/data/updateFilePath") public long
+	 * updateFilePath(@RequestBody final Product product) { return
+	 * proService.saveFileUrl(product); }
+	 */
 
 	/**
 	 * 获取单个作品ID
@@ -576,7 +606,7 @@ public class ProductController extends BaseController {
 	@RequestMapping("/product/static/data/salesproduct")
 	public List<PmsProduct> salesProject(final HttpServletRequest request) {
 
-		//final List<Product> list = proService.loadSalesProduct();
+		// final List<Product> list = proService.loadSalesProduct();
 		final List<PmsProduct> list = pmsProductFacade.loadSalesProduct();
 		return list;
 	}
@@ -584,6 +614,29 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = "/set/masterWork")
 	public boolean setMasterWork(@RequestBody final PmsProduct product) {
 		return pmsProductFacade.setMasterWork(product);
+	}
+
+	@RequestMapping(value = "/get/masterWork/{teamId}")
+	public PmsProduct getMasterWork(@PathVariable("teamId") Long teamId, HttpServletRequest request) {
+		if (teamId == null || teamId <= 0) {
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("productId is null ...", sessionInfo);
+			return null;
+		}
+		// Product product = proService.getMasterWork(teamId);
+		PmsProduct product = pmsProductFacade.getMasterWork(teamId);
+		if (product == null) {
+			List<PmsProduct> products = pmsProductFacade.loadProductByTeam(teamId);
+			if (ValidateUtil.isValid(products)) {
+				product = products.get(0);
+			} else {
+				SessionInfo sessionInfo = getCurrentInfo(request);
+				Log.error("product is null ...", sessionInfo);
+			}
+		}
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("set masterWork ... ", sessionInfo);
+		return product;
 	}
 
 	// 活动页面作品列表
@@ -624,7 +677,19 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/product/visibility")
 	public boolean productVisibility(@RequestBody final PmsProduct product) {
-		//return proService.updateProductVisibility(product);
 		return pmsProductFacade.updateProductVisibility(product);
 	}
+
+	@RequestMapping(value = "/product/updateChanPin")
+	public BaseMsg updateChanpin(Long chanpinId, Long configId, Long productId, HttpServletRequest request) {
+		Map<String, String[]> sceneTag = request.getParameterMap();
+		String[] tags = sceneTag.get("sceneTag");
+		if (tags != null && tags.length > 0) {
+			String join = org.apache.commons.lang3.StringUtils.join(tags, ',');
+			pmsProductFacade.setupScene(join, productId);
+		}
+		pmsProductFacade.setupChanpinAndConfig(chanpinId, configId, productId);
+		return new BaseMsg(BaseMsg.NORMAL, "更新成功！");
+	}
+
 }

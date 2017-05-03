@@ -71,6 +71,7 @@ public class LoginController extends BaseController {
 			info.setReqiureId(e.getEmployeeId());
 			info.setLoginName(e.getEmployeeLoginName());
 			info.setRealName(e.getEmployeeRealName());
+			info.setTelephone(e.getPhoneNumber());
 			
 			// 计算权限码
 			// 替换带有权限的角色

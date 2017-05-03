@@ -7,9 +7,24 @@ import org.activiti.bpmn.model.StartEvent;
 import org.activiti.bpmn.model.UserTask;
 import org.apache.commons.lang.StringUtils;
 
+import com.panfeng.resource.model.FlowNode;
+
+/**
+ * activiti 框架动态创建流程节点工具类
+ * 
+ * @author wang
+ *
+ */
 public class Bpmn {
 
-	/* 任务节点 */
+	/**
+	 * 任务节点 ,附加信息已JSON字符串嵌入到流程数据表中 {@link FlowNode}
+	 * 
+	 * @param id
+	 * @param name
+	 * @param documentation
+	 * @return
+	 */
 	protected static UserTask createUserTask(String id, String name, String documentation) {
 		UserTask userTask = new UserTask();
 		userTask.setId(id);
@@ -18,7 +33,9 @@ public class Bpmn {
 		return userTask;
 	}
 
-	/* 连线 */
+	/**
+	 * 连线
+	 */
 	protected static SequenceFlow createSequenceFlow(String from, String to, String name, String conditionExpression) {
 		SequenceFlow flow = new SequenceFlow();
 		flow.setSourceRef(from);
@@ -30,14 +47,21 @@ public class Bpmn {
 		return flow;
 	}
 
-	/* 排他网关 */
+	/**
+	 * 排他网关
+	 */
 	protected static ExclusiveGateway createExclusiveGateway(String id) {
 		ExclusiveGateway exclusiveGateway = new ExclusiveGateway();
 		exclusiveGateway.setId(id);
 		return exclusiveGateway;
 	}
 
-	/* 开始节点 */
+	/**
+	 * 开始节点,
+	 * 
+	 * @param documentation
+	 * @return
+	 */
 	protected static StartEvent createStartEvent(String documentation) {
 		StartEvent startEvent = new StartEvent();
 		startEvent.setId("startEvent");
@@ -46,7 +70,12 @@ public class Bpmn {
 		return startEvent;
 	}
 
-	/* 结束节点 */
+	/**
+	 * 结束节点
+	 * 
+	 * @param documentation
+	 * @return
+	 */
 	protected static EndEvent createEndEvent(String documentation) {
 		EndEvent endEvent = new EndEvent();
 		endEvent.setId("endEvent");
