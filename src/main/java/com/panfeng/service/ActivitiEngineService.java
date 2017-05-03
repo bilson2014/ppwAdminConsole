@@ -10,8 +10,8 @@ import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 
+import com.paipianwang.pat.common.entity.SessionInfo;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.FlowTemplate;
 
 public interface ActivitiEngineService {

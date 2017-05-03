@@ -7,12 +7,12 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsRight;
 import com.panfeng.dao.RightDao;
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.SessionInfo;
-import com.panfeng.resource.model.Right;
 import com.panfeng.util.UrlResourceUtils;
-import com.panfeng.util.ValidateUtil;
 
 /**
  * 判断两个URL，至少有一个满足条件
@@ -33,7 +33,7 @@ public class SecurityTagMultipleParam extends TagSupport {
 		final ServletContext sc = pageContext.getServletContext();
 		WebApplicationContext  wc = WebApplicationContextUtils.findWebApplicationContext(sc);
 		final RightDao dao = (RightDao) wc.getBean("rightDao");
-		final SessionInfo info = (SessionInfo) pageContext.getSession().getAttribute(GlobalConstant.SESSION_INFO);
+		final SessionInfo info = (SessionInfo) pageContext.getSession().getAttribute(PmsConstant.SESSION_INFO);
 		
 		final String contextPath = sc.getContextPath();
 		
@@ -70,7 +70,7 @@ public class SecurityTagMultipleParam extends TagSupport {
 	public boolean hasRight(final SessionInfo info,final String url,final String contextPath,final RightDao dao){
 		if(ValidateUtil.isValid(uri)){
 			final String requestUrl = UrlResourceUtils.URLResolver(url, contextPath);
-			final Right right = dao.getRightFromRedis(requestUrl);
+			final PmsRight right = dao.getRightFromRedis(requestUrl);
 			if(right != null){
 				if(info.hasRight(right)){
 					return true;

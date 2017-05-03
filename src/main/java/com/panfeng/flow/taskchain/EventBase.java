@@ -1,6 +1,6 @@
 package com.panfeng.flow.taskchain;
 
-import com.panfeng.domain.SessionInfo;
+import com.paipianwang.pat.common.entity.SessionInfo;
 import com.panfeng.resource.model.NodesEvent;
 
 /**

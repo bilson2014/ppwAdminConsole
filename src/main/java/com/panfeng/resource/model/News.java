@@ -1,8 +1,8 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import java.io.Serializable;
 
-public class News extends BaseObject {
+public class News implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -18,6 +18,7 @@ public class News extends BaseObject {
 	private String tags;
 	private String picLDUrl;
 	private Integer recommend = 0;
+	private Integer visible = 0; // 0 可见 1不可见。默认可见
 
 	public Integer getId() {
 		return id;
@@ -133,6 +134,14 @@ public class News extends BaseObject {
 
 	public void setQ(String q) {
 		this.q = q;
+	}
+
+	public Integer getVisible() {
+		return visible;
+	}
+
+	public void setVisible(Integer visible) {
+		this.visible = visible;
 	}
 
 }

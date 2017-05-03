@@ -16,8 +16,9 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.flow.taskchain.TaskChainHandler;
 import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.persist.FlowDateMapper;
@@ -30,36 +31,40 @@ import com.panfeng.resource.model.FlowTemplate;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.service.ActivitiEngineService;
-import com.panfeng.service.EmployeeService;
 import com.panfeng.service.IndentActivitiService;
 import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.SynergyService;
-import com.panfeng.util.ValidateUtil;
 
 @Service
 public class IndentActivitiServiceImpl implements IndentActivitiService {
 
 	@Autowired
 	private ActivitiEngineService activitiEngineService;
+
 	@Autowired
 	private IndentFlowMapper flowMapper;
+
 	@Autowired
 	private FlowDateMapper flowDateMapper;
 
 	private static String processDefinitionKey = "ProjectFlow";
+
 	@Autowired
 	private IndentCommentService indentCommentService;
+
 	@Autowired
 	private IndentProjectMapper indentProjectMapper;
+
 	@Autowired
 	private IndentProjectService indentProjectService;
+
 	@Autowired
 	SynergyService synergyService;
-	@Autowired
-	final EmployeeService employeeService = null;
+
 	@Autowired
 	SmsMQService smsMQService;
+
 	@Autowired
 	TaskChainHandler taskChainHandler;
 
@@ -194,37 +199,6 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 			String processDefinitionId) {
 		// 更新项目状态
 		indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_FINISH, null);
-		// ready to send sms
-		// indentProject =
-		// indentProjectService.getRedundantProject(indentProject);
-		// List<Long> ids = new ArrayList<>();
-		// Long userId = indentProject.getUserId();
-		// ids.add(userId); // 添加主负责人
-
-		// Map<Long, Synergy> synergys =
-		// synergyService.findSynergyMapByProjectId(indentProject.getId());
-		// Collection<Synergy> collectionSynergys = synergys.values();
-		// for (Synergy synergy : collectionSynergys) {
-		// ids.add(synergy.getUserId());// 添加主协同人
-		// }
-		// List<Employee> es = employeeService.findEmployeeByIds(ids.toArray(new
-		// Long[ids.size()]));
-		// if (ValidateUtil.isValid(es)) {
-		// for (Employee employee : es) {
-		// String[] param = new String[2];
-		// param[0] = employee.getEmployeeRealName();
-		// param[1] = "《" + indentProject.getProjectName() + "》";
-		// // smsMQService.sendMessage("134606", employee.getPhoneNumber(),
-		// // param);
-		// }
-		// }
-		// /////////////////////////////////// 给客户发送信息。=、、、、、、、、、、、、、、、、、、、、
-		// String[] param = new String[2];
-		// param[0] = indentProject.getUserName();
-		// param[1] = "《" + indentProject.getProjectName() + "》";
-		// // smsMQService.sendMessage("134606", indentProject.getUserPhone(),
-		// param);
-		// execute automatic events
 		FlowTemplate template = activitiEngineService.getTemplate(processDefinitionId);
 		FlowNode flowNode = template.getFlowNodes().pollLast();
 		if (flowNode != null) {
@@ -503,6 +477,5 @@ public class IndentActivitiServiceImpl implements IndentActivitiService {
 		}
 		return indentProject;
 	}
-
 
 }

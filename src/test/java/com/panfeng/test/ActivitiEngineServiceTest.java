@@ -1,16 +1,14 @@
 package com.panfeng.test;
 
-import org.activiti.engine.RuntimeService;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({ "classpath:applicationContext.xml" })
 public class ActivitiEngineServiceTest {
-	@Autowired
-	private RuntimeService runtimeService;
+	/*@Autowired
+	private RuntimeService runtimeService;*/
 //
 ////	@Autowired
 ////	private final RightDao dao = null;

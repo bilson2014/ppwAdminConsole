@@ -1,27 +1,17 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
 /**
  * 业务字典
  */
-public class BizBean extends BaseObject {
+public class BizBean extends BaseEntity {
 
 	private static final long serialVersionUID = 2072179123234736135L;
 
-	private long id = 0l; // 唯一ID
-	
 	private String name = null; // 内容
 	
 	private String type = null; // 业务组
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;

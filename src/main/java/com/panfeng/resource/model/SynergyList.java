@@ -2,9 +2,9 @@ package com.panfeng.resource.model;
 
 import java.util.List;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
-public class SynergyList extends BaseObject{
+public class SynergyList extends BaseEntity{
 
 	private static final long serialVersionUID = -6253604169518281641L;
 	

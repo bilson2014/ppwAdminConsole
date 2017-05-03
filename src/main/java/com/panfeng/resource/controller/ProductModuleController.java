@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.product.entity.PmsProductModule;
 import com.paipianwang.pat.facade.product.service.PmsProductModuleFacade;
-import com.panfeng.service.FDFSService;
 
 /**
  * 产品模块化
@@ -30,8 +30,6 @@ public class ProductModuleController extends BaseController {
 
 	@Autowired
 	private PmsProductModuleFacade pmsProductModuleFacade;
-	@Autowired
-	private FDFSService fdfsService;
 
 	@RequestMapping(value = "/module-list")
 	public ModelAndView view(final ModelMap model) {
@@ -50,7 +48,7 @@ public class ProductModuleController extends BaseController {
 		response.setContentType("text/html;charset=UTF-8");
 		if(!moduleImg.isEmpty()){
 			//上传图片
-			String fileId = fdfsService.upload(moduleImg);
+			String fileId = FastDFSClient.uploadFile(moduleImg);
 			productModule.setPic(fileId);
 		}
 		if(productModule.getPid() == null){
@@ -67,7 +65,7 @@ public class ProductModuleController extends BaseController {
 		if(!moduleImg.isEmpty()){
 			//删除以前的图片
 			delOldPicById(productModule.getId());
-			String fileId = fdfsService.upload(moduleImg);
+			String fileId = FastDFSClient.uploadFile(moduleImg);
 			productModule.setPic(fileId);
 		}
 		if(productModule.getPid() == null){
@@ -79,7 +77,7 @@ public class ProductModuleController extends BaseController {
 	private void delOldPicById(long pmId) {
 		String oldPath = pmsProductModuleFacade.getPic(pmId);
 		if(StringUtils.isNotBlank(oldPath)){
-			fdfsService.delete(oldPath);
+			FastDFSClient.deleteFile(oldPath);
 		}
 	}
 

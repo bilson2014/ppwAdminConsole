@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsRight;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
 import com.panfeng.resource.model.Product;
-import com.panfeng.resource.model.Right;
 
 /**
  * Redis 数据转换
@@ -17,12 +18,12 @@ import com.panfeng.resource.model.Right;
  */
 public class RedisUtils {
 
-	public static Map<String, String> toJson(final Map<String, Right> map) {
+	public static Map<String, String> toJson(final Map<String, PmsRight> map) {
 
 		final Map<String, String> objMap = new HashMap<String, String>();
 		if (ValidateUtil.isValid(map)) {
-			for (Map.Entry<String, Right> entry : map.entrySet()) {
-				final Right right = entry.getValue();
+			for (Map.Entry<String, PmsRight> entry : map.entrySet()) {
+				final PmsRight right = entry.getValue();
 				// 转换为json
 				final Gson gson = new Gson();
 				final String str = gson.toJson(right);
@@ -83,17 +84,17 @@ public class RedisUtils {
 		return null;
 	}
 
-	public static Map<String, Right> fromJson(final Map<String, String> map) {
+	public static Map<String, PmsRight> fromJson(final Map<String, String> map) {
 
 		if (ValidateUtil.isValid(map)) {
-			final Map<String, Right> rightMap = new HashMap<String, Right>();
+			final Map<String, PmsRight> rightMap = new HashMap<String, PmsRight>();
 			for (Map.Entry<String, String> entry : map.entrySet()) {
 				final String key = entry.getKey();
 				if (ValidateUtil.isValid(key)) {
 					final String str = entry.getValue();
 					if (ValidateUtil.isValid(str)) {
 						final Gson gson = new Gson();
-						final Right right = gson.fromJson(str, Right.class);
+						final PmsRight right = gson.fromJson(str, PmsRight.class);
 						rightMap.put(key, right);
 					}
 				}

@@ -13,9 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.PathFormatUtils;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsEmployee;
+import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
+import com.paipianwang.pat.facade.user.entity.PmsUser;
+import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.persist.DealLogMapper;
 import com.panfeng.persist.FlowDateMapper;
@@ -26,7 +32,6 @@ import com.panfeng.poi.ProjectPoiAdapter;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.DealLog;
-import com.panfeng.resource.model.Employee;
 import com.panfeng.resource.model.FlowDate;
 import com.panfeng.resource.model.IndentFlow;
 import com.panfeng.resource.model.IndentProject;
@@ -42,12 +47,7 @@ import com.panfeng.service.IndentCommentService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.service.SynergyService;
-import com.panfeng.service.bak_UserService;
 import com.panfeng.service.UserTempService;
-import com.paipianwang.pat.common.util.PathFormatUtils;
-import com.paipianwang.pat.facade.user.entity.PmsUser;
-import com.paipianwang.pat.facade.user.service.PmsUserFacade;
-import com.panfeng.util.ValidateUtil;
 
 @Service
 public class IndentProjectServiceImpl implements IndentProjectService {
@@ -74,6 +74,9 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	SynergyService synergyService;
 
 	@Autowired
+	final PmsEmployeeFacade pmsEmployeeFacade = null;
+	
+	@Autowired
 	final EmployeeService employeeService = null;
 
 	@Autowired
@@ -82,9 +85,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Autowired
 	IndentResourceService indentResourceService;
 
-	@Autowired
-	bak_UserService userService;
-	
 	@Autowired
 	PmsUserFacade pmsUserFacade;
 
@@ -110,7 +110,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		if (isValid) {
 			for (Synergy synergy : list) {
 				if (null == synergy.getUserName()) {// 后台添加的数据,没有视频管家名字
-					String realName = employeeService.findEmployerById(synergy.getUserId()).getEmployeeRealName();
+					String realName = pmsEmployeeFacade.findEmployeeById(synergy.getUserId()).getEmployeeRealName();
 					synergy.setUserName(realName);
 				}
 				synergy.setProjectId(indentProject.getId());
@@ -124,33 +124,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			for (Synergy synergy : list) {
 				synergyService.delete(synergy.getSynergyId());
 			}
-		}
-		if (res) {
-			// 发送项目开始消息
-//			List<Long> ids = new ArrayList<>();
-//			Long userId = indentProject.getUserId();
-//			ids.add(userId); // 添加主负责人
-//
-//			Map<Long, Synergy> synergys = synergyService.findSynergyMapByProjectId(indentProject.getId());
-//			Collection<Synergy> collectionSynergys = synergys.values();
-//			for (Synergy synergy : collectionSynergys) {
-//				ids.add(synergy.getUserId());// 添加主协同人
-//			}
-//			List<Employee> es = employeeService.findEmployeeByIds(ids.toArray(new Long[ids.size()]));
-//			if (ValidateUtil.isValid(es)) {
-//				for (Employee employee : es) {
-//					String[] param = new String[2];
-//					param[0] = employee.getEmployeeRealName();
-//					param[1] = "《" + indentProject.getProjectName() + "》";
-//					//smsMQService.sendMessage("134605", employee.getPhoneNumber(), param);
-//				}
-//			}
-//			/////////////////////////////////// 给客户发送信息。=、、、、、、、、、、、、、、、、、、、、
-//			String[] param = new String[2];
-//			param[0] = indentProject.getUserName();
-//			param[1] = "《" + indentProject.getProjectName() + "》";
-			//smsMQService.sendMessage("134605", indentProject.getUserPhone(), param);
-
 		}
 		return res;
 	}
@@ -171,17 +144,17 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		List<IndentProject> list = null;
 		switch (userType) {
 		// 用户身份 -- 客户
-		case GlobalConstant.ROLE_CUSTOMER:
+		case PmsConstant.ROLE_CUSTOMER:
 			indentProject.setCustomerId(indentProject.getUserId());
 			list = indentProjectMapper.findProjectByUserName(indentProject);
 			break;
 		// 用户身份 -- 供应商
-		case GlobalConstant.ROLE_PROVIDER:
+		case PmsConstant.ROLE_PROVIDER:
 			indentProject.setTeamId(indentProject.getUserId());
 			list = indentProjectMapper.findProjectByUserName(indentProject);
 			break;
 		// 用户身份 -- 视频管家
-		case GlobalConstant.ROLE_EMPLOYEE:
+		case PmsConstant.ROLE_EMPLOYEE:
 			list = indentProjectMapper.findProjectList(indentProject);
 			break;
 		}
@@ -384,11 +357,11 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		} else {
 			list = indentProjectMapper.listWithPaginationAllAndSynergy(view);
 		}
-		Map<Long, Employee> eMap = employeeService.getEmployeeMap();
+		Map<Long, PmsEmployee> eMap = employeeService.getEmployeeMap();
 		Map<Long, List<Synergy>> sMap = synergyService.findSynergyMap();
 		for (final IndentProject pro : list) {
-			final Employee user = eMap.get(pro.getUserId());
-			final Employee referer = eMap.get(pro.getReferrerId());
+			final PmsEmployee user = eMap.get(pro.getUserId());
+			final PmsEmployee referer = eMap.get(pro.getReferrerId());
 			final List<Synergy> sList = sMap.get(pro.getId());
 			if (user != null)
 				pro.setEmployeeRealName(eMap.get(pro.getUserId()).getEmployeeRealName());
@@ -471,7 +444,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		List<Synergy> sList = indentProject.getSynergys();
 		if (ValidateUtil.isValid(sList)) {
 			for (final Synergy synergy : sList) {
-				Employee employee = employeeService.findEmployerById(synergy.getUserId());
+				PmsEmployee employee = pmsEmployeeFacade.findEmployeeById(synergy.getUserId());
 				synergy.setUserName(employee.getEmployeeRealName());
 				Synergy originalSynergy = map.get(synergy.getSynergyId());
 				if (originalSynergy == null) {

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.panfeng.domain.SessionInfo;
+import com.paipianwang.pat.common.entity.SessionInfo;
 import com.panfeng.resource.model.Item;
 import com.panfeng.resource.view.DataGrid;
 import com.panfeng.resource.view.ItemView;

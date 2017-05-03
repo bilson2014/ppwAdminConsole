@@ -9,8 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
 import com.paipianwang.pat.common.util.Constants;
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.product.service.PmsKindeditorFacade;
-import com.panfeng.service.FDFSService;
 
 /**
  * 编辑器相关
@@ -22,8 +22,6 @@ public class KindeditorController extends BaseController {
 
 	@Autowired
 	private PmsKindeditorFacade pmsKindeditorFacade;
-	@Autowired
-	private FDFSService dfsService;
 
 	//上传图片和视频
 	@RequestMapping(value = "/kindeditor/uploadImage", produces = "text/html; charset=UTF-8")
@@ -36,7 +34,7 @@ public class KindeditorController extends BaseController {
 		if (!"".equals(result))
 			return pmsKindeditorFacade.createMsg(result, Constants.MSG_FAIL);
 		// step 2.保存文件
-		result = dfsService.upload(multipartFile);
+		result = FastDFSClient.uploadFile(multipartFile);
 		if (Constants.FAIL.equals(result))
 			return pmsKindeditorFacade.createMsg("保存文件失败。", Constants.MSG_FAIL);
 		// step 3.生成图片URL

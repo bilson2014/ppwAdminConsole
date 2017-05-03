@@ -6,12 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.SessionInfo;
-import com.panfeng.resource.model.Employee;
-import com.panfeng.resource.model.Role;
-import com.panfeng.service.EmployeeService;
-import com.panfeng.service.RoleService;
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsEmployee;
+import com.paipianwang.pat.facade.right.entity.PmsRole;
+import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
+import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
 
 /**
  * 认证当前用户是否有权利完成当前节点</br>
@@ -23,11 +24,12 @@ import com.panfeng.service.RoleService;
  */
 @Component
 public class Auth {
-	@Autowired
-	private final RoleService roleService = null;
 
 	@Autowired
-	private final EmployeeService employeeService = null;
+	private final PmsRoleFacade pmsRoleFacade = null;
+
+	@Autowired
+	private final PmsEmployeeFacade pmsEmployeeFacade = null;
 
 	/**
 	 * 认证当前用户是否有权限执行当前步骤
@@ -45,28 +47,31 @@ public class Auth {
 
 		String[] assignee = assignees.split("\\,");
 
-		final List<Role> roles = new ArrayList<>();
+		final List<PmsRole> roles = new ArrayList<>();
 
 		switch (sessionInfo.getSessionType()) {
-		case GlobalConstant.ROLE_CUSTOMER:
-			Role role = roleService.findRoleById(3l);
+		case PmsConstant.ROLE_CUSTOMER:
+			PmsRole role = pmsRoleFacade.findRoleById(3l);
 			roles.add(role);
 			break;
-		case GlobalConstant.ROLE_PROVIDER:
-			role = roleService.findRoleById(2l);
+		case PmsConstant.ROLE_PROVIDER:
+			role = pmsRoleFacade.findRoleById(2l);
 			roles.add(role);
 			break;
-		case GlobalConstant.ROLE_EMPLOYEE:
-			Employee employee = employeeService.findEmployerById(sessionInfo.getReqiureId());
-			for (final Role r : employee.getRoles()) {
-				role = roleService.findRoleById(r.getRoleId());
-				roles.add(role);
+		case PmsConstant.ROLE_EMPLOYEE:
+			PmsEmployee employee = pmsEmployeeFacade.findEmployeeById(sessionInfo.getReqiureId());
+			final List<PmsRole> roleList = employee.getRoles();
+			if(ValidateUtil.isValid(roleList)) {
+				for (final PmsRole r : roleList) {
+					role = pmsRoleFacade.findRoleById(r.getRoleId());
+					roles.add(role);
+				}
 			}
 			break;
 		}
 
 		for (int i = 0; i < assignee.length; i++) {
-			for (Role role : roles) {
+			for (PmsRole role : roles) {
 				if (Long.parseLong(assignee[i]) == role.getRoleId()) {
 					return true;
 				}

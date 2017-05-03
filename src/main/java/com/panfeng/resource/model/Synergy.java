@@ -1,8 +1,8 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
-public class Synergy extends BaseObject {
+public class Synergy extends BaseEntity {
 
 	private static final long serialVersionUID = 7186705977664367497L;
 

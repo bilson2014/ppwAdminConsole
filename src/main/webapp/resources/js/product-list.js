@@ -60,6 +60,7 @@ $().ready(function(){
 						field : 'checkDetails' ,
 						title : '审核详情' ,
 						align : 'center' ,
+						sortable : true,
 						width : 100,
 						hidden : false
 					},{

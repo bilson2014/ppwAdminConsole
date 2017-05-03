@@ -8,19 +8,20 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.paipianwang.pat.common.config.PublicConfig;
+import com.paipianwang.pat.common.constant.PmsConstant;
 import com.paipianwang.pat.common.util.JsonUtil;
+import com.paipianwang.pat.common.util.PathFormatUtils;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.GlobalConstant;
 import com.panfeng.persist.DealLogMapper;
 import com.panfeng.resource.model.DealLog;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.service.DealLogService;
 import com.panfeng.service.IndentProjectService;
-import com.panfeng.util.AESUtil;
+import com.panfeng.util.AESSecurityUtil;
 import com.panfeng.util.DateUtils;
 import com.panfeng.util.HttpsUtils;
-import com.paipianwang.pat.common.util.PathFormatUtils;
-import com.panfeng.util.ValidateUtil;
 import com.sun.star.lang.NullPointerException;
 
 @Service
@@ -34,8 +35,8 @@ public class DealLogImpl implements DealLogService {
 	static String KEY = "PanFengYOUWen659";
 	static int PAY_URL_TIMEOUT = 30 * 60 * 1000; // ms
 	static int PAY_ORDER_TIMEOUT = 48 * 60 * 60 * 1000; // ms
-	static String PAY_INCOME_URL = GlobalConstant.PAY_SERVER + "pay/income";
-	static String UN_WEB_RETURNURL = GlobalConstant.PAY_RETURN_SERVER + "payment/success";
+	static String PAY_INCOME_URL = PublicConfig.PAY_SERVER + "pay/income";
+	static String UN_WEB_RETURNURL = PublicConfig.PAY_RETURN_SERVER + "payment/success";
 	
 
 	@Override
@@ -97,13 +98,13 @@ public class DealLogImpl implements DealLogService {
 
 			List<DealLog> dealLogs = null;
 			switch (userType) {
-			case GlobalConstant.ROLE_EMPLOYEE:
+			case PmsConstant.ROLE_EMPLOYEE:
 				dealLogs = dealLogMapper.findDealByProjectId(projectId);
 				break;
-			case GlobalConstant.ROLE_CUSTOMER:
+			case PmsConstant.ROLE_CUSTOMER:
 				dealLogs = dealLogMapper.findDealByUserId(projectId, userId);
 				break;
-			case GlobalConstant.ROLE_PROVIDER:
+			case PmsConstant.ROLE_PROVIDER:
 				break;
 			}
 			if (dealLogs != null) {
@@ -141,7 +142,7 @@ public class DealLogImpl implements DealLogService {
 	@Override
 	public String getToken(DealLog dealLog) throws Exception {
 		String formatData = String.valueOf(dealLog.getDealId()) + "|" + String.valueOf(System.currentTimeMillis());
-		String token = AESUtil.Encrypt2Hex(formatData, KEY);
+		String token = AESSecurityUtil.Encrypt2Hex(formatData, KEY);
 		return token;
 	}
 
@@ -173,7 +174,7 @@ public class DealLogImpl implements DealLogService {
 		indentProject.setId(proId);
 		indentProject = indentProjectService.getProjectInfo(indentProject);
 
-		dealLog.setUserType(GlobalConstant.ROLE_CUSTOMER);
+		dealLog.setUserType(PmsConstant.ROLE_CUSTOMER);
 		dealLog.setUserId(indentProject.getCustomerId());
 
 		long res = dealLogMapper.save(dealLog);
@@ -197,7 +198,7 @@ public class DealLogImpl implements DealLogService {
 	 * @throws Exception
 	 */
 	static String[] decodeToken(String token) throws Exception {
-		String Ostr = AESUtil.HexDecrypt(token, KEY);
+		String Ostr = AESSecurityUtil.HexDecrypt(token, KEY);
 		String[] data = Ostr.split("\\|");// 0 -->Id,1 -->timestamp
 		return data;
 	}
@@ -327,7 +328,7 @@ public class DealLogImpl implements DealLogService {
 		indentProject.setId(proId);
 		indentProject = indentProjectService.getProjectInfo(indentProject);
 
-		dealLog.setUserType(GlobalConstant.ROLE_CUSTOMER);
+		dealLog.setUserType(PmsConstant.ROLE_CUSTOMER);
 		dealLog.setUserId(indentProject.getCustomerId());
 		dealLog.setBillNo(generateBillNo(indentProject.getSerial()));
 		dealLog.setPayChannel("线下转账");

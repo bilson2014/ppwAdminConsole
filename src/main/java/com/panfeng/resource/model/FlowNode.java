@@ -1,13 +1,14 @@
 package com.panfeng.resource.model;
 
+import java.io.Serializable;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.flow.core.Bpmn.NodeType;
-import com.panfeng.util.ValidateUtil;
 
-public class FlowNode extends BaseObject {
+public class FlowNode implements Serializable {
 
 	private static final long serialVersionUID = -8877099356358266869L;
 

@@ -10,7 +10,8 @@
 			`status`,
 			TAGS AS tags,
 			PICLDURL AS picLDUrl,
-			RECOMMEND AS recommend
+			RECOMMEND AS recommend,
+			VISIBLE AS visible
 			FROM NEWS WHERE 1=1
 		]]>
 		<if test="category != null">
@@ -51,7 +52,8 @@
 				`STATUS`,
 				TAGS,
 				PICLDURL,
-				RECOMMEND
+				RECOMMEND,
+				VISIBLE
 			) VALUES(
 				#{title},
 				#{discription},
@@ -62,7 +64,8 @@
 				${status},
 				#{tags},
 				#{picLDUrl},
-				${recommend}
+				${recommend},
+				${visible}
 			)
 		]]>
 	</insert>
@@ -76,7 +79,8 @@
 		      n.UPDATE_TIME = CURRENT_TIMESTAMP,
 		      n.STATUS = ${status},
 		      n.TAGS = #{tags},
-		      n.RECOMMEND = ${recommend}
+		      n.RECOMMEND = ${recommend},
+		      n.VISIBLE = ${visible}
 		]]>
 
 		<if test="picLDUrl != null and picLDUrl != '' ">
@@ -102,7 +106,8 @@
 			,`status` ,
 			TAGS AS tags,
 			PICLDURL AS picLDUrl,
-			RECOMMEND AS recommend
+			RECOMMEND AS recommend,
+			VISIBLE AS visible
 			FROM NEWS 
 			WHERE ID= ${id}
 		]]>
@@ -149,7 +154,8 @@
 				`status`,
 				TAGS AS tags,
 				PICLDURL AS picLDUrl,
-				RECOMMEND AS recommend
+				RECOMMEND AS recommend,
+				VISIBLE AS visible
 			FROM NEWS ORDER BY create_time DESC
 		]]>
 	</select>
@@ -163,7 +169,8 @@
 			`status`,
 			TAGS AS tags,
 			PICLDURL AS picLDUrl,
-			RECOMMEND AS recommend
+			RECOMMEND AS recommend,
+			VISIBLE AS visible
 			FROM NEWS WHERE id = ${id}
 		]]>
 	</select>
@@ -177,7 +184,8 @@
 			`status`,
 			TAGS AS tags,
 			PICLDURL AS picLDUrl,
-			RECOMMEND AS recommend
+			RECOMMEND AS recommend,
+			VISIBLE AS visible
 			FROM NEWS WHERE
 		]]>
 		<if test="q !=null and q != ''">
@@ -187,7 +195,7 @@
 			`STATUS` = status AND
 		</if>
 		<![CDATA[
-			id > ${id}
+			id > ${id} AND VISIBLE = 0
 			ORDER BY CREATE_TIME ASC limit 1
 		]]>
 	</select>
@@ -200,7 +208,8 @@
 			`status`,
 			TAGS AS tags,
 			PICLDURL AS picLDUrl,
-			RECOMMEND AS recommend
+			RECOMMEND AS recommend,
+			VISIBLE AS visible
 			FROM NEWS WHERE 
 		]]>
 		<if test="q !=null and q != ''">
@@ -209,7 +218,7 @@
 		<if test="status != null and status != ''">
 			`STATUS` = status AND
 		</if>
-		<![CDATA[ id < ${id}
+		<![CDATA[ id < ${id} AND VISIBLE = 0
 			ORDER BY CREATE_TIME DESC limit 1
 		]]>
 	</select>
@@ -225,7 +234,7 @@
 			RECOMMEND AS recommend
 			FROM NEWS WHERE
 			RECOMMEND > 0 AND 
-			id > ${id}
+			id > ${id} AND VISIBLE = 0
 			ORDER BY CREATE_TIME ASC limit 1
 		]]>
 	</select>
@@ -241,7 +250,7 @@
 			RECOMMEND AS recommend
 			FROM NEWS WHERE
 			RECOMMEND > 0 AND 
-			id < ${id}
+			id < ${id}  AND VISIBLE = 0
 			ORDER BY CREATE_TIME DESC limit 1
 		]]>
 	</select>

@@ -1,8 +1,8 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
-public class TaskChainNodesEventLink extends BaseObject {
+public class TaskChainNodesEventLink extends BaseEntity {
 
 	private static final long serialVersionUID = -7562343427437667262L;
 

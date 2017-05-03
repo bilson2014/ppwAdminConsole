@@ -5,11 +5,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsRight;
 import com.panfeng.dao.RightDao;
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.resource.model.Right;
 import com.panfeng.util.RedisUtils;
-import com.panfeng.util.ValidateUtil;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -21,12 +21,12 @@ public class RightDaoImpl implements RightDao {
 	@Autowired
 	private final JedisPool pool = null;
 	
-	public Right getRightFromRedis(final String uri) {
+	public PmsRight getRightFromRedis(final String uri) {
 		Jedis jedis = null;
 		try {
 			jedis = pool.getResource();
-			String str = jedis.hget(GlobalConstant.CONTEXT_RIGHT_MAP, uri);
-			final Right right = RedisUtils.fromJson(str,Right.class);
+			String str = jedis.hget(PmsConstant.CONTEXT_RIGHT_MAP, uri);
+			final PmsRight right = RedisUtils.fromJson(str,PmsRight.class);
 			return right;
 		} catch (Exception e) {
 			// do something for logger
@@ -40,13 +40,13 @@ public class RightDaoImpl implements RightDao {
 		return null;
 	}
 
-	public Map<String, Right> getRightsFromRedis() {
+	public Map<String, PmsRight> getRightsFromRedis() {
 		Jedis jedis = null;
 		try {
 			jedis = pool.getResource();
-			Map<String,String> map = jedis.hgetAll(GlobalConstant.CONTEXT_RIGHT_MAP);
+			Map<String,String> map = jedis.hgetAll(PmsConstant.CONTEXT_RIGHT_MAP);
 			if(ValidateUtil.isValid(map)){
-				final Map<String,Right> rightMap = RedisUtils.fromJson(map);
+				final Map<String,PmsRight> rightMap = RedisUtils.fromJson(map);
 				return rightMap;
 			}
 			
@@ -63,7 +63,7 @@ public class RightDaoImpl implements RightDao {
 		return null;
 	}
 
-	public void addRightByRedis(final Right right) {
+	public void addRightByRedis(final PmsRight right) {
 		
 		if(right != null){
 			Jedis jedis = null;
@@ -72,7 +72,7 @@ public class RightDaoImpl implements RightDao {
 				final String str = RedisUtils.toJson(right);
 				if(ValidateUtil.isValid(str)){
 					Transaction t = jedis.multi();
-					t.hset(GlobalConstant.CONTEXT_RIGHT_MAP, right.getUrl(), str);
+					t.hset(PmsConstant.CONTEXT_RIGHT_MAP, right.getUrl(), str);
 					t.exec();
 				}
 			} catch (Exception e) {
@@ -86,7 +86,7 @@ public class RightDaoImpl implements RightDao {
 		}
 	}
 
-	public void resetRightFromRedis(final Map<String, Right> map) {
+	public void resetRightFromRedis(final Map<String, PmsRight> map) {
 		
 		if(ValidateUtil.isValid(map)){
 			Jedis jedis = null;
@@ -94,7 +94,7 @@ public class RightDaoImpl implements RightDao {
 				jedis = pool.getResource();
 				Transaction tx = jedis.multi();
 				final Map<String,String> rightMap = RedisUtils.toJson(map);
-				tx.hmset(GlobalConstant.CONTEXT_RIGHT_MAP, rightMap);
+				tx.hmset(PmsConstant.CONTEXT_RIGHT_MAP, rightMap);
 				tx.exec();
 			} catch (Exception e) {
 				// do something for logger

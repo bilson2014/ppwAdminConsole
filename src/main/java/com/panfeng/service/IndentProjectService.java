@@ -3,8 +3,8 @@ package com.panfeng.service;
 import java.io.OutputStream;
 import java.util.List;
 
+import com.paipianwang.pat.common.entity.SessionInfo;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.ActivitiTask;
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.IndentProject;

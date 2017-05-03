@@ -11,20 +11,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.panfeng.domain.SessionInfo;
-import com.panfeng.resource.model.Job;
-import com.panfeng.resource.view.DataGrid;
+import com.paipianwang.pat.common.entity.DataGrid;
+import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.JsonUtil;
+import com.paipianwang.pat.facade.employee.entity.PmsJob;
+import com.paipianwang.pat.facade.employee.service.PmsJobFacade;
 import com.panfeng.resource.view.JobView;
-import com.panfeng.resource.view.PageFilter;
-import com.panfeng.service.JobService;
 import com.panfeng.util.Log;
 
 @RestController
 @RequestMapping("/portal")
 public class JobController extends BaseController {
 
+	/*@Autowired
+	private final JobService service = null;*/
+	
 	@Autowired
-	private final JobService service = null;
+	private final PmsJobFacade pmsJobFacade = null;
+	
 	
 	@RequestMapping("/job-list")
 	public ModelAndView view(){
@@ -33,36 +38,31 @@ public class JobController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/job/list",method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
-	public DataGrid<Job> list(final JobView view,final PageFilter pf){
+	public DataGrid<PmsJob> list(final JobView view,final PageParam param){
 		
-		final long page = pf.getPage();
-		final long rows = pf.getRows();
-		view.setBegin((page - 1) * rows);
-		view.setLimit(rows);
+		final long page = param.getPage();
+		final long rows = param.getRows();
+		param.setBegin((page - 1) * rows);
+		param.setLimit(rows);
 		
-		DataGrid<Job> dataGrid = new DataGrid<Job>();
+		final DataGrid<PmsJob> dataGrid = pmsJobFacade.listWithPagination(param, JsonUtil.objectToMap(view));
 		
-		final List<Job> list = service.listWithPagination(view);
-		
-		dataGrid.setRows(list);
-		final long total = service.maxSize(view);
-		dataGrid.setTotal(total);
 		return dataGrid;
 	}
 	
 	@RequestMapping("/job/update")
-	public long update(final Job job,HttpServletRequest request){
+	public long update(final PmsJob job,HttpServletRequest request){
 		
-		final long ret = service.update(job);
+		final long ret = pmsJobFacade.update(job);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update job ...", sessionInfo);
 		return ret;
 	}
 	
 	@RequestMapping("/job/save")
-	public long save(final Job job,HttpServletRequest request){
+	public long save(final PmsJob job,HttpServletRequest request){
 		
-		final long ret = service.save(job);
+		final long ret = pmsJobFacade.save(job);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("add job ...", sessionInfo);
 		return ret;
@@ -71,7 +71,7 @@ public class JobController extends BaseController {
 	@RequestMapping("/job/delete")
 	public long delete(final long[] ids,HttpServletRequest request){
 		
-		final long ret = service.delete(ids);
+		final long ret = pmsJobFacade.delete(ids);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("delete items ...  ids:"+ids.toString(), sessionInfo);
 		return ret;
@@ -79,17 +79,17 @@ public class JobController extends BaseController {
 	
 	// -------------------------- 前端请求 -------------------------------
 	@RequestMapping("/job/static/list")
-	public List<Job> list(final HttpServletRequest request){
+	public List<PmsJob> list(final HttpServletRequest request){
 		
-		final List<Job> list = service.getAll();
+		final List<PmsJob> list = pmsJobFacade.getAll();
 		return list;
 	}
 	
 	@RequestMapping("/job/static/{id}")
-	public Job job(final HttpServletRequest request,@PathVariable("id") final Long id){
+	public PmsJob job(final HttpServletRequest request,@PathVariable("id") final Long id){
 		
 		if(id != null){
-			final Job job = service.findJobById(id);
+			final PmsJob job = pmsJobFacade.findJobById(id);
 			return job;
 		}
 		return null;

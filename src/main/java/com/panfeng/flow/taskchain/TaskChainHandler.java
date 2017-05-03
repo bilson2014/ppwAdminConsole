@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.panfeng.domain.SessionInfo;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.persist.TaskChainMapper;
 import com.panfeng.resource.model.NodesEvent;
 import com.panfeng.resource.model.TaskChain;
-import com.panfeng.util.ValidateUtil;
 
 /**
  * 处理任务链（每个节点拥有有个）

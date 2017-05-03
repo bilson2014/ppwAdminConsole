@@ -6,11 +6,7 @@ import java.util.Date;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
 
-import com.panfeng.domain.BaseObject;
-
-public class ActivitiTask extends BaseObject implements Cloneable {
-
-	private static final long serialVersionUID = 112464574554L;
+public class ActivitiTask implements Cloneable {
 
 	private String owner = "";
 	private String createTime = null;

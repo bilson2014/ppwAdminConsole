@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.panfeng.domain.SessionInfo;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.flow.data.FillerParam;
 import com.panfeng.flow.taskchain.EventBase;
 import com.panfeng.flow.taskchain.EventType;
@@ -19,7 +20,6 @@ import com.panfeng.resource.model.NodesEvent;
 import com.panfeng.resource.model.Sms;
 import com.panfeng.service.SMSTemplateService;
 import com.panfeng.service.TemplateDataManage;
-import com.panfeng.util.ValidateUtil;
 
 @Component
 public class SmsEvent extends EventBase {

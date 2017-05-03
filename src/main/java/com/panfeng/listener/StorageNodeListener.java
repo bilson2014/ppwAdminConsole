@@ -13,8 +13,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.dao.StorageLocateDao;
-import com.panfeng.util.ValidateUtil;
 
 @SuppressWarnings("rawtypes")
 @Component
@@ -23,7 +23,7 @@ public class StorageNodeListener implements ApplicationListener{
 	@Autowired
 	private final StorageLocateDao storageDao = null;
 	
-	private static final String CONF_FILENAME = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "fdfs_storage.conf";
+	private static final String CONF_FILENAME = Thread.currentThread().getContextClassLoader().getResource("").getPath() + "fdfs/fdfs_storage.conf";
 	private IniFileReader iniReader;
 	private String[] storageServers;
 	

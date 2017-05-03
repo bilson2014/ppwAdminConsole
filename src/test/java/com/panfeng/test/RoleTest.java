@@ -5,54 +5,40 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.panfeng.persist.RoleMapper;
-import com.panfeng.resource.model.Employee;
+import com.paipianwang.pat.facade.right.entity.PmsEmployee;
+import com.paipianwang.pat.facade.right.entity.PmsRole;
+import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
 import com.panfeng.resource.model.EmployeeRoleLink;
-import com.panfeng.resource.model.Role;
-import com.panfeng.resource.view.RoleView;
-import com.panfeng.service.RoleService;
 
 public class RoleTest extends BaseTest {
 
 	@Autowired
-	private RoleMapper mapper = null;
-	
-	@Autowired
-	private RoleService service = null;
+	private PmsRoleFacade pmsRoleFacade = null;
 	
 	@Test
 	public void save(){
-		final Role r = new Role();
+		final PmsRole r = new PmsRole();
 		r.setRoleName("用户");
-		mapper.save(r);
+		pmsRoleFacade.save(r);
 		System.err.println(r.getRoleId());
 	}
 	
 	@Test
 	public void update(){
-		final Role r = new Role();
+		final PmsRole r = new PmsRole();
 		r.setRoleId(2);
 		r.setRoleName("客户");
-		mapper.update(r);
-	}
-	
-	@Test
-	public void list(){
-		final RoleView view = new RoleView();
-		final List<Role> roles = mapper.listWithPagination(view);
-		final long size = mapper.maxSize(view);
-		System.err.println(size);
-		System.out.println(roles.size());
+		pmsRoleFacade.update(r);
 	}
 	
 	@Test
 	public void saveRelation(){
 		final EmployeeRoleLink link = new EmployeeRoleLink();
-		final Employee e =  new Employee();
+		final PmsEmployee e =  new PmsEmployee();
 		e.setEmployeeId(2);
 		link.setEmployee(e);
 		
-		final Role role = new Role();
+		final PmsRole role = new PmsRole();
 		role.setRoleId(2);
 		link.setRole(role);
 		// mapper.saveRelativity(link);
@@ -60,20 +46,19 @@ public class RoleTest extends BaseTest {
 	
 	@Test
 	public void findEmployerWithRole(){
-		final Role r = mapper.findRoleById(1l);
+		final PmsRole r = pmsRoleFacade.findRoleById(1l);
 		System.err.println(r);
 	}
 	
 	@Test
 	public void findAll(){
-		final List<Role> list= service.all();
+		final List<PmsRole> list= pmsRoleFacade.findAllRoles();
 		System.err.println(list.size());
-		
 	}
 	
 	@Test
 	public void delete(){
-		final long ret = service.delete(new long[]{2l});
+		final long ret = pmsRoleFacade.deleteByIds(new long[]{2l});
 		System.err.println(ret);
 	}
 }

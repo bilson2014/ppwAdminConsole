@@ -70,8 +70,36 @@
 	        <form id="fm" method="post">
 	        	<input type="hidden" name="salesmanId" id="salesmanId"> 
 	        	<div class="fitem">
-	                <label>姓名:</label>
+	                <label>名称:</label>
 	                <input name="salesmanName" class="easyui-textbox" required="true">
+	            </div>
+	            <div class="fitem">
+	                <label>作用范围:</label>
+	                <select name="belongs" class="easyui-combobox" editable="true">
+							<option value="网站" selected>网站</option>
+							<option value="活动">活动</option>
+							<option value="新媒体">新媒体</option>
+							<option value="分销">分销</option>
+						</select>
+	            </div>
+	            <div class="fitem">
+	                <label>受众平台:</label>
+	                <select name="platform" class="easyui-combobox" editable="true">
+						<option value="PC" selected>PC</option>
+						<option value="移动端">移动端</option>
+					</select>
+	            </div>
+	            <div class="fitem">
+	                <label>访问地址:</label>
+					<input name="accessurl" id="accessurl" class="easyui-textbox" >
+	            </div>
+	            <div class="fitem">
+	                <label>唯一标识:</label>
+	                <select name="uniqueId" class="easyui-combobox" editable="true">
+							<option value="" selected>-- 分销人 --</option>
+							<option value="weixin">微信下单</option>
+							<option value="toutiao">头条下单</option>
+						</select>
 	            </div>
 	            <div class="fitem">
 	                <label>备注:</label>

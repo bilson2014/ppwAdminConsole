@@ -2,9 +2,9 @@ package com.panfeng.service;
 
 import java.util.List;
 
+import com.paipianwang.pat.facade.right.entity.PmsTree;
 import com.panfeng.resource.model.NodesEvent;
 import com.panfeng.resource.model.TaskChain;
-import com.panfeng.resource.model.Tree;
 
 public interface TaskChainService {
 	List<TaskChain> getAll();
@@ -21,7 +21,7 @@ public interface TaskChainService {
 
 	long addNodes(TaskChain taskChain);
 	
-	List<Tree> getEventTree();
+	List<PmsTree> getEventTree();
 	
-	List<Tree> contentTemplateTree();
+	List<PmsTree> contentTemplateTree();
 }

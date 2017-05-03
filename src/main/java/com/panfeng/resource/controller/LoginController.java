@@ -13,17 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.panfeng.domain.GlobalConstant;
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsEmployee;
+import com.paipianwang.pat.facade.right.entity.PmsRole;
+import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
+import com.paipianwang.pat.facade.right.service.PmsRightFacade;
+import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
 import com.panfeng.domain.Result;
-import com.panfeng.domain.SessionInfo;
-import com.panfeng.resource.model.Employee;
-import com.panfeng.resource.model.Role;
-import com.panfeng.service.EmployeeService;
-import com.panfeng.service.RightService;
-import com.panfeng.service.RoleService;
-import com.panfeng.util.AESUtil;
+import com.panfeng.util.AESSecurityUtil;
 import com.panfeng.util.DataUtil;
-import com.panfeng.util.ValidateUtil;
 
 /**
  * 登陆相关
@@ -36,16 +36,16 @@ import com.panfeng.util.ValidateUtil;
 public class LoginController extends BaseController {
 	
 	@Autowired
-	private final EmployeeService eService = null;
+	private final PmsEmployeeFacade pmsEmployeeFacade = null;
 	
 	@Autowired
-	private final RoleService rService = null;
+	private final PmsRoleFacade pmsRoleFacade = null;
 	
 	@Autowired
-	private final RightService rightService = null;
+	private final PmsRightFacade pmsRightFacade = null;
 	
 	@RequestMapping("/doLogin")
-	public Result doLogin(final Employee employee,final HttpServletRequest request,
+	public Result doLogin(final PmsEmployee employee,final HttpServletRequest request,
 			final HttpServletResponse response){
 		
 		final String loginName = employee.getEmployeeLoginName();
@@ -53,38 +53,38 @@ public class LoginController extends BaseController {
 		
 		if(ValidateUtil.isValid(password)){
 			try {
-				final String ps = AESUtil.Decrypt(password, GlobalConstant.UNIQUE_KEY);
+				final String ps = AESSecurityUtil.Decrypt(password, PmsConstant.UNIQUE_KEY);
 				password = DataUtil.md5(ps);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 		}
 		
-		final Employee e = eService.doLogin(loginName,password);
+		final PmsEmployee e = pmsEmployeeFacade.doLogin(loginName,password);
 		final Result result = new Result();
 		if(e != null){
 			// 登陆成功
 			result.setRet(true);
 			
-			//final HttpSession session = request.getSession();
 			final SessionInfo info = new SessionInfo();
-			info.setSessionType(GlobalConstant.ROLE_EMPLOYEE);
+			info.setSessionType(PmsConstant.ROLE_EMPLOYEE);
 			info.setReqiureId(e.getEmployeeId());
 			info.setLoginName(e.getEmployeeLoginName());
 			info.setRealName(e.getEmployeeRealName());
+			info.setTelephone(e.getPhoneNumber());
 			
 			// 计算权限码
 			// 替换带有权限的角色
-			final List<Role> roles = new ArrayList<Role>();
-			for (final Role r : e.getRoles()) {
+			final List<PmsRole> roles = new ArrayList<PmsRole>();
+			for (final PmsRole r : e.getRoles()) {
 				
-				final Role role = rService.findRoleById(r.getRoleId());
+				final PmsRole role = pmsRoleFacade.findRoleById(r.getRoleId());
 				roles.add(role);
 			}
 			e.setRoles(roles);
 
 			// 计算权限码总和
-			final long maxPos = rightService.getMaxPos();
+			final long maxPos = pmsRightFacade.getMaxPos();
 			final long[] rightSum = new long[(int) (maxPos+ 1)];
 			
 			e.setRightSum(rightSum);
@@ -93,23 +93,18 @@ public class LoginController extends BaseController {
 			info.setSum(sum);
 			info.setSuperAdmin(e.isSuperAdmin()); // 判断是否是超级管理员
 			
-			//session.setAttribute(GlobalConstant.SESSION_INFO, info);
 			final Map<String,Object> map = new HashMap<String, Object>();
-			map.put(GlobalConstant.SESSION_INFO, info);
+			map.put(PmsConstant.SESSION_INFO, info);
 			final HttpSession session = request.getSession();
-			System.err.println("Login Session ID is " + session.getId());
 			
 			boolean ret = true;
-			if(session.getAttribute(GlobalConstant.SESSION_INFO) != null) {
+			if(session.getAttribute(PmsConstant.SESSION_INFO) != null) {
 				// 如果已经登录，那么提示登出后在登录
 				ret = false;
 			} else {
-				session.setAttribute(GlobalConstant.SESSION_INFO, info);
+				session.setAttribute(PmsConstant.SESSION_INFO, info);
 			}
 			
-			//final boolean ret = sessionService.addSession(request, map);
-			
-			// addCookies(request,response);
 			result.setRet(ret);
 			result.setMessage("您当前已登录，如要切换账号，请登出后再进行登陆操作!");
 			return result;
@@ -123,13 +118,9 @@ public class LoginController extends BaseController {
 	@RequestMapping("/logout")
 	public boolean logout(final HttpServletRequest request,final HttpServletResponse response){
 		
-		//HttpSession session = request.getSession();
-		//session.setAttribute(GlobalConstant.SESSION_INFO, null);
 		// logOutCookie(request,response);
 		// 删除
-		// sessionService.removeSession(request);
-		System.err.println("Logout Session ID is " + request.getSession().getId());
-		request.getSession().removeAttribute(GlobalConstant.SESSION_INFO);
+		request.getSession().removeAttribute(PmsConstant.SESSION_INFO);
 		return true;
 	}
 }

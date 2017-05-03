@@ -1,12 +1,12 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
 /**
  * 分销人
  * @author Jack
  */
-public class Salesman extends BaseObject {
+public class Salesman extends BaseEntity {
 
 	private static final long serialVersionUID = -8360251575797625256L;
 

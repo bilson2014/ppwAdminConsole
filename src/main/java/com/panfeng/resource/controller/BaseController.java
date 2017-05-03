@@ -5,9 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.Constants;
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.User;
 import com.panfeng.util.Log;
 
@@ -40,8 +40,7 @@ public abstract class BaseController {
 	
 	
 	protected SessionInfo getCurrentInfo(final HttpServletRequest request){
-		//final SessionInfo info = (SessionInfo) sessionService.getSessionWithField(request, GlobalConstant.SESSION_INFO);
-		final SessionInfo info = (SessionInfo) request.getSession().getAttribute(GlobalConstant.SESSION_INFO);
+		final SessionInfo info = (SessionInfo) request.getSession().getAttribute(PmsConstant.SESSION_INFO);
 		return info;
 	}
 	protected void addCookies(HttpServletRequest request, HttpServletResponse response) {

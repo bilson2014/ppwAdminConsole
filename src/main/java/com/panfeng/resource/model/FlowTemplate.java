@@ -1,5 +1,6 @@
 package com.panfeng.resource.model;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 import com.panfeng.domain.BaseObject;
@@ -12,7 +13,8 @@ import com.panfeng.persist.FlowCoreMapper;
  * @author wang
  *
  */
-public class FlowTemplate extends BaseObject {
+
+public class FlowTemplate implements Serializable {
 
 	private static final long serialVersionUID = 7598528321076177988L;
 	/**

@@ -1,6 +1,5 @@
 package com.panfeng.resource.controller;
 
-import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,27 +12,24 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.SessionInfo;
-import com.panfeng.resource.model.Staff;
-import com.panfeng.resource.view.DataGrid;
-import com.panfeng.resource.view.PageFilter;
+import com.paipianwang.pat.common.entity.DataGrid;
+import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.JsonUtil;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.common.web.file.FastDFSClient;
+import com.paipianwang.pat.facade.employee.entity.PmsStaff;
+import com.paipianwang.pat.facade.employee.service.PmsStaffFacade;
 import com.panfeng.resource.view.StaffView;
-import com.panfeng.service.FDFSService;
-import com.panfeng.service.StaffService;
-import com.paipianwang.pat.common.util.FileUtils;
 import com.panfeng.util.Log;
-import com.panfeng.util.ValidateUtil;
 
 @RestController
 @RequestMapping("/portal")
 public class StaffController extends BaseController {
 
 	@Autowired
-	private final StaffService service = null;
-	@Autowired
-	private final FDFSService fdfsService = null;
-
+	private final PmsStaffFacade pmsStaffFacade = null;
+	
 	@RequestMapping("/staff-list")
 	public ModelAndView view() {
 
@@ -41,29 +37,23 @@ public class StaffController extends BaseController {
 	}
 
 	@RequestMapping("/staff/list")
-	public DataGrid<Staff> list(final StaffView view, final PageFilter pf) {
+	public DataGrid<PmsStaff> list(final StaffView view, final PageParam param) {
 
-		final long page = pf.getPage();
-		final long rows = pf.getRows();
-		view.setBegin((page - 1) * rows);
-		view.setLimit(rows);
+		final long page = param.getPage();
+		final long rows = param.getRows();
+		param.setBegin((page - 1) * rows);
+		param.setLimit(rows);
 
-		DataGrid<Staff> dataGrid = new DataGrid<Staff>();
-
-		final List<Staff> list = service.listWithPagination(view);
-
-		dataGrid.setRows(list);
-		final long total = service.maxSize(view);
-		dataGrid.setTotal(total);
+		final DataGrid<PmsStaff> dataGrid = pmsStaffFacade.listWithPagination(param,JsonUtil.objectToMap(view));
 		return dataGrid;
 	}
 
 	@RequestMapping("/staff/save")
 	public void save(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam final MultipartFile staffImage, final Staff staff) {
+			@RequestParam final MultipartFile staffImage, final PmsStaff staff) {
 		response.setContentType("text/html;charset=UTF-8");
 
-		service.save(staff);
+		pmsStaffFacade.save(staff);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save staff ...", sessionInfo);
 		processFile(staffImage, staff);
@@ -72,18 +62,17 @@ public class StaffController extends BaseController {
 
 	@RequestMapping("/staff/update")
 	public void update(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam final MultipartFile staffImage, final Staff staff) {
+			@RequestParam final MultipartFile staffImage, final PmsStaff staff) {
 
 		response.setContentType("text/html;charset=UTF-8");
 
-		final Staff s = service.findStaffById(staff.getStaffId());
+		final PmsStaff s = pmsStaffFacade.findStaffById(staff.getStaffId());
 		final String imagePath = s.getStaffImageUrl();
 		if (ValidateUtil.isValid(imagePath)) {
 			// dfs删除文件
-			fdfsService.delete(imagePath);
-			// FileUtils.deleteFile(imagePath);
+			FastDFSClient.deleteFile(imagePath);
 		}
-		service.update(staff);
+		pmsStaffFacade.update(staff);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update staff ...", sessionInfo);
 		processFile(staffImage, staff);
@@ -93,63 +82,29 @@ public class StaffController extends BaseController {
 	public long delete(final long[] ids, HttpServletRequest request) {
 
 		if (ids != null && ids.length > 1) {
-			List<Staff> list = service.findStaffsByArray(ids);
+			List<PmsStaff> list = pmsStaffFacade.findStaffsByArray(ids);
 			if (ValidateUtil.isValid(list)) {
-				for (final Staff staff : list) {
+				for (final PmsStaff staff : list) {
 					final String imageUrl = staff.getStaffImageUrl();
 					if (ValidateUtil.isValid(imageUrl)) {
-						FileUtils.deleteFile(GlobalConstant.FILE_PROFIX + File.separator + imageUrl);
+						FastDFSClient.deleteFile(imageUrl);
 					}
 				}
 			}
 		}
 
-		final long ret = service.deleteByArray(ids);
+		final long ret = pmsStaffFacade.deleteByArray(ids);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("delete staff ... ids:" + ids.toString(), sessionInfo);
 		return ret;
 	}
 
-	public void processFile(final MultipartFile staffImage, final Staff staff) {
+	public void processFile(final MultipartFile staffImage, final PmsStaff staff) {
 		if (!staffImage.isEmpty()) {
 			// 修改为DFS上传
-			String path = fdfsService.upload(staffImage);
+			String path = FastDFSClient.uploadFile(staffImage);
 			staff.setStaffImageUrl(path);
-			service.updateImagePath(staff);
-
-			/*
-			 * final String imagePath = GlobalConstant.FILE_PROFIX +
-			 * GlobalConstant.STAFF_IMAGE_PATH;
-			 * 
-			 * File image = new File(imagePath); if(!image.exists())
-			 * image.mkdir();
-			 * 
-			 * final String extName =
-			 * FileUtils.getExtName(staffImage.getOriginalFilename(), ".");
-			 * final StringBuffer fileName = new StringBuffer();
-			 * fileName.append("staff" + staff.getStaffId());
-			 * fileName.append("-"); final Calendar calendar = new
-			 * GregorianCalendar();
-			 * fileName.append(calendar.get(Calendar.YEAR));
-			 * fileName.append((calendar.get(Calendar.MONTH) + 1) < 10 ? "0" +
-			 * (calendar.get(Calendar.MONTH) + 1) :
-			 * (calendar.get(Calendar.MONTH) + 1));
-			 * fileName.append(calendar.get(Calendar.DAY_OF_MONTH) < 10 ? "0" +
-			 * calendar.get(Calendar.DAY_OF_MONTH) :
-			 * calendar.get(Calendar.DAY_OF_MONTH));
-			 * fileName.append(calendar.get(Calendar.HOUR_OF_DAY));
-			 * fileName.append(calendar.get(Calendar.MINUTE));
-			 * fileName.append(calendar.get(Calendar.SECOND));
-			 * fileName.append(calendar.get(Calendar.MILLISECOND));
-			 * fileName.append("."); fileName.append(extName); final String path
-			 * = imagePath + File.separator + fileName.toString();
-			 * 
-			 * File dest = new File(path); try { staffImage.transferTo(dest);
-			 * staff.setStaffImageUrl(GlobalConstant.STAFF_IMAGE_PATH +
-			 * File.separator + fileName.toString());
-			 * service.updateImagePath(staff); } catch (IllegalStateException |
-			 * IOException e) { e.printStackTrace(); }
-			 */
+			pmsStaffFacade.updateImagePath(staff);
 		}
 	}
 
@@ -159,8 +114,8 @@ public class StaffController extends BaseController {
 	 * 获取所有人员信息
 	 */
 	@RequestMapping("/staff/static/list")
-	public List<Staff> list(final HttpServletRequest request) {
-		List<Staff> list = service.getAll();
+	public List<PmsStaff> list(final HttpServletRequest request) {
+		List<PmsStaff> list = pmsStaffFacade.getAll();
 		return list;
 	}
 }

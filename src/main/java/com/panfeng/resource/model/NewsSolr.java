@@ -1,15 +1,15 @@
 package com.panfeng.resource.model;
 
-import org.apache.solr.client.solrj.beans.Field;
+import java.io.Serializable;
 
-import com.panfeng.domain.BaseObject;
+import org.apache.solr.client.solrj.beans.Field;
 
 /**
  * 新闻solr存储实体
  * @author Jack
  *
  */
-public class NewsSolr extends BaseObject {
+public class NewsSolr implements Serializable {
 
 	private static final long serialVersionUID = 5263692798871248537L;
 

@@ -5,9 +5,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.dao.StorageLocateDao;
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.util.ValidateUtil;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -25,7 +25,7 @@ public class StorageLocateDaoImpl implements StorageLocateDao {
 		Jedis jedis = null;
 		try {
 			jedis = pool.getResource();
-			Map<String,String> nodeMap = jedis.hgetAll(GlobalConstant.STORAGE_NODE_RELATIONSHIP);
+			Map<String,String> nodeMap = jedis.hgetAll(PmsConstant.STORAGE_NODE_RELATIONSHIP);
 			if(ValidateUtil.isValid(nodeMap)){
 				return nodeMap;
 			}
@@ -48,8 +48,8 @@ public class StorageLocateDaoImpl implements StorageLocateDao {
 			try {
 				jedis = pool.getResource();
 				Transaction tx = jedis.multi();
-				tx.del(GlobalConstant.STORAGE_NODE_RELATIONSHIP);
-				tx.hmset(GlobalConstant.STORAGE_NODE_RELATIONSHIP, nodes);
+				tx.del(PmsConstant.STORAGE_NODE_RELATIONSHIP);
+				tx.hmset(PmsConstant.STORAGE_NODE_RELATIONSHIP, nodes);
 				tx.exec();
 			} catch (Exception e) {
 				// do something for logger

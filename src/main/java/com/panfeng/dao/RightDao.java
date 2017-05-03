@@ -2,15 +2,15 @@ package com.panfeng.dao;
 
 import java.util.Map;
 
-import com.panfeng.resource.model.Right;
+import com.paipianwang.pat.facade.right.entity.PmsRight;
 
 public interface RightDao {
 
-	public Right getRightFromRedis(final String uri);
+	public PmsRight getRightFromRedis(final String uri);
 	
-	public Map<String,Right> getRightsFromRedis();
+	public Map<String,PmsRight> getRightsFromRedis();
 	
-	public void addRightByRedis(final Right right);
+	public void addRightByRedis(final PmsRight right);
 	
-	public void resetRightFromRedis(final Map<String,Right> map);
+	public void resetRightFromRedis(final Map<String,PmsRight> map);
 }

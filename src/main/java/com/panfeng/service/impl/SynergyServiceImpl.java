@@ -10,10 +10,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.persist.SynergyMapper;
 import com.panfeng.resource.model.Synergy;
 import com.panfeng.service.SynergyService;
-import com.panfeng.util.ValidateUtil;
 
 @Service
 public class SynergyServiceImpl implements SynergyService {

@@ -8,6 +8,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsEmployee;
+import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
 import com.paipianwang.pat.facade.user.entity.PmsUser;
@@ -15,13 +18,8 @@ import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.flow.taskchain.EventType;
 import com.panfeng.resource.model.Activity;
 import com.panfeng.resource.model.Activity.param;
-import com.panfeng.resource.model.Employee;
-import com.panfeng.resource.model.User;
 import com.panfeng.service.ActivityService;
-import com.panfeng.service.EmployeeService;
 import com.panfeng.service.JobParamParser;
-import com.panfeng.service.bak_UserService;
-import com.panfeng.util.ValidateUtil;
 
 @Service
 public class JobParamParserImpl implements JobParamParser {
@@ -30,14 +28,13 @@ public class JobParamParserImpl implements JobParamParser {
 	private ActivityService activityService;
 
 	@Autowired
-	private bak_UserService userService;
-
+	private PmsTeamFacade pmsTeamFacade = null;
+	
 	@Autowired
-	private PmsTeamFacade pmsTeamFacade;
+	private PmsUserFacade pmsUserFacade = null;
+	
 	@Autowired
-	private PmsUserFacade pmsUserFacade;
-	@Autowired
-	private EmployeeService employeeService;
+	private PmsEmployeeFacade pmsEmployeeFacade = null;
 	
 
 	public Map<String, String[]> parser(Long activityId) throws Exception {
@@ -87,9 +84,9 @@ public class JobParamParserImpl implements JobParamParser {
 						}
 						break;
 					case Activity.PERSONS_ALL_EMPLOYEE:
-						List<Employee> employeeList = employeeService.getEmployeeList();
+						List<PmsEmployee> employeeList = pmsEmployeeFacade.findEmployeeList();
 						if (ValidateUtil.isValid(employeeList)) {
-							for (Employee employee : employeeList) {
+							for (PmsEmployee employee : employeeList) {
 								String key = parseKey(employee, eventType);
 								if (ValidateUtil.isValid(key)) {
 									String[] value = parseParam(paramList, employee);
@@ -150,7 +147,7 @@ public class JobParamParserImpl implements JobParamParser {
 		return values;
 	}
 
-	private String[] parseParam(List<param> paramList, Employee employee) {
+	private String[] parseParam(List<param> paramList, PmsEmployee employee) {
 		String[] values = new String[paramList.size()];
 		for (int i = 0; i < paramList.size(); i++) {
 			param p = paramList.get(i);
@@ -234,7 +231,7 @@ public class JobParamParserImpl implements JobParamParser {
 		return result;
 	}
 
-	private String parseKey(Employee employee, EventType eventType) {
+	private String parseKey(PmsEmployee employee, EventType eventType) {
 		String result = "";
 		switch (eventType) {
 		case MAIL:

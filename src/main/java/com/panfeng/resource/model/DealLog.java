@@ -2,9 +2,9 @@ package com.panfeng.resource.model;
 
 import java.util.Map;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
-public class DealLog extends BaseObject {
+public class DealLog extends BaseEntity {
 
 	private static final long serialVersionUID = 8541137142577987948L;
 

@@ -19,8 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.model.IndentResource;
@@ -31,16 +32,12 @@ import com.panfeng.resource.view.PageFilter;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.IndentResourceService;
 import com.panfeng.util.Log;
-import com.panfeng.util.ValidateUtil;
 
 @RestController
 @RequestMapping("/project")
 public class ProjectController extends BaseController {
 	@Autowired
 	private IndentProjectService indentProjectService = null;
-
-	// @Autowired
-	// private IndentActivitiService activitiService = null;
 
 	@Autowired
 	private IndentResourceService resourceService = null;
@@ -352,11 +349,11 @@ public class ProjectController extends BaseController {
 			// indentProjectService.getReport(list, outputStream);
 			// modify by wanglc 2016-9-19 15:46:08 begin
 			// -->修改导出方法,加快导出速度
-			 indentProjectService.getReportForExport(list, outputStream);
-			//indentProjectService.export2Excel(list, outputStream);
+			indentProjectService.getReportForExport(list, outputStream);
+			// indentProjectService.export2Excel(list, outputStream);
 			// modify by wanglc 2016-9-19 15:46:08 end
 			outputStream.flush();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

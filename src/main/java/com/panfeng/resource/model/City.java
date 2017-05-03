@@ -1,6 +1,6 @@
 package com.panfeng.resource.model;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
 /**
  * 级联“市”
@@ -8,22 +8,13 @@ import com.panfeng.domain.BaseObject;
  * @author wang
  *
  */
-public class City extends BaseObject {
+public class City extends BaseEntity {
 
 	private static final long serialVersionUID = 7933928369958873968L;
 
-	private int id; // 唯一ID
 	private String city;// 市名
 	private String cityID;// 市ID
 	private String father;// 父级ID（省ID）
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getCity() {
 		return city;

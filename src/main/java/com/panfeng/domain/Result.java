@@ -1,6 +1,8 @@
 package com.panfeng.domain;
 
-public class Result extends BaseObject {
+import com.paipianwang.pat.common.entity.BaseEntity;
+
+public class Result extends BaseEntity {
 
 	private static final long serialVersionUID = 8198446999141773515L;
 

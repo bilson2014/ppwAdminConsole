@@ -2,7 +2,7 @@ package com.panfeng.resource.model;
 
 import java.util.Map;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
 /**
  * 支付回掉返回实体
@@ -10,7 +10,7 @@ import com.panfeng.domain.BaseObject;
  * @author laowang
  *
  */
-public class PayWebHook extends BaseObject {
+public class PayWebHook extends BaseEntity {
 
 	private static final long serialVersionUID = -8830509334980777367L;
 

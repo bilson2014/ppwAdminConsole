@@ -11,13 +11,13 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.right.entity.PmsTree;
 import com.panfeng.flow.data.FillerParam;
 import com.panfeng.flow.data.TemplateDateInterface;
 import com.panfeng.flow.taskchain.EventBase;
 import com.panfeng.flow.taskchain.EventType;
-import com.panfeng.resource.model.Tree;
 import com.panfeng.service.TemplateDataManage;
-import com.panfeng.util.ValidateUtil;
 
 @Service
 public class TemplateDataManageImpl implements ApplicationListener<ApplicationEvent>, TemplateDataManage {
@@ -49,12 +49,12 @@ public class TemplateDataManageImpl implements ApplicationListener<ApplicationEv
 	 * 
 	 * @return
 	 */
-	public List<Tree> getDataList() {
-		List<Tree> tree = new ArrayList<>();
+	public List<PmsTree> getDataList() {
+		List<PmsTree> tree = new ArrayList<>();
 		if (ValidateUtil.isValid(templateData)) {
 			Set<String> keySet = templateData.keySet();
 			for (String string : keySet) {
-				Tree t = new Tree();
+				PmsTree t = new PmsTree();
 				t.setId(string);
 				t.setText(string);
 				tree.add(t);
@@ -66,12 +66,12 @@ public class TemplateDataManageImpl implements ApplicationListener<ApplicationEv
 	/**
 	 * 获取所有事件类
 	 */
-	public List<Tree> getEventHandle() {
-		List<Tree> tree = new ArrayList<>();
+	public List<PmsTree> getEventHandle() {
+		List<PmsTree> tree = new ArrayList<>();
 		if (ValidateUtil.isValid(eventHandle)) {
 			Set<String> keySet = eventHandle.keySet();
 			for (String string : keySet) {
-				Tree t = new Tree();
+				PmsTree t = new PmsTree();
 				t.setId(string);
 				t.setText(string);
 				tree.add(t);
@@ -103,13 +103,13 @@ public class TemplateDataManageImpl implements ApplicationListener<ApplicationEv
 	 * @param templateDataKey
 	 * @return
 	 */
-	public List<Tree> optionalFields(String templateDataKey) {
+	public List<PmsTree> optionalFields(String templateDataKey) {
 		if (ValidateUtil.isValid(templateDataKey)) {
 			TemplateDateInterface<?, ?> tdi = templateData.get(templateDataKey);
-			List<Tree> treeList = new ArrayList<>();
+			List<PmsTree> treeList = new ArrayList<>();
 			if (tdi != null && ValidateUtil.isValid(tdi.optionalFields())) {
 				for (String tree : tdi.optionalFields()) {
-					Tree t = new Tree();
+					PmsTree t = new PmsTree();
 					t.setId(tree);
 					t.setText(tree);
 					treeList.add(t);
@@ -126,15 +126,15 @@ public class TemplateDataManageImpl implements ApplicationListener<ApplicationEv
 	 * @param templateDataKey
 	 * @return
 	 */
-	public List<Tree> personnel(String templateDataKey) {
+	public List<PmsTree> personnel(String templateDataKey) {
 		if (ValidateUtil.isValid(templateDataKey)) {
 			TemplateDateInterface<?, ?> tdi = templateData.get(templateDataKey);
-			List<Tree> treeList = new ArrayList<>();
+			List<PmsTree> treeList = new ArrayList<>();
 			Map<String, String> personnel = tdi.personnel();
 			if (tdi != null && ValidateUtil.isValid(personnel)) {
 				Set<String> keySet = personnel.keySet();
 				for (String key : keySet) {
-					Tree t = new Tree();
+					PmsTree t = new PmsTree();
 					t.setId(key);
 					t.setText(personnel.get(key));
 					treeList.add(t);

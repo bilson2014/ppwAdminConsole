@@ -1,10 +1,9 @@
 package com.panfeng.resource.view;
 
+import java.io.Serializable;
 import java.util.List;
 
-import com.panfeng.domain.BaseObject;
-
-public class DataGrid<T> extends BaseObject {
+public class DataGrid<T> implements Serializable {
 
 	private static final long serialVersionUID = -8488550127239105293L;
 

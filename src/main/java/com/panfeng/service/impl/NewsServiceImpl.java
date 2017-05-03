@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.panfeng.persist.NewsMapper;
 import com.panfeng.resource.model.News;
 import com.panfeng.resource.view.NewsView;
-import com.panfeng.service.FDFSService;
 import com.panfeng.service.NewsService;
 
 @Service
@@ -19,9 +19,6 @@ public class NewsServiceImpl implements NewsService {
 
 	@Autowired
 	private NewsMapper mapper;
-
-	@Autowired
-	private final FDFSService fdfsService = null;
 
 	private static final String HOTTEST_NEWS = "最热资讯";
 	private static final String INDEX_NEWS = "index";
@@ -63,7 +60,7 @@ public class NewsServiceImpl implements NewsService {
 				News n = mapper.getNewsById(id);
 				String picLDUrl = n.getPicLDUrl();
 				if (StringUtils.isNotEmpty(picLDUrl)) {
-					fdfsService.delete(picLDUrl);
+					FastDFSClient.deleteFile(picLDUrl);
 				}
 				mapper.delete(id);
 				// 提高大于n的所有数据的排序

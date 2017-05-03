@@ -12,6 +12,11 @@ import com.panfeng.resource.model.IndentComment;
 import com.panfeng.resource.model.IndentProject;
 import com.panfeng.service.IndentCommentService;
 
+/**
+ * 项目评论以及流程日志记录
+ * @author Jack
+ *
+ */
 @RestController
 public class CommentController extends BaseController {
 	@Autowired

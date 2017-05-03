@@ -19,8 +19,18 @@ $().ready(function(){
 		columns:[[
 			{
 				field : 'salesmanName',
-				title : '姓名',
+				title : '名称',
 				width : 100,
+				align : 'center'
+			},{
+				field : 'belongs',
+				title : '作用范围',
+				width : 60,
+				align : 'center'
+			},{
+				field : 'platform',
+				title : '受众平台',
+				width : 60,
 				align : 'center'
 			},{
 				field : 'uniqueId',
@@ -33,11 +43,19 @@ $().ready(function(){
 				width : 200,
 				align : 'center'
 			},{
+				field : 'accessurl' ,
+				title : '访问地址' ,
+				width : 200,
+				hidden : true,
+				align : 'center'
+			},{
 				field : 'salesmanURL' ,
 				title : '分销产品地址' ,
 				width : 200,
 				align : 'center',
 				formatter : function(value,row,index){
+					if (row.accessurl != null && row.accessurl != '' && row.accessurl != undefined)
+						return '<span style=color:orange; >'+ getServerName() + row.accessurl + row.uniqueId +'</span>' ; 
 					return '<span style=color:orange; >'+ getServerName() + '/salesman/' + row.uniqueId +'</span>' ;
 				}
 			},{
@@ -47,8 +65,8 @@ $().ready(function(){
 				align : 'center',
 				formatter : function(value, row, index) {
 					var str = '&nbsp;';
-						str += $.formatString('<a href="javascript:void(0)" onclick="orderView(\'{0}\');" >查看</a> | ', row.uniqueId);
-						str += $.formatString('<a href="javascript:void(0)" onclick="orderDownLoad(\'{0}\',\'{1}\');" >下载</a>', row.uniqueId,row.salesmanName);
+						str += $.formatString('<a href="javascript:void(0)" onclick="orderView(\'{0}\');" >查看</a> | ', row.uniqueId, row.accessurl);
+						str += $.formatString('<a href="javascript:void(0)" onclick="orderDownLoad(\'{0}\',\'{1}\');" >下载</a>', row.uniqueId,row.salesmanName,row.accessurl);
 					return str;
 				}
 			},{
@@ -144,6 +162,27 @@ function saveFuc(){
 	progressLoad();
 	$('#fm').form('submit',{
 		url : formUrl,
+		onSubmit : function() {
+			var accessurl = $("#accessurl").val();
+			if(accessurl == '' || accessurl == null){
+				accessurl = '/salesman/';
+			}
+			
+			if(accessurl.charAt(0) != '/') {
+				accessurl = '/' + accessurl;
+			}
+			
+			if(accessurl.charAt(accessurl.length-1) != '/') {
+				accessurl += '/';
+			}
+			
+			$('input[name="accessurl"]').val(accessurl);
+			var flag = $(this).form('validate');
+			if(!flag){
+				progressClose();
+			}
+			return flag;
+		},
 		success : function(result) {
 			$('#dlg').dialog('close');
 			datagrid.datagrid('clearSelections');
@@ -202,8 +241,15 @@ function downLoad(uniqueId,salesmanName){
 }
 
 // 查看产品页二维码
-function orderView(uniqueId){
-	var url = 'http://qr.liantu.com/api.php?text=' + getServerName() + '/salesman/' + uniqueId;
+function orderView(uniqueId,accessurl){
+	var url;
+	if(accessurl != null && accessurl != '' && accessurl != undefined) {
+		// 如果访问路径没有配置，则默认为分销地址
+		url = 'http://qr.liantu.com/api.php?text=' + getServerName() + '/salesman/' + uniqueId;
+	}else {
+		// 如果配置了访问路径，则使用该访问路径
+		url = 'http://qr.liantu.com/api.php?text=' + getServerName() + accessurl + uniqueId;
+	}
 	$('#qrCode').attr('src',url);
 	$('#qrCode').removeClass('hide');
 	$('#qrCode-condition').removeClass('hide');

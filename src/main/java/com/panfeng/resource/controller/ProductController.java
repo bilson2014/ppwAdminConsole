@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,27 +25,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.paipianwang.pat.common.config.PublicConfig;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.product.entity.PmsProduct;
 import com.paipianwang.pat.facade.product.entity.PmsService;
 import com.paipianwang.pat.facade.product.service.PmsProductFacade;
+import com.paipianwang.pat.facade.product.service.PmsServiceFacade;
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.domain.GlobalConstant;
-import com.panfeng.domain.SessionInfo;
 import com.panfeng.mq.service.FileConvertMQService;
 import com.panfeng.resource.model.Product;
-import com.panfeng.resource.model.Solr;
 import com.panfeng.resource.view.ProductView;
-import com.panfeng.resource.view.SolrView;
-import com.panfeng.service.FDFSService;
 import com.panfeng.service.ProductService;
 import com.panfeng.service.SolrService;
 import com.panfeng.util.JsoupUtil;
 import com.panfeng.util.Log;
-import com.panfeng.util.ValidateUtil;
 
 /**
  * 产品管理类
@@ -63,9 +60,9 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private SolrService solrService = null;
-
+	
 	@Autowired
-	private final FDFSService fdfsService = null;
+	private final PmsServiceFacade pmsServiceFacade = null;
 
 	@Autowired
 	private final FileConvertMQService fileConvertMQService = null;
@@ -76,6 +73,7 @@ public class ProductController extends BaseController {
 	@Autowired
 	private final PmsTeamFacade pmsTeamFacade = null;
 	
+
 	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
 
 	private static String SOLR_URL = null;
@@ -105,7 +103,6 @@ public class ProductController extends BaseController {
 
 	@RequestMapping(value = "/product/init", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public List<PmsTeam> init() {
-		// final List<Team> list = teamService.getAll();
 		final List<PmsTeam> list = pmsTeamFacade.getAllTeamName();
 		return list;
 	}
@@ -156,24 +153,24 @@ public class ProductController extends BaseController {
 				for (final PmsProduct product : list) {
 					// 删除 缩略图
 					final String picLDUrl = product.getPicLDUrl();
-					fdfsService.delete(picLDUrl);
+					FastDFSClient.deleteFile(picLDUrl);
 					// 删除 高清图，如果删除的是以前的作品的话，高清图是存在的
 					final String picHDUrl = product.getPicHDUrl();
-					fdfsService.delete(picHDUrl);
+					FastDFSClient.deleteFile(picHDUrl);
 
 					// 删除 视频
 					final String videoUrl = product.getVideoUrl();
-					fdfsService.delete(videoUrl);
+					FastDFSClient.deleteFile(videoUrl);
 					// 待修改成分解富文本编辑器，删除图片
 					final String description = product.getVideoDescription();
 					if (ValidateUtil.isValid(description)) {
 						List<String> imgList = JsoupUtil.getImgSrc(description);
 						for (String s : imgList) {
-							fdfsService.delete(s);
+							FastDFSClient.deleteFile(s);
 						}
 					}
 					// 删除搜索索引
-					solrService.deleteDoc(product.getProductId(), SOLR_URL);
+					solrService.deleteProductDoc(product.getProductId(), PublicConfig.SOLR_URL);
 				}
 			} else {
 				throw new RuntimeException("Product ids is null");
@@ -196,7 +193,7 @@ public class ProductController extends BaseController {
 		for (int i = 0; i < uploadFiles.length; i++) {
 			final MultipartFile multipartFile = uploadFiles[i];
 			if (!multipartFile.isEmpty()) {
-				String path = fdfsService.upload(multipartFile);
+				String path = FastDFSClient.uploadFile(multipartFile);
 				pathList.add(path);
 			} else {
 				pathList.add("");
@@ -230,11 +227,8 @@ public class ProductController extends BaseController {
 			@RequestParam final MultipartFile[] uploadFiles, final PmsProduct product) {
 
 		final long productId = product.getProductId(); // product id
-		// ->2017-2-3 13:27:15 modify to dubbo begin
-		// final Product originalProduct =
-		// proService.findProductById(productId);
 		final PmsProduct originalProduct = pmsProductFacade.findProductById(productId);
-		// ->2017-2-3 13:27:15 modify to dubbo end
+
 
 		// 获取未更改前的product对象,用于删除修改过的文件
 		final List<String> pathList = new ArrayList<String>(); // 路径集合
@@ -242,7 +236,7 @@ public class ProductController extends BaseController {
 			for (int i = 0; i < uploadFiles.length; i++) {
 				final MultipartFile multipartFile = uploadFiles[i];
 				if (!multipartFile.isEmpty()) {
-					String path = fdfsService.upload(multipartFile);
+					String path = FastDFSClient.uploadFile(multipartFile);
 					pathList.add(path);
 				} else {
 					// file字段 如果为空,说明 未上传新文件
@@ -251,8 +245,23 @@ public class ProductController extends BaseController {
 			}
 			product.setVideoUrl(pathList.get(0));
 			product.setPicLDUrl(pathList.get(1));
-			// proService.update(product);
 			pmsProductFacade.update(product);
+			// 增加审核通过时，创建service数据
+			List<PmsService> list = pmsServiceFacade.loadService((int) product.getProductId());
+			if (product.getFlag() == 1) {
+				if (null == list || list.size() == 0) {
+					PmsService service = new PmsService();
+					service.setProductId(product.getProductId());
+					service.setProductName(product.getProductName());
+					service.setServiceDiscount(1);
+					service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
+					service.setServiceOd(0);
+					service.setServicePrice(0d);
+					service.setServiceRealPrice(0d);
+					service.setMcoms(Long.parseLong(product.getVideoLength()));
+					pmsProductFacade.save(service);
+				}
+			}
 			if (originalProduct != null) {
 				// 删除 原文件
 				for (int i = 0; i < pathList.size(); i++) {
@@ -271,7 +280,7 @@ public class ProductController extends BaseController {
 							continue;
 						}
 						if (path != null && !"".equals(path)) {
-							fdfsService.delete(path);
+							FastDFSClient.deleteFile(path);
 							// 如果视频更新的话，需要将新视频添加到转换队列
 							if (i == 0)
 								fileConvertMQService.sendMessage(originalProduct.getProductId(), pathList.get(0));
@@ -312,29 +321,6 @@ public class ProductController extends BaseController {
 		return list;
 	}
 
-	/**
-	 * 首页 装载 更多作品页-PC端
-	 */
-	@RequestMapping(value = "/product/static/pc/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<Solr> load(final HttpServletRequest request, @RequestBody SolrView solrView) {
-
-		// modify by wlc 2016-11-21 11:42:18
-		// 修改为solr查询 begin
-		// final List<Product> list = proService.loadProductByCommend();
-		final SolrQuery query = new SolrQuery();
-		query.set("qf", "productName^4 tags^3 teamName^2 pDescription^1");
-		query.setQuery("*:*");
-		query.setFields(
-				"teamId,productId,productName,productType,itemName,teamName,orignalPrice,price,picLDUrl,length,pDescription,recommend,supportCount,tags");
-		query.setStart(0);
-		query.setRows(Integer.MAX_VALUE);
-		if (null != solrView.getSort()) {
-			query.setSort(solrView.getSort(), ORDER.desc);
-		}
-		final List<Solr> list = solrService.queryDocs(GlobalConstant.SOLR_PORTAL_URL, query);
-		return list;
-		// 修改为solr查询 end
-	}
 
 	@RequestMapping("/product/static/redirect")
 	public ModelAndView redirect(final ModelMap model) {
@@ -458,11 +444,9 @@ public class ProductController extends BaseController {
 		List<PmsProduct> list = pmsProductFacade.delete(ids); // 删除视频信息
 
 		// 删除搜索索引
-		solrService.deleteDoc(productId, SOLR_URL);
-		solrService.deleteDoc(productId, SOLR_EMPLOYEE_URL);
-		solrService.deleteDoc(productId, SOLR_PORTAL_URL);
-
-		// serService.deleteByProduct(productId); // 删除服务信息
+		solrService.deleteProductDoc(productId, PublicConfig.SOLR_URL);
+		solrService.deleteProductDoc(productId, PublicConfig.SOLR_EMPLOYEE_URL);
+		solrService.deleteProductDoc(productId, PublicConfig.SOLR_PORTAL_URL);
 
 		// delete file on disk
 		if (!list.isEmpty() && list.size() > 0) {
@@ -471,17 +455,17 @@ public class ProductController extends BaseController {
 				// 删除 缩略图
 				final String picLDUrl = product.getPicLDUrl();
 				if (StringUtils.isNotBlank(picLDUrl))
-					fdfsService.delete(picLDUrl);
+					FastDFSClient.deleteFile(picLDUrl);
 
 				// 删除 高清图
 				final String picHDUrl = product.getPicHDUrl();
 				if (StringUtils.isNotBlank(picHDUrl))
-					fdfsService.delete(picHDUrl);
+					FastDFSClient.deleteFile(picHDUrl);
 
 				// 删除 视频
 				final String videoUrl = product.getVideoUrl();
 				if (StringUtils.isNotBlank(videoUrl))
-					fdfsService.delete(videoUrl);
+					FastDFSClient.deleteFile(videoUrl);
 
 				// 待修改成分解富文本，删除图片
 				final String description = product.getVideoDescription();
@@ -489,7 +473,7 @@ public class ProductController extends BaseController {
 				if (imgList != null && imgList.size() > 0) {
 					for (String s : imgList) {
 						if (StringUtils.isNotBlank(s))
-							fdfsService.delete(s);
+							FastDFSClient.deleteFile(s);
 					}
 				}
 			}
@@ -509,8 +493,6 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping("/product/static/data/{videoId}")
 	public PmsProduct findProductById(@PathVariable("videoId") final long productId) {
-
-		// final Product product = proService.findProductById(productId);
 		final PmsProduct product = pmsProductFacade.findProductById(productId);
 		return product;
 	}
@@ -537,7 +519,7 @@ public class ProductController extends BaseController {
 				oldProduct.setPicLDUrl(product.getPicLDUrl());
 				if (StringUtils.isNotBlank(oldProduct.getPicLDUrl())
 						&& !product.getPicLDUrl().equals(oldProduct.getPicLDUrl())) {
-					fdfsService.delete(oldProduct.getPicLDUrl());
+					FastDFSClient.deleteFile(oldProduct.getPicLDUrl());
 				}
 			}
 			long l = pmsProductFacade.updateProductInfo(oldProduct); // 更新视频信息

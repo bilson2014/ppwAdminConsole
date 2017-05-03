@@ -240,7 +240,7 @@
 				<div class="picture-condition-body">
 					<div class="operation-panel">
 						<img id="productPicture" src="" style="height: 360px;width: 640px;" class="hide" >
-						<video autoplay="autoplay" style="height: 360px;width: 640px" id="productVideo" class="hide" controls="controls" src=""></video>
+						<video autoplay="autoplay" style="height: 360px;width: 640px" id="productVideo" preload="auto" class="hide" controls="controls" src=""></video>
 						<div id="youku-player" style="height: 360px;width: 640px;display: none;"></div>
 						<div class="p-label">
 							<a href="#" class="button p-submit" id="p-cancel">取消</a>

@@ -9,7 +9,6 @@ public class User extends Customer {
 
 	private static final long serialVersionUID = -3500839628063835593L;
 
-	private long id = 0l;
 	private long userId = 0l; // 冗余字段，以id属性为准
 	private String userName = null; // 昵称
 	private String realName = null; // 真实姓名
@@ -108,14 +107,6 @@ public class User extends Customer {
 
 	public void setLoginType(String loginType) {
 		this.loginType = loginType;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public String getUserName() {

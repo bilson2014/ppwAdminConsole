@@ -2,7 +2,7 @@ package com.panfeng.resource.model;
 
 import java.util.List;
 
-import com.panfeng.domain.BaseObject;
+import com.paipianwang.pat.common.entity.BaseEntity;
 
 /**
  * 流程节点绑定的任务链
@@ -10,7 +10,7 @@ import com.panfeng.domain.BaseObject;
  * @author wang
  *
  */
-public class TaskChain extends BaseObject {
+public class TaskChain extends BaseEntity {
 
 	private static final long serialVersionUID = 9122997952274211200L;
 
