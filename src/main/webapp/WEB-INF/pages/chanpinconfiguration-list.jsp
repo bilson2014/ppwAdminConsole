@@ -44,8 +44,8 @@
 				<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 		</div>
 	    
-		<div id="dlg" class="easyui-dialog" style="width:480px; height:500px"
-            closed="true" buttons="#dlg-buttons" title="人员信息">
+		<div id="dlg" class="easyui-dialog" style="width:580px; height:500px"
+            closed="true" buttons="#dlg-buttons" title="配置/价格信息">
             <form id="fm" method="post">
             	<input type="hidden" name="chanpinconfigurationId" id="chanpinconfigurationId">
             	<div class="fitem">
@@ -56,6 +56,10 @@
 	                <label>选择产品：</label>
 	                <select id="chanpinId" name="chanpinId" style="width: 150px" class="easyui-combobox" required="true">
 	                </select>
+	            </div>
+	            <div class="fitem">
+	                <label>标签：</label>
+	                <input id="tags" name="tags" class="easyui-textbox" required="true">
 	            </div>
 	            <div>
 	            	<label>配置描述：</label><br/>

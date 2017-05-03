@@ -729,7 +729,6 @@ function initScene(id) {
 		}
 	}, getContextPath()+"/portal/product/scene/list?productId="+id);
 }
-
 function updateChanPin(){
 	progressLoad();
 	$('#fmx-c').form('submit',{

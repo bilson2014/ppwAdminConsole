@@ -40,6 +40,13 @@ public class Resource {
 	@Autowired
 	private RepositoryService repositoryService;
 
+	/**
+	 * 加载一个bpm文件
+	 * 
+	 * @param name
+	 * @param bpmnFile
+	 * @throws FileNotFoundException
+	 */
 	public void loadTemplate(String name, File bpmnFile) throws FileNotFoundException {
 		DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
 		FileInputStream fileInputStream = new FileInputStream(bpmnFile);
@@ -48,6 +55,12 @@ public class Resource {
 		deploymentBuilder.deploy();
 	}
 
+	/**
+	 * 创建新的流程模板
+	 * 
+	 * @param flowTemplate
+	 * @return
+	 */
 	public boolean createTemplate(FlowTemplate flowTemplate) {
 		BpmnModel model = new BpmnModel();
 		Process process = new Process();
@@ -70,7 +83,11 @@ public class Resource {
 	public void updateTemplate(String name) {
 
 	}
-
+	/**
+	 * 解析节点
+	 * @param nodes
+	 * @param process
+	 */
 	private void parseNode(LinkedList<FlowNode> nodes, Process process) {
 		if (ValidateUtil.isValid(nodes)) {
 			// 按照顺序存放节点
@@ -87,9 +104,9 @@ public class Resource {
 			process.addFlowElement(startEvent);
 			EndEvent endEvent = Bpmn.createEndEvent(nodes.pollLast().getflowOptionsToJson());
 			process.addFlowElement(endEvent);
-			
+
 			nodes.sort(comparator);
-			
+
 			FlowNode nextFlowNode = null;
 			FlowNode prevFlowNode = null;
 			for (int i = 0; i < nodes.size(); i++) {

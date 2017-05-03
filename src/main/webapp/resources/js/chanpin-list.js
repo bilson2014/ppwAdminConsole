@@ -10,7 +10,7 @@ $().ready(function() {
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/chanpin/list',
 		idField : 'chanpinId',
-		title : '场景列表',
+		title : '产品列表',
 		fitColumns : true,
 		striped : true,
 		loadMsg : '数据正在加载,请耐心的等待...',
@@ -86,7 +86,6 @@ function editFuc() {
 	} else {
 		$.message('只能选择一条记录进行修改!');
 	}
-	
 }
 function delFuc(){
 	var arr = datagrid.datagrid('getSelections');

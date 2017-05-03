@@ -54,7 +54,7 @@ import com.panfeng.util.ValidateUtil;
 /**
  * 流程引擎操作类
  * 
- * @author Wang,LM
+ * @author Wang
  *
  */
 @Service
@@ -62,7 +62,6 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 
 	@Autowired
 	private RuntimeService runtimeService;
-
 	@Autowired
 	private TaskService taskService;
 
@@ -78,12 +77,19 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 	@Autowired
 	private FlowCoreMapper flowCoreMapper;
 
+	/**
+	 * 流程资源服务，用于创建新的流程模板
+	 */
 	@Autowired
 	private Resource flowTemplateResource;
-
+	/**
+	 * 流程权限认证服务，认证当前用户是否有有权限操坐当前节点
+	 */
 	@Autowired
 	private Auth auth;
-
+	/**
+	 * 事件链服务，一个流程模板绑定唯一的任务链<br>
+	 */
 	@Autowired
 	private TaskChainHandler taskChainHandler;
 
@@ -93,21 +99,31 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 	@Autowired
 	private TaskChainService taskChainService;
 
+	/**
+	 * 获取当前任务节点
+	 */
 	public Task getCurrentTask(String processInstanceId) {
 		return taskService.createTaskQuery().processInstanceId(processInstanceId).active().singleResult();
-		// return
-		// taskService.createTaskQuery().processInstanceId(processInstanceId).active().singleResult();
 	}
 
+	/**
+	 * 获取当前节点之前的节点
+	 */
 	public List<HistoricTaskInstance> getAfterTask(String processInstanceId) {
 		return historyService.createHistoricTaskInstanceQuery().processInstanceId(processInstanceId).list();
 
 	}
 
+	/**
+	 * 获取历史流程
+	 */
 	public HistoricProcessInstance getHistoryProcess(String processInstanceId) {
 		return historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
 	}
 
+	/**
+	 * 推进流程
+	 */
 	@Deprecated
 	public boolean completeTask(String processInstanceId) {
 		Task task = taskService.createTaskQuery().processInstanceId(processInstanceId).active().singleResult();
@@ -117,6 +133,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return true;
 	}
 
+	/**
+	 * 启动新的流程实例
+	 */
 	public String startProcess(String processDefinitionKey, String processInstanceBusinessKey) {
 		ProcessInstance pi;
 		if (processInstanceBusinessKey == null)
@@ -129,8 +148,11 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 			return pi.getProcessInstanceId();
 		}
 	}
-	
-	public void executeStartEvent(SessionInfo sessionInfo,String flowId){
+
+	/**
+	 * 执行开始任务
+	 */
+	public void executeStartEvent(SessionInfo sessionInfo, String flowId) {
 		Task currentTask = getCurrentTask(flowId);
 		String processDefinitionId = currentTask.getProcessDefinitionId();
 		FlowTemplate template = getTemplate(processDefinitionId);
@@ -140,6 +162,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		}
 	}
 
+	/**
+	 * 暂停当前流程实例
+	 */
 	public boolean suspendProcess(String processInstanceId) {
 		ProcessInstance pi = getUnDoneProcessInstance(processInstanceId);
 		if (pi == null)
@@ -148,6 +173,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return true;
 	}
 
+	/**
+	 * 恢复当前流程
+	 */
 	public boolean resumeProcess(String processInstanceId) {
 		ProcessInstance pi = getUnDoneProcessInstance(processInstanceId);
 		if (pi == null)
@@ -156,6 +184,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return true;
 	}
 
+	/**
+	 * 获取当前流程实例的所有节点
+	 */
 	public List<ActivityImpl> getNodes(String processInstanceId) {
 		HistoricTaskInstance historicTaskInstance = getDoneTaskInstance(processInstanceId);
 		if (historicTaskInstance == null)
@@ -165,10 +196,19 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return def.getActivities();
 	}
 
+	/**
+	 * 获取为完成的流程实例
+	 * 
+	 * @param processInstanceId
+	 * @return
+	 */
 	private ProcessInstance getUnDoneProcessInstance(String processInstanceId) {
 		return runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
 	}
 
+	/**
+	 * 获取已完成的流程节点
+	 */
 	public HistoricTaskInstance getDoneTaskInstance(String processInstanceId) {
 		List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
 				.processInstanceId(processInstanceId).list();
@@ -178,10 +218,16 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return null;
 	}
 
+	/**
+	 * 获取已完成的流程节点
+	 */
 	public List<HistoricTaskInstance> getHistoryProcessTask(String processInstanceId) {
 		return historyService.createHistoricTaskInstanceQuery().processInstanceId(processInstanceId).list();
 	}
 
+	/**
+	 * 检测当前流程实例是否是暂停状态
+	 */
 	@Override
 	public boolean isSuspended(String processInstanceId) {
 		ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
@@ -189,6 +235,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return processInstance != null ? processInstance.isSuspended() : false;
 	}
 
+	/**
+	 * 检测当前流程实例是否是完成状态
+	 */
 	public boolean isFinish(String processInstanceId) {
 		HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
 				.processInstanceId(processInstanceId).finished().singleResult();
@@ -196,6 +245,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return historicProcessInstance != null;
 	}
 
+	/**
+	 * 批量获取当前正在进行中的节点
+	 */
 	@Override
 	public List<Task> getCurrentTask(List<String> processInstanceIds) {
 		if (!ValidateUtil.isValid(processInstanceIds))
@@ -203,11 +255,17 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return taskService.createTaskQuery().processInstanceIdIn(processInstanceIds).list();
 	}
 
+	/**
+	 * 批量获取当前正在暂停状态的流程实例
+	 */
 	@Override
 	public List<ProcessInstance> isSuspendeds(String processDefinitionKey, Set<String> processInstanceIds) {
 		return runtimeService.createProcessInstanceQuery().processInstanceIds(processInstanceIds).list();
 	}
 
+	/**
+	 * 批量获取当前已经完成状态的流程实例
+	 */
 	@Override
 	public List<HistoricProcessInstance> isFinishs(String processDefinitionKey, Set<String> ids) {
 		List<HistoricProcessInstance> historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
@@ -217,6 +275,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 	}
 
 	// --------------------new----------------------------------------------------------------------------
+	/**
+	 * 获取数据库中所有模板的最新实例
+	 */
 	@Override
 	public List<FlowTemplate> getAllTemplate() {
 		Map<String, FlowTemplate> flowTemplateMap = new HashMap<>();
@@ -246,6 +307,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return list;
 	}
 
+	/**
+	 * 获取当前流程资源生成的 流程图
+	 */
 	@Override
 	public InputStream getImage(String deployment_id) {
 		List<String> names = repositoryService.getDeploymentResourceNames(deployment_id);
@@ -262,6 +326,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return null;
 	}
 
+	/**
+	 * 获取当前流程生成的运行中 流程图
+	 */
 	public InputStream getProcessImage(String processId) {
 		Task task = taskService.createTaskQuery().processInstanceId(processId).singleResult();
 		try {
@@ -276,6 +343,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return null;
 	}
 
+	/**
+	 * 获取指定流程ID下的最新流程模板 IndentFlow:10:57504
+	 */
 	public FlowTemplate getTemplate(String flowTemplateId) {
 		FlowTemplate flowTemplate = new FlowTemplate();
 		LinkedList<FlowNode> flowNodes = new LinkedList<>();
@@ -283,10 +353,13 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		FlowNode endNode = null;
 		BpmnModel model = repositoryService.getBpmnModel(flowTemplateId);
 		if (model != null) {
-			flowTemplate.setId(model.getMainProcess().getId());// 一个模板里只有一个流程
+			flowTemplate.setId(model.getMainProcess().getId());// 一个模板里只有一个流程。即获取默认流程
 			flowTemplate.setName(model.getMainProcess().getName());
 			Collection<FlowElement> flowElements = model.getMainProcess().getFlowElements();
 			int index = 1;
+			/**
+			 * 将流程组件转化成，模板节点
+			 */
 			for (FlowElement flowElement : flowElements) {
 				if (flowElement instanceof UserTask) {
 					UserTask userTask = (UserTask) flowElement;
@@ -310,6 +383,12 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return flowTemplate;
 	}
 
+	/**
+	 * 创建新的流程节点
+	 * 
+	 * @param element
+	 * @return
+	 */
 	private FlowNode createFlowNode(FlowElement element) {
 		FlowNode flowNode = new FlowNode();
 		flowNode.setflowOptionst(element.getDocumentation());
@@ -330,6 +409,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return flowNode;
 	}
 
+	/**
+	 * 创建新的流程模板
+	 */
 	public BaseMsg createFlowTemplate(FlowTemplate flowTemplate) {
 		// 处理事件链
 		List<FlowNode> flowNodes = flowTemplate.getFlowNodes();
@@ -375,6 +457,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		}
 	}
 
+	/**
+	 * 推荐流程节点，验证当前权限，验证手动任务。执行自动任务
+	 */
 	public BaseMsg completeTask_2(SessionInfo sessionInfo, String processId) {
 		Task task = getCurrentTask(processId);
 		FlowNode flowNode = new FlowNode();
@@ -399,6 +484,9 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		return new BaseMsg(BaseMsg.ERROR, "嘿！你是哪来的，你没权限！", null);
 	}
 
+	/**
+	 * 回退到上一个节点
+	 */
 	public void prevTask(SessionInfo sessionInfo, String processInstanceId) {
 		Task task = getCurrentTask(processInstanceId);
 		FlowTemplate flowTemplate = getTemplate(task.getProcessDefinitionId());
@@ -419,14 +507,23 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 
 	}
 
+	/**
+	 * 节点跳转
+	 */
 	public void jumpTask(String activityId, String processInstanceId) {
 		managementService.executeCommand(new JumpActivityCmd(processInstanceId, activityId));
 	}
 
+	/**
+	 * 停止当前流程
+	 */
 	public void stopProcess(String processInstanceId) {
 		jumpTask("endEvent", processInstanceId);
 	}
 
+	/**
+	 * 删除流程实例
+	 */
 	public boolean removeProcess(String processInstanceId) {
 		ProcessInstance pi = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId)
 				.singleResult();
@@ -436,82 +533,5 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 		}
 		return false;
 	}
-
-	// public List<BaseFlowModel> getFlows(HashSet<String> ids) {
-	// if (ValidateUtil.isValid(ids)) {
-	// List<BaseFlowModel> flowModels = new ArrayList<>();
-	// // TODO 未完结！流程当前所处节点信息
-	// List<Task> list = taskService.createTaskQuery().processInstanceIdIn(new
-	// ArrayList<>(ids)).list();
-	//
-	// ProcessInstanceQuery processInstanceQuery =
-	// runtimeService.createProcessInstanceQuery()
-	// .processInstanceIds(ids);
-	// // 暂停流程实例
-	// List<ProcessInstance> suspendList =
-	// processInstanceQuery.suspended().list();
-	// if (ValidateUtil.isValid(suspendList)) {
-	// for (ProcessInstance processInstance : suspendList) {
-	// BaseFlowModel baseFlowModel = new BaseFlowModel();
-	// baseFlowModel.setFlowId(processInstance.getProcessDefinitionId());
-	//
-	// String processId = processInstance.getProcessInstanceId();
-	// ids.remove(processId);
-	// }
-	// }
-	// // 进行中流程
-	// List<ProcessInstance> activeList = processInstanceQuery.active().list();
-	// if (ValidateUtil.isValid(activeList)) {
-	// for (ProcessInstance processInstance : activeList) {
-	// String processId = processInstance.getProcessInstanceId();
-	// ids.remove(processId);
-	// }
-	// }
-	//
-	// // 历史流程
-	// List<HistoricProcessInstance> haHistoricProcessInstances = historyService
-	// .createHistoricProcessInstanceQuery().processInstanceIds(ids).finished().list();
-	//
-	// List<HistoricTaskInstance> historicTaskInstances =
-	// historyService.createHistoricTaskInstanceQuery()
-	// .processInstanceIdIn(new ArrayList<>(ids)).finished().list();
-	//
-	// // 拼装
-	//
-	// }
-	// return null;
-	// }
-	//
-	// @Override
-	// public List<BaseFlowModel> getAll(String flowTemplateVersionId) {
-	// ids
-	// 先检查进行中队列 --》暂停
-	// 检查进行中队列 --》除去暂停的就是进行中的集合结果
-	// 检查历史队列 --》已经完成的集合
-	//
-	// HistoricProcessInstanceQuery hps =
-	// historyService.createHistoricProcessInstanceQuery()
-	// .processDefinitionId(flowTemplateVersionId);
-	// hps.finished().list();
-	// hps.unfinished();
-	// ProcessInstance ps;
-	//
-	//
-	// runtimeService.createProcessInstanceQuery().processInstanceIds(processInstanceIds)
-	// List<BaseFlowModel> baseFlowModels = new ArrayList<>();
-	// if (ValidateUtil.isValid(hps)) {
-	// for (HistoricProcessInstance historicProcessInstance : hps) {
-	// BaseFlowModel baseFlowModel = new BaseFlowModel();
-	// baseFlowModel.setFlowId(historicProcessInstance.getId());
-	//
-	// baseFlowModel.setFlowTemplateId(processInstance.getProcessDefinitionKey());
-	// baseFlowModel.setFlowTemplateName(processInstance.getProcessDefinitionName());
-	// baseFlowModel.setFlowTemplateVersionId(historicProcessInstance.getProcessDefinitionId());
-	// baseFlowModel.setCreateTime(processInstance.);
-	// }
-	// }
-	//
-	// return null;
-	// }
 
 }

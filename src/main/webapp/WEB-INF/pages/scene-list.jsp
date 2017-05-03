@@ -45,7 +45,7 @@
 		</div>
 	    
 		<div id="dlg" class="easyui-dialog" style="width:380px; height:300px;"
-            closed="true" buttons="#dlg-buttons" title="人员信息">
+            closed="true" buttons="#dlg-buttons" title="场景信息">
             <form id="fm" method="post" enctype="multipart/form-data">
             	<input type="hidden" name="sceneId" id="sceneId">
             	<div class="fitem">

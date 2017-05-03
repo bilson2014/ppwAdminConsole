@@ -30,10 +30,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.facade.product.entity.PmsProduct;
-import com.paipianwang.pat.facade.product.entity.PmsScene;
 import com.paipianwang.pat.facade.product.entity.PmsService;
 import com.paipianwang.pat.facade.product.service.PmsProductFacade;
-import com.paipianwang.pat.facade.product.service.PmsSceneFacade;
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
 import com.panfeng.domain.BaseMsg;
@@ -77,10 +75,6 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private final PmsTeamFacade pmsTeamFacade = null;
-	
-	@Autowired
-	private PmsSceneFacade pmsSceneFacade;
-	
 	
 	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
 
@@ -714,30 +708,6 @@ public class ProductController extends BaseController {
 		}
 		pmsProductFacade.setupChanpinAndConfig(chanpinId, configId, productId);
 		return new BaseMsg(BaseMsg.NORMAL, "更新成功！");
-	}
-
-	@RequestMapping("/product/scene/list")
-	public BaseMsg getScene(Long productId) {
-		BaseMsg baseMsg = new BaseMsg();
-		DataGrid<PmsScene> allScene = pmsSceneFacade.getAllScene();
-		PmsProduct product = pmsProductFacade.findProductById(productId);
-		String sceneTag = product.getSceneTag();
-		if(ValidateUtil.isValid(sceneTag)){
-			String[] split = sceneTag.split("\\,");
-			if(split!=null && split.length >0){
-				for (int i = 0; i < split.length; i++) {
-					for (PmsScene pmsScene : allScene.getRows()) {
-						if(pmsScene.getSceneName().equals(split[i])){
-							pmsScene.setChecked(true);
-							break;
-						}
-					}
-				}
-			}
-		}
-		baseMsg.setErrorCode(BaseMsg.NORMAL);
-		baseMsg.setResult(allScene);
-		return baseMsg;
 	}
 
 }

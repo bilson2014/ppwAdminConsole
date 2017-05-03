@@ -9,7 +9,7 @@ $().ready(function() {
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/config/list',
 		idField : 'chanpinconfigurationId',
-		title : '场景列表',
+		title : '配置/价格列表',
 		fitColumns : true,
 		striped : true,
 		loadMsg : '数据正在加载,请耐心的等待...',
@@ -57,6 +57,11 @@ $().ready(function() {
 			formatter : function(value,row,index){
 				return '---';
 			}
+		}, {
+			field : 'tags',
+			title : '标签',
+			width : 60,
+			align : 'center'
 		}, {
 			field : 'chanpinconfigurationCreateTime',
 			title : '创建时间',
@@ -159,6 +164,7 @@ function save() {
 		"chanpinconfigurationName":$('#chanpinconfigurationName').val(),
 		"chanpinId":$('#chanpinId').combobox('getValue'),
 		"chanpinconfigurationDescription":$('#chanpinconfigurationDescription').val(),
+		"tags":$('#tags').val(),
 		"pmsProductModule":buildModuleParam(),
 		"pmsDimensions":buildDimensionParam(),
 		"chanpinconfigurationId":$('#chanpinconfigurationId').val()
@@ -178,7 +184,6 @@ function initChanPinCache() {
 	syncLoadData(function(res) {
 		modulecache = res;
 	}, getContextPath() + "/portal/module/list", null);
-	
 }
 
 function addBaseModule(mId,cpmId,price){
@@ -227,7 +232,7 @@ function addAdditiveModule(mId,cpmId,price){
 	delAdditiveModule();
 }
 
-function addDimensionModule(dimensionId,value,computeType,dimensionNameId){
+function addDimensionModule(dimensionId,name,value,computeType,dimensionNameId){
 	var module = $(".dimensionmodule");
 	if(value == undefined)
 		value = 0;
@@ -242,6 +247,7 @@ function addDimensionModule(dimensionId,value,computeType,dimensionNameId){
 	$(".dimensionModuleName:eq("+box+')').combobox('select', dimensionNameId);
 	var box =  $(".computeType").length - 1;
 	$(".computeType:eq("+box+')').combobox('select', computeType);
+	$(".dimensionRowName:eq("+box+')').combobox('setText', name);
 	delDimension();
 }
 
@@ -268,30 +274,60 @@ function createAdditiveModuleView(cpmId,price){
 }
 
 function createDimensionModuleView(dimensionId,value){
-	var dimension = ['<option value="0">项目工期</option>',
-	                 '<option value="1">影片时长</option>',
-	                 '<option value="2">物料损耗</option>',
-	                 '<option value="3">其他</option>'
+	var dimension = ['<option value="0">时长</option>'
 	                 ].join('');
 	var computeType = [
 		               	'<option value="0">乘</option>',
 		           		'<option value="1">加</option>',
 		           		'<option value="2">减</option>'
 	                  ].join('');
-	
 	var $body=['<div class="moduleDimensionBlock">',
 	           		'<input type="hidden" id="dimensionId" value="'+dimensionId+'">',
 		           '维度：<select id="dimensionModuleName" style="width: 80px" class=" dimensionModuleName easyui-combobox" required="true">',
 		           dimension,
 		           '</select>',
-		           '值： <input id="dimensionValue" class="easyui-textbox" style="width: 50px" value="'+value+'" required="true">',
 		           '计算模式：<select id="computeType" style="width: 40px" class="computeType easyui-combobox" required="true">',
 		           computeType,
 		           '</select>',
+		           '维度列：<select id="dimensionRowName" style="width: 80px" class=" dimensionRowName easyui-combobox" required="true">',
+		           rowNameArray(0),
+		           '</select>',
+		           '维度值： <input id="dimensionRowValue" class="easyui-textbox" style="width: 50px" value="'+value+'" required="true">',
 		           '<a href="javascript:void(0);" class="easyui-linkbutton dimension-del" data-options="plain:true,iconCls:\'icon-remove\'"></a>',
 	           '</div>',
 	           '<br/>'].join('');
 	return $body;
+}
+/**
+ * 构造维度列名,存在基础的提示信息
+ * @param index
+ */
+function rowNameArray(index){
+	var html = '';
+	switch (index) {
+	case 0:
+		html = [
+		        '<option>1分钟</option>',
+		        '<option>2分钟</option>',
+		        '<option>3分钟</option>',
+		        '<option>4分钟</option>',
+		        '<option>5分钟</option>',
+		        '<option>10分钟</option>'
+		       ];
+		break;
+	case 1:
+		html = [
+		        '<option>1分钟</option>',
+		        '<option>2分钟</option>',
+		        '<option>3分钟</option>',
+		        '<option>4分钟</option>',
+		        '<option>5分钟</option>',
+		        '<option>10分钟</option>'
+		       ];
+		break;
+	}
+	html.join('');
+	return html;
 }
 
 /**
@@ -311,10 +347,12 @@ function ModuleEntity (productModuleId,m){
 	this.pinConfiguration_ProductModule = m;
 }
 
-function DimensionEntity(dimensionNameId,dimensionComputeType,dimensionValue,dimensionId,cfId){
+function DimensionEntity(dimensionNameId,computeType,rowName,rowValue,dimensionId,cfId){
 	this.dimensionNameId = dimensionNameId;
-	this.dimensionComputeType = dimensionComputeType;
-	this.dimensionValue = dimensionValue;
+	this.computeType = computeType;
+	this.rowName = rowName;
+	this.rowValue = rowValue;
+	
 	this.dimensionId = dimensionId;
 	this.cfId = cfId;
 }
@@ -363,11 +401,13 @@ function buildDimensionParam(){
 		for (var int = 0; int < rootDimensionView.length; int++) {
 			var view = $(rootDimensionView[int]);
 			var dimensionNameId = view.find('#dimensionModuleName').combobox('getValue');
-			var dimensionValue = view.find('#dimensionValue').val();
 			var computeType = view.find('#computeType').combobox('getValue');
+			var rowName = view.find('#dimensionRowName').combobox('getValue');
+			var rowValue = view.find('#dimensionRowValue').val();
 			var dimensionId = view.find('#dimensionId').val();
 			var cfId = $('#chanpinconfigurationId').val();
-			var dimensionEntity = new DimensionEntity(dimensionNameId,computeType,dimensionValue,dimensionId,cfId);
+			// TODO: function DimensionEntity(dimensionNameId,computeType,rowName,rowValue,dimensionId,cfId){
+			var dimensionEntity = new DimensionEntity(dimensionNameId,computeType,rowName,rowValue,dimensionId,cfId);
 			param.push(dimensionEntity);
 		}
 	}
@@ -391,13 +431,10 @@ function initModule(obj){
 	if(dimensions!=null){
 		for (var int = 0; int < dimensions.length; int++) {
 			var x = dimensions[int];
-			addDimensionModule(x.dimensionId,x.dimensionValue,x.dimensionComputeType,x.dimensionNameId);
+			addDimensionModule(x.dimensionId,x.rowName,x.rowValue,x.computeType,x.dimensionNameId);
 		}
 	}
 }
-
-
-
 
 function delBaseModule(){
 	$(".basemodule-del").unbind('click').on("click",function(){

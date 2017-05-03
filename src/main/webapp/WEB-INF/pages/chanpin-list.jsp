@@ -58,7 +58,7 @@
 		</div>
 	    
 		<div id="dlg" class="easyui-dialog" style="width:380px; height:300px;"
-            closed="true" buttons="#dlg-buttons" title="人员信息">
+            closed="true" buttons="#dlg-buttons" title="产品信息">
             <form id="fm" method="post" enctype="multipart/form-data">
             	<input type="hidden" name="chanpinId" id="chanpinId">
             	<input id="chanpinFeature" type="hidden" name="chanpinFeature" >
@@ -87,7 +87,7 @@
 	    
 	    <!-- 产品封面相关   ---  begin -->
 		    <div id="PicDlg" class="easyui-dialog" style="width:646px; height:560px;"
-	            closed="true"  title="人员信息">
+	            closed="true"  title="产品封面信息">
 	           <div id="PicD" style="width:100%; height:100%;">
 	           		<table id="imgList" data-options="fit:true,border:false"></table>
 	           </div>
@@ -103,7 +103,7 @@
 		
 		<!-- 产品特性相关   --- begin  -->
 		<div id="featureDlg" class="easyui-dialog" style="width:646px; height:560px;"
-            closed="true"  title="人员信息">
+            closed="true"  title="产品特性信息">
 			<table id="featureBody" data-options="fit:true,border:false"></table>
 			
 			 <div id="toolbar3" style="display: none;">
@@ -115,7 +115,7 @@
 	    </div>
 	    
 	    <div id="dlgFeatureForm" class="easyui-dialog" style="width:380px; height:300px;"
-            closed="true" buttons="#dlg-buttons1" title="人员信息">
+            closed="true" buttons="#dlg-buttons1" title="产品特性信息">
             <form id="fmFeature" method="post" enctype="multipart/form-data">
             	<input type="hidden" name="chanpinId" id="chanpinId-Feature">
             	<input type="hidden" name="fId" id="fId">

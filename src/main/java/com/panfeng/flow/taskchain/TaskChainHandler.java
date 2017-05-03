@@ -102,6 +102,11 @@ public class TaskChainHandler {
 		}).start();
 	}
 
+	/**
+	 * 构造class 实例
+	 * @param Vclass
+	 * @return
+	 */
 	private EventBase getBean(String Vclass) {
 		Object obj = applicationContext.getBean(Vclass);
 		if (obj instanceof EventBase) {
