@@ -19,15 +19,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.paipianwang.pat.common.entity.BaseEntity;
-import com.paipianwang.pat.common.entity.BaseMsg;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.product.entity.Feature;
 import com.paipianwang.pat.facade.product.entity.PmsChanPin;
 import com.paipianwang.pat.facade.product.entity.PmsScene;
 import com.paipianwang.pat.facade.product.service.PmsChanPinFacade;
 import com.paipianwang.pat.facade.product.service.PmsSceneFacade;
-import com.panfeng.service.FDFSService;
+import com.panfeng.domain.BaseMsg;
 
 @RestController
 @RequestMapping("/portal")
@@ -38,9 +38,6 @@ public class ChanPinController extends BaseController {
 
 	@Autowired
 	private PmsSceneFacade pmsSceneFacade;
-
-	@Autowired
-	private FDFSService fdfsService;
 
 	ReentrantLock reentrantLock = new ReentrantLock();
 
@@ -56,7 +53,11 @@ public class ChanPinController extends BaseController {
 	}
 
 	@RequestMapping("/chanpin/save")
-	public BaseMsg save(PmsChanPin chanPin, HttpServletRequest request) {
+	public BaseMsg save(PmsChanPin chanPin, HttpServletRequest request,MultipartFile picimg) {
+		if(!picimg.isEmpty()){
+			String uploadFile = FastDFSClient.uploadFile(picimg);
+			chanPin.setChanpinPicLDUrl(uploadFile);
+		}
 		Map<String, Object> save = pmsChanPinFacade.save(chanPin);
 		Map<String, String[]> sceneTag = request.getParameterMap();
 		String[] tags = sceneTag.get("sceneTag");
@@ -77,9 +78,19 @@ public class ChanPinController extends BaseController {
 	}
 
 	@RequestMapping("/chanpin/update")
-	public BaseMsg update(PmsChanPin chanpin, HttpServletRequest request) {
+	public BaseMsg update(PmsChanPin chanpin, HttpServletRequest request,MultipartFile picimg) {
+		if(!picimg.isEmpty()){
+			PmsChanPin chanPinInfo = pmsChanPinFacade.getChanPinInfo(chanpin.getChanpinId());
+			if (chanPinInfo != null) {
+				String chanpinPicLDUrl = chanPinInfo.getChanpinPicLDUrl();
+				if(ValidateUtil.isValid(chanpinPicLDUrl)){
+					FastDFSClient.deleteFile(chanpinPicLDUrl);
+				}
+			}
+			String uploadFile = FastDFSClient.uploadFile(picimg);
+			chanpin.setChanpinPicLDUrl(uploadFile);
+		}
 		long update = pmsChanPinFacade.update(chanpin);
-
 		Map<String, String[]> sceneTag = request.getParameterMap();
 		String[] tags = sceneTag.get("sceneTag");
 		if (tags != null && tags.length > 0) {
@@ -150,13 +161,13 @@ public class ChanPinController extends BaseController {
 		BaseMsg baseMsg = new BaseMsg();
 		if (!fileList.isEmpty()) {
 			reentrantLock.lock();
-			String fId = fdfsService.upload(fileList);
+			String fId = FastDFSClient.uploadFile(fileList);
 			PmsChanPin chanPinInfo = pmsChanPinFacade.getChanPinInfo(chanpinId);
 			if (chanPinInfo != null) {
-				LinkedList<String> picImgs = chanPinInfo.picImgs();
+				LinkedList<String> picImgs = chanPinInfo.bannerImgs();
 				picImgs.addLast(fId);
-				chanPinInfo.buildPicImgs(picImgs);
-				pmsChanPinFacade.updatePicImgs(chanPinInfo);
+				chanPinInfo.buildBannerImgs(picImgs);
+				pmsChanPinFacade.updateBannerImgs(chanPinInfo);
 				baseMsg.setCode(BaseMsg.NORMAL);
 			} else {
 				baseMsg.setCode(BaseMsg.ERROR);
@@ -167,10 +178,10 @@ public class ChanPinController extends BaseController {
 		return baseMsg;
 	}
 
-	@RequestMapping("/chanpin/picImgs")
+	@RequestMapping("/chanpin/bannerImgs")
 	public DataGrid<String> getPicImgs(Long chanpinId) {
 		PmsChanPin chanPinInfo = pmsChanPinFacade.getChanPinInfo(chanpinId);
-		LinkedList<String> picImgs = chanPinInfo.picImgs();
+		LinkedList<String> picImgs = chanPinInfo.bannerImgs();
 		DataGrid<String> dd = new DataGrid<>();
 		if (ValidateUtil.isValid(picImgs)) {
 			dd.setRows(picImgs);
@@ -186,11 +197,11 @@ public class ChanPinController extends BaseController {
 		BaseMsg baseMsg = new BaseMsg();
 		PmsChanPin chanPinInfo = pmsChanPinFacade.getChanPinInfo(chanpinId);
 		if (chanPinInfo != null) {
-			LinkedList<String> picImgs = chanPinInfo.picImgs();
+			LinkedList<String> picImgs = chanPinInfo.bannerImgs();
 			picImgs.remove(path);
-			fdfsService.delete(path);
-			chanPinInfo.buildPicImgs(picImgs);
-			pmsChanPinFacade.updatePicImgs(chanPinInfo);
+			FastDFSClient.deleteFile(path);
+			chanPinInfo.buildBannerImgs(picImgs);
+			pmsChanPinFacade.updateBannerImgs(chanPinInfo);
 			baseMsg.setCode(BaseMsg.NORMAL);
 		} else {
 			baseMsg.setCode(BaseMsg.ERROR);
@@ -204,8 +215,8 @@ public class ChanPinController extends BaseController {
 		BaseMsg baseMsg = new BaseMsg();
 		PmsChanPin chanPinInfo = pmsChanPinFacade.getChanPinInfo(chanpinId);
 		if (chanPinInfo != null) {
-			chanPinInfo.setChanpinPicLDUrl(paths);
-			pmsChanPinFacade.updatePicImgs(chanPinInfo);
+			chanPinInfo.setChanpinBannerUrl(paths);
+			pmsChanPinFacade.updateBannerImgs(chanPinInfo);
 			baseMsg.setCode(BaseMsg.NORMAL);
 		} else {
 			baseMsg.setCode(BaseMsg.ERROR);
@@ -221,7 +232,7 @@ public class ChanPinController extends BaseController {
 		BaseMsg baseMsg = new BaseMsg();
 		if (feature != null) {
 			if (!fileList.isEmpty()) {
-				String fileId = fdfsService.upload(fileList);
+				String fileId = FastDFSClient.uploadFile(fileList);
 				feature.setPicHDUrl(fileId);
 			}
 			feature.setfId(UUID.randomUUID().toString().replaceAll("-", "")); // 生成唯一ID
@@ -247,12 +258,12 @@ public class ChanPinController extends BaseController {
 			ListIterator<Feature> iterator = featureList.listIterator();
 			while (iterator.hasNext()) {
 				Feature f = iterator.next();
-				if(f.getfId().equals(feature.getfId())){
+				if (f.getfId().equals(feature.getfId())) {
 					iterator.remove();
 					if (!fileList.isEmpty()) {
-						String fileId = fdfsService.upload(fileList);
+						String fileId = FastDFSClient.uploadFile(fileList);
 						feature.setPicHDUrl(fileId);
-					}else{
+					} else {
 						feature.setPicHDUrl(f.getPicHDUrl());
 					}
 					iterator.add(feature);
@@ -295,7 +306,7 @@ public class ChanPinController extends BaseController {
 				Feature feature = iterator.next();
 				if (feature.getfId().equals(fId)) {
 					if (ValidateUtil.isValid(feature.getPicHDUrl())) {
-						fdfsService.delete(feature.getPicHDUrl());
+						FastDFSClient.deleteFile(feature.getPicHDUrl());
 					}
 					iterator.remove();
 					break;
@@ -311,7 +322,7 @@ public class ChanPinController extends BaseController {
 		}
 		return baseMsg;
 	}
-	
+
 	@RequestMapping("/chanpin/saveFeatureOd")
 	public BaseMsg saveFeatureOd(Long chanpinId, String features) {
 		BaseMsg baseMsg = new BaseMsg();
@@ -327,5 +338,5 @@ public class ChanPinController extends BaseController {
 		}
 		return baseMsg;
 	}
-	
+
 }

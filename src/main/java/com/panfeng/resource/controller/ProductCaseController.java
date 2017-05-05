@@ -12,15 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.paipianwang.pat.common.entity.BaseEntity;
-import com.paipianwang.pat.common.entity.BaseMsg;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.util.ValidateUtil;
-import com.paipianwang.pat.facade.product.entity.PmsProduct;
 import com.paipianwang.pat.facade.product.entity.PmsProductCase;
 import com.paipianwang.pat.facade.product.entity.PmsScene;
 import com.paipianwang.pat.facade.product.service.PmsProductCaseFacade;
 import com.paipianwang.pat.facade.product.service.PmsSceneFacade;
+import com.panfeng.domain.BaseMsg;
 
 /**
  * 产品案例Controller

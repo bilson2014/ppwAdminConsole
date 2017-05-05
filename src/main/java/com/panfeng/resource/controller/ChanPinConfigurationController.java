@@ -8,14 +8,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.deser.Deserializers.Base;
 import com.paipianwang.pat.common.entity.BaseEntity;
-import com.paipianwang.pat.common.entity.BaseMsg;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.product.entity.PmsChanPinConfiguration;
 import com.paipianwang.pat.facade.product.service.PmsChanPinConfigurationFacade;
+import com.panfeng.domain.BaseMsg;
 
 @RestController
 @RequestMapping("/portal")
@@ -87,6 +90,29 @@ public class ChanPinConfigurationController extends BaseController {
 		List<PmsChanPinConfiguration> chanPinConfigurationByChanPinId = PmsChanPinConfigurationFacade
 				.getChanPinConfigurationByChanPinId(chanpinId);
 		return chanPinConfigurationByChanPinId;
+	}
+	@RequestMapping("/config/saveimg")
+	public BaseMsg savePicImg(PmsChanPinConfiguration config,MultipartFile picFile){
+		BaseMsg baseMsg = new BaseMsg();
+		baseMsg.setCode(BaseMsg.ERROR);
+		baseMsg.setErrorMsg("更新失败！");
+		if(!picFile.isEmpty()){
+			PmsChanPinConfiguration chanPinConfigurationInfo = PmsChanPinConfigurationFacade
+					.getChanPinConfigurationInfo(config.getChanpinconfigurationId());
+			String url = chanPinConfigurationInfo.getChanpinconfigurationPicLDUrl();
+			if(ValidateUtil.isValid(url)){
+				FastDFSClient.deleteFile(url);
+			}
+			String uploadFile = FastDFSClient.uploadFile(picFile);
+			config.setChanpinconfigurationPicLDUrl(uploadFile);
+			long res = PmsChanPinConfigurationFacade.savePicImg(config);
+			if(res > 0){
+				baseMsg.setCode(BaseMsg.NORMAL);
+				baseMsg.setErrorMsg("更新成功！");
+				return baseMsg;
+			}
+		}
+		return baseMsg;
 	}
 
 }

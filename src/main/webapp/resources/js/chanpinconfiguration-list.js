@@ -414,6 +414,33 @@ function buildDimensionParam(){
 	return param;
 }
 
+function savePic(){
+	progressLoad();
+	$('#pic').form('submit',{
+		url : '/portal/config/saveimg',
+		success : function(result) {
+			var res = $.evalJSON(result);
+			progressClose();
+			$('#dlgPicForm').dialog('close');
+			datagrid.datagrid('clearSelections');
+			datagrid.datagrid('reload');
+			$.message(res.errorMsg);
+		}
+	});
+}
+function setPic(){
+	var rows = datagrid.datagrid('getSelections');
+	if (rows.length == 1) {
+		$('#pic').form('clear');
+		$('#dlgPicForm').dialog({
+			modal : true
+		}).dialog('open').dialog('center');
+		$('#pic').form('load', rows[0]);
+	} else {
+		$.message('只能选择一条记录进行修改!');
+	}
+}
+
 function initModule(obj){
 	var mod = obj.pmsProductModule;
 	if(mod!=null){

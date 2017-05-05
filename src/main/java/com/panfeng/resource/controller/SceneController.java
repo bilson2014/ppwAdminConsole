@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.paipianwang.pat.common.entity.BaseMsg;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.product.entity.PmsScene;
 import com.paipianwang.pat.facade.product.service.PmsSceneFacade;
-import com.panfeng.service.FDFSService;
+import com.panfeng.domain.BaseMsg;
 
 @RestController
 @RequestMapping("/portal")
@@ -19,9 +19,6 @@ public class SceneController extends BaseController {
 
 	@Autowired
 	private PmsSceneFacade pmsSceneFacade;
-
-	@Autowired
-	private FDFSService fdfsService;
 
 	@RequestMapping("/scene-list")
 	public ModelAndView activityView() {
@@ -37,7 +34,7 @@ public class SceneController extends BaseController {
 	@RequestMapping("/scene/save")
 	public BaseMsg save(PmsScene scene, MultipartFile scenenPicLDUrlFile) {
 		if (!scenenPicLDUrlFile.isEmpty()) {
-			String upload = fdfsService.upload(scenenPicLDUrlFile);
+			String upload = FastDFSClient.uploadFile(scenenPicLDUrlFile);
 			scene.setScenenPicLDUrl(upload);
 		}
 		long save = pmsSceneFacade.save(scene);
@@ -50,7 +47,7 @@ public class SceneController extends BaseController {
 	@RequestMapping("/scene/update")
 	public BaseMsg update(PmsScene scene, MultipartFile scenenPicLDUrlFile) {
 		if (!scenenPicLDUrlFile.isEmpty()) {
-			String upload = fdfsService.upload(scenenPicLDUrlFile);
+			String upload = FastDFSClient.uploadFile(scenenPicLDUrlFile);
 			scene.setScenenPicLDUrl(upload);
 		}
 		long update = pmsSceneFacade.update(scene);

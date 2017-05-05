@@ -3,7 +3,6 @@ package com.panfeng.resource.model;
 import java.io.Serializable;
 import java.util.LinkedList;
 
-import com.panfeng.domain.BaseObject;
 import com.panfeng.persist.FlowCoreMapper;
 
 /**

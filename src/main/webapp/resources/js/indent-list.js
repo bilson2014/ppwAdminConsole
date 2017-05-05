@@ -60,6 +60,14 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'goto' ,
+						title : '填写需求表' ,
+						align : 'center' ,
+						width : 80,
+						formatter : function(value , record , index){
+							return "<a target='_parent' href='http://localhost/std/require?indentId="+record.id+"'>去填写</a>";
+						}
+					},{
 						field : 'indent_tele',
 						title : '客户电话',
 						width : 120,

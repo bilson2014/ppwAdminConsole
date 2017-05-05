@@ -155,17 +155,17 @@ function initScene(id) {
 /**
  * 显示封面编辑弹出框
  */
-function showPicImg(){
-	$('#PicD').show();
-	$('#PicDlgBody').hide();
+function showBannerImg(){
+	$('#BannerD').show();
+	$('#BannerDlgBody').hide();
 	var rows = datagrid.datagrid('getSelections');
 	if(rows.length == 1){
-		$('#PicDlg').dialog({
+		$('#BannerDlg').dialog({
 			modal : true,
 			onOpen : function(event, ui) {
 				var imgList = $('#imgList');
 					datagrid2 = $('#imgList').datagrid({
-						url : getContextPath()+'/portal/chanpin/picImgs?chanpinId='+rows[0].chanpinId,
+						url : getContextPath()+'/portal/chanpin/bannerImgs?chanpinId='+rows[0].chanpinId,
 						fitColumns : true,
 						striped : true,
 						loadMsg : '数据正在加载,请耐心的等待...',
@@ -212,11 +212,11 @@ function showPicImg(){
  * 初始化批量上传图片组件
  */
 function initSubPicImgView() {
-	$('#PicDlgBody').html('');
+	$('#BannerDlgBody').html('');
 	var rows = datagrid.datagrid('getSelections');
 	var param = {};
 	param['chanpinId'] = rows[0].chanpinId;
-	$("#PicDlgBody").zyUpload({
+	$("#BannerDlgBody").zyUpload({
 		width            :   "640px",                 // 宽度
 		height           :   "400px",                 // 宽度
 		itemWidth        :   "120px",                 // 文件项的宽度
@@ -260,8 +260,8 @@ function initSubPicImgView() {
  * 前台UI切换方法
  */
 function subImg() {
-	$('#PicD').hide();
-	$('#PicDlgBody').show();
+	$('#BannerD').hide();
+	$('#BannerDlgBody').show();
 	initSubPicImgView();
 }
 /**
@@ -298,7 +298,7 @@ function deleteImg(self){
      });
 }
 function back(){
-	$('#PicDlg').dialog('close');
+	$('#BannerDlg').dialog('close');
 	$('#featureDlg').dialog('close');
 }
 ////////////////////////////////////////特性相关//////////////////////////////////////

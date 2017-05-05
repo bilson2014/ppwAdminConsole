@@ -42,6 +42,7 @@
 				<a onclick="editFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">修改配置</a>
 				<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除配置</a>
 				<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
+				<a onclick="setPic();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">设置封面</a>
 		</div>
 	    
 		<div id="dlg" class="easyui-dialog" style="width:580px; height:500px"
@@ -86,5 +87,25 @@
 				</div>
 	        </form>
 	    </div>
+	    
+	    
+	    <!-- 配置封面   --- begin  -->
+	    <div id="dlgPicForm" class="easyui-dialog" style="width:380px; height:300px;"
+            closed="true" buttons="#dlg-buttons1" title="配置封面">
+            <form id="pic" method="post" enctype="multipart/form-data">
+            	<input type="hidden" name="chanpinconfigurationId" id="chanpinconfigurationId">
+            	<div class="fitem">
+	                <label>特性名称：</label>
+	                <input id="picFile" name="picFile" type="file">
+	            </div>
+				 <div id="dlg-buttons1">
+					<r:mulparampermission uri2="/portal/employee/save" uri="/portal/employee/update">
+					<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="savePic()" >保存</a>
+					</r:mulparampermission>
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgPicForm').dialog('close')" >取消</a>
+				</div> 
+	        </form>
+	    </div>
+		<!-- 配置封面   --- end  -->
 </body>
 </html>

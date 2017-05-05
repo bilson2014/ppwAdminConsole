@@ -4,7 +4,7 @@
 
 <spring:url value="/resources/css/flowTemptale.css" var="flowTemptaleCss" />
 <spring:url value="/resources/lib/zyUpload/css/zyUpload.css" var="zyUploadCss" />
-<spring:url value="/resources/js/chanpin-list.js" var="chanpinJs" />
+<spring:url value="/resources/js/require-list.js" var="chanpinJs" />
 <spring:url value="/resources/lib/jquery.json/jquery.json-2.4.min.js"
 	var="jsonJs" />
 <spring:url value="/resources/lib/zyUpload/js/zyUpload.js"
@@ -53,7 +53,7 @@
 				<a onclick="editFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">修改产品</a>
 				<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除产品</a>
 				<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
-				<a onclick="showBannerImg();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">设置Banner</a>
+				<a onclick="showPicImg();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">设置封面</a>
 				<a onclick="showFeature();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">设置特性</a>
 		</div>
 	    
@@ -65,10 +65,6 @@
             	<div class="fitem">
 	                <label>产品名称：</label>
 	                <input id="chanpinName" name="chanpinName" class="easyui-textbox" required="true">
-	            </div>
-            	<div class="fitem">
-	                <label>产品略缩图：</label>
-	                <input id="picimg" name="picimg" type="file">
 	            </div>
 	            <div class="fitem">
 	                <label>场景：</label>
@@ -90,12 +86,12 @@
 	    </div>
 	    
 	    <!-- 产品封面相关   ---  begin -->
-		    <div id="BannerDlg" class="easyui-dialog" style="width:646px; height:560px;"
+		    <div id="PicDlg" class="easyui-dialog" style="width:646px; height:560px;"
 	            closed="true"  title="产品封面信息">
-	           <div id="BannerD" style="width:100%; height:100%;">
+	           <div id="PicD" style="width:100%; height:100%;">
 	           		<table id="imgList" data-options="fit:true,border:false"></table>
 	           </div>
-	           <div id="BannerDlgBody" style="display: none;">
+	           <div id="PicDlgBody" style="display: none;">
 	           </div>
 		    </div>
 		    <div id="toolbar2" style="display: none;">
