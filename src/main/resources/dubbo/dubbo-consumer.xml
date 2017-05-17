@@ -17,11 +17,21 @@
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsServiceFacade" id="pmsServiceFacade" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsKindeditorFacade" id="pmsKindeditorFacade" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductModuleFacade" id="pmsProductModuleFacade" check="false" timeout="5000"/>
+	
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsChanPinConfigurationFacade" id="pmsChanPinConfigurationFacade" check="false" timeout="5000" />
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsChanPinFacade" id="pmsChanPinFacade" check="false" timeout="5000" />
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsSceneFacade" id="pmsSceneFacade" check="false" timeout="5000" />
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsDimensionFacade" id="pmsDimensionFacade" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductCaseFacade" id="pmsProductCaseFacade" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsRequireFacade" id="pmsRequireFacade" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsIndentConfirmFacade" id="pmsIndentConfirmFacade" check="false" timeout="5000"/>
+	
 	<!--供应商服务接口 -->
 	<dubbo:reference interface="com.paipianwang.pat.facade.team.service.PmsTeamFacade" id="pmsTeamFacade" check="false" timeout="15000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.team.service.PmsTeamTmpFacade" id="pmsTeamTmpFacade" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.team.service.PmsProvinceFacade" id="pmsProvinceFacade" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.team.service.PmsCityFacade" id="pmsCityFacade" check="false" timeout="5000"/>
+	
 	<!--用户服务接口 -->
 	<dubbo:reference interface="com.paipianwang.pat.facade.user.service.PmsUserFacade" id="pmsUserFacade" check="false" timeout="10000"/>
 	<!--财务服务接口 -->

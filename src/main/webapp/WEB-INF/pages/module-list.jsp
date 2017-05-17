@@ -88,9 +88,9 @@
 	                	<option value="5">高级</option>
 	                </select>
 	            </div>
-	            <div class="fitem">
+	            <div class="fitem" style = "display: none">
 	                <label>价格:</label>
-	                <input name="modulePrice" class="easyui-textbox" required="true">
+	                <input name="modulePrice" class="easyui-textbox" value="0" >
 	            </div>
 	            <div class="fitem">
 	                <label>描述:</label>

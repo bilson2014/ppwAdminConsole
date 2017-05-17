@@ -22,12 +22,14 @@ import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.JsonUtil;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.facade.indent.entity.PmsIndent;
 import com.paipianwang.pat.facade.indent.service.PmsIndentFacade;
 import com.paipianwang.pat.facade.product.entity.PmsProduct;
 import com.paipianwang.pat.facade.product.entity.PmsService;
 import com.paipianwang.pat.facade.product.service.PmsProductFacade;
 import com.paipianwang.pat.facade.product.service.PmsServiceFacade;
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.Result;
 import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Indent;
@@ -198,6 +200,31 @@ public class IndentController extends BaseController {
 		} catch (IOException e) {
 			Log.error("indent list export error ...", sessionInfo);
 		}
+	}
+
+	@RequestMapping(value = "/indent/updateCustomerService", method = RequestMethod.POST)
+	public BaseMsg updateCustomerService(String employeeIds, Long customerService) {
+		BaseMsg baseMsg = new BaseMsg();
+		baseMsg.setCode(BaseMsg.ERROR);
+		baseMsg.setErrorMsg("更新失败！");
+		if (ValidateUtil.isValid(employeeIds)) {
+			String[] split = employeeIds.split(",");
+			if (split != null && split.length > 0) {
+				for (int i = 0; i < split.length; i++) {
+					String id = split[i];
+					if (!"".equals(id) && !"".equals(id.trim())) {
+						Long indentId = Long.valueOf(id);
+						PmsIndent pi = new PmsIndent();
+						pi.setIndentId(indentId);
+						pi.setEmployeeId(customerService);
+						pmsIndentFacade.updateCustomerService(pi);
+					}
+				}
+				baseMsg.setCode(BaseMsg.NORMAL);
+				baseMsg.setErrorMsg("更新成功！");
+			}
+		}
+		return baseMsg;
 	}
 
 }

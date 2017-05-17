@@ -104,6 +104,7 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		List<PmsEmployee> providerManager = null;
 		List<PmsEmployee> manager = null;
 
+
 		if (ValidateUtil.isValid(fields) && ValidateUtil.isValid(relevantPersons)) {
 			// 识别人员 --》构造参数
 			String key = null;

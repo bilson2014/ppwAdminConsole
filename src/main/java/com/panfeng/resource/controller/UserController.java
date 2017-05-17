@@ -34,7 +34,6 @@ import com.paipianwang.pat.facade.user.entity.PmsUser;
 import com.paipianwang.pat.facade.user.entity.ThirdBind;
 import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.view.UserView;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.DateUtils;
@@ -56,8 +55,8 @@ public class UserController extends BaseController {
 	@Autowired
 	private final PmsRightFacade pmsRightFacade = null;
 
-	@Autowired
-	private final SmsMQService smsMQService = null;
+	//@Autowired
+	//private final SmsMQService smsMQService = null;
 
 	@Autowired
 	private final PmsUserFacade pmsUserFacade = null;
@@ -120,10 +119,16 @@ public class UserController extends BaseController {
 		user.setPassword(DataUtil.md5(PublicConfig.INIT_PASSWORD));
 		user.setBirthday(DateUtils.nowDate());
 		user.setUpdateTime(DateUtils.nowTime());
-		final Map<String, Object> map = pmsUserFacade.save(user);
+		Map<String, Object> save = pmsUserFacade.save(user);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save user...", sessionInfo);
-		return Long.parseLong(String.valueOf(map.get(BaseEntity.SAVE_MAP_ID)));
+		Object object = save.get(BaseEntity.SAVE_MAP_ROWS);
+		if(object != null){
+			String rowStr = object.toString();
+			Long row = Long.valueOf(rowStr);
+			return row;
+		}
+		return 0;
 	}
 
 	/**
