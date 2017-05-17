@@ -8,54 +8,6 @@ import com.panfeng.resource.view.ProductView;
 
 public interface ProductService {
 
-	/**
-	 * 分页检索 product
-	 * @param product
-	 * @return list of product
-	 */
-	//public List<Product> listWithPagination(final ProductView view);
-	
-	/**
-	 * 保存后返回自动生成的ID
-	 * @param product
-	 * @return productId
-	 */
-	//public long save(final Product product);
-	
-	
-	/**
-	 * 删除后返回信息列表，便于删除文件
-	 * @param ids 编号数组
-	 * @return 团队列表
-	 */
-	//public List<Product> delete(final long[] ids);
-	
-	//public long update(final Product product);
-	
-	/**
-	 * 获取 product总个数
-	 * @return product的总个数
-	 */
-	//public long maxSize(final ProductView view);
-	
-	/**
-	 * 根据 ID 获取 product 信息
-	 * @param id product ID
-	 * @return product
-	 */
-	//public Product findProductById(final long productId);
-
-	/**
-	 * 保存 路径
-	 * @param product
-	 */
-	//public long saveFileUrl(Product product);
-
-	/**
-	 * 获取所有 产品
-	 */
-	//public List<Product> all();
-
 	// ---------------------  前端 展示 功能 -----------------------------
 	public List<Product> listWithCondition(final ProductView view);
 
@@ -82,32 +34,11 @@ public interface ProductService {
 	public long conditionSize(final ProductView view);
 
 	/**
-	 * 获取 已审核的作品
-	 * @param teamId 供应商ID
-	 * @return 已审核作品集合
-	 */
-	//public List<Product> loadProductByProviderId(final long teamId);
-
-	/**
-	 * 更新 视频基本信息，除了 推荐值等外
-	 */
-	//public long updateProductInfo(final Product product);
-
-	/**
 	 * 获取单个作品ID
 	 * @param teamId 供应商唯一编号
 	 * @return 作品ID
 	 */
 	public Product loadSingleProduct(final long teamId);
-
-	/**
-	 * 获取PC端主页视频
-	 * @param view 包含上界及下界
-	 * @return 视频列表
-	 */
-	//public List<Product> loadProductByCommend();
-
-	//public void updateVideoDescription(final Product product);
 
 	/**
 	 * 查询BD产品营销页面产品信息
@@ -121,24 +52,6 @@ public interface ProductService {
 	 */
 	public Map<Long,Product> getProductByRecommend();
 
-	//public Product getMasterWork(long teamId);
-
 	public List<Product> loadActivityProducts();
 
-	/**
-	 * 查询推荐的作品，分页
-	 */
-	//public List<Product> searchPageRecommendList(ProductView view);
-
-	//public long maxRecommendSize(ProductView view);
-
-	/**
-	 * 修改作品的推荐值
-	 */
-	//public boolean updateRecommend(Product product);
-
-	/**
-	 * 修改作品可见性
-	 */
-	//public boolean updateProductVisibility(Product product);
 }

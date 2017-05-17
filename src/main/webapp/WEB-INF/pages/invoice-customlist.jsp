@@ -21,13 +21,13 @@
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 		<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
-			<form id="searchForm">
+			<form id="searchForm" method="post">
 				<table>
 				<tr>
 					<th>发票类型:</th>
 					<td>
 						<select id="search-type"  name="invoiceType" editable="false" class="easyui-combobox" style="width: 120px;">
-							<option selected>-- 请选择 --</option>
+							<option selected value="">-- 请选择 --</option>
 							<option value="1" >增值税专用发票</option>
            					<option value="2" >增值税普通发票</option>
 						</select>
@@ -38,8 +38,8 @@
 					</td>
 					<th>项目名称:</th>
 					<td>
-						<select id="search-projectId"  name="invoiceProjectId" editable="false" class="easyui-combobox" style="width: 120px;">
-							
+						<select id="search-projectId"  name="invoiceProjectId" editable="true" class="easyui-combobox" style="width: 120px;">
+							<option selected value="">-- 请选择 --</option>
 						</select>
 					</td>
 					<td>

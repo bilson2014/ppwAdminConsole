@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="r" uri="/mytaglib" %>
 
+<spring:url value="/resources/lib/My97DatePicker/WdatePicker.js" var="WdatePickerJs" />
 <spring:url value="/resources/css/project-list.css" var="projectListCss"/>
 <spring:url value="/resources/js/finance-list.js" var="financeListJs"/>
 
@@ -13,6 +14,7 @@
 <head>
 	<jsp:include page="common.jsp" />
 	<link rel="stylesheet" href="${projectListCss }">
+	<script src="${WdatePickerJs }"></script>
 	<script src="${financeListJs }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
@@ -29,6 +31,11 @@
 						</select>
 					</td>
 					
+					<th>项目名称:</th>
+					<td>
+						<input id="search-projectId" name="projectName" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;"/>
+					</td>
+					
 					<th>交易方式:</th>
 					<td>
 						<select id="search-resource"  name="dealLogSource" editable="false" class="easyui-combobox" style="width: 76px;">
@@ -36,6 +43,14 @@
 							<option value="0" >线上支付</option>
             				<option value="1" >线下支付</option>
 						</select>
+					</td>
+					
+					<th>交易时间:</th>
+					<td>
+						<input name="beginTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />~
+					</td>
+					<td>
+						<input name="endTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
 					</td>
 					
 					<td>

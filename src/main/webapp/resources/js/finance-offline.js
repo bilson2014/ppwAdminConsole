@@ -98,7 +98,19 @@ $().ready(function(){
 		toolbar : '#toolbar'
 	});
 		
+	finance.initData();
 });
+
+var finance = {
+		initData : function() {
+			// 加载项目信息
+			$('#search-projectId').combobox({
+				url : getContextPath() + '/project/getAllProject',
+				valueField : 'projectName',
+				textField : 'projectName'
+			});
+		}
+}
 
 
 // 增加

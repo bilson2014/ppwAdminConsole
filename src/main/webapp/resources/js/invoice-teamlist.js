@@ -49,6 +49,8 @@ $().ready(function(){
 											return '<span style=color:red; >增值税专用发票</span>' ;
 										} else if(value == 2){
 											return '<span style=color:black; >增值税普通发票</span>' ;
+										} else if(value == 3) {
+											return '<span style=color:green; >通用机打发票</span>' ;
 										}
 									}
 								},{
@@ -79,7 +81,7 @@ $().ready(function(){
 									}
 								},{
 									field : 'invoiceTeamTime',
-									title : '提供发票日期',
+									title : '付款日期',
 									sortable : true ,
 									align : 'center',
 									formatter : function(value,row,index){

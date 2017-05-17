@@ -30,7 +30,6 @@ import com.panfeng.persist.IndentProjectMapper;
 import com.panfeng.poi.GenerateExcel;
 import com.panfeng.poi.ProjectPoiAdapter;
 import com.panfeng.resource.model.ActivitiTask;
-import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.DealLog;
 import com.panfeng.resource.model.FlowDate;
 import com.panfeng.resource.model.IndentFlow;
@@ -248,7 +247,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		return at;
 	}
 
-	@Override
+	/*@Override
 	public List<BizBean> getTags() {
 		String[] tags = new String[7];
 		tags[0] = "电话下单";
@@ -267,7 +266,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			list.add(bean);
 		}
 		return list;
-	}
+	}*/
 
 	public boolean cancelProject(IndentProject indentProject) {
 		indentProject.setState(IndentProject.PROJECT_CANCEL);

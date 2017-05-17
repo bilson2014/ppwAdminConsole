@@ -8,6 +8,8 @@ public class FinanceView extends Pagination{
 	
 	private Integer dealLogSource = null; // 交易记录来源， 0 线上支付，1线下支付
 	
+	private String projectName = null; // 项目名称
+	
 	private String beginTime = null;//搜索起始时间
 	
 	private String endTime = null;//搜索结束时间
@@ -43,6 +45,14 @@ public class FinanceView extends Pagination{
 
 	public void setDealLogSource(Integer dealLogSource) {
 		this.dealLogSource = dealLogSource;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 	
 }

@@ -214,6 +214,16 @@ $().ready(function(){
 								return '<span style=color:blue; >推荐</span>' ;
 							case 6:
 								return '<span style=color:blue; >电销</span>' ;
+							case 7:
+								return '<span style=color:blue; >新媒体</span>' ;
+							case 8:
+								return '<span style=color:blue; >线下拓展</span>' ;
+							case 9:
+								return '<span style=color:blue; >市场活动</span>' ;
+							case 10:
+								return '<span style=color:blue; >社区运营</span>' ;
+							case 11:
+								return '<span style=color:blue; >复购</span>' ;
 							}
 						},
 						editor:{

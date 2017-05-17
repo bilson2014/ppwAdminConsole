@@ -96,10 +96,10 @@ public class ProjectController extends BaseController {
 		return indentProjectService.updateIndentProject(indentProject, true);
 	}
 
-	@RequestMapping("/getProjectTags")
+	/*@RequestMapping("/getProjectTags")
 	public List<BizBean> getProjectTags() {
 		return indentProjectService.getTags();
-	}
+	}*/
 
 	/**
 	 * @param indentProject

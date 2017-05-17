@@ -165,6 +165,11 @@
 								<option value="4">活动</option>
 								<option value="5">推荐</option>
 								<option value="6">电销</option>
+								<option value="7">新媒体</option>
+								<option value="8">线下拓展</option>
+								<option value="9">市场活动</option>
+								<option value="10">社区运营</option>
+								<option value="11">复购</option>
 							</select>
 	        			</td>
 	        			<th>跟进日期</th>
@@ -199,10 +204,5 @@
 	    	
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
-	
-	
-	
-	
-	
 </body>
 </html>

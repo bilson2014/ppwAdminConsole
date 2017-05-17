@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.paipianwang.pat.common.config.PublicConfig;
 import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.entity.BaseEntity;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
@@ -119,11 +120,10 @@ public class UserController extends BaseController {
 		user.setPassword(DataUtil.md5(PublicConfig.INIT_PASSWORD));
 		user.setBirthday(DateUtils.nowDate());
 		user.setUpdateTime(DateUtils.nowTime());
-		// final long ret = userService.save(user);
-		final long ret = pmsUserFacade.save(user);
+		final Map<String, Object> map = pmsUserFacade.save(user);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save user...", sessionInfo);
-		return ret;
+		return Long.parseLong(String.valueOf(map.get(BaseEntity.SAVE_MAP_ID)));
 	}
 
 	/**

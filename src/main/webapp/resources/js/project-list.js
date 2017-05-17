@@ -1,6 +1,21 @@
 var editing ; //判断用户是否处于编辑状态 
 var flag  ;	  //判断新增和修改方法
 var datagrid;
+// 项目来源信息
+var indent_resource_array = [
+	{"name" : "推广"},
+	{"name" : "活动"},
+	{"name" : "新媒体"},
+	{"name" : "渠道"},
+	{"name" : "线下拓展"},
+	{"name" : "市场活动"},
+	{"name" : "社区运营"},
+	{"name" : "自主开发"},
+	{"name" : "电销"},
+	{"name" : "复购"},
+	{"name" : "推荐"}
+];
+
 $().ready(function(){
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -241,7 +256,7 @@ var project = {
 		});
 		
 		$('#search-source').combobox({
-			url : getContextPath() + '/project/getProjectTags',
+			data : indent_resource_array,
 			valueField : 'name',
 			textField : 'name'
 		});
@@ -491,11 +506,11 @@ function openDialog(id,data){
 			});
 			
 			$('#source').combobox({
-				url : getContextPath() + '/project/getProjectTags',
+				data : indent_resource_array,
 				valueField : 'name',
 				textField : 'name',
 				onSelect : function(record){
-					if(record.name == '个人信息下单'){
+					if(record.name == '推荐'){
 						$('#referrer-tr').show();
 					}else {
 						$('#referrer-tr').hide();
@@ -543,7 +558,7 @@ function openDialog(id,data){
 				var sourceName = data.source;
 				if(sourceName != null && sourceName != undefined && sourceName != ''){
 					$('#source').combobox('setValue',sourceName);
-					if(sourceName == '个人信息下单'){
+					if(sourceName == '推荐'){
 						// 显示推荐人
 						$('#referrer-tr').show();
 						$('#referrerId').combobox('setValue',data.referrerId);

@@ -77,6 +77,18 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'picLDUrl' ,
+						title : '封面' ,
+						align : 'center' ,
+						width : 80,
+						sortable : true ,
+						editor : {
+							type : 'validatebox' ,
+							options : {
+								required : false 
+							}
+						}
+					},{
 						field : 'tags' ,
 						title : '标签' ,
 						align : 'center' ,
@@ -172,18 +184,6 @@ $().ready(function(){
 						width : 150,
 						sortable : true ,
 					},{
-						field : 'picLDUrl' ,
-						title : '封面' ,
-						align : 'center' ,
-						width : 180,
-						sortable : true ,
-						editor : {
-							type : 'validatebox' ,
-							options : {
-								required : false 
-							}
-						}
-					},{
 						field : 'pDescription' ,
 						title : '描述' ,
 						align : 'center' ,
@@ -238,9 +238,14 @@ $().ready(function(){
 						width : 280,
 						hidden : true,
 						formatter : function(value , record , index){
-							//http://www.apaipian.com/play/16_659.html
 							return 'http://www.apaipian.com/play/'+record.teamId + '_' + record.productId+'.html';
 						}
+					},{
+						field : 'indentProjectId' ,
+						title : '项目ID' ,
+						align : 'center' ,
+						width : 280,
+						hidden : true
 					},{
 						field : 'masterWork' ,
 						title : '代表作' ,
@@ -482,16 +487,25 @@ function openDialog(data){
 				valueField : 'teamId',
 				textField : 'teamName'
 			});
+			
+			$('#indentProjectId').combobox({
+				url : getContextPath() + '/project/getAllProject',
+				valueField : 'id',
+				textField : 'projectName'
+			});
+			
 			if(data == null){
 				$('#teamId').combobox('setValue','');
 				$('#videoLength').textbox('setValue','0');
 				$('#recommend').textbox('setValue','0');
 				$('#supportCount').textbox('setValue','0');
 				$('#flag').combobox('setValue','1');
+				$('#indentProjectId').combobox('setValue','');
 			}else {
 				$('#teamId').combobox('setValue',data.teamId);
 				$('#videoUrl').val(data.videoUrl);
 				$('#picLDUrl').val(data.picLDUrl);
+				$('#indentProjectId').combobox('setValue',data.indentProjectId);
 			}
 			
 			KindEditor.remove('input[name="videoDescription"]');

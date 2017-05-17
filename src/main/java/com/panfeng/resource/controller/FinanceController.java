@@ -62,6 +62,9 @@ public class FinanceController extends BaseController{
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("logType", view.getLogType());
 		paramMap.put("dealLogSource",view.getDealLogSource());
+		paramMap.put("projectName", view.getProjectName());
+		paramMap.put("beginTime", view.getBeginTime());
+		paramMap.put("endTime", view.getEndTime());
 		final DataGrid<PmsDealLog> dataGrid = pmsFinanceFacade.listWithPagination(pageParam,paramMap);
 		return dataGrid;
 	}
@@ -81,6 +84,7 @@ public class FinanceController extends BaseController{
 	Map<String, Object> paramMap = new HashMap<>();
 	paramMap.put("dealLogSource",1);		
 	paramMap.put("logType", view.getLogType());
+	paramMap.put("projectName", view.getProjectName());
 	paramMap.put("beginTime", view.getBeginTime());
 	paramMap.put("endTime", view.getEndTime());
 	final DataGrid<PmsDealLog> dataGrid = pmsFinanceFacade.listWithPagination(pageParam,paramMap);

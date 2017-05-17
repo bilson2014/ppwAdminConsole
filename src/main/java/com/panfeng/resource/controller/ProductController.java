@@ -103,6 +103,7 @@ public class ProductController extends BaseController {
 		paramMap.put("visible", view.getVisible());
 		paramMap.put("hret", view.getHret());
 		paramMap.put("recommend", view.getRecommend());
+		paramMap.put("tags", view.getTags());
 		final DataGrid<PmsProduct> dataGrid = pmsProductFacade.listWithPagination(param,paramMap);
 		return dataGrid;
 	}
@@ -394,7 +395,6 @@ public class ProductController extends BaseController {
 	@RequestMapping("/product/static/data/loadProducts/{providerId}")
 	public List<PmsProduct> loadProductByProviderId(@PathVariable("providerId") final long teamId) {
 
-		//final List<Product> list = proService.loadProductByProviderId(teamId);
 		final List<PmsProduct> list = pmsProductFacade.loadProductByProviderId(teamId);
 		return list;
 	}
@@ -478,7 +478,6 @@ public class ProductController extends BaseController {
 	public boolean updateProductInfo(@RequestBody final PmsProduct product, HttpServletRequest request) {
 		// 解码
 		try {
-			//Product oldProduct = proService.findProductById(product.getProductId());
 			PmsProduct oldProduct = pmsProductFacade.findProductById(product.getProductId());
 			oldProduct.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
 			oldProduct.setCreationTime(product.getCreationTime());
@@ -541,17 +540,6 @@ public class ProductController extends BaseController {
 	}
 
 	/**
-	 * 更新文件路径
-	 * 
-	 * @param product
-	 * 包含 视频唯一编号、缩略图、封面、视频路径
-	 */
-	/*@RequestMapping("/product/static/data/updateFilePath")
-	public long updateFilePath(@RequestBody final Product product) {
-		return proService.saveFileUrl(product);
-	}*/
-
-	/**
 	 * 获取单个作品ID
 	 * 
 	 * @param teamId
@@ -576,7 +564,6 @@ public class ProductController extends BaseController {
 	@RequestMapping("/product/static/data/salesproduct")
 	public List<PmsProduct> salesProject(final HttpServletRequest request) {
 
-		//final List<Product> list = proService.loadSalesProduct();
 		final List<PmsProduct> list = pmsProductFacade.loadSalesProduct();
 		return list;
 	}
@@ -624,7 +611,6 @@ public class ProductController extends BaseController {
 	 */
 	@RequestMapping(value = "/product/visibility")
 	public boolean productVisibility(@RequestBody final PmsProduct product) {
-		//return proService.updateProductVisibility(product);
 		return pmsProductFacade.updateProductVisibility(product);
 	}
 }

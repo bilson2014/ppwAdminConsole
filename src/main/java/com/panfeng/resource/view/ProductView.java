@@ -40,6 +40,8 @@ public class ProductView extends Pagination{
 	
 	private String visible = null; // 0:可见,1:不可见
 	
+	private String tags = null; // 标签
+	
 	public String getVisible() {
 		return visible;
 	}
@@ -182,6 +184,14 @@ public class ProductView extends Pagination{
 
 	public void setLengthEnd(long lengthEnd) {
 		this.lengthEnd = lengthEnd;
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 	
 }

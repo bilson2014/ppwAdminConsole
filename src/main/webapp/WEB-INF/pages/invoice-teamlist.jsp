@@ -27,9 +27,10 @@
 						<th>发票类型:</th>
 						<td>
 							<select id="search-type"  name="invoiceType" editable="false" class="easyui-combobox" style="width: 120px;">
-								<option selected>-- 请选择 --</option>
+								<option selected value="">-- 请选择 --</option>
 								<option value="1" >增值税专用发票</option>
 	           					<option value="2" >增值税普通发票</option>
+	           					<option value="3" >通用机打发票</option>
 							</select>
 						</td>
 						<th>发票号:</th>
@@ -38,7 +39,7 @@
 						</td>
 						<th>项目名称:</th>
 						<td>
-							<select id="search-projectId"  name="invoiceProjectId" class="easyui-combobox" style="width: 120px;">
+							<select id="search-projectId"  name="invoiceProjectId" editable="true" class="easyui-combobox" style="width: 120px;">
 								
 							</select>
 						</td>
@@ -86,6 +87,7 @@
 	               	<select name="invoiceType" class="easyui-combobox" editable="false" required="true">
 						<option value="1" selected>增值税专用发票</option>
            				<option value="2" >增值税普通发票</option>
+           				<option value="3" >通用机打发票</option>
 					</select>
 	            </div>
 	            <div class="fitem">
@@ -109,7 +111,7 @@
 	                <input name="invoiceStampTime"  onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
 	            </div>
 	            <div class="fitem">
-	                <label>提供发票时间:</label>
+	                <label>付款日期:</label>
 	                <input name="invoiceTeamTime" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
 	            </div>
 	            <div class="fitem">

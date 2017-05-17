@@ -84,7 +84,12 @@
 							<option value="2">精品案例</option>
 							<option value="3">推荐视频</option>
 						</select>
-						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
+					</td>
+					<th>标签：</th>
+					<td>
+						<input id="search-tags" name="tags" class="easyui-textbox" placeholder="请填写标签" />
+						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
+						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 					</td>
 				</tr>
 			</table>
@@ -209,6 +214,11 @@
 							<option value="1" selected>审核通过</option>
 							<option value="2">未通过审核</option>
 						</select>
+					</div>
+					
+					<div class="lable l-width">所属项目</div>
+					<div class="d-float f-width1">
+						<input id="indentProjectId" name="indentProjectId" class="p-textbox-small" />
 					</div>
 				</div>
 				<div class="textarea-position">
