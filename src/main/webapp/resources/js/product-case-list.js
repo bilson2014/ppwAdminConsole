@@ -2,6 +2,7 @@ var formUrl;
 var chanpincache;
 var productcache;
 var configcache;
+var userCache;
 $().ready(function() {
 	initChanPinCache();
 	// 初始化DataGrid
@@ -27,12 +28,32 @@ $().ready(function() {
 			title : '案例名称',
 			width : 60,
 			align : 'center'
-		}
-		, {
+		}, {
 			field : 'pProductionCycle',
 			title : '案例周期',
 			width : 60,
 			align : 'center'
+		}, {
+			field : 'mcoms',
+			title : '案例时长',
+			width : 60,
+			align : 'center'
+		}, {
+			field : 'userId',
+			title : '关联客户',
+			width : 60,
+			align : 'center',
+			formatter : function(value,row,index){
+				if(value != undefined ){
+					var html= "";
+					for (var int = 0; int < userCache.length; int++) {
+						var user = userCache[int];
+						if(user.userId == value)
+							return user.userName;
+					}
+					return html;
+				}
+			}
 		}, {
 			field : 'pDescription',
 			title : '案例描述',
@@ -181,6 +202,18 @@ function openDialog(id, data) {
 					return row.productName.indexOf(q) >= 0;
 				}
 			});
+			
+			$('#userId').combobox({
+				data:userCache,
+				valueField : 'id',
+				textField : 'userName',
+				filter: function(q, row){
+					if(row.userName == null)
+						return false;
+					return row.userName.indexOf(q) >= 0;
+				}
+			});
+			
 			if(data != null){
 				initScene(data.pId);
 				$('#configurationId').combobox({
@@ -205,6 +238,9 @@ function initChanPinCache() {
 	syncLoadData(function(res) {
 		configcache = res;
 	}, getContextPath() + '/portal/service/productSelect', null);
+	syncLoadData(function(res) {
+		userCache = res;
+	}, getContextPath() + '/portal/user/all', null);
 }
 function initScene(id) {
 	var root = $(".sceneTag");

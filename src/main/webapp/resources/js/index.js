@@ -87,7 +87,6 @@ function loadflowdata() {
 								currentIndex = num;
 								return;
 							}
-
 							$(".drop-content a").each(function(index) {
 								$(this).css({
 									'animation-delay' : (index / 10) + 's'
@@ -96,28 +95,20 @@ function loadflowdata() {
 
 							(function() {
 								var init, isMobile, setupExamples, setupHero, _Drop;
-
 								_Drop = Drop.createContext({
 									classPrefix : 'drop'
 								});
-
 								init = function() {
 									return setupExamples();
 								};
-
 								setupExamples = function() {
-									return $('.test')
-											.each(
+									return $('.test').each(
 									function() {
 										var $example, $target, content, drop, openOn, theme;
 										$example = $(this);
-										theme = $example
-												.data('theme');
-										openOn = $example
-												.data('open-on')
-												|| 'click';
-										$target = $example
-												.find('.drop-target');
+										theme = $example.data('theme');
+										openOn = $example.data('open-on')|| 'click';
+										$target = $example.find('.drop-target');
 										$target.addClass(theme);
 										content = function() {
 											return $('.drop-content').html();

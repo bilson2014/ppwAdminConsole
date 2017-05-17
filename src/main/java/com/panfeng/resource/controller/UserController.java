@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.gson.Gson;
 import com.paipianwang.pat.common.config.PublicConfig;
 import com.paipianwang.pat.common.constant.PmsConstant;
+import com.paipianwang.pat.common.entity.BaseEntity;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
@@ -33,7 +34,6 @@ import com.paipianwang.pat.facade.user.entity.PmsUser;
 import com.paipianwang.pat.facade.user.entity.ThirdBind;
 import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.view.UserView;
 import com.panfeng.util.DataUtil;
 import com.panfeng.util.DateUtils;
@@ -55,8 +55,8 @@ public class UserController extends BaseController {
 	@Autowired
 	private final PmsRightFacade pmsRightFacade = null;
 
-	@Autowired
-	private final SmsMQService smsMQService = null;
+	//@Autowired
+	//private final SmsMQService smsMQService = null;
 
 	@Autowired
 	private final PmsUserFacade pmsUserFacade = null;
@@ -120,10 +120,16 @@ public class UserController extends BaseController {
 		user.setBirthday(DateUtils.nowDate());
 		user.setUpdateTime(DateUtils.nowTime());
 		// final long ret = userService.save(user);
-		final long ret = pmsUserFacade.save(user);
+		 Map<String, Object> save = pmsUserFacade.save(user);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save user...", sessionInfo);
-		return ret;
+		Object object = save.get(BaseEntity.SAVE_MAP_ROWS);
+		if(object != null){
+			String rowStr = object.toString();
+			Long row = Long.valueOf(rowStr);
+			return row;
+		}
+		return 0;
 	}
 
 	/**

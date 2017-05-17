@@ -83,6 +83,14 @@
 	                </select>
 	            </div>
 	            <div class="fitem">
+	                <label>客户：</label>
+	                <select id="userId" name="userId" style="width: 150px" class="easyui-combobox" required="true"></select>
+	            </div>
+	            <div class="fitem">
+	                <label>案例时长：</label>
+	                <input id="mcoms" name="mcoms" class="easyui-textbox">
+	            </div>
+	            <div class="fitem">
 	                <label>场景：</label>
 	            </div>
 	             <div class="sceneTag">

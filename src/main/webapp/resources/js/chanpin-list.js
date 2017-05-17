@@ -29,6 +29,16 @@ $().ready(function() {
 			title : '名称',
 			width : 60,
 			align : 'center'
+		}, {
+			field : 'englishName',
+			title : '名称英文名',
+			width : 60,
+			align : 'center'
+		}, {
+			field : 'englishTitle',
+			title : '英文标题',
+			width : 60,
+			align : 'center'
 		}
 		, {
 			field : 'chanpinDescription',
@@ -177,7 +187,23 @@ function showBannerImg(){
 							align : 'center',
 							formatter : function(value,row,index){
 								if(row != undefined && row != '' && row != null){
-									return '<img style="height:100px;" src="'+getDfsHostName()+row+'">';
+									return '<img style="height:100px;" src="'+getDfsHostName()+row.url+'">';
+								}
+								return '';
+							}
+						},
+						{
+							field : 'type',
+							title : 'ID',
+							width : 60,
+							align : 'center',
+							formatter : function(value,row,index){
+								if(row != undefined && row != '' && row != null){
+									if(row.type == 1){
+										return "手机端";
+									}else{
+										return "WEB端";
+									}
 								}
 								return '';
 							}
@@ -188,7 +214,7 @@ function showBannerImg(){
 							width : 60,
 							formatter : function(value,row,index){
 								if(row != undefined && row != '' && row != null){
-									return '<button data-id='+row+' onclick="deleteImg(this);">删除</button>';
+									return '<button data-id='+row.url+' onclick="deleteImg(this);">删除</button>';
 								}
 								return '';
 							}

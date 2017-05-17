@@ -1,7 +1,11 @@
 var editing ; //判断用户是否处于编辑状态 
 var flag  ;	  //判断新增和修改方法
 var datagrid;
+var EmployeeListCache;
 $().ready(function(){
+	syncLoadData(function(res){
+		EmployeeListCache = res
+	}, getContextPath() + '/portal/getEmployeeList',null);
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -60,12 +64,18 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'goto' ,
-						title : '填写需求表' ,
+						field : 'employeeId' ,
+						title : '分配客服' ,
 						align : 'center' ,
 						width : 80,
 						formatter : function(value , record , index){
-							return "<a target='_parent' href='http://localhost/std/require?indentId="+record.id+"'>去填写</a>";
+							for (var int = 0; int < EmployeeListCache.length; int++) {
+								var elc = EmployeeListCache[int];
+								if(elc.employeeId == value){
+									return elc.employeeRealName;
+								}
+							}
+							return '';
 						}
 					},{
 						field : 'indent_tele',
@@ -261,5 +271,46 @@ function saveFun(){
 			progressClose();
 			$.message('操作成功!');
 		}
+	});
+}
+function customerServiceFun(){
+	var arr = datagrid.datagrid('getSelections');
+	if(arr.length <= 0 ){
+		$.message('最少需要选择一条记录以上才能进行分配!');
+	} else {
+		var ids = '';
+		for(var i = 0 ; i < arr.length ; i++){
+			ids += arr[i].id + ',';
+		}
+		ids = ids.substring(0,ids.length-1);
+		$('#FmCustomerService').form('clear');
+		$('#dlgCustomerService').dialog({
+			modal : true,
+			onOpen : function(event, ui) {
+				$('#customerService').combobox({
+					url : getContextPath() + '/portal/getEmployeeList',
+					valueField : 'employeeId',
+					textField : 'employeeRealName'
+				});
+			}
+		}).dialog('open').dialog('center');
+		$('#employeeIds').val(ids);
+	}
+}
+
+function saveCustomerService(){
+	progressLoad();
+	var employeeIds = $('#employeeIds').val();
+	var customerService = $('#customerService').combobox('getValue');
+	$.post(getContextPath() + '/portal/indent/updateCustomerService',
+			{
+		employeeIds:employeeIds,
+		customerService:customerService
+			},function(result){
+				datagrid.datagrid('clearSelections');
+				datagrid.datagrid('reload');
+				progressClose();
+				$.message('操作成功!');
+				$('#dlgCustomerService').dialog('close');
 	});
 }

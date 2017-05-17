@@ -67,6 +67,14 @@
 	                <input id="chanpinName" name="chanpinName" class="easyui-textbox" required="true">
 	            </div>
             	<div class="fitem">
+	                <label>英文名称：</label>
+	                <input id="englishName" name="englishName" class="easyui-textbox" required="true">
+	            </div>
+            	<div class="fitem">
+	                <label>英文标题：</label>
+	                <input id="englishTitle" name="englishTitle" class="easyui-textbox" required="true">
+	            </div>
+            	<div class="fitem">
 	                <label>产品略缩图：</label>
 	                <input id="picimg" name="picimg" type="file">
 	            </div>

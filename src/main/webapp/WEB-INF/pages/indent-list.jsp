@@ -83,6 +83,11 @@
 				data-options="iconCls:'icon-search',plain:true"
 				onclick="exportFun();">报表导出</a>
 		</r:permission>
+		
+		<a href="javascript:void(0);" class="easyui-linkbutton"
+			data-options="iconCls:'icon-search',plain:true"
+			onclick="customerServiceFun();">分配客服</a>
+		
 		<a onclick="cancelFuc();" href="javascript:void(0);"
 			class="easyui-linkbutton"
 			data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
@@ -170,5 +175,24 @@
 		</r:permission>
 		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg2').dialog('close')">取消</a>
 	</div>
+	
+	
+		<!-- 分配客服相关   --- begin  -->
+		 <div id="dlgCustomerService" class="easyui-dialog" style="width:380px; height:150px;"
+            closed="true" buttons="#dlg-buttons1" title="分配客服">
+            <form id="FmCustomerService" method="post">
+            	<input type="hidden" name="employeeIds" id="employeeIds">
+	            <div class="fitem">
+            	 <label>客服:</label>
+            	 <select name="customerService" id="customerService" class="easyui-combobox" required="true" style="width: 46%;">
+                </select>
+            	</div>
+				 <div id="dlg-buttons1">
+					<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveCustomerService()" >保存</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgCustomerService').dialog('close')" >取消</a>
+				</div> 
+	        </form>
+	    </div>
+		<!-- 分配客服相关   --- end  -->
 </body>
 </html>

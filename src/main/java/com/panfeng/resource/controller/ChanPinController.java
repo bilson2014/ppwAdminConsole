@@ -20,8 +20,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.paipianwang.pat.common.entity.BaseEntity;
 import com.paipianwang.pat.common.entity.DataGrid;
+import com.paipianwang.pat.common.util.FileUtils;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
+import com.paipianwang.pat.facade.product.entity.Banner;
 import com.paipianwang.pat.facade.product.entity.Feature;
 import com.paipianwang.pat.facade.product.entity.PmsChanPin;
 import com.paipianwang.pat.facade.product.entity.PmsScene;
@@ -53,8 +55,8 @@ public class ChanPinController extends BaseController {
 	}
 
 	@RequestMapping("/chanpin/save")
-	public BaseMsg save(PmsChanPin chanPin, HttpServletRequest request,MultipartFile picimg) {
-		if(!picimg.isEmpty()){
+	public BaseMsg save(PmsChanPin chanPin, HttpServletRequest request, MultipartFile picimg) {
+		if (!picimg.isEmpty()) {
 			String uploadFile = FastDFSClient.uploadFile(picimg);
 			chanPin.setChanpinPicLDUrl(uploadFile);
 		}
@@ -78,12 +80,12 @@ public class ChanPinController extends BaseController {
 	}
 
 	@RequestMapping("/chanpin/update")
-	public BaseMsg update(PmsChanPin chanpin, HttpServletRequest request,MultipartFile picimg) {
-		if(!picimg.isEmpty()){
+	public BaseMsg update(PmsChanPin chanpin, HttpServletRequest request, MultipartFile picimg) {
+		if (!picimg.isEmpty()) {
 			PmsChanPin chanPinInfo = pmsChanPinFacade.getChanPinInfo(chanpin.getChanpinId());
 			if (chanPinInfo != null) {
 				String chanpinPicLDUrl = chanPinInfo.getChanpinPicLDUrl();
-				if(ValidateUtil.isValid(chanpinPicLDUrl)){
+				if (ValidateUtil.isValid(chanpinPicLDUrl)) {
 					FastDFSClient.deleteFile(chanpinPicLDUrl);
 				}
 			}
@@ -160,12 +162,20 @@ public class ChanPinController extends BaseController {
 	public BaseMsg uploadPicImg(MultipartFile fileList, Long chanpinId) {
 		BaseMsg baseMsg = new BaseMsg();
 		if (!fileList.isEmpty()) {
+			// 图片控件是异步批量上传的 要同步储存数据库
 			reentrantLock.lock();
 			String fId = FastDFSClient.uploadFile(fileList);
 			PmsChanPin chanPinInfo = pmsChanPinFacade.getChanPinInfo(chanpinId);
 			if (chanPinInfo != null) {
-				LinkedList<String> picImgs = chanPinInfo.bannerImgs();
-				picImgs.addLast(fId);
+				LinkedList<Banner> picImgs = chanPinInfo.bannerImgs();
+				Banner banner = new Banner();
+				if (FileUtils.isMPicture(fileList.getOriginalFilename())) {
+					banner.setType(Banner.PHONE);
+				} else {
+					banner.setType(Banner.WEB);
+				}
+				banner.setUrl(fId);
+				picImgs.addLast(banner);
 				chanPinInfo.buildBannerImgs(picImgs);
 				pmsChanPinFacade.updateBannerImgs(chanPinInfo);
 				baseMsg.setCode(BaseMsg.NORMAL);
@@ -179,10 +189,10 @@ public class ChanPinController extends BaseController {
 	}
 
 	@RequestMapping("/chanpin/bannerImgs")
-	public DataGrid<String> getPicImgs(Long chanpinId) {
+	public DataGrid<Banner> getPicImgs(Long chanpinId) {
 		PmsChanPin chanPinInfo = pmsChanPinFacade.getChanPinInfo(chanpinId);
-		LinkedList<String> picImgs = chanPinInfo.bannerImgs();
-		DataGrid<String> dd = new DataGrid<>();
+		LinkedList<Banner> picImgs = chanPinInfo.bannerImgs();
+		DataGrid<Banner> dd = new DataGrid<>();
 		if (ValidateUtil.isValid(picImgs)) {
 			dd.setRows(picImgs);
 			dd.setTotal(picImgs.size());
@@ -197,8 +207,19 @@ public class ChanPinController extends BaseController {
 		BaseMsg baseMsg = new BaseMsg();
 		PmsChanPin chanPinInfo = pmsChanPinFacade.getChanPinInfo(chanpinId);
 		if (chanPinInfo != null) {
-			LinkedList<String> picImgs = chanPinInfo.bannerImgs();
-			picImgs.remove(path);
+			LinkedList<Banner> picImgs = chanPinInfo.bannerImgs();
+			if (ValidateUtil.isValid(picImgs)) {
+				Banner b = null;
+				Iterator<Banner> iterator = picImgs.iterator();
+				while (iterator.hasNext()) {
+					Banner banner = (Banner) iterator.next();
+					if (banner.getUrl().equals(path)) {
+						b = banner;
+						break;
+					}
+				}
+				picImgs.remove(b);
+			}
 			FastDFSClient.deleteFile(path);
 			chanPinInfo.buildBannerImgs(picImgs);
 			pmsChanPinFacade.updateBannerImgs(chanPinInfo);
@@ -224,7 +245,8 @@ public class ChanPinController extends BaseController {
 		}
 		return baseMsg;
 	}
-	////////////////////////////////////////////////// 特性/////////////////////////////////////////////
+	////////////////////////////////////////////////// 特性
+	////////////////////////////////////////////////// /////////////////////////////////////////////
 
 	@RequestMapping("/chanpin/save/feature")
 	public BaseMsg saveFeature(Long chanpinId, MultipartFile fileList, Feature feature) {
@@ -237,6 +259,11 @@ public class ChanPinController extends BaseController {
 			}
 			feature.setfId(UUID.randomUUID().toString().replaceAll("-", "")); // 生成唯一ID
 			LinkedList<Feature> featureList = chanPinInfo.feature();
+			if (FileUtils.isMPicture(fileList.getOriginalFilename())) {
+				feature.setType(Feature.PHONE);
+			} else {
+				feature.setType(Feature.WEB);
+			}
 			featureList.add(feature);
 			chanPinInfo.buildFeature(featureList);
 			pmsChanPinFacade.update(chanPinInfo);
@@ -254,6 +281,11 @@ public class ChanPinController extends BaseController {
 		PmsChanPin chanPinInfo = pmsChanPinFacade.getChanPinInfo(chanpinId);
 		BaseMsg baseMsg = new BaseMsg();
 		if (feature != null) {
+			if (FileUtils.isMPicture(fileList.getOriginalFilename())) {
+				feature.setType(Feature.PHONE);
+			} else {
+				feature.setType(Feature.WEB);
+			}
 			LinkedList<Feature> featureList = chanPinInfo.feature();
 			ListIterator<Feature> iterator = featureList.listIterator();
 			while (iterator.hasNext()) {
@@ -338,5 +370,5 @@ public class ChanPinController extends BaseController {
 		}
 		return baseMsg;
 	}
-
+	
 }

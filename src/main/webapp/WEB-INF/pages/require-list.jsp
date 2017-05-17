@@ -49,112 +49,26 @@
 		</div>
 
 		<div id="toolbar" style="display: none;">
-				<a onclick="addFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">新增产品</a>
-				<a onclick="editFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">修改产品</a>
-				<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除产品</a>
+				<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除需求</a>
 				<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
-				<a onclick="showPicImg();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">设置封面</a>
-				<a onclick="showFeature();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">设置特性</a>
+				<a onclick="updatePMDialog();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">分配产品经理</a>
 		</div>
 	    
-		<div id="dlg" class="easyui-dialog" style="width:380px; height:300px;"
+		<div id="pmDlg" class="easyui-dialog" style="width:380px; height:300px;"
             closed="true" buttons="#dlg-buttons" title="产品信息">
-            <form id="fm" method="post" enctype="multipart/form-data">
-            	<input type="hidden" name="chanpinId" id="chanpinId">
-            	<input id="chanpinFeature" type="hidden" name="chanpinFeature" >
-            	<div class="fitem">
-	                <label>产品名称：</label>
-	                <input id="chanpinName" name="chanpinName" class="easyui-textbox" required="true">
-	            </div>
+            <form id="pmFm" method="post" >
+            	<input type="hidden" name="requireIds" id="requireIds">
 	            <div class="fitem">
-	                <label>场景：</label>
-	            </div>
-	             <div class="sceneTag">
-	            	
-	            </div>
-	            <div>
-	            	<label>产品描述：</label><br/>
-	                <textarea class="easyui-textbox" id="chanpinDescription" name="chanpinDescription" multiline="true" style="width:256px;height: 50px;"></textarea>
-	            </div>
+	            	 <label>产品经理:</label>
+	            	 <select name="employeeId" id="employeeId" class="easyui-combobox" required="true" style="width: 46%;">
+	                 </select>
+            	</div>
 				<div id="dlg-buttons">
-					<r:mulparampermission uri2="/portal/employee/save" uri="/portal/employee/update">
-					<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="save()" >保存</a>
-					</r:mulparampermission>
-					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="pmsave()" >保存</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#pmDlg').dialog('close')" >取消</a>
 				</div>
 	        </form>
-	    </div>
-	    
-	    <!-- 产品封面相关   ---  begin -->
-		    <div id="PicDlg" class="easyui-dialog" style="width:646px; height:560px;"
-	            closed="true"  title="产品封面信息">
-	           <div id="PicD" style="width:100%; height:100%;">
-	           		<table id="imgList" data-options="fit:true,border:false"></table>
-	           </div>
-	           <div id="PicDlgBody" style="display: none;">
-	           </div>
-		    </div>
-		    <div id="toolbar2" style="display: none;">
-					<a onclick="subImg();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">上传封面</a>
-					<a onclick="saveOd();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">保存顺序</a>
-					<a onclick="back();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
-			</div>
-		<!-- 产品封面相关   ---  end -->
-		
-		<!-- 产品特性相关   --- begin  -->
-		<div id="featureDlg" class="easyui-dialog" style="width:646px; height:560px;"
-            closed="true"  title="产品特性信息">
-			<table id="featureBody" data-options="fit:true,border:false"></table>
-			
-			 <div id="toolbar3" style="display: none;">
-					<a onclick="addFeature();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">添加特性</a>
-					<a onclick="updateFeature();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">修改特性</a>
-					<a onclick="saveFeatureOd();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'">保存顺序</a>
-					<a onclick="back();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
-			</div>
-	    </div>
-	    
-	    <div id="dlgFeatureForm" class="easyui-dialog" style="width:380px; height:300px;"
-            closed="true" buttons="#dlg-buttons1" title="产品特性信息">
-            <form id="fmFeature" method="post" enctype="multipart/form-data">
-            	<input type="hidden" name="chanpinId" id="chanpinId-Feature">
-            	<input type="hidden" name="fId" id="fId">
-            	<div class="fitem">
-	                <label>特性名称：</label>
-	                <input id="name" name="name" class="easyui-textbox" required="true">
-	            </div>
-	            <div class="fitem">
-	                <label>封面图片：</label>
-	                <input id="scenenPicLDUrlFile" type="file" name="fileList"  required="true">
-	            </div>
-	            <div>
-	            	<label>特性描述：</label><br/>
-	                <textarea class="easyui-textbox" id="description" name="description" multiline="true" style="width:256px;height: 50px;"></textarea>
-	            </div>
-				 <div id="dlg-buttons1">
-					<r:mulparampermission uri2="/portal/employee/save" uri="/portal/employee/update">
-					<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveFeature()" >保存</a>
-					</r:mulparampermission>
-					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgFeatureForm').dialog('close')" >取消</a>
-				</div> 
-	        </form>
-	    </div>
-		<!-- 产品特性相关   --- end  -->
-		
-		<!-- image/video show content begin-->
-		<div id="picture-condition" class="picture-condition hide">
-			<div class="picture-modalDialog">
-				<div style="position: absolute; z-index: 9999999;border: 1px solid #CCC;background-color: #ffffff;box-shadow: 1px 2px 4px 2px rgba(0, 0, 0, 0.3);border-radius: 3px;">
-					<div class="" >
-						<img id="productPicture" src=""  style="width: 100%!important;height: 365px!important;" class="hide" >
-						<div class="p-label">
-							<a href="#" class="button p-submit" id="p-cancel">取消</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- image/video show content end-->
+	   </div>
 		
 </body>
 </html>

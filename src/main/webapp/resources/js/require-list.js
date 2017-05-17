@@ -1,6 +1,10 @@
 var formUrl;
 var datagrid;
+var pmCache;
 $().ready(function() {
+	syncLoadData(function (res){
+		pmCache = res;
+	},  getContextPath() + '/portal/employee/findSynergy', null);
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/require/list',
@@ -14,32 +18,58 @@ $().ready(function() {
 			field : 'ck',
 			checkbox : true
 		} ] ],
-		columns : [ [ {
-			field : 'requireId',
-			title : 'ID',
-			width : 60,
-			align : 'center'
-		}, {
-			field : 'indentId',
-			title : 'indentId',
-			width : 60,
-			align : 'center'
-		}
-		, {
+		columns : [ [{
+			field : 'employeeId',
+			title : '项目经理',
+			width : 30,
+			align : 'center',
+			formatter : function(value,row,index){
+				if(value != null && value != undefined && pmCache !=null && pmCache.length >0){
+					for (var int = 0; int < pmCache.length; int++) {
+						var item = pmCache[int];
+						if(item.employeeId == value){
+							return '<span style="color:red">'+item.employeeRealName+'</span>';
+						}
+					}
+				}
+				return '';
+			}
+		},{
 			field : 'requireJson',
-			title : 'requireJson',
-			width : 60,
-			align : 'center'
+			title : '需求表',
+			width : 120,
+			align : 'center',
+			formatter : function(value,row,index){
+				if(value != null && value != undefined){
+					var json = $.evalJSON(value);
+					var jsonHtml = '';
+					jsonHtml += "适用场景："+json.scene + '  ';
+					jsonHtml += "受众："+json.audience+ '  ';
+					jsonHtml += "核心信息："+json.coreMessage+ '  ';
+					jsonHtml += "时长："+json.time+ '  ';
+					jsonHtml += "预算："+json.budget+ '  ';
+					jsonHtml += "是否有样片："+json.sample+ '  ';
+					jsonHtml += "调性："+json.tonal;
+					return jsonHtml;
+				}
+				return '';
+			}
+		},{
+			field : 'wechat',
+			title : '客户微信',
+			width : 30,
+			align : 'center',
+			hidden: true
 		}, {
-			field : 'chanpinCreateTime',
+			field : 'createTime',
 			title : '创建时间',
 			align : 'center',
-			width : 60
+			width : 30
 		}, {
-			field : 'chanpinUpdateTime',
+			field : 'updateTime',
 			title : '更新时间',
 			align : 'center',
-			width : 60
+			width : 30
 		}] ],
 		pagination : true,
 		pageSize : 50,
@@ -49,39 +79,50 @@ $().ready(function() {
 	});
 });
 
-// 打开dialog
-function openDialog(id, data) {
-	$('#' + id).dialog({
-		modal : true,
-		onOpen : function(event, ui) {
-			if(data != null){
-				initScene(data.chanpinId);
-			}else{
-				// 0设定成特殊值，为新建对象时所用
-				initScene(0); 
-			}
-		}
-	}).dialog('open').dialog('center');
-}
-
-// 增加
-function addFuc() {
-	$('#fm').form('clear');
-	openDialog('dlg', null);
-	formUrl =getContextPath()+'/portal/chanpin/save';
-}
-// 修改
-function editFuc() {
-	var rows = datagrid.datagrid('getSelections');
-	if(rows.length == 1){
-		$('#fm').form('clear');
-		$('#fm').form('load',rows[0]);
-		formUrl = getContextPath() + '/portal/chanpin/update';
-		openDialog('dlg',rows[0]);
+//打开dialog
+function updatePMDialog(id, data) {
+	var arr = datagrid.datagrid('getSelections');
+	if(arr.length <= 0 ){
+		$.message('最少需要选择一条记录以上才能进行分配!');
 	} else {
-		$.message('只能选择一条记录进行修改!');
+		var ids = '';
+		for(var i = 0 ; i < arr.length ; i++){
+			ids += arr[i].requireId + ',';
+		}
+		ids = ids.substring(0,ids.length-1);
+		$('#pmFm').form('clear');
+		$('#pmDlg').dialog({
+			modal : true,
+			onOpen : function(event, ui) {
+				$('#employeeId').combobox({
+		            url : getContextPath() + '/portal/employee/findSynergy',
+		            valueField : 'employeeId',
+		            textField : 'employeeRealName'
+		        });
+			}
+		}).dialog('open').dialog('center');
+		$('#requireIds').val(ids);
 	}
 }
+
+function pmsave(){
+	progressLoad();
+	var requireIds = $('#requireIds').val();
+	var employeeId = $('#employeeId').combobox('getValue');
+	$.post(getContextPath() + '/portal/require/updatepm'
+		,{
+		requireIds:requireIds,
+		employeeId:employeeId
+		},
+		function(result){
+				$('#pmDlg').dialog('close');
+				datagrid.datagrid('clearSelections');
+				datagrid.datagrid('reload');
+				progressClose();
+				$.message('操作成功!');
+		});
+}
+
 function delFuc(){
 	var arr = datagrid.datagrid('getSelections');
 	if(arr.length <= 0 ){
@@ -91,10 +132,10 @@ function delFuc(){
 			if(r){
 				var ids = '';
 				for(var i = 0 ; i < arr.length ; i++){
-					ids += arr[i].chanpinId + ',';
+					ids += arr[i].requireId + ',';
 				}
 				ids = ids.substring(0,ids.length-1);
-				$.post(getContextPath() + '/portal/chanpin/delete', {ids:ids},function(result){
+				$.post(getContextPath() + '/portal/require/delete', {requireIds:ids},function(result){
 					// 刷新数据
 					datagrid.datagrid('clearSelections');
 					datagrid.datagrid('reload');
@@ -105,26 +146,4 @@ function delFuc(){
 			}
 		});
 	}
-}
-
-function save(){
-	progressLoad();
-	$('#fm').form('submit',{
-		url : formUrl,
-		success : function(result) {
-			var res = $.evalJSON(result);
-			progressClose();
-			$('#dlg').dialog('close');
-			datagrid.datagrid('clearSelections');
-			datagrid.datagrid('reload');
-			var msg = res.result == 1 ||  res.result == '1' ? '操作成功':'操作失败';
-			$.message(msg);
-		}
-	});
-}
-function searchFun(){
-	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
-}
-function cleanFun(){
-	$('#searchFormactivityName').val('');
 }

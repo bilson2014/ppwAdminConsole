@@ -3,7 +3,7 @@ var formUrl;
 $().ready(function(){
 	treegrid = $('#treeGrid').treegrid({
 		url : getContextPath() + '/portal/module/list',
-		idField : 'id',
+		idField : 'productModuleId',
 		treeField : 'moduleName',
 		parentField : 'pid',
 		fit : true,
@@ -11,7 +11,7 @@ $().ready(function(){
 		border : false,
 		frozenColumns : [[{
 			title : '编号',
-			field : 'id',
+			field : 'productModuleId',
 			width : 40
 		}]],
 		columns : [ [ {
