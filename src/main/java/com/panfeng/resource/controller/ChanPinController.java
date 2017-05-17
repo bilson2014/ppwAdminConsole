@@ -245,8 +245,6 @@ public class ChanPinController extends BaseController {
 		}
 		return baseMsg;
 	}
-	////////////////////////////////////////////////// 特性
-	////////////////////////////////////////////////// /////////////////////////////////////////////
 
 	@RequestMapping("/chanpin/save/feature")
 	public BaseMsg saveFeature(Long chanpinId, MultipartFile fileList, Feature feature) {
