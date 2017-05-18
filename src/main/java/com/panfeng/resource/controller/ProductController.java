@@ -567,8 +567,6 @@ public class ProductController extends BaseController {
 	}
 
 	/**
-<<<<<<< HEAD
-=======
 	 * 更新文件路径
 	 * 
 	 * @param product
@@ -581,7 +579,6 @@ public class ProductController extends BaseController {
 	 */
 
 	/**
->>>>>>> e502e87648e570496edafb14f9af0511455f8f07
 	 * 获取单个作品ID
 	 * 
 	 * @param teamId
