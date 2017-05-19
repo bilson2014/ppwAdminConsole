@@ -1,10 +1,6 @@
 var formUrl;
-var chanpincache;
-var productcache;
-var configcache;
-var userCache;
+
 $().ready(function() {
-	initChanPinCache();
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/case/list',
@@ -39,11 +35,11 @@ $().ready(function() {
 			width : 60,
 			align : 'center'
 		}, {
-			field : 'userId',
+			field : 'userName',
 			title : '关联客户',
 			width : 60,
-			align : 'center',
-			formatter : function(value,row,index){
+			align : 'center'
+			/*formatter : function(value,row,index){
 				if(value != undefined ){
 					var html= "";
 					for (var int = 0; int < userCache.length; int++) {
@@ -53,18 +49,18 @@ $().ready(function() {
 					}
 					return html;
 				}
-			}
+			}*/
 		}, {
 			field : 'pDescription',
 			title : '案例描述',
 			align : 'center',
 			width : 60
 		}, {
-			field : 'chanpinId',
+			field : 'chanPinName',
 			title : '关联产品',
 			align : 'center',
-			width : 60,
-			formatter : function(value,row,index){
+			width : 60
+			/*formatter : function(value,row,index){
 				if(value != undefined ){
 					var chanpinId  = row.chanpinId;
 					for (var int = 0; int < chanpincache.length; int++) {
@@ -74,13 +70,13 @@ $().ready(function() {
 					}
 					return chanpinId;
 				}
-			}
+			}*/
 		}, {
-			field : 'productId',
+			field : 'prodeuctName',
 			title : '关联作品',
 			align : 'center',
-			width : 60,
-			formatter : function(value,row,index){
+			width : 60
+			/*formatter : function(value,row,index){
 				if(value != undefined ){
 					var productId  = row.productId;
 					for (var int = 0; int < productcache.length; int++) {
@@ -90,7 +86,7 @@ $().ready(function() {
 					}
 					return ""+productId;
 				}
-			}
+			}*/
 		}, {
 			field : 'pScene',
 			title : '关联场景',
@@ -180,9 +176,9 @@ function openDialog(id, data) {
 		modal : true,
 		onOpen : function(event, ui) {
 			$('#chanpinId').combobox({
+				url:getContextPath()+'/portal/chanpin/list2',
 				valueField : 'chanpinId',
 				textField : 'chanpinName',
-				data:chanpincache,
 				onSelect : function(){
 					var cId = $('#chanpinId').combobox('getValue');
 					$('#configurationId').combobox({
@@ -193,7 +189,7 @@ function openDialog(id, data) {
 				}
 			});
 			$("#productId").combobox({
-				data:productcache,
+				url:getContextPath()+'/portal/service/productSelect',
 				valueField:'productId',
 				textField:'productName',
 				filter: function(q, row){
@@ -202,9 +198,8 @@ function openDialog(id, data) {
 					return row.productName.indexOf(q) >= 0;
 				}
 			});
-			
 			$('#userId').combobox({
-				data:userCache,
+				url:getContextPath()+'/portal/user/all',
 				valueField : 'id',
 				textField : 'userName',
 				filter: function(q, row){
@@ -213,7 +208,6 @@ function openDialog(id, data) {
 					return row.userName.indexOf(q) >= 0;
 				}
 			});
-			
 			if(data != null){
 				initScene(data.pId);
 				$('#configurationId').combobox({
@@ -228,24 +222,7 @@ function openDialog(id, data) {
 		}
 	}).dialog('open').dialog('center');
 }
-function initChanPinCache() {
-	loadData(function(res) {
-		chanpincache = res.rows;
-		console.info('chanpincache',chanpincache);
-	}, getContextPath() + "/portal/chanpin/list", null);
-	loadData(function(res) {
-		productcache = res;
-		console.info('productcache',res);
-	}, getContextPath() + '/portal/service/productSelect', null);
-	loadData(function(res) {
-		configcache = res;
-		console.info('configcache',res);
-	}, getContextPath() + '/portal/service/productSelect', null);
-	loadData(function(res) {
-		userCache = res;
-		console.info('userCache',res);
-	}, getContextPath() + '/portal/user/all', null);
-}
+
 function initScene(id) {
 	var root = $(".sceneTag");
 	root.html("");
@@ -258,7 +235,7 @@ function initScene(id) {
 				if(a.checked){
 					checked = 'checked="checked"';
 				}
-				var ele = '<input type="checkbox" name="sceneTag"  '+checked+'  value="'+a.sceneName+'">' + a.sceneName;
+				var ele = '<input type="checkbox" name="sceneTag"  '+checked+'  value="'+a.sceneDescription+'">' + a.sceneName;
 				root.append(ele);
 			}
 		}

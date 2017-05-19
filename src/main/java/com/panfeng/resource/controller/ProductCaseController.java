@@ -131,7 +131,7 @@ public class ProductCaseController extends BaseController {
 				if (split != null && split.length > 0) {
 					for (int i = 0; i < split.length; i++) {
 						for (PmsScene pmsScene : allScene.getRows()) {
-							if (pmsScene.getSceneName().equals(split[i])) {
+							if (pmsScene.getSceneDescription().equals(split[i])) {
 								pmsScene.setChecked(true);
 								break;
 							}

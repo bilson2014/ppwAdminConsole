@@ -75,7 +75,7 @@
 	            </div>
             	<div class="fitem">
 	                <label>选择配置：</label>
-	                 <select id="configurationId" name="configurationId"  class="easyui-combobox" style="width: 130px" required="true"></select>
+	                 <select id="configurationId" name="configurationId"  class="easyui-combobox" style="width: 130px"></select>
 	            </div>
             	<div class="fitem">
 	                <label>关联作品：</label>
@@ -84,11 +84,11 @@
 	            </div>
 	            <div class="fitem">
 	                <label>客户：</label>
-	                <select id="userId" name="userId" style="width: 150px" class="easyui-combobox" required="true"></select>
+	                <select id="userId" name="userId" style="width: 150px" class="easyui-combobox" required="true" ></select>
 	            </div>
 	            <div class="fitem">
 	                <label>案例时长：</label>
-	                <input id="mcoms" name="mcoms" class="easyui-textbox">
+	                <input id="mcoms" name="mcoms" class="easyui-textbox" required="true" >
 	            </div>
 	            <div class="fitem">
 	                <label>场景：</label>

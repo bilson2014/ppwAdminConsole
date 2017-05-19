@@ -738,7 +738,7 @@ function initScene(id) {
 				if(a.checked){
 					checked = 'checked="checked"';
 				}
-				var ele = '<input type="checkbox" name="sceneTag"  '+checked+'  value="'+a.sceneName+'">' + a.sceneName;
+				var ele = '<input type="checkbox" name="sceneTag"  '+checked+'  value="'+a.sceneDescription+'">' + a.sceneName;
 				root.append(ele);
 			}
 		}

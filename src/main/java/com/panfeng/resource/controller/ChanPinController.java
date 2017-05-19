@@ -53,6 +53,11 @@ public class ChanPinController extends BaseController {
 		DataGrid<PmsChanPin> allScene = pmsChanPinFacade.getAllChanPin();
 		return allScene;
 	}
+	@RequestMapping("/chanpin/list2")
+	public List<PmsChanPin> sceneList2() {
+		DataGrid<PmsChanPin> allScene = pmsChanPinFacade.getAllChanPin();
+		return allScene.getRows();
+	}
 
 	@RequestMapping("/chanpin/save")
 	public BaseMsg save(PmsChanPin chanPin, HttpServletRequest request, MultipartFile picimg) {
