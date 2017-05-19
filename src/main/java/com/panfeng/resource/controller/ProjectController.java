@@ -331,6 +331,16 @@ public class ProjectController extends BaseController {
 		final List<IndentProject> list = indentProjectService.getAllProject();
 		return list;
 	}
+	
+	@RequestMapping("/getProjectWithProduct")
+	public List<IndentProject> getAllProject() {
+		final List<IndentProject> list = indentProjectService.getAllProject();
+		IndentProject project = new IndentProject();
+		project.setProjectId(-1);
+		project.setProjectName("其他");
+		list.add(project);
+		return list;
+	}
 
 	@RequestMapping(value = "/export", method = RequestMethod.POST)
 	public void export(final IndentProjectView view, final HttpServletResponse response) {

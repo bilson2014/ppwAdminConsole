@@ -489,8 +489,8 @@ function openDialog(data){
 			});
 			
 			$('#indentProjectId').combobox({
-				url : getContextPath() + '/project/getAllProject',
-				valueField : 'id',
+				url : getContextPath() + '/project/getProjectWithProduct',
+				valueField : 'projectId',
 				textField : 'projectName'
 			});
 			

@@ -697,6 +697,7 @@
 		<![CDATA[
 			SELECT 
 				i.IP_ID AS id,
+				i.IP_ID AS projectId,
 				i.IP_PROJECT_NAME AS projectName
 			FROM INDENT_PROJECT i 
 			WHERE 1 = 1

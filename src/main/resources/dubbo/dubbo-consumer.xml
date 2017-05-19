@@ -19,10 +19,10 @@
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductModuleFacade" id="pmsProductModuleFacade" check="false" timeout="5000"/>
 	
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsChanPinConfigurationFacade" id="pmsChanPinConfigurationFacade" check="false" timeout="5000" />
-	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsChanPinFacade" id="pmsChanPinFacade" check="false" timeout="5000" />
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsChanPinFacade" id="pmsChanPinFacade" check="false" timeout="15000" retries="1" />
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsSceneFacade" id="pmsSceneFacade" check="false" timeout="5000" />
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsDimensionFacade" id="pmsDimensionFacade" check="false" timeout="5000"/>
-	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductCaseFacade" id="pmsProductCaseFacade" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsProductCaseFacade" id="pmsProductCaseFacade" check="false" timeout="15000" retries="1" />
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsRequireFacade" id="pmsRequireFacade" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.facade.product.service.PmsIndentConfirmFacade" id="pmsIndentConfirmFacade" check="false" timeout="5000"/>
 	

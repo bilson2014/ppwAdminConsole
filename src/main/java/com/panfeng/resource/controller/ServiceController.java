@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.zookeeper.KeeperException.SystemErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -77,8 +78,10 @@ public class ServiceController extends BaseController{
 	@RequestMapping(value = "/service/productSelect",method = RequestMethod.POST,
 					produces = "application/json; charset=UTF-8")
 	public List<PmsProduct> select(){
-		
+		long start = System.currentTimeMillis();
 		final List<PmsProduct> list = pmsProductFacade.all();
+		long end = System.currentTimeMillis();
+		System.err.println("Dubbo取出数据共计耗时：" + (end -start));
 		return list;
 	}
 	

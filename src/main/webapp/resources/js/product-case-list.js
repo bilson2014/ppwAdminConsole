@@ -229,17 +229,21 @@ function openDialog(id, data) {
 	}).dialog('open').dialog('center');
 }
 function initChanPinCache() {
-	syncLoadData(function(res) {
+	loadData(function(res) {
 		chanpincache = res.rows;
+		console.info('chanpincache',chanpincache);
 	}, getContextPath() + "/portal/chanpin/list", null);
-	syncLoadData(function(res) {
+	loadData(function(res) {
 		productcache = res;
+		console.info('productcache',res);
 	}, getContextPath() + '/portal/service/productSelect', null);
-	syncLoadData(function(res) {
+	loadData(function(res) {
 		configcache = res;
+		console.info('configcache',res);
 	}, getContextPath() + '/portal/service/productSelect', null);
-	syncLoadData(function(res) {
+	loadData(function(res) {
 		userCache = res;
+		console.info('userCache',res);
 	}, getContextPath() + '/portal/user/all', null);
 }
 function initScene(id) {
