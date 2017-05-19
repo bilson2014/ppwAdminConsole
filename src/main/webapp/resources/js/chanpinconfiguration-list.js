@@ -233,13 +233,17 @@ function addAdditiveModule(mId,cpmId,price){
 }
 
 function addDimensionModule(dimensionId,name,value,computeType,dimensionNameId){
+	if(name == undefined){
+		name = "0";
+	}
+	
 	var module = $(".dimensionmodule");
 	if(value == undefined)
 		value = 0;
 	if(dimensionId == undefined)
 		dimensionId = '';
 	//添加模板
-	var html = createDimensionModuleView(dimensionId,value);
+	var html = createDimensionModuleView(dimensionId,value,name);
 	var newModule = $(html).appendTo(".dimensionmodule");
 	//渲染easyUI
 	$.parser.parse($(newModule));
@@ -247,7 +251,8 @@ function addDimensionModule(dimensionId,name,value,computeType,dimensionNameId){
 	$(".dimensionModuleName:eq("+box+')').combobox('select', dimensionNameId);
 	var box =  $(".computeType").length - 1;
 	$(".computeType:eq("+box+')').combobox('select', computeType);
-	$(".dimensionRowName:eq("+box+')').combobox('setText', name);
+	//$(".dimensionRowName:eq("+box+')').combobox('setText', name);
+	//$(".dimensionRowName:eq("+box+')').val(name);
 	delDimension();
 }
 
@@ -273,7 +278,7 @@ function createAdditiveModuleView(cpmId,price){
 	return $body;
 }
 
-function createDimensionModuleView(dimensionId,value){
+function createDimensionModuleView(dimensionId,value,name){
 	var dimension = ['<option value="0">时长</option>'
 	                 ].join('');
 	var computeType = [
@@ -289,9 +294,7 @@ function createDimensionModuleView(dimensionId,value){
 		           '计算模式：<select id="computeType" style="width: 40px" class="computeType easyui-combobox" required="true">',
 		           computeType,
 		           '</select>',
-		           '维度列：<select id="dimensionRowName" style="width: 80px" class=" dimensionRowName easyui-combobox" required="true">',
-		           rowNameArray(0),
-		           '</select>',
+		           '维度列：<input id="dimensionRowName" class="easyui-textbox dimensionRowName" style="width: 50px" value="'+name+'" required="true">',
 		           '维度值： <input id="dimensionRowValue" class="easyui-textbox" style="width: 50px" value="'+value+'" required="true">',
 		           '<a href="javascript:void(0);" class="easyui-linkbutton dimension-del" data-options="plain:true,iconCls:\'icon-remove\'"></a>',
 	           '</div>',
@@ -402,7 +405,7 @@ function buildDimensionParam(){
 			var view = $(rootDimensionView[int]);
 			var dimensionNameId = view.find('#dimensionModuleName').combobox('getValue');
 			var computeType = view.find('#computeType').combobox('getValue');
-			var rowName = view.find('#dimensionRowName').combobox('getValue');
+			var rowName = view.find('#dimensionRowName').val();
 			var rowValue = view.find('#dimensionRowValue').val();
 			var dimensionId = view.find('#dimensionId').val();
 			var cfId = $('#chanpinconfigurationId').val();
