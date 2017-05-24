@@ -227,4 +227,22 @@ public class IndentController extends BaseController {
 		return baseMsg;
 	}
 
+	/**
+	 * 大炮改飞机新增方法！ 项目经理管家能看见的都是已经提交了的订单 {@code PmsIndent.ORDER_DONE}
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/list/require")
+	public DataGrid<PmsIndent> getRequireList(PageParam param) {
+		IndentView view = new IndentView();
+		view.setIndentType(PmsIndent.ORDER_DONE);
+		long page = param.getPage();
+		long rows = param.getRows();
+		param.setBegin((page - 1) * rows);
+		param.setLimit(rows);
+
+		DataGrid<PmsIndent> dataGrid = pmsIndentFacade.listWithPagination(param, JsonUtil.objectToMap(view));
+
+		return dataGrid;
+	}
 }
