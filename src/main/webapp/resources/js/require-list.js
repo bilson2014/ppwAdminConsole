@@ -90,7 +90,7 @@ function updatePMDialog(id, data) {
 		$('#indentIds').val(ids);
 	}
 }
-
+// 分配项目经理
 function pmsave(){
 	progressLoad();
 	var indentIds = $('#indentIds').val();
@@ -107,29 +107,4 @@ function pmsave(){
 				progressClose();
 				$.message('操作成功!');
 		});
-}
-
-function delFuc(){
-	var arr = datagrid.datagrid('getSelections');
-	if(arr.length <= 0 ){
-		$.message('请选择进行删除操作!');
-	} else {
-		$.messager.confirm('提示信息' , '确认删除?' , function(r){
-			if(r){
-				var ids = '';
-				for(var i = 0 ; i < arr.length ; i++){
-					ids += arr[i].requireId + ',';
-				}
-				ids = ids.substring(0,ids.length-1);
-				$.post(getContextPath() + '/portal/require/delete', {requireIds:ids},function(result){
-					// 刷新数据
-					datagrid.datagrid('clearSelections');
-					datagrid.datagrid('reload');
-					$.message('操作成功!');
-				});
-			} else {
-				 return "";
-			}
-		});
-	}
 }
