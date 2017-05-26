@@ -49,15 +49,13 @@
 		</div>
 
 		<div id="toolbar" style="display: none;">
-				<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除需求</a>
 				<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 				<a onclick="updatePMDialog();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">分配产品经理</a>
 		</div>
 	    
-		<div id="pmDlg" class="easyui-dialog" style="width:380px; height:300px;"
-            closed="true" buttons="#dlg-buttons" title="产品信息">
+		<div id="pmDlg" class="easyui-dialog" style="width:380px; height:300px;" closed="true" buttons="#dlg-buttons" title="产品信息">
             <form id="pmFm" method="post" >
-            	<input type="hidden" name="requireIds" id="requireIds">
+            	<input type="hidden" name="indentIds" id="indentIds">
 	            <div class="fitem">
 	            	 <label>产品经理:</label>
 	            	 <select name="employeeId" id="employeeId" class="easyui-combobox" required="true" style="width: 46%;">

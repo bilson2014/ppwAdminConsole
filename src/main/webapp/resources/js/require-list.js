@@ -7,8 +7,8 @@ $().ready(function() {
 	},  getContextPath() + '/portal/employee/findSynergy', null);
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
-		url : getContextPath() + '/portal/require/list',
-		idField : 'requireId',
+		url : getContextPath() + '/portal/list/require',
+		idField : 'id',
 		title : '产品列表',
 		fitColumns : true,
 		striped : true,
@@ -19,58 +19,44 @@ $().ready(function() {
 			checkbox : true
 		} ] ],
 		columns : [ [{
-			field : 'employeeId',
-			title : '项目经理',
+			field : 'indentName',
+			title : '订单名称',
 			width : 30,
-			align : 'center',
-			formatter : function(value,row,index){
-				if(value != null && value != undefined && pmCache !=null && pmCache.length >0){
-					for (var int = 0; int < pmCache.length; int++) {
-						var item = pmCache[int];
-						if(item.employeeId == value){
-							return '<span style="color:red">'+item.employeeRealName+'</span>';
-						}
-					}
-				}
-				return '';
-			}
+			align : 'center'
 		},{
-			field : 'requireJson',
-			title : '需求表',
-			width : 120,
-			align : 'center',
-			formatter : function(value,row,index){
-				if(value != null && value != undefined){
-					var json = $.evalJSON(value);
-					var jsonHtml = '';
-					jsonHtml += "适用场景："+json.scene + '  ';
-					jsonHtml += "受众："+json.audience+ '  ';
-					jsonHtml += "核心信息："+json.coreMessage+ '  ';
-					jsonHtml += "时长："+json.time+ '  ';
-					jsonHtml += "预算："+json.budget+ '  ';
-					jsonHtml += "是否有样片："+json.sample+ '  ';
-					jsonHtml += "调性："+json.tonal;
-					return jsonHtml;
-				}
-				return '';
-			}
+			field : 'realName',
+			title : '用户，ing',
+			width : 30,
+			align : 'center'
 		},{
-			field : 'wechat',
-			title : '客户微信',
+			field : 'indent_tele',
+			title : '客户电话',
 			width : 30,
 			align : 'center',
 			hidden: true
 		}, {
-			field : 'createTime',
-			title : '创建时间',
+			field : 'userCompany',
+			title : '客户公司',
 			align : 'center',
 			width : 30
 		}, {
-			field : 'updateTime',
-			title : '更新时间',
+			field : 'wechat',
+			title : '客户微信',
 			align : 'center',
 			width : 30
-		}] ],
+		}, {
+			field : 'orderDate',
+			title : '下单时间',
+			align : 'center',
+			width : 30
+		}, {
+			field : 'indent_recomment',
+			title : '备注',
+			align : 'center',
+			width : 30
+		}
+		
+		] ],
 		pagination : true,
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
@@ -87,7 +73,7 @@ function updatePMDialog(id, data) {
 	} else {
 		var ids = '';
 		for(var i = 0 ; i < arr.length ; i++){
-			ids += arr[i].requireId + ',';
+			ids += arr[i].id + ',';
 		}
 		ids = ids.substring(0,ids.length-1);
 		$('#pmFm').form('clear');
@@ -101,17 +87,17 @@ function updatePMDialog(id, data) {
 		        });
 			}
 		}).dialog('open').dialog('center');
-		$('#requireIds').val(ids);
+		$('#indentIds').val(ids);
 	}
 }
-
+// 分配项目经理
 function pmsave(){
 	progressLoad();
-	var requireIds = $('#requireIds').val();
+	var indentIds = $('#indentIds').val();
 	var employeeId = $('#employeeId').combobox('getValue');
 	$.post(getContextPath() + '/portal/require/updatepm'
 		,{
-		requireIds:requireIds,
+		indentIds:indentIds,
 		employeeId:employeeId
 		},
 		function(result){
@@ -121,29 +107,4 @@ function pmsave(){
 				progressClose();
 				$.message('操作成功!');
 		});
-}
-
-function delFuc(){
-	var arr = datagrid.datagrid('getSelections');
-	if(arr.length <= 0 ){
-		$.message('请选择进行删除操作!');
-	} else {
-		$.messager.confirm('提示信息' , '确认删除?' , function(r){
-			if(r){
-				var ids = '';
-				for(var i = 0 ; i < arr.length ; i++){
-					ids += arr[i].requireId + ',';
-				}
-				ids = ids.substring(0,ids.length-1);
-				$.post(getContextPath() + '/portal/require/delete', {requireIds:ids},function(result){
-					// 刷新数据
-					datagrid.datagrid('clearSelections');
-					datagrid.datagrid('reload');
-					$.message('操作成功!');
-				});
-			} else {
-				 return "";
-			}
-		});
-	}
 }
