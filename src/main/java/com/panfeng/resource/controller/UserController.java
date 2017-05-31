@@ -55,9 +55,6 @@ public class UserController extends BaseController {
 	@Autowired
 	private final PmsRightFacade pmsRightFacade = null;
 
-	//@Autowired
-	//private final SmsMQService smsMQService = null;
-
 	@Autowired
 	private final PmsUserFacade pmsUserFacade = null;
 
