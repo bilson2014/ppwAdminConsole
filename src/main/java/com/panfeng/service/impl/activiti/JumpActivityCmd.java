@@ -8,7 +8,7 @@ import org.activiti.engine.impl.pvm.process.ProcessDefinitionImpl;
 
 /**
  * activiti 节点跳转实现
- * 
+ * activiti 是基于命令模式实现的
  * @author wang
  *
  */

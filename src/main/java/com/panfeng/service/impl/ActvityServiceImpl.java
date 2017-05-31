@@ -21,6 +21,12 @@ import com.panfeng.service.impl.job.SendMailJob;
 import com.panfeng.service.impl.job.SendSmsJob;
 import com.panfeng.util.DateUtils;
 
+/**
+ * 活动实现类
+ * 
+ * @author wang
+ *
+ */
 @Service
 public class ActvityServiceImpl implements ActivityService {
 	@Autowired
@@ -29,6 +35,9 @@ public class ActvityServiceImpl implements ActivityService {
 	@Autowired
 	private QuartzService quartzService;
 
+	/**
+	 * 获取所有活动
+	 */
 	@Override
 	public List<Activity> getAll() throws Exception {
 		List<Activity> activityList = activityMapper.findAll();
@@ -44,6 +53,9 @@ public class ActvityServiceImpl implements ActivityService {
 		return activityList;
 	}
 
+	/**
+	 * 新增活动
+	 */
 	@Override
 	public BaseMsg saveActivity(Activity activity) throws SchedulerException, ParseException {
 		paramConversionToString(activity);
@@ -127,7 +139,7 @@ public class ActvityServiceImpl implements ActivityService {
 	}
 
 	/**
-	 * must contain the "activity Id"
+	 * 构造一个任务实例
 	 * 
 	 * @param activity
 	 * @return

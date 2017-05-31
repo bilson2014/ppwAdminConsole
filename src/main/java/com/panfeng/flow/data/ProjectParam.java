@@ -25,6 +25,13 @@ import com.panfeng.service.ActivitiEngineService;
 import com.panfeng.service.IndentProjectService;
 import com.panfeng.service.SynergyService;
 
+/**
+ * 流程任务参数解析类
+ * 
+ * @author wang
+ *
+ *         现在反回来看看，只有老天才知道。这代码特么是啥意思
+ */
 @Component
 public class ProjectParam implements TemplateDateInterface<Map<String, String[]>, String> {
 
@@ -104,7 +111,6 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		List<PmsEmployee> providerManager = null;
 		List<PmsEmployee> manager = null;
 
-
 		if (ValidateUtil.isValid(fields) && ValidateUtil.isValid(relevantPersons)) {
 			// 识别人员 --》构造参数
 			String key = null;
@@ -168,6 +174,15 @@ public class ProjectParam implements TemplateDateInterface<Map<String, String[]>
 		return result;
 	}
 
+	/**
+	 * 填充参数
+	 * 
+	 * @param fields
+	 * @param manager
+	 * @param eventType
+	 * @param indentProject
+	 * @param result
+	 */
 	private void fillParam(LinkedList<String> fields, List<PmsEmployee> manager, EventType eventType,
 			IndentProject indentProject, Map<String, String[]> result) {
 		for (PmsEmployee employee : manager) {
