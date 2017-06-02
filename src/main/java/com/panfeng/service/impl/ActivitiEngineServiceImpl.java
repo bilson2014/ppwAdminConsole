@@ -62,6 +62,7 @@ public class ActivitiEngineServiceImpl implements ActivitiEngineService {
 
 	@Autowired
 	private RuntimeService runtimeService;
+
 	@Autowired
 	private TaskService taskService;
 

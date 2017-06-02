@@ -35,6 +35,9 @@ public class QuartzServiceImpl implements QuartzService {
 	private SchedulerFactoryBean schedulerFactoryBean;
 	String PARAMKEY = "paramkey";
 
+	/**
+	 * 任务动态新增或更新
+	 */
 	public void addOrUpdateJob(BaseJob baseJob) throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
 		// 唯一主键
@@ -47,11 +50,12 @@ public class QuartzServiceImpl implements QuartzService {
 			// 一个job类可以执行多种相同性质但是参数不同的任务
 			// 通过JobDetail 进行关联，一个job对应着多个JobDetail。
 			if (jobDetail == null)
-				jobDetail = JobBuilder.newJob(baseJob.getJobClass()).withIdentity(jobName + "_Job", jobGroup).requestRecovery().build();
+				jobDetail = JobBuilder.newJob(baseJob.getJobClass()).withIdentity(jobName + "_Job", jobGroup)
+						.requestRecovery().build();
 
 			cronTrigger = TriggerBuilder.newTrigger().withIdentity(jobName + "_trigger", jobGroup)
 					.withSchedule(CronScheduleBuilder.cronSchedule(baseJob.getCronExpression())).build();
-			
+
 			if (baseJob.getParam() != null)
 				jobDetail.getJobDataMap().put(PARAMKEY, baseJob.getParam().toString());
 			scheduler.scheduleJob(jobDetail, cronTrigger);
@@ -65,6 +69,9 @@ public class QuartzServiceImpl implements QuartzService {
 		}
 	}
 
+	/**
+	 * 删除定时器
+	 */
 	public void removeJob(BaseJob baseJob) throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
 		TriggerKey triggerKey = baseJob.getTriggerKey();
@@ -99,7 +106,7 @@ public class QuartzServiceImpl implements QuartzService {
 			return;
 		}
 		JobKey jobKey = trigger.getJobKey();
-		scheduler.resumeJob(jobKey);  
+		scheduler.resumeJob(jobKey);
 		scheduler.rescheduleJob(triggerKey, trigger);
 	}
 
