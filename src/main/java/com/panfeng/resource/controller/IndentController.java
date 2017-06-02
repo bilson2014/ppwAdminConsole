@@ -235,7 +235,7 @@ public class IndentController extends BaseController {
 	@RequestMapping(value = "/list/require")
 	public DataGrid<PmsIndent> getRequireList(PageParam param) {
 		IndentView view = new IndentView();
-		view.setIndentType(PmsIndent.ORDER_DONE);
+		view.setIndentType(PmsIndent.ORDER_SUBMIT);
 		long page = param.getPage();
 		long rows = param.getRows();
 		param.setBegin((page - 1) * rows);
