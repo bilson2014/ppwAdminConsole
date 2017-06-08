@@ -74,7 +74,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	@Autowired
 	final PmsEmployeeFacade pmsEmployeeFacade = null;
-	
+
 	@Autowired
 	final EmployeeService employeeService = null;
 
@@ -87,7 +87,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Autowired
 	PmsUserFacade pmsUserFacade;
 
-
 	@Autowired
 	DealLogMapper dealLogMapper;
 
@@ -97,7 +96,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	private static String SHANGWU = "商务";
 
 	@Override
-	public boolean save(IndentProject indentProject,SessionInfo sessionInfo) {
+	public boolean save(IndentProject indentProject, SessionInfo sessionInfo) {
 
 		indentProjectMapper.save(indentProject);
 		indentProject.setSerial(getProjectSerialID(indentProject.getId()));
@@ -117,7 +116,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			}
 		}
 		// 解决项目重复bug
-		boolean res = indentActivitiService.startProcess(indentProject,sessionInfo);
+		boolean res = indentActivitiService.startProcess(indentProject, sessionInfo);
 		if (!res) {
 			indentProjectMapper.deleteById(indentProject.getId());
 			for (Synergy synergy : list) {
@@ -137,9 +136,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public List<IndentProject> findProjectList(IndentProject indentProject) {
 		String userType = indentProject.getUserType();
-		// UserViewModel userViewModel = userTempService.getInfo(userType,
-		// userId);
-		// String userName = userViewModel.getOrgName();
 		List<IndentProject> list = null;
 		switch (userType) {
 		// 用户身份 -- 客户
@@ -247,27 +243,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		return at;
 	}
 
-	/*@Override
-	public List<BizBean> getTags() {
-		String[] tags = new String[7];
-		tags[0] = "电话下单";
-		tags[1] = "个人信息下单";
-		tags[2] = "网站下单";
-		tags[3] = "复购下单";
-		tags[4] = "活动下单";
-		tags[5] = "电销";
-		tags[6] = "自主开发";
-
-		final List<BizBean> list = new ArrayList<BizBean>();
-
-		for (String str : tags) {
-			final BizBean bean = new BizBean();
-			bean.setName(str);
-			list.add(bean);
-		}
-		return list;
-	}*/
-
 	public boolean cancelProject(IndentProject indentProject) {
 		indentProject.setState(IndentProject.PROJECT_CANCEL);
 		long l = indentProjectMapper.updateState(indentProject.getId(), IndentProject.PROJECT_CANCEL,
@@ -329,27 +304,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	public List<IndentProject> listWithPagination(final IndentProjectView view) {
 
-		// List<IndentProject> list =
-		// indentProjectMapper.listWithPagination(view);
-
-		// modify by wanglc 2016-6-28 19:54:21
-		// 添加协同人搜索维度,同时对数据排序,作为组负责人放在前面,协同人放在后面 begin
-		/*
-		 * List<IndentProject> returnList = new ArrayList<IndentProject>(); if
-		 * (null == view.getIsSynergy() || view.getIsSynergy() == 0) {
-		 * returnList = indentProjectMapper.listWithPaginationNoLimit(view); }
-		 * else { returnList =
-		 * indentProjectMapper.listWithPaginationNoLimit(view);
-		 * List<IndentProject> list2 =
-		 * indentProjectMapper.listWithPaginationAddSynergy(view);
-		 * returnList.addAll(list2); } List<IndentProject> list = new
-		 * ArrayList<IndentProject>(); int begin = (int) view.getBegin(); int
-		 * size = (int) view.getLimit(); int total = (begin + size) <
-		 * returnList.size() ? (begin + size) : returnList.size(); // int end =
-		 * (size > (returnList.size()-begin)?returnList.size():size) + // size;
-		 * for (int i = begin; i < total; i++) { list.add(returnList.get(i)); }
-		 * // modify by wanglc 2016-6-28 19:54:21 end
-		 */
 		List<IndentProject> list = new ArrayList<IndentProject>();
 		if (null == view.getIsSynergy() || view.getIsSynergy() == 0) {
 			list = indentProjectMapper.listWithPaginationAll(view);
@@ -717,7 +671,7 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	private boolean isSLevel(IndentProject indentProject) {
 		Long userId = indentProject.getCustomerId();
-		//User user = userService.findUserById(userId);
+		// User user = userService.findUserById(userId);
 		PmsUser user = pmsUserFacade.findUserById(userId);
 		if (user.getClientLevel() != null) {
 			int userClientLevel = user.getClientLevel();
@@ -1049,11 +1003,11 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 
 	/**
 	 * 导出excel表格
+	 * 
 	 * @param list
 	 * @param outputStream
 	 */
 	public void export2Excel(final List<IndentProject> list, final OutputStream outputStream) {
-		
-		
+
 	}
 }

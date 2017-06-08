@@ -3,7 +3,6 @@ var flag  ;	  //判断新增和修改方法
 var formUrl;
 var datagrid;
 $().ready(function(){
-	
 	var invoiceTeamList = {
 			init:function(){
 				//初始化搜索 条件
@@ -155,6 +154,19 @@ function editFuc(){
 	} else {
 		$.message('只能选择一条记录进行修改!');
 	}
+}
+
+//报表导出
+function exportFun(){
+	$('#searchForm').form('submit',{
+		url : getContextPath() + '/portal/invoice/team/export',
+		onSubmit : function() {
+			// $.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
+		},
+		success : function(result) {
+			
+		}
+	});
 }
 
 // 删除
@@ -333,7 +345,7 @@ function openDialog(id,data){
 				}
 			});
 			$('#invoiceEmployeeId').combobox({
-				url : getContextPath() + '/portal/employee/findSynergy',
+				url : getContextPath() + '/portal/employee/findProvider',
 				valueField : 'employeeId',
 				textField : 'employeeRealName',
 				filter: function(q, row){

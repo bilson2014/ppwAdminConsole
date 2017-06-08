@@ -180,6 +180,19 @@ function delFuc(){
 	}
 }
 
+//报表导出
+function exportFun(){
+	$('#searchForm').form('submit',{
+		url : getContextPath() + '/portal/invoice/user/export',
+		onSubmit : function() {
+			// $.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
+		},
+		success : function(result) {
+			
+		}
+	});
+}
+
 // 取消
 function cancelFuc(){
 	//回滚数据 
@@ -329,7 +342,7 @@ function openDialog(id,data){
 			});
 			
 			$('#invoiceEmployeeId').combobox({
-				url : getContextPath() + '/portal/employee/findSynergy',
+				url : getContextPath() + '/portal/employee/findSale',
 				valueField : 'employeeId',
 				textField : 'employeeRealName',
 				filter: function(q, row){

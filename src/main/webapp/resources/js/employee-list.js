@@ -28,20 +28,25 @@ $().ready(function(){
 						width : 80,
 						align : 'center'
 					},{
+						field : 'hireDate',
+						title : '入职日期',
+						align : 'center',
+						formatter : function(value,row,index){
+							var time = new Date(value); 
+							return time.Format("yyyy-MM-dd"); 
+						}
+					},{
 						field : 'phoneNumber' ,
 						title : '手机号码',
-						width : 120,
-						align : 'center'
+						align : 'left'
 					},{
 						field : 'email' ,
 						title : '邮箱',
-						width : 120,
-						align : 'center'
+						align : 'left'
 					},{
-						field : 'employeeDescription' ,
-						title : '人员简介',
-						width : 200,
-						align : 'center'
+						field : 'roleNameGroup' ,
+						title : '角色',
+						align : 'left'
 					},{
 						field : 'roleIds' ,
 						title : '人员列表',
@@ -60,6 +65,11 @@ $().ready(function(){
 								return '<span>测试</span>' ; 
 							} 
 						}
+					},{
+						field : 'employeeDescription' ,
+						title : '备注',
+						width : 160,
+						align : 'center'
 					}]],
 		pagination: true ,
 		pageSize : 50,
@@ -67,9 +77,19 @@ $().ready(function(){
 		showFooter : false,
 		toolbar : '#toolbar'
 	});
-		
+	employee.initData();
 });
 
+var employee = {
+	initData : function() {
+		$('#roleId').combobox({
+		    url: getContextPath() + '/portal/role/findAll',
+			valueField : 'roleId',
+			textField : 'roleName'
+		});
+	}
+		
+}
 
 // 增加
 function addFuc(){
@@ -109,14 +129,21 @@ function save(){
 		url : formUrl,
 		onSubmit : function() {
 			
+			var flag = $(this).form('validate');
 			var ps = $('input[name="employeePassword"]').val().trim();
 			if(ps != null && ps != '' && ps != undefined){
-				
 				$('input[name="employeePassword"]').val(Encrypt(ps));
 			}
 			
-			var flag = $(this).form('validate');
+			// 判断 入职日期是否为空
+			var hireDate = $('input[name="hireDate"]').val();
+			if(hireDate == null || hireDate == undefined || hireDate == ''){
+				flag = false;
+				msg="请选择入职日期!"
+			}
+			
 			if(!flag){
+				$.message(msg);
 				progressClose();
 			}
 			return flag;
@@ -141,14 +168,34 @@ function openDialog(id,data){
 			    url: getContextPath() + '/portal/role/tree',
 			    multiple: true,
 			    required: true,
-			    panelHeight : 'auto',
-			    value : data
+			    panelHeight : 200,
+			    value : data,
+			    onLoadSuccess : function() {
+			    	createRoleInfo();
+			    },
+				onCheck : function(node,checked){
+					// 改变选择后，触发功能
+					createRoleInfo();
+				}
 			});
 			
 		}
 	}).dialog('open').dialog('center');
 }
 
+function createRoleInfo() {
+	$('#roleDesc').empty();
+	var $roleDescBody = '';
+	
+	$.each($("#roleIds").combotree('getValues'), function(i,n) {
+		var node = $('#roleIds').combotree('tree').tree('find',n);
+		$roleDescBody += '<div class="fitem">';
+		$roleDescBody += '<label>'+ node.text +':</label>';
+		$roleDescBody += '<label style="width:70%;">'+ node.desc +'</label>';
+		$roleDescBody += '</div>';
+	});
+	$('#roleDesc').append($roleDescBody);
+}
 //查询
 function searchFun(){
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));

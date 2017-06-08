@@ -323,7 +323,6 @@ var product = {
 	initData : function(){
 		$('#search-teamName').combobox({
 			url : getContextPath() + '/portal/product/init',
-			//valueField : 'teamId',
 			valueField : 'teamName',
 			textField : 'teamName',
 			filter: function(q, row){

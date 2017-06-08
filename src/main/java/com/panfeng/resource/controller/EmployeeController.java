@@ -1,5 +1,6 @@
 package com.panfeng.resource.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,8 +74,6 @@ public class EmployeeController extends BaseController {
 			if (ValidateUtil.isValid(oldPwd)) {
 				try {
 					final String ops = AESSecurityUtil.Decrypt(oldPwd, PmsConstant.UNIQUE_KEY);
-					// final Employee employee =
-					// service.doLogin(info.getLoginName(), DataUtil.md5(ops));
 					final PmsEmployee employee = employeeFacade.doLogin(info.getLoginName(), DataUtil.md5(ops));
 					if (employee != null) {
 						// 验证通过
@@ -82,7 +81,6 @@ public class EmployeeController extends BaseController {
 						if (ValidateUtil.isValid(pwd)) {
 							final String nps = AESSecurityUtil.Decrypt(pwd, PmsConstant.UNIQUE_KEY);
 							employee.setEmployeePassword(DataUtil.md5(nps));
-							// service.editPasswordById(employee);
 							employeeFacade.updatePwdById(employee);
 							Log.error("update Employee password ...", info);
 							return true;
@@ -109,9 +107,8 @@ public class EmployeeController extends BaseController {
 		final long rows = param.getRows();
 		param.setBegin((page - 1) * rows);
 		param.setLimit(rows);
-
+		
 		final DataGrid<PmsEmployee> dataGrid = employeeFacade.listWithPagination(JsonUtil.objectToMap(view), param);
-
 		return dataGrid;
 	}
 
@@ -212,6 +209,32 @@ public class EmployeeController extends BaseController {
 	@RequestMapping("/employee/findSynergy")
 	public List<PmsEmployee> findEmployeeToSynergy() {
 		final List<PmsEmployee> list = employeeFacade.findEmployeeToSynergy();
+		return list;
+	}
+	
+	/**
+	 * 获取角色为供应商管家的员工
+	 * @return
+	 */
+	@RequestMapping("/employee/findProvider")
+	public List<PmsEmployee> findEmployeeToProvider() {
+		List<Long> roleId = new ArrayList<Long>();
+		// 查找角色为“供应商管家”的员工
+		roleId.add(4l);
+		final List<PmsEmployee> list = employeeFacade.findEmployeeByRoleId(roleId);
+		return list;
+	}
+	
+	/**
+	 * 获取角色为销售的员工
+	 * @return
+	 */
+	@RequestMapping("/employee/findSale")
+	public List<PmsEmployee> findEmployeeToSale() {
+		List<Long> roleId = new ArrayList<Long>();
+		// 查找角色为“销售”的员工
+		roleId.add(9l);
+		final List<PmsEmployee> list = employeeFacade.findEmployeeByRoleId(roleId);
 		return list;
 	}
 

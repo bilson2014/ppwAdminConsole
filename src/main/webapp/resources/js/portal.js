@@ -57,9 +57,9 @@ $().ready(function(){
 	});
 	
 	// 每2分钟检测 订单状态，如果有 新订单 则弹出提示
-	checkIndentStatus();
+	// checkIndentStatus();
 	//每2分钟检测 用户评级，如果有新用户未评级 则弹出提示
-	checkUsrClientLevel();
+	// checkUsrClientLevel();
 	
 });
 
