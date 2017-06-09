@@ -186,7 +186,7 @@ function initChanPinCache() {
 	}, getContextPath() + "/portal/module/list", null);
 }
 
-function addBaseModule(mId,cpmId,price){
+function addBaseModule(mId,cpmId,price,close){
 	var module = $(".basemodule");
 	if(price == undefined)
 		price = 0;
@@ -198,18 +198,22 @@ function addBaseModule(mId,cpmId,price){
 	 //渲染easyUI
 	 $.parser.parse($(newModule));
 	 var box =  $(".moduleName").length - 1;
-	 $(".moduleName:eq("+box+")").combobox({
-		 	valueField : 'productModuleId',
-			textField : 'moduleName',
+	 $(".moduleName:eq("+box+")").combotree({
+		    idField : 'productModuleId',
+		    treeField : 'moduleName',
+		    parentField:'pid',
 			data:modulecache,
 			onLoadSuccess: function () { //数据加载完毕事件
-				 $(".moduleName:eq("+box+')').combobox('select', mId);
+				if(mId != null && mId != undefined)
+				$(".moduleName:eq("+box+')').combotree('setValue', mId);
          	}
 	 });
+	 //if(close == undefined)
+		 //$(".moduleName:eq("+box+")").combotree('tree').tree("collapseAll"); 
 	 delBaseModule();
 }
 
-function addAdditiveModule(mId,cpmId,price){
+function addAdditiveModule(mId,cpmId,price,close){
 	var module = $(".additivemodule");
 	if(price == undefined)
 		price = 0;
@@ -221,14 +225,18 @@ function addAdditiveModule(mId,cpmId,price){
 	//渲染easyUI
 	$.parser.parse($(newModule));
 	var box =  $(".additiveModuleName").length - 1;
-	$(".additiveModuleName:eq("+box+")").combobox({
-		valueField : 'productModuleId',
-		textField : 'moduleName',
+	$(".additiveModuleName:eq("+box+")").combotree({
+		idField : 'productModuleId',
+	    treeField : 'moduleName',
+	    parentField:'pid',
 		data:modulecache,
 		onLoadSuccess: function () { //数据加载完毕事件
-			$(".additiveModuleName:eq("+box+')').combobox('select', mId);
+			if(mId != null && mId != undefined)
+			$(".additiveModuleName:eq("+box+')').combotree('setValue', mId);
 		}
 	});
+	//if(close == undefined)
+		//$(".additiveModuleName:eq("+box+")").combotree('tree').tree("collapseAll"); 
 	delAdditiveModule();
 }
 
@@ -251,8 +259,6 @@ function addDimensionModule(dimensionId,name,value,computeType,dimensionNameId){
 	$(".dimensionModuleName:eq("+box+')').combobox('select', dimensionNameId);
 	var box =  $(".computeType").length - 1;
 	$(".computeType:eq("+box+')').combobox('select', computeType);
-	//$(".dimensionRowName:eq("+box+')').combobox('setText', name);
-	//$(".dimensionRowName:eq("+box+')').val(name);
 	delDimension();
 }
 
@@ -260,7 +266,7 @@ function addDimensionModule(dimensionId,name,value,computeType,dimensionNameId){
 function createBaseModuleView(cpmId,price){
 	var $body=['<div class="moduleBlock">',
 	'<input type="hidden" id="cpmId" value="'+cpmId+'">',
-	'模块：<select id="moduleName" style="width: 130px" class=" moduleName easyui-combobox" required="true"></select>',
+	'模块：<select id="moduleName" style="width: 260px" class=" moduleName easyui-combotree" required="true"></select>',
 	'价格： <input id="modulePrice" class="easyui-textbox" style="width: 50px" value="'+price+'" required="true">',
 	'<a href="javascript:void(0);" class="easyui-linkbutton basemodule-del" data-options="plain:true,iconCls:\'icon-remove\'"></a>',
     '</div>',
@@ -270,7 +276,7 @@ function createBaseModuleView(cpmId,price){
 function createAdditiveModuleView(cpmId,price){
 	var $body=['<div class="moduleAdditiveBlock">',
 	           '<input type="hidden" id="additiveCpmId" value="'+cpmId+'">',
-	           '模块：<select id="additiveModuleName" style="width: 130px" class=" additiveModuleName easyui-combobox" required="true"></select>',
+	           '模块：<select id="additiveModuleName" style="width: 260px" class=" additiveModuleName easyui-combotree" required="true"></select>',
 	           '价格： <input id="additiveModulePrice" class="easyui-textbox" style="width: 50px" value="'+price+'" required="true">',
 	           '<a href="javascript:void(0);" class="easyui-linkbutton additivemodule-del" data-options="plain:true,iconCls:\'icon-remove\'"></a>',
 	           '</div>',
@@ -373,7 +379,7 @@ function buildModuleParam(){
 			var view = $(rootView[int]);
 			var cpmModulePrice = view.find('#modulePrice').val();
 			var cpmModuleType = 0;
-			var productModuleId = view.find('#moduleName').combobox('getValue');
+			var productModuleId = view.find('#moduleName').combotree('getValue');
 			var cpmId = view.find('#cpmId').val();
 			var moduleEntity_ = new  ModuleEntity_(cpmId,cpmModulePrice,cpmModuleType);
 			var moduleEntity = new ModuleEntity(productModuleId,moduleEntity_);
@@ -385,7 +391,7 @@ function buildModuleParam(){
 			var view = $(rootAdditiveView[int]);
 			var cpmModulePrice = view.find('#additiveModulePrice').val();
 			var cpmModuleType = 1;
-			var productModuleId = view.find('#additiveModuleName').combobox('getValue');
+			var productModuleId = view.find('#additiveModuleName').combotree('getValue');
 			var cpmId = view.find('#additiveCpmId').val();
 			var moduleEntity_ = new  ModuleEntity_(cpmId,cpmModulePrice,cpmModuleType);
 			var moduleEntity = new ModuleEntity(productModuleId,moduleEntity_);
@@ -451,9 +457,9 @@ function initModule(obj){
 			var x = mod[int];
 			var xx= x.pinConfiguration_ProductModule.cpmModuleType;
 			if(xx == 0){
-				addBaseModule(x.productModuleId,x.pinConfiguration_ProductModule.cpmId,x.pinConfiguration_ProductModule.cpmModulePrice);
+				addBaseModule(x.productModuleId,x.pinConfiguration_ProductModule.cpmId,x.pinConfiguration_ProductModule.cpmModulePrice,false);
 			}else{
-				addAdditiveModule(x.productModuleId,x.pinConfiguration_ProductModule.cpmId,x.pinConfiguration_ProductModule.cpmModulePrice);
+				addAdditiveModule(x.productModuleId,x.pinConfiguration_ProductModule.cpmId,x.pinConfiguration_ProductModule.cpmModulePrice,false);
 			}
 		}
 	}

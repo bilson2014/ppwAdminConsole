@@ -30,6 +30,7 @@ import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.facade.right.entity.PmsRole;
 import com.paipianwang.pat.facade.right.service.PmsRightFacade;
 import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
+import com.paipianwang.pat.facade.user.entity.Grade.Option;
 import com.paipianwang.pat.facade.user.entity.PmsUser;
 import com.paipianwang.pat.facade.user.entity.ThirdBind;
 import com.paipianwang.pat.facade.user.service.PmsUserFacade;
@@ -87,6 +88,8 @@ public class UserController extends BaseController {
 	public long update(final PmsUser user, HttpServletRequest request) {
 
 		// final long ret = userService.update(user);
+		int computeScore = pmsUserFacade.computeScore(user);
+		user.setClientLevel(computeScore);
 		final long ret = pmsUserFacade.update(user);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("user update ...", sessionInfo);
@@ -116,11 +119,13 @@ public class UserController extends BaseController {
 		user.setPassword(DataUtil.md5(PublicConfig.INIT_PASSWORD));
 		user.setBirthday(DateUtils.nowDate());
 		user.setUpdateTime(DateUtils.nowTime());
+		int computeScore = pmsUserFacade.computeScore(user);
+		user.setClientLevel(computeScore);
 		Map<String, Object> save = pmsUserFacade.save(user);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save user...", sessionInfo);
 		Object object = save.get(BaseEntity.SAVE_MAP_ROWS);
-		if(object != null){
+		if (object != null) {
 			String rowStr = object.toString();
 			Long row = Long.valueOf(rowStr);
 			return row;
@@ -174,6 +179,7 @@ public class UserController extends BaseController {
 		}
 		return false;
 	}
+
 	/**
 	 * 验证手机号是否被注册
 	 * 
@@ -525,4 +531,14 @@ public class UserController extends BaseController {
 		}
 		return new BaseMsg(0, "error");
 	}
+
+	@RequestMapping("/user/option")
+	public BaseMsg getSelectOption() {
+		Map<String, Option[]> selectOption = pmsUserFacade.getSelectOption();
+		BaseMsg baseMsg = new BaseMsg();
+		baseMsg.setCode(BaseMsg.NORMAL);
+		baseMsg.setResult(selectOption);
+		return baseMsg;
+	}
+
 }

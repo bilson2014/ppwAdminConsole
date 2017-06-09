@@ -33,6 +33,7 @@
 							<option value="0">A</option>
 							<option value="1">B</option>
 							<option value="2">C</option>
+							<option value="4">D</option>
 						</select>
 					</td>
 					<th>跟进时间:</th>
@@ -77,53 +78,33 @@
 		
 		<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 	</div>
-	
-	
-	
-		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 430px;"
+		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 500px;"
             closed="true" buttons="#dlg-buttons" title="项目信息">
 	        <form id="fm" method="post">
 	        	<input type="hidden" name='id' id="userId">
+	        	<input type="hidden" name='clientLevel' id="XclientLevelX">
 	        	<table id="table_info" style="width: 98%;">
 	        		<tr>
 	        			<th>昵称</th>
 	        			<td>
 	        				<input id="userName" name="userName" data-options="validType:'vuNickName'" class="easyui-textbox" required="true"/>
 	        			</td>
+	        			<th>客户公司</th>
+	        			<td>
+	        				<input id="userCompany" name="userCompany" class="easyui-textbox" required="required"/>
+	        			</td>
+	        		</tr>
+	        		<tr>
 	        			<th>真实姓名</th>
 	        			<td>
 	        				<input id="realName" name="realName" class="easyui-textbox" required="true"/>
 	        			</td>
-	        		</tr>
-	        		<tr>
-	        			
-	        			
-	        			<th>客户级别</th>
+	        			<th>联系电话</th>
 	        			<td>
-							<select style="width:155px" name="clientLevel"  class="easyui-combobox" required="true" editable="false">
-								<option value="-1">未分级</option>
-								<option value="0" selected>A</option>
-								<option value="1">B</option>
-								<option value="2">C</option>
-								<option value="3">S</option>
-							</select>
-	        			</td>
-	        			<th>客户意向度</th>
-	        			<td>
-							<select style="width:155px" name="preference" id='preference' class="easyui-combobox"  editable="false">
-								<option value="0" selected>A</option>
-								<option value="1">B</option>
-								<option value="2">C</option>
-								<option value="3">D</option>
-							</select>
+	        				<input id="telephone" name="telephone" class="easyui-textbox" data-options="validType:['mobile','vuPhoneNumber']"  required="required" />
 	        			</td>
 	        		</tr>
-	        		
 	        		<tr>
-	        			<th>客户公司</th>
-	        			<td>
-	        				<input id="userCompany" name="userCompany" class="easyui-textbox"/>
-	        			</td>
 	        			<th>性别</th>
 	        			<td>
 	        				<select style="width:155px" name="sex" id='sex' class="easyui-combobox" required="required" editable="false">
@@ -132,57 +113,71 @@
 								<option value="2">保密</option>
 							</select>
 	        			</td>
-	        		</tr>
-	        		
-	        		<tr>
-	        			<th>联系电话</th>
+	        			<th>是否推送</th>
 	        			<td>
-	        				<input id="telephone" name="telephone" class="easyui-textbox" data-options="validType:['mobile','vuPhoneNumber']"  required="required" />
+	        				<select style="width:155px" name="kindlySend" id='kindlySend' class="easyui-combobox" required="required">
+								<option value="1" selected>推送</option>
+								<option value="0">不推送</option>
+							</select>
+	        			</td>
+	        		</tr>
+	        		<tr id="yilei">
+	        			<th>客户类型</th>
+	        			<td>
+	        				<select style="width:155px" name="customerType" id='customerType' class="easyui-combobox" required="required" editable="false">
+							</select>
+	        			</td>
+	        			<th class="referrer" style="display: none;">推荐人</th>
+						<td class="referrer" colspan="2" style="display: none;">
+							<input id="referrerId" name="referrerId" class="easyui-combobox" style="width: 155px;"/>
+						</td>
+	        		</tr>
+	        		<tr>
+	        			<th>职位</th>
+	        			<td>
+	        				<select style="width:155px" name="position" id='position' class="easyui-combobox" required="required" editable="false">
+							</select>
+	        			</td>
+	        		</tr>
+	        		<tr></tr>
+	        		<tr>
+	        			<th>微信</th>
+	        			<td>
+	        				<input id="weChat" name="weChat" class="easyui-textbox" data-options="validType:'length[6,20]'"/>
 	        			</td>
 	        			<th>电子邮件</th>
 	        			<td>
 	        				<input id="email" name="email" class="easyui-textbox" data-options="validType:'email'"/>
 	        			</td>
 	        		</tr>
-	        		
 	        		<tr>
-	        			<th>QQ</th>
+						<th>网址</th>
 	        			<td>
-	        				<input id="qq" name="qq" class="easyui-textbox" data-options="validType:'length[6,20]'"/>
+	        				<input id="officialSite" name="officialSite" class="easyui-textbox" data-options="validType:'length[6,20]'"/>
 	        			</td>
-	        			<th>微信</th>
-	        			<td>
-	        				<input id="weChat" name="weChat" class="easyui-textbox" data-options="validType:'length[6,20]'"/>
-	        			</td>
-	        		</tr>
+					</tr>
+					<tr></tr>
 	        		<tr>
-	        			<th>客户来源</th>
+	        			<th>购买频次</th>
 	        			<td>
-	        				<select style="width:155px" name="customerSource" id='customerSource' class="easyui-combobox" required="required" editable="false">
-								<option value="1">渠道</option>
-								<option value="2">推广</option>
-								<option value="3">自主开发</option>
-								<option value="4">活动</option>
-								<option value="5">推荐</option>
-								<option value="6">电销</option>
-								<option value="7">新媒体</option>
-								<option value="8">线下拓展</option>
-								<option value="9">市场活动</option>
-								<option value="10">社区运营</option>
-								<option value="11">复购</option>
+	        				<select style="width:155px" name="purchaseFrequency" id='purchaseFrequency' class="easyui-combobox" editable="false">
 							</select>
 	        			</td>
-	        			<th>跟进日期</th>
+	        			<th>购买价格</th>
 	        			<td>
-	        				<input id="followTime" name="followTime" class="easyui-datebox" required="required"/>
+	        				<select style="width:155px" name="purchasePrice" id="purchasePrice" class="easyui-combobox" editable="false">
+							</select>
 	        			</td>
 	        		</tr>
 	        		<tr>
-	        			<th>是否推送</th>
+	        			<th>客户规模</th>
 	        			<td>
-	        				<select style="width:155px" name="kindlySend" id='kindlySend' class="easyui-combobox" required="required">
-								<option value="1">推送</option>
-								<option value="0">不推送</option>
+	        				<select style="width:155px" name="customerSize" id='customerSize' class="easyui-combobox" editable="false">
+							</select>
+	        			</td>
+	        			<th>高层背书</th>
+	        			<td>
+	        				<select style="width:155px" name="endorse" id='endorse' class="easyui-combobox" editable="false">
 							</select>
 	        			</td>
 	        		</tr>
@@ -195,13 +190,10 @@
 	        	</table>
 	        </form>
 	    </div>
-	    
 	     <div id="dlg-buttons">
-	    
 	    	<r:mulparampermission uri2="/portal/user/save" uri="/portal/user/update">
 		        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="save()" >保存</a>
 	    	</r:mulparampermission>
-	    	
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
 </body>

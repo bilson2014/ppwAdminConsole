@@ -60,44 +60,19 @@ $().ready(function(){
 								return '<span style=color:green; >C</span>' ;
 							} else if( value == 3){
 								return '<span style=color:black; >S</span>' ;
-							} else {
+							} else if( value == 4){
+								return '<span style=color:orange; >D</span>' ;
+							}else{
 								return '<span style=color:orange; >未分级</span>' ;
 							}
 						},
 						editor:{
 							type:'combobox' , 
 							options:{
-								data:[{id:'-1' , val:'未分级'},{id:3 , val:'S'},{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'}] ,
+								data:[{id:'-1' , val:'未分级'},{id:3 , val:'S'},{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'},{id:4 , val:'D'}] ,
 								valueField:'id' , 
 								textField:'val' ,
 								required:true , 
-								editable : false
-							}
-						}
-					},{
-						field : 'preference',
-						title : '客户意向度',
-						width : 80,
-						align : 'center' ,
-						sortable : true ,
-						formatter : function(value , record , index){
-							if(value == 0){
-								return '<span style=color:red; >A</span>' ;
-							} else if( value == 1){
-								return '<span style=color:blue; >B</span>' ; 
-							} else if( value == 2){
-								return '<span style=color:green; >C</span>' ;
-							} else if( value == 3){
-								return '<span style=color:black; >D</span>' ;
-							}
-						},
-						editor:{
-							type:'combobox' , 
-							options:{
-								data:[{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'},{id:3 , val:'D'}] ,
-								valueField:'id' , 
-								textField:'val' ,
-								required:false , 
 								editable : false
 							}
 						}
@@ -171,7 +146,7 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'qq',
+						field : '网站',
 						title : 'QQ',
 						width : 80,
 						align : 'center',
@@ -236,7 +211,8 @@ $().ready(function(){
 								editable : false
 							}
 						}
-					},{
+					}
+/*					,{
 						field : 'followTime',
 						title : '跟进日期',
 						width : 120,
@@ -249,7 +225,8 @@ $().ready(function(){
 									missingMessage : '请填写跟进日期!'
 								}
 						}
-					},{
+					}*/
+					,{
 						field : 'kindlySend',
 						title : '是否推送',
 						width : 80,
@@ -321,13 +298,14 @@ $().ready(function(){
 		showFooter : false,
 		toolbar : '#toolbar'
 	});
-	
+	initRating();
 });
 
 //增加
 function addFuc(){
 	$('#fm').form('clear');
 	openDialog(null);
+	$('.referrer').hide();
 	isadd = true;
 	$("#userId").val(0);
 	formUrl = getContextPath() + '/portal/user/save';
@@ -342,6 +320,11 @@ function editFuc(){
 		$('#fm').form('clear');
 		$('#fm').form('load',rows[0]);
 		openDialog('dlg',rows[0]);
+		if(rows[0].customerType == 3)
+			$('.referrer').show();
+		else
+			$('.referrer').hide();
+		
 		formUrl = getContextPath() + '/portal/user/update';
 	} else {
 		$.message('只能选择一条记录进行修改!');
@@ -465,7 +448,60 @@ function openDialog(data){
 	$('#dlg').dialog({
 		modal : true,
 		onOpen : function(event, ui) {
-			
 		},
 	}).dialog('open').dialog('center');
+	
+}
+
+function initRating(){
+	$('#referrerId').combobox({
+		url : getContextPath() + '/portal/getEmployeeList',
+		valueField : 'employeeId',
+		textField : 'employeeRealName'
+	});
+	
+	loadData(function(res){
+		$('#position').combobox({
+			data : res.result.position,
+			valueField : 'id',
+			textField : 'text'
+		});
+		$('#customerType').combobox({
+			data : res.result.customerType,
+			valueField : 'id',
+			textField : 'text',
+			onSelect : function(record){
+				if(record.text == '直客'){
+					$('.referrer').show();
+				}else{
+					$('.referrer').hide();
+				}
+			}
+		});
+		$('#purchaseFrequency').combobox({
+			data : res.result.purchaseFrequency,
+			valueField : 'id',
+			textField : 'text'
+		});
+		$('#purchasePrice').combobox({
+			data : res.result.purchasePrice,
+			valueField : 'id',
+			textField : 'text'
+		});
+		$('#customerSize').combobox({
+			data : res.result.customerSize,
+			valueField : 'id',
+			textField : 'text'
+		});
+		$('#endorse').combobox({
+			data : res.result.endorse,
+			valueField : 'id',
+			textField : 'text'
+		});
+		$('#customerSize').combobox({
+			data : res.result.customerSize,
+			valueField : 'id',
+			textField : 'text'
+		});
+	}, getContextPath() + '/portal/user/option', null);
 }

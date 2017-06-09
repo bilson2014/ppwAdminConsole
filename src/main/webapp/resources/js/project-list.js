@@ -510,7 +510,7 @@ function openDialog(id,data){
 				valueField : 'name',
 				textField : 'name',
 				onSelect : function(record){
-					if(record.name == '推荐'){
+					if(record.name == '自主开发'){
 						$('#referrer-tr').show();
 					}else {
 						$('#referrer-tr').hide();
@@ -558,7 +558,7 @@ function openDialog(id,data){
 				var sourceName = data.source;
 				if(sourceName != null && sourceName != undefined && sourceName != ''){
 					$('#source').combobox('setValue',sourceName);
-					if(sourceName == '推荐'){
+					if(sourceName == '自主开发'){
 						// 显示推荐人
 						$('#referrer-tr').show();
 						$('#referrerId').combobox('setValue',data.referrerId);

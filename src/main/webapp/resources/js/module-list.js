@@ -9,6 +9,9 @@ $().ready(function(){
 		fit : true,
 		fitColumns : false,
 		border : false,
+		onLoadSuccess: function(data){
+			treegrid.treegrid('collapseAll');
+	    },
 		frozenColumns : [[{
 			title : '编号',
 			field : 'productModuleId',
@@ -62,7 +65,6 @@ $().ready(function(){
 			}
 		}
 	});
-	
 });
 
 // 增加
