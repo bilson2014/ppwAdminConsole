@@ -53,5 +53,8 @@
 	
 	<!-- Solr服务接口 -->
 	<dubbo:reference interface="com.paipianwang.pat.facade.information.service.PmsSolrFacade" id="pmsSolrFacade" check="false" timeout="5000" />
+	
+	<!-- 新闻接口 -->
+	<dubbo:reference interface="com.paipianwang.pat.facade.information.service.PmsNewsFacade" id="pmsNewsFacade" check="false" timeout="5000" />
 </beans>
 

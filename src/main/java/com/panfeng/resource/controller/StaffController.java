@@ -65,17 +65,16 @@ public class StaffController extends BaseController {
 			@RequestParam final MultipartFile staffImage, final PmsStaff staff) {
 
 		response.setContentType("text/html;charset=UTF-8");
-
+		pmsStaffFacade.update(staff);
+		
 		final PmsStaff s = pmsStaffFacade.findStaffById(staff.getStaffId());
 		final String imagePath = s.getStaffImageUrl();
-		if (ValidateUtil.isValid(imagePath)) {
+		if (!staffImage.isEmpty()) {
 			// dfs删除文件
 			FastDFSClient.deleteFile(imagePath);
+			processFile(staffImage, staff);
 		}
-		pmsStaffFacade.update(staff);
-		SessionInfo sessionInfo = getCurrentInfo(request);
-		Log.error("update staff ...", sessionInfo);
-		processFile(staffImage, staff);
+		
 	}
 
 	@RequestMapping("/staff/delete")

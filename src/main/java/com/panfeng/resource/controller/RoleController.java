@@ -114,4 +114,17 @@ public class RoleController extends BaseController {
 		}
 		return rights;
 	}
+	
+	@RequestMapping("/role/findAll")
+	public List<PmsRole> findAllRoles() {
+		final List<PmsRole> list = pmsRoleFacade.findAllRoles();
+		final List<PmsRole> roleList = new ArrayList<PmsRole>();
+		for (PmsRole pmsRole : list) {
+			final String roleName = pmsRole.getRoleName();
+			final String roleValue = pmsRole.getRoleValue();
+			if(!"-1".equals(roleValue) && !"供应商".equals(roleName) && !"客户".equals(roleName)) 
+				roleList.add(pmsRole);
+		}
+		return roleList;
+	}
 }

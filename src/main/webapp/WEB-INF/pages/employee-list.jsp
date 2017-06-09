@@ -3,6 +3,7 @@
 <%@ taglib prefix="r" uri="/mytaglib" %>
 
 <spring:url value="/resources/css/employee-list.css" var="employeeListCss" />
+<spring:url value="/resources/lib/My97DatePicker/WdatePicker.js" var="WdatePickerJs" />
 <spring:url value="/resources/lib/cripto/aes.js" var="aesJs"/>
 <spring:url value="/resources/lib/cripto/pad-zeropadding.js" var="padJs"/>
 <spring:url value="/resources/js/employee-list.js" var="employeeListJs" />
@@ -18,6 +19,7 @@
 
 <jsp:include page="common.jsp" />
 <link rel="stylesheet" href="${employeeListCss }">
+<script src="${WdatePickerJs }"></script>
 <script src="${aesJs }"></script>
 <script src="${padJs }"></script>
 <script src="${employeeListJs }"></script>
@@ -29,7 +31,30 @@
 				<table>
 					<tr>
 						<th>姓名:</th>
-						<td><input name="employeeRealName" placeholder="请输入用户姓名"/></td>
+						<td><input name="employeeRealName" placeholder="请输入员工姓名"/></td>
+						
+						<th>手机号码:</th>
+						<td><input name="phoneNumber" placeholder="请输入手机号码"/></td>
+						
+						<th>在职状态:</th>
+						<td>
+							<select name="dimissionStatus" class="easyui-combobox" id="dimissionStatus" style="width: 100px;" editable="false" >
+								<option value="" selected>-- 请选择 --</option>
+			               		<option value="0">在职</option>
+			                	<option value="1">离职</option>
+			                	<option value="2">测试</option>
+			                </select>
+						</td>
+						
+						<th>入职时间:</th>
+						<td>
+							<input name="hireBeginDate"  onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" /> - <input name="hireEndDate" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly"  />
+						</td>
+						
+						<th>角色:</th>
+						<td>
+							<input name="roleId" id="roleId" />
+						</td>
 						
 						<td><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a></td>
 					</tr>
@@ -53,7 +78,7 @@
 			<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 		</div>
 		
-		<div id="dlg" class="easyui-dialog" style="width:360px;padding:10px 20px"
+		<div id="dlg" class="easyui-dialog" style="width:500px;padding:10px 15px"
             closed="true" buttons="#dlg-buttons" title="人员信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input name="employeeId" type="hidden">
@@ -86,9 +111,12 @@
 	                </select>
 	            </div>
 	            <div class="fitem">
+	                <label>入职时间:</label>
+	                <input name="hireDate"  id="hireDate" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
+	            </div>
+	            <div class="fitem">
 	                <label>角色:</label>
-	                <select name="roleIds" id="roleIds" style="width: 160px;">
-	                </select>
+	                <select name="roleIds" id="roleIds" style="width: 160px; height: auto;"></select>
 	            </div>
 	            <div class="fitem">
 	                <label>头像:</label>
@@ -98,6 +126,8 @@
 	                <label>描述:</label>
 	                <input class="easyui-textbox" name="employeeDescription" multiline="true" style="height: 100px;"/>
 	            </div>
+	            
+	            <div id="roleDesc"></div>
 	        </form>
 	    </div>
 	    <div id="dlg-buttons">

@@ -31,7 +31,7 @@ public class PmsRoleControllerBiz {
 				PmsTree t = new PmsTree();
 				t.setId(role.getRoleId() + "");
 				t.setText(role.getRoleName());
-
+				t.setDesc(role.getRoleDescription());
 				tree.add(t);
 			}
 		}

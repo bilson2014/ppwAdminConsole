@@ -1,14 +1,11 @@
 package com.panfeng.resource.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -73,29 +70,6 @@ public class ProductController extends BaseController {
 	@Autowired
 	private final PmsTeamFacade pmsTeamFacade = null;
 	
-
-	private static String PRODUCT_VIDEO_PATH = null; // video文件路径
-
-	private static String SOLR_URL = null;
-	private static String SOLR_EMPLOYEE_URL = null;
-	private static String SOLR_PORTAL_URL = null;
-
-	public ProductController() {
-		if (PRODUCT_VIDEO_PATH == null || "".equals(PRODUCT_VIDEO_PATH)) {
-			final InputStream is = this.getClass().getClassLoader().getResourceAsStream("jdbc.properties");
-			try {
-				Properties propertis = new Properties();
-				propertis.load(is);
-				PRODUCT_VIDEO_PATH = propertis.getProperty("upload.server.product.video");
-				SOLR_URL = propertis.getProperty("solr.url");
-				SOLR_EMPLOYEE_URL = propertis.getProperty("solr.employee.url");
-				SOLR_PORTAL_URL = propertis.getProperty("solr.portal.url");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
 	@RequestMapping(value = "/product-list")
 	public ModelAndView view(final ModelMap model) {
 		return new ModelAndView("product-list", model);

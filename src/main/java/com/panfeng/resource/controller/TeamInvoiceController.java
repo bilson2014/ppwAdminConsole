@@ -1,10 +1,17 @@
 package com.panfeng.resource.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +26,7 @@ import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.facade.finance.entity.PmsTeamInvoice;
 import com.paipianwang.pat.facade.finance.service.PmsTeamInvoiceFacade;
 import com.panfeng.resource.view.InvoiceView;
+import com.panfeng.service.TeamInvoiceService;
 import com.panfeng.util.Log;
 
 @RestController
@@ -27,7 +35,10 @@ public class TeamInvoiceController extends BaseController {
 
 	@Autowired
 	private PmsTeamInvoiceFacade pmsTeamInvoiceFacade = null;
-
+	
+	@Autowired
+	private TeamInvoiceService teamInvoiceService = null;
+	
 	@RequestMapping("/invoice-teamlist")
 	public ModelAndView teamlist(final HttpServletRequest request) {
 
@@ -91,6 +102,48 @@ public class TeamInvoiceController extends BaseController {
 	@RequestMapping("/invoice/team/auditing")
 	public long auditing(final PmsTeamInvoice invoice){
 		return pmsTeamInvoiceFacade.auditing(invoice);
+	}
+	
+	/**
+	 * 报表导出
+	 * @param view
+	 * @param pageParam
+	 */
+	@RequestMapping("/invoice/team/export")
+	public void export(final InvoiceView view, final PageParam pageParam, final HttpServletResponse response) {
+		OutputStream outputStream = null;
+		try {
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("application/octet-stream");
+			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
+			String filename = URLEncoder.encode("供应商发票管理" + dateString + ".xlsx", "UTF-8");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
+			outputStream = response.getOutputStream();
+			
+			// TODO  获取数据
+			Map<String, Object> paramMap = new HashMap<String, Object>();
+			paramMap.put("invoiceProjectId", view.getInvoiceProjectId());
+			paramMap.put("invoiceType", view.getInvoiceType());
+			paramMap.put("invoiceCode", view.getInvoiceCode());
+			
+			// 数据
+			List<PmsTeamInvoice> list = pmsTeamInvoiceFacade.findTeamInvoiceWithCondition(paramMap);
+			
+			teamInvoiceService.generateReport(list,outputStream);
+			
+			outputStream.flush();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		} finally {
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 }

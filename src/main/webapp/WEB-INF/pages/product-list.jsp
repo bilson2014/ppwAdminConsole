@@ -121,12 +121,19 @@
 			
 			<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 			
-			<a onclick="setMaster();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'">设为代表作</a>
-			<a onclick="recommendFuc()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">首页推荐</a>
+			<r:permission uri="/portal/set/masterWork">
+				<a onclick="setMaster();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'">设为代表作</a>
+			</r:permission>
+			
+			<r:permission uri="/portal/product/recommend/list">
+				<a onclick="recommendFuc()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">首页推荐</a>
+			</r:permission>
 			
 			<a onclick="toPlayHtml()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">作品链接</a>
 			
-			<a onclick="chanpinDlg()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">设置标准化</a>
+			<r:permission uri="/portal/chanpin/list">
+				<a onclick="chanpinDlg()" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">设置标准化</a>
+			</r:permission>
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 6500px;height: 500px;"
