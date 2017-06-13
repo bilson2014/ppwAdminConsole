@@ -74,6 +74,10 @@
 	                <label>英文标题：</label>
 	                <input id="englishTitle" name="englishTitle" class="easyui-textbox" required="true">
 	            </div>
+	            <div class="fitem">
+	                <label>排序：</label>
+	                <input id="chanpinOd" name="chanpinOd" class="easyui-textbox" required="true">
+	            </div>
             	<div class="fitem">
 	                <label>产品略缩图：</label>
 	                <input id="picimg" name="picimg" type="file">
