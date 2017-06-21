@@ -22,6 +22,24 @@ public class IndentView extends Pagination {
 
 	private String endTime = null;// 上传时间搜索 结束时间
 
+	/**
+	 * 订单来源
+	 */
+	private Integer indentSource;
+
+	/**
+	 * 客服ID
+	 */
+	private Long employeeId;
+
+	public Integer getIndentSource() {
+		return indentSource;
+	}
+
+	public void setIndentSource(Integer indentSource) {
+		this.indentSource = indentSource;
+	}
+
 	public String getBeginTime() {
 		return beginTime;
 	}
@@ -92,6 +110,14 @@ public class IndentView extends Pagination {
 
 	public void setSalesmanUniqueId(String salesmanUniqueId) {
 		this.salesmanUniqueId = salesmanUniqueId;
+	}
+
+	public Long getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(Long employeeId) {
+		this.employeeId = employeeId;
 	}
 
 }

@@ -67,7 +67,7 @@
 	                <textarea class="easyui-textbox" id="chanpinconfigurationDescription" name="chanpinconfigurationDescription" multiline="true" style="width:256px;height: 50px;"></textarea>
 	            </div>
 				<div id="dlg-buttons">
-					<r:mulparampermission uri2="/portal/employee/save" uri="/portal/employee/update">
+					<r:mulparampermission uri2="/portal/config/save" uri="/portal/config/update">
 					<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="save()" >保存</a>
 					</r:mulparampermission>
 					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
@@ -99,7 +99,7 @@
 	                <input id="picFile" name="picFile" type="file">
 	            </div>
 				 <div id="dlg-buttons1">
-					<r:mulparampermission uri2="/portal/employee/save" uri="/portal/employee/update">
+					<r:mulparampermission uri2="/portal/config/save" uri="/portal/config/update">
 					<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="savePic()" >保存</a>
 					</r:mulparampermission>
 					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgPicForm').dialog('close')" >取消</a>

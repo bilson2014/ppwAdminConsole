@@ -39,6 +39,25 @@
 						style="width: 76px;"
 						onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})"
 						readonly="readonly" required="true" /></td>
+					<th>订单来源:</th>
+					<td>
+						<select name="indentSource" style="width: 110px;">
+							<option value="" selected="selected">-- 请选择 --</option>
+		               	    <option value="1">线上-网站</option>
+						    <option value="2">线上-活动</option>
+						    <option value="3">线上-新媒体</option>
+						    <option value="4">线下-电销</option>
+						    <option value="5">线下-直销</option>
+						    <option value="6">线下-活动</option>
+						    <option value="7">线下-渠道</option>
+						    <option value="8">复购</option>
+		                </select>
+					</td>
+					<th>处理人员:</th>
+					<td>
+						<select name="employeeId" class="easyui-combobox" id="tIndentSource" style="width: 110px;">
+		                </select>
+					</td>	
 					<td><a href="javascript:void(0);" class="easyui-linkbutton"
 						data-options="iconCls:'icon-search',plain:true"
 						onclick="searchFun();">查询</a><a href="javascript:void(0);"
@@ -121,9 +140,7 @@
 			iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">取消</a>
 	</div>
 
-
-	<!-- ---------------------------------------------------------- -->
-
+	<!-------------------------------------------------------------->
 
 	<div id="dlg2" class="easyui-dialog"
 		style="padding: 5px 5px; width: 350px; height: 360px;" closed="true"
@@ -142,7 +159,20 @@
                 <label>订单金额:</label>
                 <input name="indentPrice" class="easyui-textbox">
 	        </div>
-	         <div class="fitem">
+	        <div class="fitem">
+            	 <label>订单来源:</label>
+            	 <select name="indentSource" class="easyui-combobox" required="true" style="width: 46%;">
+               	    <option value="1">线上-网站</option>
+				    <option value="2">线上-活动</option>
+				    <option value="3">线上-新媒体</option>
+				    <option value="4">线下-电销</option>
+				    <option value="5">线下-直销</option>
+				    <option value="6">线下-活动</option>
+				    <option value="7">线下-渠道</option>
+				    <option value="8">复购</option>
+                </select>
+            </div>
+	        <div class="fitem">
             	 <label>订单状态:</label>
             	 <select name="indentType" class="easyui-combobox" required="true" style="width: 46%;">
                 	<option value="0">新订单</option>

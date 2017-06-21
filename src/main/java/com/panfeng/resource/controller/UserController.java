@@ -80,6 +80,13 @@ public class UserController extends BaseController {
 		paramMap.put("beginTime", view.getBeginTime());
 		paramMap.put("endTime", view.getEndTime());
 		paramMap.put("telephone", view.getTelephone());
+		paramMap.put("officialSite", view.getOfficialSite());
+		paramMap.put("position", view.getPosition());
+		paramMap.put("customerType", view.getCustomerType());
+		paramMap.put("purchaseFrequency", view.getPurchaseFrequency());
+		paramMap.put("purchasePrice", view.getPurchasePrice());
+		paramMap.put("customerSize", view.getCustomerSize());
+		paramMap.put("endorse", view.getEndorse());
 		final DataGrid<PmsUser> dataGrid = pmsUserFacade.listWithPagination(pageParam, paramMap);
 		return dataGrid;
 	}

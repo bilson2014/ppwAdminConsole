@@ -573,7 +573,17 @@ function initRating(){
 				}
 			}
 		});
+		$('#tCustomerType').combobox({
+			data : res.result.customerType,
+			valueField : 'id',
+			textField : 'text'
+		});
 		$('#purchaseFrequency').combobox({
+			data : res.result.purchaseFrequency,
+			valueField : 'id',
+			textField : 'text'
+		});
+		$('#tPurchaseFrequency').combobox({
 			data : res.result.purchaseFrequency,
 			valueField : 'id',
 			textField : 'text'
@@ -583,7 +593,17 @@ function initRating(){
 			valueField : 'id',
 			textField : 'text'
 		});
+		$('#tPurchasePrice').combobox({
+			data : res.result.purchasePrice,
+			valueField : 'id',
+			textField : 'text'
+		});
 		$('#customerSize').combobox({
+			data : res.result.customerSize,
+			valueField : 'id',
+			textField : 'text'
+		});
+		$('#tCustomerSize').combobox({
 			data : res.result.customerSize,
 			valueField : 'id',
 			textField : 'text'
@@ -593,10 +613,12 @@ function initRating(){
 			valueField : 'id',
 			textField : 'text'
 		});
-		$('#customerSize').combobox({
-			data : res.result.customerSize,
+		$('#tEndorse').combobox({
+			data : res.result.endorse,
 			valueField : 'id',
 			textField : 'text'
 		});
+		$('#searchForm').form('clear');
+		$('#clientLevel').combobox('setValue',-1);
 	}, getContextPath() + '/portal/user/option', null);
 }

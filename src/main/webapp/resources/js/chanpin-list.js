@@ -23,7 +23,8 @@ $().ready(function() {
 			field : 'chanpinId',
 			title : 'ID',
 			width : 60,
-			align : 'center'
+			align : 'center',
+			hidden : true
 		}, {
 			field : 'chanpinName',
 			title : '名称',
@@ -31,7 +32,7 @@ $().ready(function() {
 			align : 'center'
 		}, {
 			field : 'englishName',
-			title : '名称英文名',
+			title : 'URL',
 			width : 60,
 			align : 'center'
 		}, {
@@ -45,7 +46,13 @@ $().ready(function() {
 			title : '描述',
 			width : 60,
 			align : 'center'
-		}, {
+		},{
+			field : 'chanpinOd',
+			title : '排序',
+			width : 60,
+			align : 'center'
+		},
+		{
 			field : 'chanpinCreateTime',
 			title : '创建时间',
 			align : 'center',
