@@ -23,7 +23,9 @@ import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.right.entity.PmsEmployee;
+import com.paipianwang.pat.facade.right.entity.PmsRole;
 import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
+import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.view.EmployeeView;
 import com.panfeng.util.AESSecurityUtil;
@@ -46,6 +48,9 @@ public class EmployeeController extends BaseController {
 
 	@Autowired
 	private final PmsEmployeeFacade employeeFacade = null;
+
+	@Autowired
+	private PmsRoleFacade pmsRoleFacade;
 
 	/**
 	 * 跳转
@@ -107,7 +112,7 @@ public class EmployeeController extends BaseController {
 		final long rows = param.getRows();
 		param.setBegin((page - 1) * rows);
 		param.setLimit(rows);
-		
+
 		final DataGrid<PmsEmployee> dataGrid = employeeFacade.listWithPagination(JsonUtil.objectToMap(view), param);
 		return dataGrid;
 	}
@@ -202,6 +207,31 @@ public class EmployeeController extends BaseController {
 	}
 
 	/**
+	 * 获取客服
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/getCustomerService")
+	public List<PmsEmployee> getCustomerService() {
+		final List<PmsEmployee> list = pmsEmployeeFacade.findEmployeeList();
+		List<PmsEmployee> rrr = new ArrayList<>();
+		if (ValidateUtil.isValid(list)) {
+			for (PmsEmployee pmsEmployee : list) {
+				List<PmsRole> roles = pmsRoleFacade.findRolesByEmployId(pmsEmployee.getEmployeeId());
+				if (ValidateUtil.isValid(roles)) {
+					for (PmsRole pmsRole : roles) {
+						if (pmsRole.getRoleName().equals("客服")) {
+							rrr.add(pmsEmployee);
+							break;
+						}
+					}
+				}
+			}
+		}
+		return rrr;
+	}
+
+	/**
 	 * 获取项目协同人 目前业务规则:协同人身份为视频管家和视频管家指导
 	 * 
 	 * @return employeeList
@@ -211,9 +241,10 @@ public class EmployeeController extends BaseController {
 		final List<PmsEmployee> list = employeeFacade.findEmployeeToSynergy();
 		return list;
 	}
-	
+
 	/**
 	 * 获取角色为供应商管家的员工
+	 * 
 	 * @return
 	 */
 	@RequestMapping("/employee/findProvider")
@@ -224,9 +255,10 @@ public class EmployeeController extends BaseController {
 		final List<PmsEmployee> list = employeeFacade.findEmployeeByRoleId(roleId);
 		return list;
 	}
-	
+
 	/**
 	 * 获取角色为销售的员工
+	 * 
 	 * @return
 	 */
 	@RequestMapping("/employee/findSale")
