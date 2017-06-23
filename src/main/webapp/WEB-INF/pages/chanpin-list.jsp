@@ -67,12 +67,16 @@
 	                <input id="chanpinName" name="chanpinName" class="easyui-textbox" required="true">
 	            </div>
             	<div class="fitem">
-	                <label>英文名称：</label>
+	                <label>URL：</label>
 	                <input id="englishName" name="englishName" class="easyui-textbox" required="true">
 	            </div>
             	<div class="fitem">
 	                <label>英文标题：</label>
 	                <input id="englishTitle" name="englishTitle" class="easyui-textbox" required="true">
+	            </div>
+	            <div class="fitem">
+	                <label>排序：</label>
+	                <input id="chanpinOd" name="chanpinOd" class="easyui-textbox" required="true">
 	            </div>
             	<div class="fitem">
 	                <label>产品略缩图：</label>
@@ -89,7 +93,7 @@
 	                <textarea class="easyui-textbox" id="chanpinDescription" name="chanpinDescription" multiline="true" style="width:256px;height: 50px;"></textarea>
 	            </div>
 				<div id="dlg-buttons">
-					<r:mulparampermission uri2="/portal/employee/save" uri="/portal/employee/update">
+					<r:mulparampermission uri2="/portal/chanpin/save" uri="/portal/chanpin/update">
 					<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="save()" >保存</a>
 					</r:mulparampermission>
 					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>

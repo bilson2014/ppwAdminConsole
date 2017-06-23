@@ -94,7 +94,7 @@
 	            </div>
 	            <div class="fitem">
 	                <label>描述:</label>
-	               <input name="description" class="easyui-textbox" required="true">
+	               <textarea class="easyui-textbox" id="description" name="description" multiline="true" required="true" style="width:256px;height: 160px;"></textarea>
 	            </div>
 	            <div class="fitem">
 	                <label>上级资源:</label>

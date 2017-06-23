@@ -18,37 +18,61 @@
 	<script src="${userListJs }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
-	<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
+	<div data-options="region:'north',border:false" style="height: 65px; overflow: hidden;background-color: #fff">
 		<form id="searchForm">
 			<table>
 				<tr>
-					<th>用户名称:</th>
-					<td><input name="userName" placeholder="请输入用户名称"/></td>
-					<th>客户分级:</th>
-					<td>
-						<select name="clientLevel" id="clientLevel" class="easyui-combobox" editable="false">
-							<option value="-1" selected>-- 请选择 --</option>
-							<option value="">未分级</option>
-							<option value="3">S</option>
-							<option value="0">A</option>
-							<option value="1">B</option>
-							<option value="2">C</option>
-							<option value="4">D</option>
+					<th>真实姓名:</th>
+					<td><input name="realName" placeholder="请输入真实姓名"/></td>
+					<th>公司名称:</th>
+					<td><input name="userCompany" placeholder="请输入公司名称"/></td>
+					<th>电话:</th>
+					<td><input name="telephone" placeholder="请输入电话"/></td>
+					<th>网站:</th>
+					<td><input name="officialSite" placeholder="请输入网站"/></td>
+				</tr>
+				<tr>
+					<th>客户类型</th>
+        			<td>
+        				<select style="width:155px" name="customerType" id='tCustomerType' class="easyui-combobox" editable="false">
 						</select>
-					</td>
-					<th>跟进时间:</th>
+        			</td>
+					<th>客户分级：</th>
 					<td>
-						<input name="beginTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />~
+						<select style="width:155px" name="clientLevel" id="clientLevel" class="easyui-combobox" editable="false">
+					        <option value="-1" selected>-- 请选择 --</option>
+					        <option value="">未分级</option>
+					        <option value="3">S</option>
+					        <option value="0">A</option>
+					        <option value="1">B</option>
+					        <option value="2">C</option>
+					        <option value="4">D</option>
+					    </select>
 					</td>
-					<td>
-						<input name="endTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
-					</td>
-					<th>联系电话:</th>
-					<td>
-						<input name="telephone"   placeholder="请输入联系电话"/>
-					</td>
-					<td>
-						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
+					<th>购买频次</th>
+        			<td>
+        				<select style="width:155px" name="purchaseFrequency" id='tPurchaseFrequency' class="easyui-combobox" editable="false">
+						</select>
+        			</td>
+        			<th>购买价格</th>
+        			<td>
+        				<select style="width:155px" name="purchasePrice" id="tPurchasePrice" class="easyui-combobox" editable="false">
+						</select>
+        			</td>
+        			<th>客户规模</th>
+        			<td>
+        				<select style="width:155px" name="customerSize" id='tCustomerSize' class="easyui-combobox" editable="false">
+						</select>
+        			</td>
+        			<th>高层背书</th>
+        			<td>
+        				<select style="width:155px" name="endorse" id='tEndorse' class="easyui-combobox" editable="false">
+						</select>
+        			</td>
+        			
+        			<td>
+					    <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
+					    <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 					</td>
 				</tr>
 			</table>

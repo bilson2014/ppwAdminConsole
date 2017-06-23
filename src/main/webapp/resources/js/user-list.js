@@ -170,7 +170,7 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'customerSource' ,
+						field : 'customerType' ,
 						title : '客户来源' ,
 						align : 'center' ,
 						width : 60,
@@ -182,7 +182,7 @@ $().ready(function(){
 							case 2:
 								return '<span style=color:blue; >推广</span>' ;
 							case 3:
-								return '<span style=color:blue; >自主开发</span>' ;
+								return '<span style=color:blue; >直客</span>' ;
 							case 4:
 								return '<span style=color:blue; >活动</span>' ;
 							case 5:
@@ -199,6 +199,10 @@ $().ready(function(){
 								return '<span style=color:blue; >社区运营</span>' ;
 							case 11:
 								return '<span style=color:blue; >复购</span>' ;
+							case 12:
+								return '<span style=color:blue; >4A有策划</span>' ;
+							case 13:
+								return '<span style=color:blue; >4A无策划</span>' ;
 							}
 						},
 						editor:{
@@ -274,6 +278,102 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'imgUrl' ,
+						title : '用户头像地址',
+						width : 110,
+						align : 'center' ,
+						hidden : true
+					},{
+						field : 'officialSite' ,
+						title : '网址',
+						width : 110,
+						align : 'center' ,
+					},{
+						field : 'position' ,
+						title : '职位',
+						width : 110,
+						align : 'center' ,
+						formatter : function(value , record , index){
+							switch (value) {
+							case 0:
+								return '<span style=color:blue; >创始团队：决策人</span>' ;
+							case 1:
+								return '<span style=color:blue; >高层：影响决策人</span>' ;
+							case 2:
+								return '<span style=color:blue; >中层：执行层/建议权</span>' ;
+							case 3:
+								return '<span style=color:blue; >基层：获取合作信息</span>' ;
+							case 4:
+								return '<span style=color:blue; >其他：非关联部门</span>' ;
+							}
+						}
+					},{
+						field : 'purchaseFrequency' ,
+						title : '购买频次',
+						width : 110,
+						align : 'center' ,
+						formatter : function(value , record , index){
+							switch (value) {
+							case 0:
+								return '<span style=color:blue; >周复购</span>' ;
+							case 1:
+								return '<span style=color:blue; >月度复购</span>' ;
+							case 2:
+								return '<span style=color:blue; >季度复购</span>' ;
+							case 3:
+								return '<span style=color:blue; >年度复购</span>' ;
+							}
+						}
+					},{
+						field : 'purchasePrice' ,
+						title : '购买价格',
+						width : 110,
+						align : 'center' ,
+						formatter : function(value , record , index){
+							switch (value) {
+							case 0:
+								return '<span style=color:blue; >均价采买价格10万以上</span>' ;
+							case 1:
+								return '<span style=color:blue; >均价采买价格5-10万</span>' ;
+							case 2:
+								return '<span style=color:blue; >均价采买价格3-5万</span>' ;
+							case 3:
+								return '<span style=color:blue; >均价采买价格1-3万</span>' ;
+							case 4:
+								return '<span style=color:blue; >均价采买价格1万内</span>' ;
+							}
+						}
+					},{
+						field : 'customerSize' ,
+						title : '客户规模',
+						width : 110,
+						align : 'center' ,
+						formatter : function(value , record , index){
+							switch (value) {
+							case 0:
+								return '<span style=color:blue; >上市公司及同等规模</span>' ;
+							case 1:
+								return '<span style=color:blue; >b轮以上及同等规模</span>' ;
+							case 2:
+								return '<span style=color:blue; >天使轮以上及同等规模</span>' ;
+							case 3:
+								return '<span style=color:blue; >小微企业／个体</span>' ;
+							}
+						}
+					},{
+						field : 'endorse' ,
+						title : '高层背书',
+						width : 110,
+						align : 'center' ,
+						formatter : function(value , record , index){
+							switch (value) {
+							case 0:
+								return '<span style=color:blue; >有高层背书</span>' ;
+							case 1:
+								return '<span style=color:blue; >无高层背书</span>' ;
+							}
+						}
+					},{
 						field : 'note',
 						title : '备注信息',
 						width : 120,
@@ -285,13 +385,8 @@ $().ready(function(){
 								missingMessage : '请填写备注信息!'
 							}
 						}
-					},{
-						field : 'imgUrl' ,
-						title : '用户头像地址',
-						width : 110,
-						align : 'center' ,
-						hidden : true
-					}]],
+					}
+					]],
 		pagination: true ,
 		pageSize : 20,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
@@ -478,7 +573,17 @@ function initRating(){
 				}
 			}
 		});
+		$('#tCustomerType').combobox({
+			data : res.result.customerType,
+			valueField : 'id',
+			textField : 'text'
+		});
 		$('#purchaseFrequency').combobox({
+			data : res.result.purchaseFrequency,
+			valueField : 'id',
+			textField : 'text'
+		});
+		$('#tPurchaseFrequency').combobox({
 			data : res.result.purchaseFrequency,
 			valueField : 'id',
 			textField : 'text'
@@ -488,7 +593,17 @@ function initRating(){
 			valueField : 'id',
 			textField : 'text'
 		});
+		$('#tPurchasePrice').combobox({
+			data : res.result.purchasePrice,
+			valueField : 'id',
+			textField : 'text'
+		});
 		$('#customerSize').combobox({
+			data : res.result.customerSize,
+			valueField : 'id',
+			textField : 'text'
+		});
+		$('#tCustomerSize').combobox({
 			data : res.result.customerSize,
 			valueField : 'id',
 			textField : 'text'
@@ -498,10 +613,12 @@ function initRating(){
 			valueField : 'id',
 			textField : 'text'
 		});
-		$('#customerSize').combobox({
-			data : res.result.customerSize,
+		$('#tEndorse').combobox({
+			data : res.result.endorse,
 			valueField : 'id',
 			textField : 'text'
 		});
+		$('#searchForm').form('clear');
+		$('#clientLevel').combobox('setValue',-1);
 	}, getContextPath() + '/portal/user/option', null);
 }

@@ -7,6 +7,13 @@ $().ready(function(){
 		EmployeeListCache = res
 	}, getContextPath() + '/portal/getEmployeeList',null);
 	
+	$('#tIndentSource').combobox({
+		url : getContextPath() + '/portal/getEmployeeList',
+		valueField : 'employeeId',
+		textField : 'employeeRealName'
+	});
+	
+	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/indent/list',
@@ -64,8 +71,34 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'indentSource' ,
+						title : '订单来源' ,
+						align : 'center' ,
+						sortable : true ,
+						width : 80,
+						sortable : true ,
+						formatter : function(value , record , index){
+							if( value == 1){
+								return '<span style=color:green; >线上-网站</span>' ; 
+							} else if( value == 2){
+								return '<span style=color:blue; >线上-活动</span>' ;
+							} else if( value == 3){
+								return '<span style=color:black; >线上-新媒体</span>' ;
+							}else if( value == 4){
+								return '<span style=color:black; >线下-电销</span>' ;
+							}else if( value == 5){
+								return '<span style=color:black; >线下-直销</span>' ;
+							}else if( value == 6){
+								return '<span style=color:black; >线下-活动</span>' ;
+							}else if( value == 7){
+								return '<span style=color:black; >线下-渠道</span>' ;
+							}else if( value == 8){
+								return '<span style=color:black; >复购</span>' ;
+							}
+						}
+					},{
 						field : 'employeeId' ,
-						title : '分配客服' ,
+						title : '处理人员' ,
 						align : 'center' ,
 						width : 80,
 						formatter : function(value , record , index){

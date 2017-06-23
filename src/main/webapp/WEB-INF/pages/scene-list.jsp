@@ -61,7 +61,7 @@
 	                <textarea class="easyui-textbox" id="sceneDescription" name="sceneDescription" multiline="true" style="width:256px;height: 50px;"></textarea>
 	            </div>
 				<div id="dlg-buttons">
-					<r:mulparampermission uri2="/portal/employee/save" uri="/portal/employee/update">
+					<r:mulparampermission uri2="/portal/scene/save" uri="/portal/scene/update">
 					<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="save()" >保存</a>
 					</r:mulparampermission>
 					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
