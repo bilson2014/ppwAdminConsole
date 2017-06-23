@@ -8,7 +8,7 @@ $().ready(function(){
 	}, getContextPath() + '/portal/getEmployeeList',null);
 	
 	$('#tIndentSource').combobox({
-		url : getContextPath() + '/portal/getEmployeeList',
+		url : getContextPath() + '/portal/getCustomerService',
 		valueField : 'employeeId',
 		textField : 'employeeRealName'
 	});
@@ -321,7 +321,7 @@ function customerServiceFun(){
 			modal : true,
 			onOpen : function(event, ui) {
 				$('#customerService').combobox({
-					url : getContextPath() + '/portal/getEmployeeList',
+					url : getContextPath() + '/portal/getCustomerService',
 					valueField : 'employeeId',
 					textField : 'employeeRealName'
 				});
