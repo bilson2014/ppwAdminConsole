@@ -130,16 +130,20 @@ function save(){
 		onSubmit : function() {
 			
 			var flag = $(this).form('validate');
-			var ps = $('input[name="employeePassword"]').val().trim();
-			if(ps != null && ps != '' && ps != undefined){
-				$('input[name="employeePassword"]').val(Encrypt(ps));
-			}
 			
-			// 判断 入职日期是否为空
-			var hireDate = $('input[name="hireDate"]').val();
-			if(hireDate == null || hireDate == undefined || hireDate == ''){
-				flag = false;
-				msg="请选择入职日期!"
+			if(flag) {
+				
+				var ps = $('input[name="employeePassword"]').val().trim();
+				if(ps != null && ps != '' && ps != undefined){
+					$('input[name="employeePassword"]').val(Encrypt(ps));
+				}
+				
+				// 判断 入职日期是否为空
+				var hireDate = $('input[name="hireDate"]').val();
+				if(hireDate == null || hireDate == undefined || hireDate == ''){
+					flag = false;
+					msg="请选择入职时间!"
+				}
 			}
 			
 			if(!flag){

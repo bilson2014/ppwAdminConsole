@@ -1,25 +1,30 @@
 package com.panfeng.resource.view;
 
-
-public class TeamView extends Pagination{
+public class TeamView extends Pagination {
 
 	private static final long serialVersionUID = 7598528321076177988L;
-	
+
 	private Long teamId = null; // 团队唯一编号
-	
+
 	private String flag = null; // 供应商审核状态
-	
+
 	private String phoneNumber = null; // 电话号码
-	
+
 	private String loginName = null; // 登录名
-	
+
 	private String priceRange = null; // 价格区间
-	
+
 	private String[] business = null; // 业务区间
-	
-	private String teamName = null;//团队名称like查询
-	
-	private boolean recommend = false;//是否是主页推荐
+
+	private String teamName = null;// 团队名称like查询
+
+	private boolean recommend = false;// 是否是主页推荐
+
+	private String linkman = null; // 联系人
+
+	private String provinceID = null; // 省ID
+
+	private String cityID = null; // 市ID
 
 	public Long getTeamId() {
 		return teamId;
@@ -84,4 +89,29 @@ public class TeamView extends Pagination{
 	public void setRecommend(boolean recommend) {
 		this.recommend = recommend;
 	}
+
+	public String getLinkman() {
+		return linkman;
+	}
+
+	public void setLinkman(String linkman) {
+		this.linkman = linkman;
+	}
+
+	public String getProvinceID() {
+		return provinceID;
+	}
+
+	public void setProvinceID(String provinceID) {
+		this.provinceID = provinceID;
+	}
+
+	public String getCityID() {
+		return cityID;
+	}
+
+	public void setCityID(String cityID) {
+		this.cityID = cityID;
+	}
+
 }

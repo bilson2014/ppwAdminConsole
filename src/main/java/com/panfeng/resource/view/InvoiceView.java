@@ -5,21 +5,24 @@ public class InvoiceView extends Pagination {
 	private static final long serialVersionUID = 1739408407063119953L;
 
 	private String invoiceName = null; // 发票名称
-	
+
 	private Long invoiceProjectId = null; // 项目ID
-	
+
 	private Long invoiceProviderId = null; // 供应商ID
-	
+
 	private Long invoiceUserId = null; // 客户ID
-	
-	private Integer invoiceType = null; 
-	
-	private Integer invoiceFlag = null; 
-	
-	private Integer invoiceDraw = null; 
-	
-	private String invoiceCode = null;//发票号
-	
+
+	private Integer invoiceType = null;
+
+	private Integer invoiceFlag = null;
+
+	private Integer invoiceDraw = null;
+
+	private String invoiceCode = null;// 发票号
+
+	private String invoiceBeginDate = null; // 开票开始日期
+
+	private String invoiceEndDate = null; // 开票结束日期
 
 	public String getInvoiceCode() {
 		return invoiceCode;
@@ -44,7 +47,7 @@ public class InvoiceView extends Pagination {
 	public void setInvoiceProjectId(Long invoiceProjectId) {
 		this.invoiceProjectId = invoiceProjectId;
 	}
-	
+
 	public Long getInvoiceUserId() {
 		return invoiceUserId;
 	}
@@ -83,6 +86,22 @@ public class InvoiceView extends Pagination {
 
 	public void setInvoiceDraw(Integer invoiceDraw) {
 		this.invoiceDraw = invoiceDraw;
+	}
+
+	public String getInvoiceBeginDate() {
+		return invoiceBeginDate;
+	}
+
+	public void setInvoiceBeginDate(String invoiceBeginDate) {
+		this.invoiceBeginDate = invoiceBeginDate;
+	}
+
+	public String getInvoiceEndDate() {
+		return invoiceEndDate;
+	}
+
+	public void setInvoiceEndDate(String invoiceEndDate) {
+		this.invoiceEndDate = invoiceEndDate;
 	}
 
 }

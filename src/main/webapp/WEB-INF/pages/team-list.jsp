@@ -24,7 +24,7 @@
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
-	<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
+	<div data-options="region:'north',border:false" style="height: 70px; overflow: hidden;background-color: #fff">
 			<form id="searchForm">
 				<table>
 					<tr>
@@ -54,6 +54,17 @@
 							</select>
 						</td>
 						
+					</tr>
+					
+					<tr>
+						<th>联系人:</th>
+						<td><input id="search-linkman" name="linkman" placeholder="请输入联系人"/></td>
+						<th>所在省：</th>
+						<td><input id="search-provinceID" name="provinceID" placeholder="请输入省"/></td>
+						
+						<th>所在市：</th>
+						<td><input id="search-cityID" name="cityID" placeholder="请输入市"/></td>
+						
 						<th>业务范围</th>
 						<td>
 							<select id="search-business" name="business" style="width:180px"></select>
@@ -77,6 +88,9 @@
 			            			<input type="checkbox" name="business" value="15"/> <span>后期制作</span>
 								</div>
 							</div>
+									
+						</td>
+						<td>
 							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 						</td>
 					</tr>

@@ -171,13 +171,13 @@
 	        			</td>
 	        			<th>电子邮件</th>
 	        			<td>
-	        				<input id="email" name="email" class="easyui-textbox" data-options="validType:'email'"/>
+	        				<input id="email" name="email" class="easyui-textbox" validType="email"/>
 	        			</td>
 	        		</tr>
 	        		<tr>
 						<th>网址</th>
 	        			<td>
-	        				<input id="officialSite" name="officialSite" class="easyui-textbox" data-options="validType:'length[6,20]'"/>
+	        				<input id="officialSite" name="officialSite" class="easyui-textbox" validType="url" invalidMessage="url格式不正确[http://www.example.com]" />
 	        			</td>
 					</tr>
 					<tr></tr>
