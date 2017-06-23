@@ -59,6 +59,8 @@ public class UserInvoiceController extends BaseController {
 		paramMap.put("invoiceProjectId", view.getInvoiceProjectId());
 		paramMap.put("invoiceType", view.getInvoiceType());
 		paramMap.put("invoiceCode", view.getInvoiceCode());
+		paramMap.put("invoiceBeginDate", view.getInvoiceBeginDate());
+		paramMap.put("invoiceEndDate", view.getInvoiceEndDate());
 		
 		final DataGrid<PmsUserInvoice> dataGrid = pmsUserInvoiceFacade.listWithPagination(pageParam,paramMap);
 		return dataGrid;
@@ -115,11 +117,12 @@ public class UserInvoiceController extends BaseController {
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
 			outputStream = response.getOutputStream();
 			
-			// TODO  获取数据
 			Map<String, Object> paramMap = new HashMap<String, Object>();
 			paramMap.put("invoiceProjectId", view.getInvoiceProjectId());
 			paramMap.put("invoiceType", view.getInvoiceType());
 			paramMap.put("invoiceCode", view.getInvoiceCode());
+			paramMap.put("invoiceBeginDate", view.getInvoiceBeginDate());
+			paramMap.put("invoiceEndDate", view.getInvoiceEndDate());
 			
 			// 数据
 			List<PmsUserInvoice> list = pmsUserInvoiceFacade.findUserInvoiceWithCondition(paramMap);

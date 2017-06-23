@@ -247,6 +247,43 @@ var team = {
 				return row.phoneNumber.indexOf(q) >= 0;
 			}
 		});
+		
+		$('#search-provinceID').combobox({
+			url : getContextPath() + '/portal/get/provinces',
+			valueField : 'provinceID',
+			textField : 'provinceName',
+			onSelect : function(record){
+				$('#search-cityID').combobox('reload',getContextPath() + '/portal/get/citys/' + record.provinceID);
+			},
+			filter : function(q,row) {
+				var word = q.trim();
+				if(word == '' || word == null || word == undefined) {
+					// 输入为空，那么则重新加载市数据
+					$('#search-cityID').combobox('reload',getContextPath() + '/portal/all/citys');
+					return ;
+				} else {
+					return row.provinceName.indexOf(word) >= 0;
+				}
+			},
+			onChange : function(n,o) {
+				var city = $('#search-cityID').combobox('getValue');
+				if(city != '' && city != null) {
+					// 清空
+					$('#search-cityID').combobox('setValue','');
+				}
+			}
+		});
+		
+		$('#search-cityID').combobox({
+			url : getContextPath() + '/portal/all/citys',
+			valueField : 'cityID',
+			textField : 'city',
+			filter : function(q,row) {
+				if(row.city == null)
+					return false;
+				return row.city.indexOf(q) >= 0;
+			}
+		});
 	},
 	initCombox : function(){
 		$('#search-business').combo({
@@ -498,6 +535,23 @@ function searchFun(){
 	//清空点击表的排序操作,例如按时间排序等
 	$('#gride').datagrid('options').sortName = null;
 	$('#gride').datagrid('options').sortOrder = null;
+	
+	// 验证 省 市 筛选数据
+	var pId = $('#search-provinceID').combobox('getValue');
+	var cId = $('#search-cityID').combobox('getValue');
+	if(pId != '' && pId != null) {
+		if(!checkNumber(pId)) {
+			alert('请选择省');
+			return ;
+		}
+	}
+	
+	if(cId != '' && cId != null) {
+		if(!checkNumber(cId)) {
+			alert('请选择城市');
+			return ;
+		}
+	}
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
 
@@ -627,4 +681,15 @@ function add(){
 			return false;
 		}
 	})
+}
+
+/*
+ * 验证 数字
+ */
+function checkNumber(str){
+	reg = /^[1-9]+[0-9]*]*$/;
+	if(str.match(reg))
+		return true;
+	else
+		return false;
 }

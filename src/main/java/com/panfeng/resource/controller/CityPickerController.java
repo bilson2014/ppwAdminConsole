@@ -16,7 +16,6 @@ import com.paipianwang.pat.facade.team.entity.PmsCity;
 import com.paipianwang.pat.facade.team.entity.PmsProvince;
 import com.paipianwang.pat.facade.team.service.PmsCityFacade;
 import com.paipianwang.pat.facade.team.service.PmsProvinceFacade;
-
 import com.panfeng.util.Log;
 
 /**
@@ -74,4 +73,5 @@ public class CityPickerController extends BaseController {
 			return new PmsProvince();
 		}
 	}
+	
 }

@@ -97,6 +97,9 @@ public class TeamController extends BaseController {
 		paramMap.put("business", view.getBusiness());
 		paramMap.put("teamName", view.getTeamName());
 		paramMap.put("recommend", view.isRecommend());
+		paramMap.put("linkman", view.getLinkman());
+		paramMap.put("cityID", view.getCityID());
+		paramMap.put("provinceID", view.getProvinceID());
 		final DataGrid<PmsTeam> dataGrid = pmsTeamFacade.listWithPagination(pageParam, paramMap);
 		return dataGrid;
 	}
