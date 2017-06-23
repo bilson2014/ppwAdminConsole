@@ -9,6 +9,11 @@ public class UserView extends Pagination {
 	private String beginTime = null;
 	private String endTime = null;
 	private String telephone = null;
+	/** 客户公司 **/
+	private String userCompany = null;
+
+	/** 真实姓名 **/
+	private String realName = null;
 
 	/**
 	 * 推荐人ID
@@ -146,5 +151,23 @@ public class UserView extends Pagination {
 	public void setClientLevel(Integer clientLevel) {
 		this.clientLevel = clientLevel;
 	}
+
+	public String getRealName() {
+		return realName;
+	}
+
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+
+	public String getUserCompany() {
+		return userCompany;
+	}
+
+	public void setUserCompany(String userCompany) {
+		this.userCompany = userCompany;
+	}
+	
+	
 
 }

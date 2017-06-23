@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.paipianwang.pat.common.config.PublicConfig;
 import com.paipianwang.pat.common.constant.PmsConstant;
 import com.paipianwang.pat.common.entity.BaseEntity;
@@ -27,6 +29,7 @@ import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.product.entity.PmsProduct;
 import com.paipianwang.pat.facade.right.entity.PmsRole;
 import com.paipianwang.pat.facade.right.service.PmsRightFacade;
 import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
@@ -76,6 +79,8 @@ public class UserController extends BaseController {
 		// 封装查询参数
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("userName", view.getUserName());
+		paramMap.put("realName", view.getRealName());
+		paramMap.put("userCompany", view.getUserCompany());
 		paramMap.put("clientLevel", view.getClientLevel());
 		paramMap.put("beginTime", view.getBeginTime());
 		paramMap.put("endTime", view.getEndTime());
@@ -386,6 +391,28 @@ public class UserController extends BaseController {
 		// List<User> list = userService.all();
 		List<PmsUser> list = pmsUserFacade.all();
 		return list;
+	}
+	/**
+	 * 获取全部客户
+	 * 
+	 * @return list
+	 */
+	@RequestMapping(value = "/user/droplist",method = RequestMethod.POST,
+	produces = "application/json; charset=UTF-8")
+	public String getDroplist() {
+		List<PmsUser> list = pmsUserFacade.getDroplist();
+		JsonArray jaArray = new JsonArray();
+		if(ValidateUtil.isValid(list)){
+			if(ValidateUtil.isValid(list)){
+				for (PmsUser user : list) {
+					JsonObject jo = new JsonObject();
+					jo.addProperty("id", user.getId());
+					jo.addProperty("userName", user.getUserName());
+					jaArray.add(jo);
+				}
+			}
+		}
+		return jaArray.toString();
 	}
 
 	/**

@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.facade.product.entity.PmsProduct;
 import com.paipianwang.pat.facade.product.entity.PmsService;
 import com.paipianwang.pat.facade.product.service.PmsProductFacade;
@@ -76,9 +80,18 @@ public class ServiceController extends BaseController{
 	 */
 	@RequestMapping(value = "/service/productSelect",method = RequestMethod.POST,
 					produces = "application/json; charset=UTF-8")
-	public List<PmsProduct> select(){
+	public String select(){
 		final List<PmsProduct> list = pmsProductFacade.all();
-		return list;
+		JsonArray jaArray = new JsonArray();
+		if(ValidateUtil.isValid(list)){
+			for (PmsProduct product : list) {
+				JsonObject jo = new JsonObject();
+				jo.addProperty("productId", product.getProductId());
+				jo.addProperty("productName", product.getProductName());
+				jaArray.add(jo);
+			}
+		}
+		return jaArray.toString();
 	}
 	
 	@RequestMapping(value = "/service/save",method = RequestMethod.POST)

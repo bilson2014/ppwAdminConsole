@@ -199,7 +199,7 @@ function openDialog(id, data) {
 				}
 			});
 			$('#userId').combobox({
-				url:getContextPath()+'/portal/user/all',
+				url:getContextPath()+'/portal/user/droplist',
 				valueField : 'id',
 				textField : 'userName',
 				filter: function(q, row){
