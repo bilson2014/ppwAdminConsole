@@ -8,6 +8,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -211,24 +212,34 @@ public class ChanPinController extends BaseController {
 	public BaseMsg deletePicImg(Long chanpinId, String path) {
 		BaseMsg baseMsg = new BaseMsg();
 		PmsChanPin chanPinInfo = pmsChanPinFacade.getChanPinInfo(chanpinId);
-		if (chanPinInfo != null) {
-			LinkedList<Banner> picImgs = chanPinInfo.bannerImgs();
-			if (ValidateUtil.isValid(picImgs)) {
-				Banner b = null;
-				Iterator<Banner> iterator = picImgs.iterator();
-				while (iterator.hasNext()) {
-					Banner banner = (Banner) iterator.next();
-					if (banner.getUrl().equals(path)) {
+		if(chanPinInfo != null) {
+		
+		LinkedList<Banner> picImgs = chanPinInfo.bannerImgs();
+		
+		picImgs.stream().filter(s -> s.getUrl()==null).collect(Collectors.toList());
+		Banner b = null;
+		for (Banner banner : picImgs) {
+			if(banner != null) {
+				String url = banner.getUrl();
+				if(ValidateUtil.isValid(url)) {
+					if (url.equals(path)) {
 						b = banner;
 						break;
 					}
 				}
-				picImgs.remove(b);
 			}
+		}
+		picImgs.remove(b);
+		
+		// 判断path 是否为空
+		if(ValidateUtil.isValid(path)) {
+			// 如果不为空，则删除文件
 			FastDFSClient.deleteFile(path);
-			chanPinInfo.buildBannerImgs(picImgs);
-			pmsChanPinFacade.updateBannerImgs(chanPinInfo);
-			baseMsg.setCode(BaseMsg.NORMAL);
+		}
+		chanPinInfo.buildBannerImgs(picImgs);
+		pmsChanPinFacade.updateBannerImgs(chanPinInfo);
+		baseMsg.setCode(BaseMsg.NORMAL);
+		
 		} else {
 			baseMsg.setCode(BaseMsg.ERROR);
 			baseMsg.setErrorMsg("产品不存在！");
