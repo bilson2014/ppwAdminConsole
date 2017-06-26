@@ -220,7 +220,7 @@ public class EmployeeController extends BaseController {
 				List<PmsRole> roles = pmsRoleFacade.findRolesByEmployId(pmsEmployee.getEmployeeId());
 				if (ValidateUtil.isValid(roles)) {
 					for (PmsRole pmsRole : roles) {
-						if (pmsRole.getRoleName().equals("客服")) {
+						if (pmsRole.getRoleName().equals("BD专员")) {
 							rrr.add(pmsEmployee);
 							break;
 						}
