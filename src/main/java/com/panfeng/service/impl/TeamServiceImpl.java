@@ -1,9 +1,17 @@
 package com.panfeng.service.impl;
 
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.common.web.poi.util.PoiReportUtils;
+import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.persist.TeamMapper;
 import com.panfeng.resource.model.Team;
@@ -351,6 +361,7 @@ public class TeamServiceImpl implements TeamService {
 		}
 	}
 
+
 	/*@Override
 	public boolean teamInfoUnBind(Team team) {
 		mapper.unBindThird(team);
@@ -507,4 +518,195 @@ public class TeamServiceImpl implements TeamService {
 		return mapper.teamRecommendList();
 	}*/
 	
+	private static String[] header = {"公司名称","登陆名","审核状态","审核意见","所在省","所在城市","联系人","更新时间","创建时间",
+										"手机号码","微信号","QQ","邮箱","官网地址","公司地址","LOGO","公司介绍","成立时间","价格区间","审核意见",
+										"公司规模","业务范围","主要客户","对客户的要求","获知渠道","备注"};
+	/**
+	 * 供应商导出
+	 */
+	@Override
+	public void generateReport(List<PmsTeam> list, OutputStream os) {
+		// 创建文档
+		XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
+		// 创建一个新的页
+		XSSFSheet sheet = xssfWorkbook.createSheet("供应商列表信息");
+		// 生成头部信息
+		PoiReportUtils.generateHeader(new ArrayList<String>(Arrays.asList(header)), xssfWorkbook, sheet);
+
+		// 生成数据信息
+		this.generateTeamContent(list, xssfWorkbook, sheet);
+
+		try {
+			xssfWorkbook.write(os);
+			xssfWorkbook.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	/**
+	 * 导出各行数据
+	 * @param list
+	 * @param workbook
+	 * @param sheet
+	 */
+	private void generateTeamContent(List<PmsTeam> list, XSSFWorkbook workbook, XSSFSheet sheet) {
+		if(ValidateUtil.isValid(list)){
+			for(int i=0;i<list.size();i++){
+				PmsTeam team=list.get(i);
+				XSSFRow xssfRow=sheet.createRow(i+1);
+				
+				// 样式
+				XSSFCellStyle cs = PoiReportUtils.getLeftCellStyle(workbook);
+				
+				XSSFCell xssfCell=xssfRow.createCell(0);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(team.getTeamName());
+				
+				xssfCell=xssfRow.createCell(1);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getLoginName());
+				
+				String flag="";//审核状态
+				switch(team.getFlag()){
+					case 0:
+						flag="审核中";
+						break;
+					case 1:
+						flag="审核通过";
+						break;
+					case 2:
+						flag="未审核通过";
+						break;
+					case 3:
+						flag="幽灵模式";
+						break;
+				}
+				xssfCell=xssfRow.createCell(2);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(flag);
+				
+				xssfCell=xssfRow.createCell(3);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getRecommendation());
+				
+				xssfCell=xssfRow.createCell(4);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getTeamProvinceName());
+				
+				xssfCell=xssfRow.createCell(5);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getTeamCityName());
+				
+				xssfCell=xssfRow.createCell(6);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getLinkman());
+				
+				xssfCell=xssfRow.createCell(7);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getUpdateDate());
+				
+				xssfCell=xssfRow.createCell(8);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getCreateDate());
+				
+				xssfCell=xssfRow.createCell(9);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getPhoneNumber());
+				
+				xssfCell=xssfRow.createCell(10);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getWebchat());
+				
+				xssfCell=xssfRow.createCell(11);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getQq());
+				
+				xssfCell=xssfRow.createCell(12);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getEmail());
+				
+				xssfCell=xssfRow.createCell(13);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getOfficialSite());
+				
+				xssfCell=xssfRow.createCell(14);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getAddress());
+				
+				xssfCell=xssfRow.createCell(15);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getTeamPhotoUrl());
+				
+				xssfCell=xssfRow.createCell(16);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getTeamDescription());
+				
+				xssfCell=xssfRow.createCell(17);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getEstablishDate());
+				
+				String priceRange="";
+				switch (team.getPriceRange()) {
+				case 0:
+					priceRange="看情况";
+					break;
+				case 1:
+					priceRange=">= 1W";
+					break;
+				case 2:
+					priceRange=">= 2W";
+					break;
+				case 3:
+					priceRange=">= 3W";
+					break;
+				case 4:
+					priceRange=">= 5W";
+					break;
+				case 5:
+					priceRange=">= 10W";
+					break;
+				
+
+				default:
+					break;
+				}
+				xssfCell=xssfRow.createCell(18);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(priceRange);
+				
+				xssfCell=xssfRow.createCell(19);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getRecommendation());
+				
+				xssfCell=xssfRow.createCell(20);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getScale());
+				
+				xssfCell=xssfRow.createCell(21);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getBusiness());
+				
+				xssfCell=xssfRow.createCell(22);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getBusinessDesc());
+				
+				xssfCell=xssfRow.createCell(23);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getDemand());
+				
+				xssfCell=xssfRow.createCell(24);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getInfoResource());
+				
+				xssfCell=xssfRow.createCell(25);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getDescription());
+				
+				
+			}
+		}
+		
+	}
 }
