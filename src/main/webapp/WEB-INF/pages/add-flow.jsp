@@ -30,7 +30,7 @@
 
 <spring:url value="/resources/lib/My97DatePicker/WdatePicker.js"
 	var="WdatePicker" />
-	<spring:url value="/resources/lib/jquery.cookie/jquery.cookie.js"
+<spring:url value="/resources/lib/jquery.cookie/jquery.cookie.js"
 	var="cookiejs" />
 
 
@@ -76,11 +76,11 @@
 </head>
 <body>
 	<div class="page">
-		<label class="state" >${state }</label>
+		<label class="state">${state }</label>
 		<div class="page-title">
 			<label class="page-title-title">项目信息添加</label>
 		</div>
-		
+
 		<div class="infobody">
 			<div class="baseinfo">
 				<div class="baseinfo-left">
@@ -96,85 +96,100 @@
 							<td class="baseinfo-table-key">项目价格</td>
 						</tr>
 						<tr>
-							<td class="baseinfo-table-value td-addbottom-border"><input type="text" class="tableinput-baseinfo projectId"></td>
-							<td class="baseinfo-table-value td-addbottom-border"><input type="text" class="tableinput-baseinfo projectName"></td>
+							<td class="baseinfo-table-value td-addbottom-border"><input
+								type="text" class="tableinput-baseinfo projectId"></td>
+							<td class="baseinfo-table-value td-addbottom-border"><input
+								type="text" class="tableinput-baseinfo projectName"></td>
 							<td class="baseinfo-table-value td-addbottom-border">
 								<div class="pirce-div mleft">
-									<input type="text" class="pirce-input firstinput">~<input type="text" class="pirce-input lastinput">
+									<input type="text" class="pirce-input firstinput">~<input
+										type="text" class="pirce-input lastinput">
 									&nbsp;&nbsp;&nbsp;
 									<button class="pirce-btn">确认</button>
 								</div>
 							</td>
 						</tr>
-						
+
 						<tr>
 							<td class="baseinfo-table-key">客户名称</td>
 							<td class="baseinfo-table-key">客户联系人</td>
 							<td class="baseinfo-table-key">客户电话</td>
 						</tr>
 						<tr>
-							<td class="baseinfo-table-value td-addbottom-border"><input type="text" class="tableinput-baseinfo userName"></td>
-							<td class="baseinfo-table-value td-addbottom-border"><input type="text" class="tableinput-baseinfo userContact"></td>
-							<td class="baseinfo-table-value td-addbottom-border"><input type="text" class="tableinput-baseinfo userPhone"></td>
+							<td class="baseinfo-table-value td-addbottom-border"><input
+								type="text" class="tableinput-baseinfo userName"></td>
+							<td class="baseinfo-table-value td-addbottom-border"><input
+								type="text" class="tableinput-baseinfo userContact"></td>
+							<td class="baseinfo-table-value td-addbottom-border"><input
+								type="text" class="tableinput-baseinfo userPhone"></td>
 						</tr>
-						
+
 						<tr>
 							<td class="baseinfo-table-key">供应商名称</td>
 							<td class="baseinfo-table-key">供应商联系人</td>
 							<td class="baseinfo-table-key">供应商电话</td>
 						</tr>
 						<tr>
-							<td class="baseinfo-table-value td-addbottom-border"><input type="text" class="tableinput-baseinfo teamName"></td>
-							<td class="baseinfo-table-value td-addbottom-border"><input type="text" class="tableinput-baseinfo teamContact"></td>
-							<td class="baseinfo-table-value td-addbottom-border"><input type="text" class="tableinput-baseinfo teamPhone"></td>
+							<td class="baseinfo-table-value td-addbottom-border"><input
+								type="text" class="tableinput-baseinfo teamName"></td>
+							<td class="baseinfo-table-value td-addbottom-border"><input
+								type="text" class="tableinput-baseinfo teamContact"></td>
+							<td class="baseinfo-table-value td-addbottom-border"><input
+								type="text" class="tableinput-baseinfo teamPhone"></td>
 						</tr>
-						
+
 						<tr>
-							<td  class="baseinfo-table-key">阶段描述</td>
+							<td class="baseinfo-table-key">阶段描述</td>
 						</tr>
 						<tr>
-							<td colspan="3"><textarea rows="3" cols="74" class="textarea-baseinfo description"></textarea></td>
+							<td colspan="3"><textarea rows="3" cols="74"
+									class="textarea-baseinfo description"></textarea></td>
 						</tr>
-						
+
 					</table>
 				</div>
 			</div>
 		</div>
-		
-		<div class ="indent-time">
+
+		<div class="indent-time">
 			<div class="indent-time-left">
-					<div class="indent-time-left-text-div">
-						<label class="indent-time-left-text">预计时间表</label>
-					</div>
+				<div class="indent-time-left-text-div">
+					<label class="indent-time-left-text">预计时间表</label>
 				</div>
-				<div class="indent-time-right">
-					<div class="table-border">
-						<table class="indent-time-table">
-							<tr>
-								<td>阶段</td>
-								<td>沟通</td>
-								<td>方案</td>
-								<td>商务</td>
-								<td>制作</td>
-								<td>交付</td>
-							</tr>
-							<tr class="indent-time-table-border-tr">
-								<td>预计时间</td>
-								<td><input type="text" class="tableinput gtstarttime"  id="gtstarttime"></td>
-								<td><input type="text" class="tableinput fastarttime"  id="gtstarttime"></td>
-								<td><input type="text" class="tableinput swstarttime" id="gtstarttime"></td>
-								<td><input type="text" class="tableinput zzstarttime" id="gtstarttime"></td>
-								<td><input type="text" class="tableinput jfstarttime" id="gtstarttime"></td>
-							</tr>
-						</table>
-					</div>
+			</div>
+			<div class="indent-time-right">
+				<div class="table-border">
+					<table class="indent-time-table">
+						<tr>
+							<td>阶段</td>
+							<td>沟通</td>
+							<td>方案</td>
+							<td>商务</td>
+							<td>制作</td>
+							<td>交付</td>
+						</tr>
+						<tr class="indent-time-table-border-tr">
+							<td>预计时间</td>
+							<td><input type="text" class="tableinput gtstarttime"
+								id="gtstarttime"></td>
+							<td><input type="text" class="tableinput fastarttime"
+								id="gtstarttime"></td>
+							<td><input type="text" class="tableinput swstarttime"
+								id="gtstarttime"></td>
+							<td><input type="text" class="tableinput zzstarttime"
+								id="gtstarttime"></td>
+							<td><input type="text" class="tableinput jfstarttime"
+								id="gtstarttime"></td>
+						</tr>
+					</table>
 				</div>
+			</div>
 		</div>
-		
+
 		<div class="indent-btn-div">
 			<button class="indent-btn">确认</button>
 		</div>
 	</div>
-	
+
 </body>
 </html>

@@ -33,7 +33,7 @@
 			WHERE 1 = 1
 		]]>
 	</select>
-	
+
 	<insert id="save">
 		<![CDATA[
 			INSERT INTO MAIL(
@@ -51,7 +51,7 @@
 			)
 		]]>
 	</insert>
-	
+
 	<update id="update">
 		<![CDATA[
 			UPDATE MAIL m
@@ -62,15 +62,15 @@
 	      WHERE m.ID = ${id}
 		]]>
 	</update>
-	
+
 	<delete id="delete">
 		<![CDATA[
 			DELETE FROM MAIL 
 				WHERE ID = ${id}
 		]]>
 	</delete>
-	
-	
+
+
 	<select id="getTemplateById" resultType="Mail">
 		<![CDATA[
 			SELECT 
@@ -82,7 +82,7 @@
 			WHERE m.ID = ${mailId}
 		]]>
 	</select>
-	
+
 	<select id="getTemplateByType" resultType="Mail">
 		<![CDATA[
 			SELECT 
@@ -94,5 +94,5 @@
 			WHERE m.MAIL_TYPE = #{type}
 		]]>
 	</select>
-	
+
 </mapper>

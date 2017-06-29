@@ -10,7 +10,7 @@
 			FROM PROVINCE
 		]]>
 	</select>
-	
+
 	<select id="findProvinceById" resultType="Province">
 		<![CDATA[
 			SELECT 
@@ -20,5 +20,5 @@
 			FROM PROVINCE WHERE PROVINCEID = #{ProvinceId}
 		]]>
 	</select>
-	
+
 </mapper>

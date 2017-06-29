@@ -100,7 +100,7 @@
 	margin-top: 5px;
 	margin-bottom: 5px;
 	line-height: 25px;
-	padding-left:40px;
+	padding-left: 40px;
 	float: left;
 }
 
@@ -176,6 +176,7 @@
 	margin-left: -280px;
 	background-color: #ffffff;
 }
+
 .log-modalDialog {
 	position: absolute;
 	top: 50%;
@@ -199,6 +200,7 @@
 	box-shadow: 1px 2px 4px 2px rgba(0, 0, 0, 0.3);
 	border-radius: 3px;
 }
+
 .log-condition-body {
 	position: absolute;
 	width: 560px;
@@ -221,31 +223,33 @@
 	overflow: auto;
 }
 
-.p-submit{
-	float:right;
-	margin-left:3px;
-	width:75px;
-	height:27px;
+.p-submit {
+	float: right;
+	margin-left: 3px;
+	width: 75px;
+	height: 27px;
 	text-align: center;
-	line-height:27px;
-}
-.log-submit{
-	float:right;
-	margin-left:3px;
-	width:75px;
-	height:27px;
-	text-align: center;
-	line-height:27px;
+	line-height: 27px;
 }
 
-.p-label{
+.log-submit {
+	float: right;
+	margin-left: 3px;
+	width: 75px;
+	height: 27px;
+	text-align: center;
+	line-height: 27px;
+}
+
+.p-label {
 	position: absolute;
 	top: 290px;
 	width: 550px;
 	height: 28px;
 	line-height: 28px;
 }
-.log-label{
+
+.log-label {
 	position: absolute;
 	top: 290px;
 	width: 550px;

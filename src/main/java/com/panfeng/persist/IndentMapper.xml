@@ -1,205 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.panfeng.persist.IndentMapper">
-	
-	
-	
-	<!-- <select id="listWithPagination" resultType="Indent">
-		<![CDATA[
-			SELECT ind.INDENTID AS indentId,
-			   ind.INDENTNAME AS indentName,
-			   ind.INDENTPRICE AS indentPrice,
-			   DATE_FORMAT(ind.ORDERDATE,'%Y-%m-%d %T') AS orderDate,
-			   ind.INDENTTYPE AS indentType,
-			   ind.INDENT_TELE AS indent_tele,
-			   ind.INDENT_RECOMMENT AS indent_recomment,
-			   ind.INDENT_DESCRIPTION AS indent_description,
-			   ind.SALESMANUNIQUEID AS salesmanUniqueId
-			FROM INDENT ind 
-			WHERE 1 = 1
-		]]>
-		<if test="indentId != null and indentId != ''">
-			AND ind.INDENTID LIKE CONCAT(CONCAT('%',#{indentId}),'%')
-		</if>
-		<if test="indentType != null and indentType != ''">
-			AND ind.INDENTTYPE = ${indentType}
-		</if>
-		<if test="indent_tele != null and indent_tele != ''">
-			AND ind.INDENT_TELE LIKE CONCAT(CONCAT('%',#{indent_tele}),'%')
-		</if>
-		<![CDATA[
-		ORDER BY 
-		]]>
-		<if test="sort != null and sort != '' and order != null and order != ''">
-			 ${sort} ${order},
-		</if>
-		<![CDATA[
-			 ind.ORDERDATE desc
-			LIMIT ${begin} , ${limit}
-		]]>
-	</select>
-	
-	<select id="maxSize" resultType="long">
-		<![CDATA[
-			SELECT COUNT(1) 
-				FROM INDENT ind 
-			WHERE 1 = 1
-		]]>
-		<if test="indentId != null and indentId != ''">
-			AND ind.INDENTID LIKE CONCAT(CONCAT('%',#{indentId}),'%')
-		</if>
-		<if test="indentType != null and indentType != ''">
-			AND ind.INDENTTYPE = ${indentType}
-		</if>
-		<if test="indent_tele != null and indent_tele != ''">
-			AND ind.INDENT_TELE LIKE CONCAT(CONCAT('%',#{indent_tele}),'%')
-		</if>
-	</select>
-	
-	
-	<insert id="save" parameterType="Indent" useGeneratedKeys="true" keyProperty="indentId">
-		<![CDATA[
-			INSERT INTO INDENT(
-				INDENTNAME,
-				INDENTNUM,
-				INDENTTYPE,
-				SERVICEID,
-				INDENT_TELE,
-				INDENT_RECOMMENT,
-				INDENT_DESCRIPTION,
-				SALESMANUNIQUEID,
-				PRODUCTID,
-				INDENTPRICE,
-				TEAMID,
-				ORDERDATE
-			) VALUES (
-				#{indentName},
-				#{indentNum},
-				${indentType},
-				${serviceId},
-				#{indent_tele},
-				#{indent_recomment},
-				#{indent_description},
-				#{salesmanUniqueId},
-				${productId},
-				${indentPrice},
-				${teamId},
-				CURRENT_TIMESTAMP
-			)
-		]]>
-	</insert>
-	
-	<update id="updateForCalculate">
-		<![CDATA[
-			UPDATE INDENT
-				SET INDENT_RECOMMENT = #{indent_recomment},
-					INDENTPRICE = ${indentPrice},
-					ORDERDATE = CURRENT_TIMESTAMP
-				WHERE INDENTID = ${indentId}
-		]]>
-	</update>
-	
-	<update id="update">
-		<![CDATA[
-			UPDATE INDENT
-				SET INDENTNAME = #{indentName},
-					SECOND = #{second},
-					INDENTPRICE = ${indentPrice},
-					INDENTTYPE = ${indentType},
-					INDENT_TELE = #{indent_tele},
-					ORDERDATE = DATE_FORMAT(#{orderDate},'%Y-%m-%d %T'),
-					INDENT_RECOMMENT = #{indent_recomment},
-					INDENT_DESCRIPTION = #{indent_description},
-					SALESMANUNIQUEID = #{salesmanUniqueId}
-				WHERE INDENTID = ${indentId}
-		]]>
-	</update>
-	
-	<delete id="delete">
-		<![CDATA[
-			DELETE 
-				FROM INDENT
-			WHERE INDENTID = ${indentId}
-		]]>
-	</delete>
-	
-	<delete id="deleteByUserId">
-		<![CDATA[
-			DELETE 
-				FROM INDENT
-			WHERE USERID = ${userId}
-		]]>
-	</delete>
-	
-	<delete id="deleteByServiceId">
-		<![CDATA[
-			DELETE
-				FROM INDENT
-			WHERE SERVICEID = ${serviceId}
-		]]>
-	</delete>
-	
-	<insert id="order">
-		<![CDATA[
-			INSERT INTO INDENT(
-				INDENTNAME,
-				TEAMID,
-				SERVICEID,
-				PRODUCTID,
-				INDENTPRICE,
-				SECOND,
-				INDENT_TELE,
-				INDENT_RECOMMENT,
-				SALESMANUNIQUEID
-			) VALUES (
-				#{indentName},
-				${teamId},
-				${serviceId},
-				${productId},
-				${indentPrice},
-				${second},
-				#{indent_tele},
-				#{indent_recomment},
-				#{salesmanUniqueId}
-			)
-		]]>
-	</insert>
-	
-	<select id="checkStatus" resultType="long">
-		<![CDATA[
-			SELECT COUNT(1)
-				FROM INDENT t
-			WHERE t.INDENTTYPE = ${indentType}
-		]]>
-	</select>
-	
-	<select id="countBySalesmanUniqueId" resultType="long">
-		<![CDATA[
-			SELECT COUNT(1)
-				FROM INDENT ind
-			WHERE ind.SALESMANUNIQUEID = #{salesmanUniqueId}
-		]]>
-	</select>
-	
-	<select id="sumPriceBySalesmanUniqueId" resultType="Double">
-		<![CDATA[
-			SELECT SUM(ind.INDENTPRICE)
-				FROM INDENT ind
-			WHERE ind.SALESMANUNIQUEID = #{salesmanUniqueId}
-		]]>
-	</select>
-	<update id="changeIndentsType">
-		<![CDATA[
-			UPDATE INDENT
-				SET INDENTTYPE = ${indentType}
-				WHERE 1=1
-		]]>
-		<if test="ids != null and ids != ''">
-			AND INDENTID IN
-			<foreach collection="ids" open="(" close=")" item="id"
-				separator=",">
-				${id}
-			</foreach>
-		</if>
-	</update> -->
+
+
+
+	<!-- <select id="listWithPagination" resultType="Indent"> <![CDATA[ SELECT 
+		ind.INDENTID AS indentId, ind.INDENTNAME AS indentName, ind.INDENTPRICE AS 
+		indentPrice, DATE_FORMAT(ind.ORDERDATE,'%Y-%m-%d %T') AS orderDate, ind.INDENTTYPE 
+		AS indentType, ind.INDENT_TELE AS indent_tele, ind.INDENT_RECOMMENT AS indent_recomment, 
+		ind.INDENT_DESCRIPTION AS indent_description, ind.SALESMANUNIQUEID AS salesmanUniqueId 
+		FROM INDENT ind WHERE 1 = 1 ]]> <if test="indentId != null and indentId != 
+		''"> AND ind.INDENTID LIKE CONCAT(CONCAT('%',#{indentId}),'%') </if> <if 
+		test="indentType != null and indentType != ''"> AND ind.INDENTTYPE = ${indentType} 
+		</if> <if test="indent_tele != null and indent_tele != ''"> AND ind.INDENT_TELE 
+		LIKE CONCAT(CONCAT('%',#{indent_tele}),'%') </if> <![CDATA[ ORDER BY ]]> 
+		<if test="sort != null and sort != '' and order != null and order != ''"> 
+		${sort} ${order}, </if> <![CDATA[ ind.ORDERDATE desc LIMIT ${begin} , ${limit} 
+		]]> </select> <select id="maxSize" resultType="long"> <![CDATA[ SELECT COUNT(1) 
+		FROM INDENT ind WHERE 1 = 1 ]]> <if test="indentId != null and indentId != 
+		''"> AND ind.INDENTID LIKE CONCAT(CONCAT('%',#{indentId}),'%') </if> <if 
+		test="indentType != null and indentType != ''"> AND ind.INDENTTYPE = ${indentType} 
+		</if> <if test="indent_tele != null and indent_tele != ''"> AND ind.INDENT_TELE 
+		LIKE CONCAT(CONCAT('%',#{indent_tele}),'%') </if> </select> <insert id="save" 
+		parameterType="Indent" useGeneratedKeys="true" keyProperty="indentId"> <![CDATA[ 
+		INSERT INTO INDENT( INDENTNAME, INDENTNUM, INDENTTYPE, SERVICEID, INDENT_TELE, 
+		INDENT_RECOMMENT, INDENT_DESCRIPTION, SALESMANUNIQUEID, PRODUCTID, INDENTPRICE, 
+		TEAMID, ORDERDATE ) VALUES ( #{indentName}, #{indentNum}, ${indentType}, 
+		${serviceId}, #{indent_tele}, #{indent_recomment}, #{indent_description}, 
+		#{salesmanUniqueId}, ${productId}, ${indentPrice}, ${teamId}, CURRENT_TIMESTAMP 
+		) ]]> </insert> <update id="updateForCalculate"> <![CDATA[ UPDATE INDENT 
+		SET INDENT_RECOMMENT = #{indent_recomment}, INDENTPRICE = ${indentPrice}, 
+		ORDERDATE = CURRENT_TIMESTAMP WHERE INDENTID = ${indentId} ]]> </update> 
+		<update id="update"> <![CDATA[ UPDATE INDENT SET INDENTNAME = #{indentName}, 
+		SECOND = #{second}, INDENTPRICE = ${indentPrice}, INDENTTYPE = ${indentType}, 
+		INDENT_TELE = #{indent_tele}, ORDERDATE = DATE_FORMAT(#{orderDate},'%Y-%m-%d 
+		%T'), INDENT_RECOMMENT = #{indent_recomment}, INDENT_DESCRIPTION = #{indent_description}, 
+		SALESMANUNIQUEID = #{salesmanUniqueId} WHERE INDENTID = ${indentId} ]]> </update> 
+		<delete id="delete"> <![CDATA[ DELETE FROM INDENT WHERE INDENTID = ${indentId} 
+		]]> </delete> <delete id="deleteByUserId"> <![CDATA[ DELETE FROM INDENT WHERE 
+		USERID = ${userId} ]]> </delete> <delete id="deleteByServiceId"> <![CDATA[ 
+		DELETE FROM INDENT WHERE SERVICEID = ${serviceId} ]]> </delete> <insert id="order"> 
+		<![CDATA[ INSERT INTO INDENT( INDENTNAME, TEAMID, SERVICEID, PRODUCTID, INDENTPRICE, 
+		SECOND, INDENT_TELE, INDENT_RECOMMENT, SALESMANUNIQUEID ) VALUES ( #{indentName}, 
+		${teamId}, ${serviceId}, ${productId}, ${indentPrice}, ${second}, #{indent_tele}, 
+		#{indent_recomment}, #{salesmanUniqueId} ) ]]> </insert> <select id="checkStatus" 
+		resultType="long"> <![CDATA[ SELECT COUNT(1) FROM INDENT t WHERE t.INDENTTYPE 
+		= ${indentType} ]]> </select> <select id="countBySalesmanUniqueId" resultType="long"> 
+		<![CDATA[ SELECT COUNT(1) FROM INDENT ind WHERE ind.SALESMANUNIQUEID = #{salesmanUniqueId} 
+		]]> </select> <select id="sumPriceBySalesmanUniqueId" resultType="Double"> 
+		<![CDATA[ SELECT SUM(ind.INDENTPRICE) FROM INDENT ind WHERE ind.SALESMANUNIQUEID 
+		= #{salesmanUniqueId} ]]> </select> <update id="changeIndentsType"> <![CDATA[ 
+		UPDATE INDENT SET INDENTTYPE = ${indentType} WHERE 1=1 ]]> <if test="ids 
+		!= null and ids != ''"> AND INDENTID IN <foreach collection="ids" open="(" 
+		close=")" item="id" separator=","> ${id} </foreach> </if> </update> -->
 </mapper>

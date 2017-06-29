@@ -327,7 +327,8 @@
 			AND t.TEAMNAME LIKE CONCAT(CONCAT('%',#{teamName}),'%')
 		</if>
 		<if test="productName !=null and productName != ''">
-			AND pro.PRODUCTNAME LIKE CONCAT(CONCAT('%',#{productName}),'%')
+			AND pro.PRODUCTNAME LIKE
+			CONCAT(CONCAT('%',#{productName}),'%')
 		</if>
 		<if test="beginTime != null and beginTime != '' ">
 			AND DATE_FORMAT(pro.UPLOADDATE,'%Y-%m-%d') &gt;=
@@ -805,7 +806,7 @@
 			AND masterWork = 1
 		]]>
 	</select>
-	
+
 	<select id="searchPageRecommendList" resultType="Product"> 
 		<![CDATA[
 			SELECT p.productId,p.productName, t.teamName,p.recommend
@@ -819,7 +820,7 @@
 				LIMIT ${begin} , ${limit}
 		]]>
 	</select>
-	<select id="maxRecommendSize"  resultType="java.lang.Long"> 
+	<select id="maxRecommendSize" resultType="java.lang.Long"> 
 		<![CDATA[
 			SELECT COUNT(1)
 				FROM PRODUCT p

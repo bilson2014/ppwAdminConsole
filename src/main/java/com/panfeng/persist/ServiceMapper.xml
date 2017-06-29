@@ -5,18 +5,18 @@
 	<cache />
 
 	<resultMap type="Service" id="ServiceRM">
-		<id property="serviceId" column="serviceId"/>
-		<result property="serviceName" column="serviceName"/>
-		<result property="serviceDescription" column="serviceDescription"/>
-		<result property="servicePrice" column="servicePrice"/>
-		<result property="serviceRealPrice" column="serviceRealPrice"/>
-		<result property="serviceDiscount" column="serviceDiscount"/>
-		<result property="serviceOd" column="serviceOd"/>
-		<result property="mcoms" column="mcoms"/>
+		<id property="serviceId" column="serviceId" />
+		<result property="serviceName" column="serviceName" />
+		<result property="serviceDescription" column="serviceDescription" />
+		<result property="servicePrice" column="servicePrice" />
+		<result property="serviceRealPrice" column="serviceRealPrice" />
+		<result property="serviceDiscount" column="serviceDiscount" />
+		<result property="serviceOd" column="serviceOd" />
+		<result property="mcoms" column="mcoms" />
 		<association property="product" javaType="Product" column="productId"
 			resultMap="productRM" />
 	</resultMap>
-	
+
 	<resultMap type="Product" id="productRM">
 		<id property="productId" column="productId" />
 		<result property="videoUrl" column="videoUrl" />
@@ -33,7 +33,7 @@
 		<association property="team" column="teamId" javaType="Team"
 			resultMap="teamRM" />
 	</resultMap>
-	
+
 	<resultMap type="Team" id="teamRM">
 		<id property="teamId" column="teamId" />
 		<result property="teamName" column="teamName" />
@@ -42,7 +42,7 @@
 		<result property="od" column="od" />
 		<result property="createDate" column="createDate" />
 	</resultMap>
-	
+
 	<select id="listWithPagination" resultType="Service">
 		<![CDATA[
 			SELECT s.SERVICEID AS serviceId,
@@ -65,20 +65,21 @@
 			AND s.PRODUCTID = ${productId}
 		</if>
 		<if test="productName != null and productName != ''">
-			AND p.PRODUCTNAME LIKE CONCAT(CONCAT('%',#{productName}),'%')
+			AND p.PRODUCTNAME LIKE
+			CONCAT(CONCAT('%',#{productName}),'%')
 		</if>
 		<![CDATA[
 		ORDER BY
 		]]>
 		<if test="sort != null and sort != '' and order != null and order != ''">
-			 ${sort} ${order},
+			${sort} ${order},
 		</if>
 		<![CDATA[
 			s.SERVICEID,SERVICEOD
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
-	
+
 	<select id="maxSize" resultType="long">
 		<![CDATA[
 			SELECT COUNT(1) 
@@ -91,10 +92,11 @@
 			AND s.PRODUCTID = ${productId}
 		</if>
 		<if test="productName != null and productName != ''">
-			AND p.PRODUCTNAME LIKE CONCAT(CONCAT('%',#{productName}),'%')
+			AND p.PRODUCTNAME LIKE
+			CONCAT(CONCAT('%',#{productName}),'%')
 		</if>
 	</select>
-	
+
 	<select id="findServiceById" resultMap="ServiceRM">
 		<![CDATA[
 			SELECT s.SERVICEID AS serviceId,
@@ -129,7 +131,7 @@
 			WHERE s.SERVICEID = ${serviceId}
 		]]>
 	</select>
-	
+
 	<delete id="deleteByProduct">
 		<![CDATA[
 			DELETE FROM SERVICE
@@ -143,7 +145,7 @@
 				WHERE SERVICEID = ${serviceId}
 		]]>
 	</delete>
-	
+
 	<insert id="save" useGeneratedKeys="true" keyProperty="serviceId"
 		parameterType="Service">
 		<![CDATA[
@@ -170,7 +172,7 @@
 			)
 		]]>
 	</insert>
-	
+
 	<update id="update">
 		<![CDATA[
 			UPDATE SERVICE
@@ -194,7 +196,7 @@
 			WHERE SERVICEID = ${serviceId}
 		]]>
 	</update>
-	
+
 	<select id="loadService" resultType="Service">
 		<![CDATA[
 			SELECT s.SERVICEID AS serviceId,
@@ -213,7 +215,7 @@
 				ORDER BY SERVICEOD 
 		]]>
 	</select>
-	
+
 	<select id="loadSingleService" resultType="Service">
 		<![CDATA[
 				SELECT s.SERVICEID AS serviceId,
@@ -227,7 +229,7 @@
 				LIMIT 1
 		]]>
 	</select>
-	
+
 	<update id="updatePriceAndMcoms">
 		<![CDATA[
 			UPDATE SERVICE
@@ -238,7 +240,7 @@
 			WHERE SERVICEID = ${serviceId}
 		]]>
 	</update>
-	
+
 	<select id="loadServiceById" resultType="Service">
 		<![CDATA[
 			SELECT s.SERVICEID AS serviceId,
@@ -253,7 +255,7 @@
 			WHERE s.SERVICEID = ${serviceId}
 		]]>
 	</select>
-	
+
 	<select id="getServiceById" resultType="Service">
 		<![CDATA[
 			SELECT s.SERVICEID AS serviceId,

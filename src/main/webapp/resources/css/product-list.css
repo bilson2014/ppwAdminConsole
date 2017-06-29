@@ -100,7 +100,7 @@
 	margin-top: 5px;
 	margin-bottom: 5px;
 	line-height: 25px;
-	padding-left:100px;
+	padding-left: 100px;
 	float: left;
 }
 
@@ -209,16 +209,16 @@
 	left: 10px;
 }
 
-.p-submit{
-	float:right;
-	margin-left:3px;
-	width:75px;
-	height:27px;
+.p-submit {
+	float: right;
+	margin-left: 3px;
+	width: 75px;
+	height: 27px;
 	text-align: center;
-	line-height:27px;
+	line-height: 27px;
 }
 
-.p-label{
+.p-label {
 	margin-top: 25px;
 	width: 650px;
 	height: 28px;

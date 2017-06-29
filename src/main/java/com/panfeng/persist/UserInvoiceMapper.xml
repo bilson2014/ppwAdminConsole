@@ -43,14 +43,14 @@
 		ORDER BY
 		]]>
 		<if test="sort != null and sort != '' and order != null and order != ''">
-			 ${sort} ${order},
+			${sort} ${order},
 		</if>
 		<![CDATA[
 			 i.INVOICE_RECEIVETIME DESC
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
-	
+
 	<select id="maxSize" resultType="Long">
 		<![CDATA[
 			SELECT COUNT(1)
@@ -63,20 +63,20 @@
 				 ON i.invoice_employeeId = e.employeeId
 			WHERE 1 = 1
 		]]>
-		
+
 		<if test="invoiceType != null and invoiceType !=0 ">
 			AND i.INVOICE_TYPE = ${invoiceType}
 		</if>
-		
+
 		<if test="invoiceCode != null and invoiceCode != '' ">
 			AND i.INVOICE_CODE LIKE CONCAT('%',#{invoiceCode},'%')
 		</if>
-		
+
 		<if test="invoiceProjectId != null ">
 			AND i.invoice_projectId = ${invoiceProjectId}
 		</if>
 	</select>
-	
+
 	<insert id="save" useGeneratedKeys="true" keyProperty="invoiceId"
 		parameterType="UserInvoice">
 		<![CDATA[
@@ -109,7 +109,7 @@
 			)
 		]]>
 	</insert>
-	
+
 	<update id="update">
 		<![CDATA[
 			UPDATE USER_INVOICE
@@ -128,7 +128,7 @@
 			WHERE INVOICE_ID = ${invoiceId}
 		]]>
 	</update>
-	
+
 	<delete id="deleteByIds">
 		<![CDATA[
 			DELETE FROM USER_INVOICE
@@ -144,7 +144,7 @@
 			</foreach>
 		</if>
 	</delete>
-		<update id="agreeInvoiceByIds">
+	<update id="agreeInvoiceByIds">
 		<![CDATA[
 			UPDATE USER_INVOICE
 				SET INVOICE_STATUS = 1,
@@ -161,7 +161,7 @@
 			</foreach>
 		</if>
 	</update>
-	
+
 	<update id="disagreeInvoice">
 		<![CDATA[
 			UPDATE USER_INVOICE

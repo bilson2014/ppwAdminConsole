@@ -20,7 +20,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<!-- 两个参数的URL -->
 	<tag>
 		<name>mulparampermission</name>
@@ -31,14 +31,14 @@
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-		
+
 		<attribute>
 			<name>uri2</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<!-- 当前角色 -->
 	<tag>
 		<name>identity</name>
@@ -50,12 +50,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<!-- 输出登录名 -->
 	<tag>
 		<name>outName</name>
 		<tag-class>com.panfeng.taglib.OutNameTag</tag-class>
 		<body-content>JSP</body-content>
 	</tag>
-	
+
 </taglib>

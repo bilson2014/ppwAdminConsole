@@ -20,7 +20,7 @@
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
-	
+
 	<select id="list" resultType="Item">
 		<![CDATA[
 			SELECT i.ITEMID AS itemId,
@@ -31,7 +31,7 @@
 			FROM ITEM i
 		]]>
 	</select>
-	
+
 	<select id="maxSize" resultType="long">
 		<![CDATA[
 			SELECT COUNT(1)
@@ -42,7 +42,7 @@
 			AND i.ITEMID = ${itemId}
 		</if>
 	</select>
-	
+
 	<insert id="save">
 		<![CDATA[
 			INSERT INTO ITEM(
@@ -58,7 +58,7 @@
 			)
 		]]>
 	</insert>
-	
+
 	<update id="update">
 		<![CDATA[
 			UPDATE ITEM
@@ -70,14 +70,14 @@
 			WHERE ITEMID = ${itemId}
 		]]>
 	</update>
-	
+
 	<delete id="delete">
 		<![CDATA[
 			DELETE FROM ITEM
 				WHERE ITEMID = ${itemId}
 		]]>
 	</delete>
-	
+
 	<select id="listWithoutActive" resultType="Item">
 		<![CDATA[
 			SELECT i.ITEMID AS itemId,
@@ -90,7 +90,7 @@
 				AND isActive = 0 
 		]]>
 	</select>
-	
+
 	<select id="getTagsById" resultType="Item">
 		<![CDATA[
 			SELECT i.ITEMID AS itemId,
@@ -101,9 +101,9 @@
 			FROM ITEM i
 			WHERE ITEMID IN 
 		]]>
-		<foreach collection="ids" item="bus" separator=","
-				open="(" close=")">
-				#{bus}
+		<foreach collection="ids" item="bus" separator="," open="("
+			close=")">
+			#{bus}
 		</foreach>
 	</select>
 </mapper>

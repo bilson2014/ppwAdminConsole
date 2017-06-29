@@ -104,7 +104,7 @@
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
-	
+
 	<select id="maxSize" resultType="long">
 		<![CDATA[
 			SELECT

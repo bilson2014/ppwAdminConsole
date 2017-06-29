@@ -4,8 +4,7 @@
 
 	<cache />
 
-	<insert id="save" useGeneratedKeys="true" keyProperty="fd_id"
-		>
+	<insert id="save" useGeneratedKeys="true" keyProperty="fd_id">
 		<![CDATA[
 		INSERT INTO FLOW_DATE (
 			FD_FLOW_ID,
