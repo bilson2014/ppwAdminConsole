@@ -61,13 +61,21 @@ $().ready(function(){
 						sortable : true ,
 						formatter : function(value , record , index){
 							if(value == 0){
-								return '<span style=color:red; >新订单</span>' ;
+							    return '<span style=color:red; >新订单</span>' ;
 							} else if( value == 1){
-								return '<span style=color:green; >处理中</span>' ; 
+							    return '<span style=color:green; >处理中</span>' ; 
 							} else if( value == 2){
-								return '<span style=color:blue; >完成</span>' ;
+							    return '<span style=color:blue; >完成</span>' ;
 							} else if( value == 3){
-								return '<span style=color:black; >停滞</span>' ;
+							    return '<span style=color:black; >停滞</span>' ;
+							} else if(value == 4){
+								return '<span style=color:black; >再次沟通</span>' ;
+							}  else if(value == 5){
+								return '<span style=color:black; >真实</span>' ;
+							} else if(value == 6){
+								return '<span style=color:black; >虚假</span>' ;
+							} else if(value == 7){
+								return '<span style=color:black; >提交</span>' ;
 							}
 						}
 					},{

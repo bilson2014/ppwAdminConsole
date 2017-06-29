@@ -148,7 +148,7 @@
 	        		<tr id="yilei">
 	        			<th>客户类型</th>
 	        			<td>
-	        				<select style="width:155px" name="customerType" id='customerType' class="easyui-combobox" required="required">
+	        				<select style="width:155px" name="customerType" id='customerType' class="easyui-combobox">
 							</select>
 	        			</td>
 	        			<th class="referrer" style="display: none;">推荐人</th>
@@ -159,7 +159,7 @@
 	        		<tr>
 	        			<th>职位</th>
 	        			<td>
-	        				<select style="width:155px" name="position" id='position' class="easyui-combobox" required="required">
+	        				<select style="width:155px" name="position" id='position' class="easyui-combobox">
 							</select>
 	        			</td>
 	        		</tr>

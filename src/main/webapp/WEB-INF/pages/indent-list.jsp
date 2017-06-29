@@ -127,6 +127,10 @@
 							<option value="1">处理中</option>
 							<option value="2">完成</option>
 							<option value="3">停滞</option>
+							<option value="4">再次沟通</option>
+							<option value="5">真实</option>
+							<option value="6">虚假</option>
+							<option value="7">提交</option>
 					</select></td>
 				</tr>
 			</table>
@@ -178,9 +182,13 @@
             	 <label>订单状态:</label>
             	 <select name="indentType" class="easyui-combobox" required="true" style="width: 46%;">
                 	<option value="0">新订单</option>
-                	<option value="1">处理中</option>
-                	<option value="2">完成</option>
-                	<option value="3">停滞</option>
+					<option value="1">处理中</option>
+					<option value="2">完成</option>
+					<option value="3">停滞</option>
+					<option value="4">再次沟通</option>
+					<option value="5">真实</option>
+					<option value="6">虚假</option>
+					<option value="7">提交</option>
                 </select>
             </div>
 	        <div class="fitem">

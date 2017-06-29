@@ -108,6 +108,26 @@ public class ProductController extends BaseController {
 		final DataGrid<PmsProduct> dataGrid = pmsProductFacade.listWithPagination(param,paramMap);
 		return dataGrid;
 	}
+	
+	/**
+	 * 查询供应商所有作品
+	 * @param teamId 供应商id
+	 * @param param
+	 * @return
+	 */
+	@RequestMapping(value = "/product/listByTeam", produces = "application/json; charset=UTF-8")
+	public DataGrid<PmsProduct> listByTeam(long teamId, final PageParam param){
+		final long page = param.getPage();
+		final long rows = param.getRows();
+		param.setBegin((page - 1) * rows);
+		param.setLimit(rows);
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("teamId", teamId);
+		final DataGrid<PmsProduct> dataGrid = pmsProductFacade.listWithPagination(param,paramMap);
+		return dataGrid;
+	}
+	
 
 	/**
 	 * 删除
