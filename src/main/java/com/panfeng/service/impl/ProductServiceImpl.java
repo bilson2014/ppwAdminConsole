@@ -137,4 +137,9 @@ public class ProductServiceImpl implements ProductService {
 		return mapper.findProductByIds(lids);
 	}
 
+	@Override
+	public List<Product> selectFilmToConvert() {
+		return mapper.selectFilmToConvert();
+	}
+
 }

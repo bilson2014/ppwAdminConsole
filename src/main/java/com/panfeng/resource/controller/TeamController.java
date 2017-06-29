@@ -1,8 +1,12 @@
 package com.panfeng.resource.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,6 +71,9 @@ public class TeamController extends BaseController {
 
 	@Autowired
 	private final PmsTeamFacade pmsTeamFacade = null;
+	
+	@Autowired
+	private final TeamService teamService=null;
 
 	@RequestMapping("team-list")
 	public ModelAndView view(final HttpServletRequest request, final ModelMap model) {
@@ -790,6 +798,55 @@ public class TeamController extends BaseController {
 	public List<PmsTeam> teamRecommendList() {
 		// return service.teamRecommendList();
 		return pmsTeamFacade.teamRecommendList();
+	}
+	
+	/**
+	 * 供应商数据导出
+	 * @param view
+	 * @param response
+	 */
+	@RequestMapping(value = "/team/export", method = RequestMethod.POST)
+	public void export(final TeamView view ,final HttpServletResponse response){
+		OutputStream outputStream = null;
+		try {
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("application/octet-stream");
+			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
+			String filename = URLEncoder.encode("供应商列表" + dateString + ".xlsx", "UTF-8");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
+			outputStream = response.getOutputStream();
+			
+			// 封装查询参数
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put("teamId", view.getTeamId());
+			paramMap.put("flag", view.getFlag());
+			paramMap.put("phoneNumber", view.getPhoneNumber());
+			paramMap.put("priceRange", view.getPriceRange());
+			paramMap.put("business", view.getBusiness());
+			paramMap.put("teamName", view.getTeamName());
+			paramMap.put("recommend", view.isRecommend());
+			paramMap.put("linkman", view.getLinkman());
+			paramMap.put("cityID", view.getCityID());
+			paramMap.put("provinceID", view.getProvinceID());
+			
+			List<PmsTeam> teamList=pmsTeamFacade.listWithParam(paramMap);
+			
+			//导出
+			teamService.generateReport(teamList, outputStream);
+			
+			outputStream.flush();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 }

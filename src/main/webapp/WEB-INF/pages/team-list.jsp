@@ -25,7 +25,7 @@
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
 	<div data-options="region:'north',border:false" style="height: 70px; overflow: hidden;background-color: #fff">
-			<form id="searchForm">
+			<form id="searchForm" method="post">
 				<table>
 					<tr>
 						<th>团队名称：</th>
@@ -91,7 +91,9 @@
 									
 						</td>
 						<td>
-							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
+							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
+							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
+							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="exportFun();">报表导出</a>
 						</td>
 					</tr>
 				</table>
@@ -119,6 +121,11 @@
 			
 			
 			<a  id="cancel-btn" onclick="recommendFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">首页推荐</a>
+			
+			<r:permission uri="/portal/product/listByTeam">
+				<a  id="cancel-btn" onclick="getProductsFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">作品列表</a>
+			</r:permission>
+			
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" style="width:520px; height:480px;padding:10px 20px"
@@ -340,6 +347,27 @@
         	<a href="javascript:void(0);" id='add-recommend' class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="">添加</a>
 			<table id="recommend-gride" data-options="fit:true,border:false"></table>
     </div>
+    <div id="product-dlg" class="easyui-dialog" style="width:620px; height:530px;padding:10px 20px"
+           closed="true" title="产品列表">
+			<table id="product-gride" data-options="fit:true,border:false"></table>
+			
+			<!-- video show content begin-->
+		<div id="video-condition" class="picture-condition hide">
+			<div class="video-modalDialog">
+				<div class="video-condition-body">
+					<div class="video-operation-panel">					
+						<video autoplay="autoplay" style="height: 270px;width: 480px" id="productVideo" preload="auto" class="hide" controls="controls" src=""></video>						
+						<div class="video-p-label">
+							<a href="#" class="button p-submit" id="v-cancel">取消</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- video show content end-->
+    </div>
+    
+		
      <div id="recommend-dlg-buttons">
     </div>
 </body>

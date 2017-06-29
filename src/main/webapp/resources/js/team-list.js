@@ -632,6 +632,107 @@ function recommendFuc(){
 		}
 	});
 }
+function getProductsFuc(){
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length == 1){
+		openDialog('product-dlg');
+		$('#product-gride').datagrid({  
+	        url:getContextPath() + '/portal/product/listByTeam',
+	        idField : 'productId',
+	        queryParams:{teamId:rows[0].teamId},
+	        striped : true ,
+			loadMsg : '数据正在加载,请耐心的等待...' ,
+			rownumbers : true , 
+			pagination: true ,
+			pageSize : 20,
+			pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
+			showFooter : false,
+	        columns:[[
+	        	{
+					field : 'productName',
+					title : '标题',
+					width : 170,
+					align : 'center' ,
+					editor : {
+						type : 'validatebox' ,
+						options : {
+							required : true , 
+							missingMessage : '请填写项目名称!'
+						}
+					}
+				},{
+					field : 'flag' ,
+					title : '审核状态' ,
+					align : 'center' ,
+					width : 100,
+					sortable : true ,
+					formatter : function(value , record , index){
+						if(value == 0){
+							return '<span style=color:blue; >审核中</span>' ;
+						} else if( value == 1){
+							return '<span style=color:green; >审核通过</span>' ;
+						} else if( value == 2){
+							return '<span style=color:red; >未通过审核</span>' ;
+						}
+					},
+					editor:{
+						type:'combobox' , 
+						options:{
+							data:[{id:0 , val:'审核中'},{id:1 , val:'审核通过'},{id:2 , val:'未通过审核'}] ,
+							valueField:'id' , 
+							textField:'val' ,
+							required:false , 
+							editable : false
+						}
+					}
+				}, {
+					field : 'visible' ,
+					title : '是否可见 ',
+					align : 'center' ,
+					width : 60,
+					sortable : true ,
+					formatter : function(value , record , index){
+						if(value == 0){
+							return '<span style=color:green; >可见</span>' ;
+						} else if( value == 1){
+							return '<span style=color:red; >不可见</span>' ; 
+						}
+					}
+				},{
+					field : 'tags' ,
+					title : '标签' ,
+					align : 'center' ,
+					width : 195,
+					sortable : true ,
+					editor : {
+						type : 'validatebox' ,
+						options : {
+							required : false 
+						}
+					}
+				} 
+	        ]] ,
+	        onDblClickCell:function(index,field,value){
+				if(field == 'productName'){
+					var row = $('#product-gride').datagrid('getData').rows[index];	
+					$('#video-condition').removeClass('hide');
+					$('#productVideo').removeClass('hide');
+					$('#productVideo').show('fast');
+					
+					var videoPath = getDfsHostName() +  row.videoUrl;
+					$('#productVideo').attr('src',videoPath);
+					
+					$('#v-cancel').on('click',function(){
+						$('#video-condition').addClass('hide');
+						$('#productVideo').attr('src','');
+					});
+				}
+	        }
+	    });  
+	}else{
+		$.message('只能查看一条记录的产品列表!');
+	}
+}
 function sort(){
 	$(".sort").off("click").on("click",function(){
 		var action = $(this).attr("data-target");
@@ -681,6 +782,19 @@ function add(){
 			return false;
 		}
 	})
+}
+
+//报表导出
+function exportFun(){
+	$('#searchForm').form('submit',{
+		url : getContextPath() + '/portal/team/export',
+		onSubmit : function() {
+			$.growlUI('报表输出中…', '正在为您输出报表，请稍等。。。');
+		},
+		success : function(result) {
+			
+		}
+	});
 }
 
 /*

@@ -54,4 +54,9 @@ public interface ProductService {
 
 	public List<Product> loadActivityProducts();
 
+	/**
+	 * 历史视频转化临时SQL语句
+	 * @return
+	 */
+	public List<Product> selectFilmToConvert();
 }
