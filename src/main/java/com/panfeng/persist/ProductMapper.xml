@@ -847,4 +847,20 @@
 				p.PRODUCTID = ${productId}
 		]]>
 	</update>
+	
+	<select id="selectFilmToConvert" resultType="Product">
+		<![CDATA[
+			SELECT
+				p.PRODUCTID AS productId,
+				p.PRODUCTNAME AS productName,
+				p.VIDEOURL AS videoUrl
+			FROM
+				PRODUCT p
+			WHERE
+				videoUrl2 = ''
+			AND p.FLAG = 1
+			AND p.RECOMMEND = 0
+			AND p.VISIBLE = 0
+		]]>
+	</select>
 </mapper>

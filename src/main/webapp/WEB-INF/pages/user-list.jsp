@@ -18,7 +18,7 @@
 	<script src="${userListJs }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
-	<div data-options="region:'north',border:false" style="height: 65px; overflow: hidden;background-color: #fff">
+	<div data-options="region:'north',border:false" style="height: 70px; overflow: hidden;background-color: #fff">
 		<form id="searchForm">
 			<table>
 				<tr>
@@ -30,16 +30,16 @@
 					<td><input name="telephone" placeholder="请输入电话"/></td>
 					<th>网站:</th>
 					<td><input name="officialSite" placeholder="请输入网站"/></td>
-				</tr>
-				<tr>
 					<th>客户类型</th>
         			<td>
-        				<select style="width:155px" name="customerType" id='tCustomerType' class="easyui-combobox" editable="false">
+        				<select style="width:140px" name="customerType" id='tCustomerType' class="easyui-combobox" editable="false">
 						</select>
         			</td>
+				</tr>
+				<tr>
 					<th>客户分级：</th>
 					<td>
-						<select style="width:155px" name="clientLevel" id="clientLevel" class="easyui-combobox" editable="false">
+						<select style="width:140px" name="clientLevel" id="clientLevel" class="easyui-combobox" editable="false">
 					        <option value="-1" selected>-- 请选择 --</option>
 					        <option value="">未分级</option>
 					        <option value="3">S</option>
@@ -51,22 +51,22 @@
 					</td>
 					<th>购买频次</th>
         			<td>
-        				<select style="width:155px" name="purchaseFrequency" id='tPurchaseFrequency' class="easyui-combobox" editable="false">
+        				<select style="width:140px" name="purchaseFrequency" id='tPurchaseFrequency' class="easyui-combobox" editable="false">
 						</select>
         			</td>
         			<th>购买价格</th>
         			<td>
-        				<select style="width:155px" name="purchasePrice" id="tPurchasePrice" class="easyui-combobox" editable="false">
+        				<select style="width:140px" name="purchasePrice" id="tPurchasePrice" class="easyui-combobox" editable="false">
 						</select>
         			</td>
         			<th>客户规模</th>
         			<td>
-        				<select style="width:155px" name="customerSize" id='tCustomerSize' class="easyui-combobox" editable="false">
+        				<select style="width:140px" name="customerSize" id='tCustomerSize' class="easyui-combobox" editable="false">
 						</select>
         			</td>
         			<th>高层背书</th>
         			<td>
-        				<select style="width:155px" name="endorse" id='tEndorse' class="easyui-combobox" editable="false">
+        				<select style="width:140px" name="endorse" id='tEndorse' class="easyui-combobox" editable="false">
 						</select>
         			</td>
         			

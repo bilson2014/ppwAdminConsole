@@ -103,9 +103,11 @@
 				onclick="exportFun();">报表导出</a>
 		</r:permission>
 		
-		<a href="javascript:void(0);" class="easyui-linkbutton"
-			data-options="iconCls:'icon-search',plain:true"
-			onclick="customerServiceFun();">分配客服</a>
+		<r:permission uri="/portal/indent/updateCustomerService">
+			<a href="javascript:void(0);" class="easyui-linkbutton"
+				data-options="iconCls:'icon-search',plain:true"
+				onclick="customerServiceFun();">分配客服</a>
+		</r:permission>
 		
 		<a onclick="cancelFuc();" href="javascript:void(0);"
 			class="easyui-linkbutton"
