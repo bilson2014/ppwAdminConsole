@@ -125,5 +125,11 @@ public interface ProductMapper {
 	 * 修改作品可见性
 	 */
 	public long updateProductVisibility(Product product);
+	
+	/**
+	 * 历史视频转化临时SQL语句
+	 * @return
+	 */
+	public List<Product> selectFilmToConvert();
 
 }

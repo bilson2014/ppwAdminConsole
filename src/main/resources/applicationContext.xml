@@ -47,11 +47,11 @@
 		<aop:include name="callMonitor" />
 	</aop:aspectj-autoproxy>
 
-	<bean id="multipartResolver"
+	<!-- <bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="uploadTempDir" value="${upload.path}" />
-	</bean>
+	</bean> -->
 
 	<bean id="jobFactory" class="com.panfeng.service.impl.job.SpringJobFactory" />
 
