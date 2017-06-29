@@ -18,23 +18,23 @@
 		<!-- 最大空闲数 -->
 		<property name="maxIdle" value="${redis.maxIdle}" />
 		<!-- 每次释放连接的最大数目 -->
-		<property name="numTestsPerEvictionRun" value="${redis.numTestsPerEvictionRun}" />
+		<property name="numTestsPerEvictionRun" value="${redis.numTestsPerEvictionRun}"/>
 		<!-- 释放连接的扫描间隔（毫秒） -->
-		<property name="timeBetweenEvictionRunsMillis" value="${redis.timeBetweenEvictionRunsMillis}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${redis.timeBetweenEvictionRunsMillis}"/>
 		<!-- 连接最小空闲时间 -->
 		<property name="minEvictableIdleTimeMillis" value="${redis.minEvictableIdleTimeMillis}" />
 		<!-- 连接空闲多久后 释放，当空闲时间 > 该值 且 空闲连接 > 最大空闲连接数 时，直接释放 -->
-		<property name="softMinEvictableIdleTimeMillis" value="${redis.softMinEvictableIdleTimeMillis}" />
+		<property name="softMinEvictableIdleTimeMillis" value="${redis.softMinEvictableIdleTimeMillis}"/>
 		<!-- 最大等待时间 -->
-		<property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
+		<property name="maxWaitMillis" value="${redis.maxWaitMillis}"/>
 		<!-- 获取连接时检查有效性，默认false -->
-		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+		<property name="testOnBorrow" value="${redis.testOnBorrow}"/>
 		<!-- 空闲时检查有效性，默认false -->
-		<property name="testWhileIdle" value="${redis.testWhileIdle}" />
+		<property name="testWhileIdle" value="${redis.testWhileIdle}"/>
 		<!-- 连接耗尽是否阻塞，false报异常，true阻塞直到超时，默认true -->
-		<property name="blockWhenExhausted" value="${blockWhenExhausted}" />
+		<property name="blockWhenExhausted" value="${blockWhenExhausted}"/>
 	</bean>
-
+	
 	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">
 		<constructor-arg index="0" ref="jedisPoolConfig" />
 		<constructor-arg index="1" value="${redis.server}" />

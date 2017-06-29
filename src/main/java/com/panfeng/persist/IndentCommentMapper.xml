@@ -41,7 +41,7 @@
 				WHERE IC_ID = ${icId}
 		]]>
 	</delete>
-
+	
 	<delete id="removeIndentCommentList" parameterType="long">
 		<![CDATA[
 			DELETE FROM INDENT_COMMENT 

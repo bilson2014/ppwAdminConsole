@@ -1,13 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%-- import CSS --%>
-<spring:url value="/resources/lib/normalize/normalize.css"
-	var="normalizeCss" />
+<spring:url value="/resources/lib/normalize/normalize.css" var="normalizeCss" />
 <spring:url value="/resources/css/common.css" var="commonCss" />
 
 <%-- import JS --%>
-<spring:url value="/resources/lib/jquery/jquery-2.0.3.min.js"
-	var="jqueryJs" />
+<spring:url value="/resources/lib/jquery/jquery-2.0.3.min.js" var="jqueryJs" />
 <spring:url value="/resources/js/common.js" var="commonJs" />
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->

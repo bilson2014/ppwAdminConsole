@@ -14,41 +14,40 @@
 	<!-- 可以生成ConnectionFactory,由JM提供 -->
 	<bean id="targetConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
 		<!-- ActiveMQ服务地址 -->
-		<property name="brokerURL" value="${mq.brokerURL}" />
-		<property name="userName" value="${mq.userName}"></property>
-		<property name="password" value="${mq.password}"></property>
+        <property name="brokerURL" value="${mq.brokerURL}" />
+        <property name="userName" value="${mq.userName}"></property>
+        <property name="password" value="${mq.password}"></property> 
 	</bean>
-
+	
 	<bean id="pooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">
 		<property name="connectionFactory" ref="targetConnectionFactory" />
 		<property name="maxConnections" value="${mq.pool.maxConnections}" />
 	</bean>
-
+	
 	<!-- Spring 管理由JM生成的ConectionFactory即targetConnectionFactory -->
-	<bean id="connectionFactory"
-		class="org.springframework.jms.connection.SingleConnectionFactory">
+	<bean id="connectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
 		<!-- 目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory -->
-		<property name="targetConnectionFactory" ref="pooledConnectionFactory" />
+		<property name="targetConnectionFactory" ref="pooledConnectionFactory"/>
 	</bean>
-
+	
 	<bean id="smsJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<property name="connectionFactory" ref="connectionFactory" />
-		<property name="defaultDestinationName" value="${smsQueue}" />
+		<property name="defaultDestinationName" value="${smsQueue}"/>
 	</bean>
-
+	
 	<bean id="mailJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<property name="connectionFactory" ref="connectionFactory" />
-		<property name="defaultDestinationName" value="${mailQueue}" />
+		<property name="defaultDestinationName" value="${mailQueue}"/>
 	</bean>
-
+	
 	<bean id="logJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<property name="connectionFactory" ref="connectionFactory" />
-		<property name="defaultDestinationName" value="${logQueue}" />
+		<property name="defaultDestinationName" value="${logQueue}"/>
 	</bean>
-
+	
 	<bean id="fileConverJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<property name="connectionFactory" ref="connectionFactory" />
-		<property name="defaultDestinationName" value="${fileConverQueue}" />
+		<property name="defaultDestinationName" value="${fileConverQueue}"/>
 	</bean>
-
+	
 </beans>

@@ -1,24 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%-- import CSS --%>
-<spring:url value="/resources/lib/normalize/normalize.css"
-	var="normalizeCss" />
-<spring:url
-	value="/resources/lib/jquery.easyui/themes/default/easyui.css"
-	var="easyuiCss" />
-<spring:url value="/resources/lib/jquery.easyui/themes/icon.css"
-	var="iconCss" />
+<spring:url value="/resources/lib/normalize/normalize.css" var="normalizeCss" />
+<spring:url value="/resources/lib/jquery.easyui/themes/default/easyui.css" var="easyuiCss" />
+<spring:url value="/resources/lib/jquery.easyui/themes/icon.css" var="iconCss" />
 <spring:url value="/resources/css/common.css" var="commonCss" />
 <spring:url value="/resources/css/login.css" var="loginCss" />
 
 <%-- import JS --%>
-<spring:url value="/resources/lib/jquery/jquery-2.0.3.min.js"
-	var="jqueryJs" />
+<spring:url value="/resources/lib/jquery/jquery-2.0.3.min.js" var="jqueryJs" />
 <spring:url value="/resources/lib/jquery/plugins.js" var="pluginJs" />
-<spring:url value="/resources/lib/jquery.easyui/jquery.easyui.min.js"
-	var="easyuiJs" />
-<spring:url value="/resources/lib/cripto/aes.js" var="aesJs" />
-<spring:url value="/resources/lib/cripto/pad-zeropadding.js" var="padJs" />
+<spring:url value="/resources/lib/jquery.easyui/jquery.easyui.min.js" var="easyuiJs" />
+<spring:url value="/resources/lib/cripto/aes.js" var="aesJs"/>
+<spring:url value="/resources/lib/cripto/pad-zeropadding.js" var="padJs"/>
 <spring:url value="/resources/js/common.js" var="commonJs" />
 <spring:url value="/resources/js/login.js" var="loginJs" />
 <!DOCTYPE html>
@@ -51,20 +45,19 @@
 </head>
 <body>
 	<div class="login">
-		<form method="post" id="loginform">
-			<div class="logo"></div>
-			<div class="login_form">
-				<div class="user">
-					<input class="text_value" type="text" name="employeeLoginName"
-						data-options="required:true"></input> <input class="text_value"
-						type="password" id="password" data-options="required:true"></input>
-					<input class="text_value" type="hidden" name="employeePassword"></input>
-				</div>
-				<button class="button" type="button" id="login-btn">登录</button>
-			</div>
-
-			<div id="tip"></div>
-		</form>
+		<form  method="post" id="loginform">
+		<div class="logo"></div>
+	    <div class="login_form">
+	    	<div class="user">
+	        	<input class="text_value" type="text" name="employeeLoginName" data-options="required:true"></input>
+	            <input class="text_value" type="password" id="password" data-options="required:true"></input>
+	            <input class="text_value" type="hidden" name="employeePassword"></input>
+	        </div>
+	        <button class="button"  type="button" id="login-btn">登录</button>
+	    </div>
+	    
+	    <div id="tip"></div>
+	    </form>
 	</div>
 </body>
 </html>

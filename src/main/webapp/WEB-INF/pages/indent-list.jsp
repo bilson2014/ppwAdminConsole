@@ -40,21 +40,24 @@
 						onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})"
 						readonly="readonly" required="true" /></td>
 					<th>订单来源:</th>
-					<td><select name="indentSource" style="width: 110px;">
+					<td>
+						<select name="indentSource" style="width: 110px;">
 							<option value="" selected="selected">-- 请选择 --</option>
-							<option value="1">线上-网站</option>
-							<option value="2">线上-活动</option>
-							<option value="3">线上-新媒体</option>
-							<option value="4">线下-电销</option>
-							<option value="5">线下-直销</option>
-							<option value="6">线下-活动</option>
-							<option value="7">线下-渠道</option>
-							<option value="8">复购</option>
-					</select></td>
+		               	    <option value="1">线上-网站</option>
+						    <option value="2">线上-活动</option>
+						    <option value="3">线上-新媒体</option>
+						    <option value="4">线下-电销</option>
+						    <option value="5">线下-直销</option>
+						    <option value="6">线下-活动</option>
+						    <option value="7">线下-渠道</option>
+						    <option value="8">复购</option>
+		                </select>
+					</td>
 					<th>处理人员:</th>
-					<td><select name="employeeId" class="easyui-combobox"
-						id="tIndentSource" style="width: 110px;">
-					</select></td>
+					<td>
+						<select name="employeeId" class="easyui-combobox" id="tIndentSource" style="width: 110px;">
+		                </select>
+					</td>	
 					<td><a href="javascript:void(0);" class="easyui-linkbutton"
 						data-options="iconCls:'icon-search',plain:true"
 						onclick="searchFun();">查询</a><a href="javascript:void(0);"
@@ -99,11 +102,13 @@
 				data-options="iconCls:'icon-search',plain:true"
 				onclick="exportFun();">报表导出</a>
 		</r:permission>
-
+		
 		<a href="javascript:void(0);" class="easyui-linkbutton"
 			data-options="iconCls:'icon-search',plain:true"
-			onclick="customerServiceFun();">分配客服</a> <a onclick="cancelFuc();"
-			href="javascript:void(0);" class="easyui-linkbutton"
+			onclick="customerServiceFun();">分配客服</a>
+		
+		<a onclick="cancelFuc();" href="javascript:void(0);"
+			class="easyui-linkbutton"
 			data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 	</div>
 
@@ -147,34 +152,34 @@
 		<form id="fm2" method="post">
 			<input type="hidden" name="id">
 			<div class="fitem">
-				<label>订单名称:</label> <input name="indentName" class="easyui-textbox"
-					required="true">
-			</div>
-			<div class="fitem">
-				<label>下单时间:</label> <input name="orderDate" class="easyui-datebox"
-					required="true">
-			</div>
-			<div class="fitem">
-				<label>订单金额:</label> <input name="indentPrice"
-					class="easyui-textbox">
-			</div>
-			<div class="fitem">
-				<label>订单来源:</label> <select name="indentSource"
-					class="easyui-combobox" required="true" style="width: 46%;">
-					<option value="1">线上-网站</option>
-					<option value="2">线上-活动</option>
-					<option value="3">线上-新媒体</option>
-					<option value="4">线下-电销</option>
-					<option value="5">线下-直销</option>
-					<option value="6">线下-活动</option>
-					<option value="7">线下-渠道</option>
-					<option value="8">复购</option>
-				</select>
-			</div>
-			<div class="fitem">
-				<label>订单状态:</label> <select name="indentType"
-					class="easyui-combobox" required="true" style="width: 46%;">
-					<option value="0">新订单</option>
+                <label>订单名称:</label>
+                <input name="indentName" class="easyui-textbox" required="true">
+	        </div>
+	        <div class="fitem">
+                <label>下单时间:</label>
+                <input name="orderDate" class="easyui-datebox" required="true">
+	        </div>
+	        <div class="fitem">
+                <label>订单金额:</label>
+                <input name="indentPrice" class="easyui-textbox">
+	        </div>
+	        <div class="fitem">
+            	 <label>订单来源:</label>
+            	 <select name="indentSource" class="easyui-combobox" required="true" style="width: 46%;">
+               	    <option value="1">线上-网站</option>
+				    <option value="2">线上-活动</option>
+				    <option value="3">线上-新媒体</option>
+				    <option value="4">线下-电销</option>
+				    <option value="5">线下-直销</option>
+				    <option value="6">线下-活动</option>
+				    <option value="7">线下-渠道</option>
+				    <option value="8">复购</option>
+                </select>
+            </div>
+	        <div class="fitem">
+            	 <label>订单状态:</label>
+            	 <select name="indentType" class="easyui-combobox" required="true" style="width: 46%;">
+                	<option value="0">新订单</option>
 					<option value="1">处理中</option>
 					<option value="2">完成</option>
 					<option value="3">停滞</option>
@@ -182,57 +187,50 @@
 					<option value="5">真实</option>
 					<option value="6">虚假</option>
 					<option value="7">提交</option>
-				</select>
-			</div>
-			<div class="fitem">
-				<label>客户电话:</label> <input name="indent_tele"
-					class="easyui-textbox" required="true">
-			</div>
-			<div class="fitem">
-				<label>订单备注:</label> <input name="indent_recomment"
-					class="easyui-textbox">
-			</div>
-			<div class="fitem">
-				<label>CRM备注:</label> <input name="indent_description"
-					class="easyui-textbox">
-			</div>
-			<div class="fitem">
-				<label>分销渠道:</label> <input name="salesmanUniqueId"
-					id='salesmanUnique' class="easyui-combobox">
-			</div>
+                </select>
+            </div>
+	        <div class="fitem">
+                <label>客户电话:</label>
+                <input name="indent_tele" class="easyui-textbox" required="true">
+	        </div>
+	        <div class="fitem">
+                <label>订单备注:</label>
+                <input name="indent_recomment" class="easyui-textbox">
+	        </div>
+	        <div class="fitem">
+                <label>CRM备注:</label>
+                <input name="indent_description" class="easyui-textbox">
+	        </div>
+	        <div class="fitem">
+                <label>分销渠道:</label>
+                <input name="salesmanUniqueId" id='salesmanUnique' class="easyui-combobox">
+	        </div>
 		</form>
 	</div>
 	<div id="dlg-buttons2">
 		<r:permission uri="/portal/indent/update">
-			<a href="javascript:void(0)" class="easyui-linkbutton c6"
-				iconCls="icon-ok" onclick="saveFun()">保存</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveFun()">保存</a>
 		</r:permission>
-		<a href="javascript:void(0)" class="easyui-linkbutton"
-			iconCls="icon-cancel" onclick="javascript:$('#dlg2').dialog('close')">取消</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg2').dialog('close')">取消</a>
 	</div>
-
-
-	<!-- 分配客服相关   --- begin  -->
-	<div id="dlgCustomerService" class="easyui-dialog"
-		style="width: 380px; height: 150px;" closed="true"
-		buttons="#dlg-buttons1" title="分配客服">
-		<form id="FmCustomerService" method="post">
-			<input type="hidden" name="employeeIds" id="employeeIds">
-			<div class="fitem">
-				<label>客服:</label> <select name="customerService"
-					id="customerService" class="easyui-combobox" required="true"
-					style="width: 46%;">
-				</select>
-			</div>
-			<div id="dlg-buttons1">
-				<a href="javascript:void(0)" class="easyui-linkbutton c6"
-					iconCls="icon-ok" onclick="saveCustomerService()">保存</a> <a
-					href="javascript:void(0)" class="easyui-linkbutton"
-					iconCls="icon-cancel"
-					onclick="javascript:$('#dlgCustomerService').dialog('close')">取消</a>
-			</div>
-		</form>
-	</div>
-	<!-- 分配客服相关   --- end  -->
+	
+	
+		<!-- 分配客服相关   --- begin  -->
+		 <div id="dlgCustomerService" class="easyui-dialog" style="width:380px; height:150px;"
+            closed="true" buttons="#dlg-buttons1" title="分配客服">
+            <form id="FmCustomerService" method="post">
+            	<input type="hidden" name="employeeIds" id="employeeIds">
+	            <div class="fitem">
+            	 <label>客服:</label>
+            	 <select name="customerService" id="customerService" class="easyui-combobox" required="true" style="width: 46%;">
+                </select>
+            	</div>
+				 <div id="dlg-buttons1">
+					<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveCustomerService()" >保存</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlgCustomerService').dialog('close')" >取消</a>
+				</div> 
+	        </form>
+	    </div>
+		<!-- 分配客服相关   --- end  -->
 </body>
 </html>

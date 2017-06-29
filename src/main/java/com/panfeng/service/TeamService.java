@@ -1,10 +1,8 @@
 package com.panfeng.service;
 
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.resource.model.Team;
 
@@ -190,6 +188,4 @@ public interface TeamService {
 	 * 获取首页推荐供应商列表
 	 */
 	//public List<Team> teamRecommendList();
-	
-	public void generateReport(List<PmsTeam> list, OutputStream os);
 }

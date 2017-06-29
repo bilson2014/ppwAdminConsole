@@ -43,7 +43,7 @@
 				AND t.flag <> 3
 		]]>
 		<if test="recommend == true ">
-			AND t.RECOMMEND = 1
+			 AND t.RECOMMEND = 1 
 		</if>
 		<if test="teamId != null and teamId != ''">
 			AND t.TEAMID = ${teamId}
@@ -70,10 +70,10 @@
 		ORDER BY
 		]]>
 		<if test="sort != null and sort != '' and order != null and order != ''">
-			${sort} ${order},
+			 ${sort} ${order},
 		</if>
 		<if test="recommend == true ">
-			t.RECOMMEND_SORT ASC,
+			 t.RECOMMEND_SORT ASC, 
 		</if>
 		<![CDATA[		   
 			t.OD ASC,UPDATEDATE DESC,CREATEDATE DESC
@@ -89,7 +89,7 @@
 					AND t.flag <> 3
 		]]>
 		<if test="recommend == true ">
-			AND t.RECOMMEND = 1
+			 AND t.RECOMMEND = 1 
 		</if>
 		<if test="teamId != null and teamId != ''">
 			AND t.TEAMID = ${teamId}
@@ -349,7 +349,7 @@
 				AND t.flag <> 3
 		]]>
 	</select>
-
+	
 	<select id="getAllNoRecommend" resultType="Team">
 		<![CDATA[
 			SELECT t.TEAMID AS teamId,
@@ -585,28 +585,28 @@
 			TEAMID = ${teamId}
 		</where>
 	</update>
-
+	
 	<update id="unBindThird">
 		<![CDATA[
 			UPDATE TEAM
 			   SET 
 		]]>
 		<if test="thirdLoginType=='qq'">
-			QQUNIQUE =''
+			 QQUNIQUE =''
 		</if>
-
+		
 		<if test="thirdLoginType=='wb'">
-			WBUNIQUE =''
+			 WBUNIQUE =''
 		</if>
-
+		
 		<if test="thirdLoginType=='wechat'">
-			WECHATUNIQUE =''
+			 WECHATUNIQUE =''
 		</if>
 		<![CDATA[
 			WHERE TEAMID = ${teamId}
 		]]>
 	</update>
-
+	
 	<select id="verificationTeamExistByThirdLogin" resultType="Team">
 		<![CDATA[
 			SELECT t.TEAMID AS teamId,
@@ -624,7 +624,7 @@
 			   OR WECHATUNIQUE = #{uniqueId}
 		]]>
 	</select>
-
+	
 	<update id="modifyTeamPhone">
 		<![CDATA[
 			UPDATE TEAM
@@ -632,15 +632,13 @@
 			WHERE TEAMID = ${teamId}
 		]]>
 	</update>
-
+	
 	<update id="resetMasterWork">
-		UPDATE PRODUCT SET masterWork = 0 WHERE teamId =
-		${teamId}
+		UPDATE PRODUCT SET masterWork = 0 WHERE teamId = ${teamId}
 	</update>
-
+	
 	<update id="setMasterWork">
-		UPDATE PRODUCT SET masterWork = ${masterWork} WHERE
-		productId = ${productId}
+		UPDATE PRODUCT SET masterWork = ${masterWork} WHERE productId = ${productId}
 	</update>
 	<select id="getTeamInfo" resultType="Team">
 		<![CDATA[
@@ -659,12 +657,12 @@
 		]]>
 	</select>
 	<update id="updateTeamDescription">
-		UPDATE TEAM SET
-		DESCRIPTION = #{description},
-		ESTABLISHDATE = #{establishDate},
-		OFFICIALSITE = #{officialSite},
-		BUSINESSDESC = #{businessDesc}
-		WHERE TEAMID = ${teamId}
+		UPDATE TEAM SET 
+			DESCRIPTION = #{description},
+			ESTABLISHDATE = #{establishDate},
+			OFFICIALSITE = #{officialSite},
+			BUSINESSDESC = #{businessDesc}
+			WHERE TEAMID = ${teamId}
 	</update>
 	<select id="getLatestTmpByTeamId" resultType="Team">
 		<![CDATA[
@@ -701,7 +699,7 @@
 			 WHERE TEAM_ID = ${teamId} AND STATUS = 1
 		]]>
 	</select>
-
+	
 	<update id="downSortByRecommendSort">
 		<![CDATA[
 			UPDATE TEAM SET RECOMMEND_SORT=RECOMMEND_SORT+1 WHERE

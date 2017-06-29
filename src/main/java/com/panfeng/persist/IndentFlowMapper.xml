@@ -142,5 +142,9 @@
 		]]>
 	</update>
 
-	<!-- <select id="getAll" resultType="FlowView"> <![CDATA[ ]]> </select> -->
+<!-- 	<select id="getAll" resultType="FlowView">
+		<![CDATA[
+			
+		]]>
+	</select> -->
 </mapper>

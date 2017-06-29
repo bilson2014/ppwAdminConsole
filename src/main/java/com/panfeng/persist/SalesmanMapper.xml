@@ -15,7 +15,7 @@
 					AND sale.SALESMANID = ${salesmanId}
 		]]>
 	</select>
-
+	
 	<select id="list" resultType="Salesman">
 		<![CDATA[
 			SELECT sale.SALESMANID AS salesmanId,
@@ -28,7 +28,7 @@
 			WHERE 1 = 1
 		]]>
 	</select>
-
+	
 	<select id="listWithPagination" resultType="Salesman">
 		<![CDATA[
 			SELECT sale.SALESMANID AS salesmanId,
@@ -43,10 +43,9 @@
 		<if test="uniqueId != null and uniqueId != ''">
 			AND sale.UNIQUEID = #{uniqueId}
 		</if>
-
+		
 		<if test="salesmanName != null and salesmanName != ''">
-			AND sale.SALESMANNAME LIKE
-			CONCAT(CONCAT('%',#{salesmanName}),'%')
+			AND sale.SALESMANNAME LIKE CONCAT(CONCAT('%',#{salesmanName}),'%')
 		</if>
 		
 		<![CDATA[
@@ -54,7 +53,7 @@
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
-
+	
 	<select id="maxSize" resultType="java.lang.Long">
 		<![CDATA[
 			SELECT COUNT(1)
@@ -64,10 +63,9 @@
 		<if test="uniqueId != null and uniqueId != ''">
 			AND sale.UNIQUEID = #{uniqueId}
 		</if>
-
+		
 		<if test="salesmanName != null and salesmanName != ''">
-			AND sale.SALESMANNAME LIKE
-			CONCAT(CONCAT('%',#{salesmanName}),'%')
+			AND sale.SALESMANNAME LIKE CONCAT(CONCAT('%',#{salesmanName}),'%')
 		</if>
 	</select>
 
@@ -85,7 +83,7 @@
 			)
 		]]>
 	</insert>
-
+	
 	<update id="update">
 		<![CDATA[
 			UPDATE SALESMAN
@@ -95,14 +93,14 @@
 			WHERE SALESMANID = ${salesmanId}
 		]]>
 	</update>
-
+	
 	<delete id="delete">
 		<![CDATA[
 			DELETE FROM SALESMAN
 				WHERE SALESMANID = ${salesmanId}
 		]]>
 	</delete>
-
+	
 	<select id="findSalesmanByUniqueId" resultType="Salesman">
 		<![CDATA[
 			SELECT sale.SALESMANID AS salesmanId,
@@ -113,5 +111,5 @@
 					AND sale.UNIQUEID = #{uniqueId}
 		]]>
 	</select>
-
+	
 </mapper>

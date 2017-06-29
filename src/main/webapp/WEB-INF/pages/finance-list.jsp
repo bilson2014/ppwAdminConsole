@@ -1,72 +1,68 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="r" uri="/mytaglib"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="r" uri="/mytaglib" %>
 
-<spring:url value="/resources/lib/My97DatePicker/WdatePicker.js"
-	var="WdatePickerJs" />
-<spring:url value="/resources/css/project-list.css" var="projectListCss" />
-<spring:url value="/resources/js/finance-list.js" var="financeListJs" />
+<spring:url value="/resources/lib/My97DatePicker/WdatePicker.js" var="WdatePickerJs" />
+<spring:url value="/resources/css/project-list.css" var="projectListCss"/>
+<spring:url value="/resources/js/finance-list.js" var="financeListJs"/>
 
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js">
-<!--<![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <head>
-<jsp:include page="common.jsp" />
-<link rel="stylesheet" href="${projectListCss }">
-<script src="${WdatePickerJs }"></script>
-<script src="${financeListJs }"></script>
+	<jsp:include page="common.jsp" />
+	<link rel="stylesheet" href="${projectListCss }">
+	<script src="${WdatePickerJs }"></script>
+	<script src="${financeListJs }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
-	<div data-options="region:'north',border:false"
-		style="height: 36px; overflow: hidden; background-color: #fff">
-		<form id="searchForm" method="post">
+	<div data-options="region:'north',border:false" style="height: 36px;overflow: hidden;background-color: #fff">
+		<form id="searchForm"  method="post">
 			<table>
 				<tr>
 					<th>入出类型:</th>
-					<td><select id="search-type" name="logType" editable="false"
-						class="easyui-combobox" style="width: 76px;">
+					<td>
+						<select id="search-type"  name="logType" editable="false" class="easyui-combobox" style="width: 76px;">
 							<option value=""></option>
-							<option value="0">入账</option>
-							<option value="1">出账</option>
-					</select></td>
-
+							<option value="0" >入账</option>
+            				<option value="1" >出账</option>
+						</select>
+					</td>
+					
 					<th>项目名称:</th>
-					<td><input id="search-projectId" name="projectName"
-						class="easyui-combobox" placeholder="请输入项目名称"
-						style="width: 136px;" /></td>
-
+					<td>
+						<input id="search-projectId" name="projectName" class="easyui-combobox"  placeholder="请输入项目名称" style="width: 136px;"/>
+					</td>
+					
 					<th>交易方式:</th>
-					<td><select id="search-resource" name="dealLogSource"
-						editable="false" class="easyui-combobox" style="width: 76px;">
+					<td>
+						<select id="search-resource"  name="dealLogSource" editable="false" class="easyui-combobox" style="width: 76px;">
 							<option value=""></option>
-							<option value="0">线上支付</option>
-							<option value="1">线下支付</option>
-					</select></td>
-
+							<option value="0" >线上支付</option>
+            				<option value="1" >线下支付</option>
+						</select>
+					</td>
+					
 					<th>交易时间:</th>
-					<td><input name="beginTime" style="width: 76px;"
-						onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})"
-						readonly="readonly" required="true" />~</td>
-					<td><input name="endTime" style="width: 76px;"
-						onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})"
-						readonly="readonly" required="true" /></td>
-
-					<td><a href="javascript:void(0);" class="easyui-linkbutton"
-						data-options="iconCls:'icon-search',plain:true"
-						onclick="searchFun();">查询</a> <a href="javascript:void(0);"
-						class="easyui-linkbutton"
-						data-options="iconCls:'icon-cancel',plain:true"
-						onclick="cleanFun();">清空</a></td>
+					<td>
+						<input name="beginTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />~
+					</td>
+					<td>
+						<input name="endTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
+					</td>
+					
+					<td>
+						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
+						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
+					</td>
 				</tr>
 			</table>
 		</form>
 	</div>
-
-	<div data-options="region:'center',border:true">
+	
+	<div data-options="region:'center',border:true" >
 		<table id="gride" data-options="fit:true,border:false"></table>
 	</div>
 

@@ -79,7 +79,7 @@
 		 FROM INDENT_RESOURCE ir WHERE ir.IR_INDENTID=${id} ORDER BY ir.IR_ID DESC; 
 		]]>
 	</select>
-
+	
 	<select id="findIndentListByTaskId" resultType="IndentResource">
 		<![CDATA[
 		SELECT 

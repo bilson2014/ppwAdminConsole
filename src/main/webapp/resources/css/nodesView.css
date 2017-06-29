@@ -25,7 +25,6 @@
 .fitem input {
 	width: 160px;
 }
-
 .picture-modalDialog {
 	position: absolute;
 	top: 50%;
@@ -36,7 +35,6 @@
 	margin-left: -330px;
 	background-color: #ffffff;
 }
-
 .picture-condition-body {
 	position: absolute;
 	width: 660px;
@@ -49,7 +47,6 @@
 	box-shadow: 1px 2px 4px 2px rgba(0, 0, 0, 0.3);
 	border-radius: 3px;
 }
-
 .operation-panel {
 	position: absolute;
 	width: 640px;
@@ -57,19 +54,17 @@
 	top: 20px;
 	left: 10px;
 }
-
-.p-label {
+.p-label{
 	margin-top: 25px;
 	width: 650px;
 	height: 28px;
 	line-height: 28px;
 }
-
-.p-submit {
-	float: right;
-	margin-left: 3px;
-	width: 75px;
-	height: 27px;
+.p-submit{
+	float:right;
+	margin-left:3px;
+	width:75px;
+	height:27px;
 	text-align: center;
-	line-height: 27px;
+	line-height:27px;
 }

@@ -175,7 +175,7 @@
 				i.IP_SOURCE=#{source},
 				i.IP_CUSTOMERID=${customerId}
 				]]>
-
+				
 		<if test="teamId != null ">
 			,i.IP_TEAMID=${teamId}
 		</if>
@@ -275,11 +275,11 @@
 		<if test="providerPayment == null">
 			,i.IP_PROVIDER_PAYMENT = NULL
 		</if>
-
+		
 		<if test="priceFinish != null">
 			,i.IP_PRICE_FINISH=${priceFinish}
 		</if>
-
+		
 		<if test="priceFinish == null">
 			,i.IP_PRICE_FINISH=NULL
 		</if>
@@ -1021,7 +1021,7 @@
 			ORDER BY 
 		]]>
 		<if test="sort != null and sort != '' and order != null and order != ''">
-			${sort} ${order},
+			 ${sort} ${order},
 		</if>
 		<![CDATA[
 			 i.IP_ID DESC
@@ -1211,11 +1211,11 @@
 			AND t1.NAME_ LIKE CONCAT('%',#{stage},'%')
 		</if>
 		<if test="sort != null and sort != '' and order != null and order != ''">
-			order by ${sort} ${order}
+			order by  ${sort} ${order}
 		</if>
 		<![CDATA[
 			LIMIT ${begin} , ${limit}
 		]]>
 	</select>
-
+	
 </mapper>

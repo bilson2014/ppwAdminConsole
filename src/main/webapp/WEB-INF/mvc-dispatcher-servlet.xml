@@ -8,11 +8,10 @@
 		                   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
 	<mvc:view-controller path="/index" view-name="/portal" />
-
+	
 	<mvc:resources location="/resources/" mapping="/resources/**" />
 
-	<bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		p:prefix="/WEB-INF/pages/" p:suffix=".jsp" />
 
 	<context:component-scan base-package="com.panfeng.resource.controller" />
@@ -20,15 +19,15 @@
 	<context:annotation-config />
 
 	<mvc:annotation-driven />
-
+	
 	<!-- 拦截器 -->
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<mvc:exclude-mapping path="/resources/**" />
-			<mvc:exclude-mapping path="/portal/solr/suggest/**" />
-			<mvc:exclude-mapping path="/portal/kindeditor/delete/**" />
-			<bean class="com.panfeng.interceptor.SecurityInterceptor">
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/resources/**"/>
+			<mvc:exclude-mapping path="/portal/solr/suggest/**"/>
+			<mvc:exclude-mapping path="/portal/kindeditor/delete/**"/>
+			<bean class="com.panfeng.interceptor.SecurityInterceptor" >
 				<property name="excludeUrls">
 					<list>
 						<value>/login</value>
@@ -39,19 +38,19 @@
 				</property>
 			</bean>
 		</mvc:interceptor>
-
+		
 		<mvc:interceptor>
-			<mvc:mapping path="/portal/solr/query" />
-			<mvc:mapping path="/portal/solr/phone/query" />
-			<mvc:mapping path="/portal/product/more" />
-			<mvc:mapping path="/portal/tags/search" />
+			<mvc:mapping path="/portal/solr/query"/>
+			<mvc:mapping path="/portal/solr/phone/query"/>
+			<mvc:mapping path="/portal/product/more"/>
+			<mvc:mapping path="/portal/tags/search"/>
 			<bean class="com.panfeng.interceptor.SearchResourceInterceptor" />
 		</mvc:interceptor>
-
+		
 		<mvc:interceptor>
-			<mvc:mapping path="/portal/solr/suggest/**" />
+			<mvc:mapping path="/portal/solr/suggest/**"/>
 			<bean class="com.panfeng.interceptor.SuggestResourceInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
-
+	
 </beans>
