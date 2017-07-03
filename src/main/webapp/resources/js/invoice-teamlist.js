@@ -55,7 +55,7 @@ $().ready(function(){
 								},{
 									field : 'invoiceContent',
 									title : '发票内容',
-									align : 'center'
+									align : 'left'
 								},{
 									field : 'invoiceTotal',
 									title : '价税合计',
@@ -90,11 +90,13 @@ $().ready(function(){
 								},{
 									field : 'teamName',
 									title : '供应商名称',
-									align : 'center'
+									align : 'left',
+									width : 120
 								},{
 									field : 'projectName',
 									title : '项目名称',
-									align : 'center'
+									align : 'left',
+									width : 120
 								},{
 									field : 'invoiceEmployeeName',
 									title : '提供人',
@@ -102,7 +104,8 @@ $().ready(function(){
 								},{
 									field : 'invoiceNotice',
 									title : '备注',
-									align : 'center'
+									align : 'left',
+									width : 220
 								},{
 									field : 'invoiceStatus',
 									title : '审批状态',
@@ -120,7 +123,7 @@ $().ready(function(){
 								},{
 									field : 'reason',
 									title : '原因',
-									align : 'center'
+									align : 'left'
 								
 								}]],
 					pagination: true ,

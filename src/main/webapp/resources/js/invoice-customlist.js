@@ -38,7 +38,8 @@ $().ready(function(){
 								{
 									field : 'invoiceCode',
 									title : '发票号',
-									align : 'center'
+									align : 'center',
+									width : 60
 								},{
 									field : 'invoiceType' ,
 									title : '发票类型' ,
@@ -88,11 +89,13 @@ $().ready(function(){
 								},{
 									field : 'userName',
 									title : '客户名称',
-									align : 'center'
+									align : 'left',
+									width : 120
 								},{
 									field : 'projectName',
 									title : '项目名称',
-									align : 'center'
+									align : 'left',
+									width : 120
 								},{
 									field : 'invoiceEmployeeName',
 									title : '领取人',
@@ -100,7 +103,8 @@ $().ready(function(){
 								},{
 									field : 'invoiceNotice',
 									title : '备注',
-									align : 'center'
+									align : 'left',
+									width : 220
 								},{
 									field : 'invoiceStatus',
 									title : '审批状态',
@@ -118,7 +122,7 @@ $().ready(function(){
 								},{
 									field : 'reason',
 									title : '原因',
-									align : 'center'
+									align : 'left'
 								}]],
 					pagination: true ,
 					pageSize : 20,
