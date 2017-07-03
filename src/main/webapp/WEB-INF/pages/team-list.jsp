@@ -348,7 +348,7 @@
 			<table id="recommend-gride" data-options="fit:true,border:false"></table>
     </div>
     <div id="product-dlg" class="easyui-dialog" style="width:620px; height:530px;padding:10px 20px"
-           closed="true" title="产品列表">
+           closed="true" title="作品列表">
 			<table id="product-gride" data-options="fit:true,border:false"></table>
 			
 			<!-- video show content begin-->
