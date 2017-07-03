@@ -650,8 +650,8 @@ function getProductsFuc(){
 	        columns:[[
 	        	{
 					field : 'productName',
-					title : '标题',
-					width : 170,
+					title : '作品标题',
+					width : 150,
 					align : 'center' ,
 					editor : {
 						type : 'validatebox' ,
@@ -702,7 +702,7 @@ function getProductsFuc(){
 					field : 'tags' ,
 					title : '标签' ,
 					align : 'center' ,
-					width : 195,
+					width : 152,
 					sortable : true ,
 					editor : {
 						type : 'validatebox' ,
@@ -710,7 +710,16 @@ function getProductsFuc(){
 							required : false 
 						}
 					}
-				} 
+				} ,{
+					field : 'teamId' ,
+					title : '作品链接' ,
+					align : 'center' ,
+					width : 60,
+					sortable : true ,
+					formatter : function(value , record , index){
+						return "<a href='http://www.apaipian.com/play/"+value+"_"+record.productId+".html' target='_blank'>链接</a>";
+					}
+				}
 	        ]] ,
 	        onDblClickCell:function(index,field,value){
 				if(field == 'productName'){
