@@ -71,9 +71,9 @@ public class TeamController extends BaseController {
 
 	@Autowired
 	private final PmsTeamFacade pmsTeamFacade = null;
-	
+
 	@Autowired
-	private final TeamService teamService=null;
+	private final TeamService teamService = null;
 
 	@RequestMapping("team-list")
 	public ModelAndView view(final HttpServletRequest request, final ModelMap model) {
@@ -799,14 +799,15 @@ public class TeamController extends BaseController {
 		// return service.teamRecommendList();
 		return pmsTeamFacade.teamRecommendList();
 	}
-	
+
 	/**
 	 * 供应商数据导出
+	 * 
 	 * @param view
 	 * @param response
 	 */
 	@RequestMapping(value = "/team/export", method = RequestMethod.POST)
-	public void export(final TeamView view ,final HttpServletResponse response){
+	public void export(final TeamView view, final HttpServletResponse response) {
 		OutputStream outputStream = null;
 		try {
 			response.setCharacterEncoding("utf-8");
@@ -815,7 +816,7 @@ public class TeamController extends BaseController {
 			String filename = URLEncoder.encode("供应商列表" + dateString + ".xlsx", "UTF-8");
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
 			outputStream = response.getOutputStream();
-			
+
 			// 封装查询参数
 			Map<String, Object> paramMap = new HashMap<>();
 			paramMap.put("teamId", view.getTeamId());
@@ -828,12 +829,12 @@ public class TeamController extends BaseController {
 			paramMap.put("linkman", view.getLinkman());
 			paramMap.put("cityID", view.getCityID());
 			paramMap.put("provinceID", view.getProvinceID());
-			
-			List<PmsTeam> teamList=pmsTeamFacade.listWithParam(paramMap);
-			
-			//导出
+
+			List<PmsTeam> teamList = pmsTeamFacade.listWithParam(paramMap);
+
+			// 报表导出
 			teamService.generateReport(teamList, outputStream);
-			
+
 			outputStream.flush();
 
 		} catch (IOException e) {
