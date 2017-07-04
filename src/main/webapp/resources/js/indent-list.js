@@ -131,7 +131,7 @@ $().ready(function(){
 						align : 'center',
 						sortable : true 
 					},{
-						field : 'indent_description',
+						field : 'cSRecomment',
 						title : 'CRM备注',
 						align : 'center',
 						sortable : true
