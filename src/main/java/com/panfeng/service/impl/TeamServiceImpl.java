@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -687,20 +686,9 @@ public class TeamServiceImpl implements TeamService {
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getScale());
 				
-				//业务范围
-				String business="";
-				if(ValidateUtil.isValid(team.getBusiness())){
-					String[] businessValueArray=team.getBusiness().split(",");
-					
-					for(int j=0;j<businessValueArray.length;j++){
-						businessValueArray[j]=Constants.BUSINESS_MAP.get(businessValueArray[j]);
-					}
-					business=StringUtils.join(businessValueArray, ",");
-				}
-				
 				xssfCell=xssfRow.createCell(21);
 				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(business);
+				xssfCell.setCellValue(team.getBusiness());
 				
 				xssfCell=xssfRow.createCell(22);
 				xssfCell.setCellStyle(cs);
