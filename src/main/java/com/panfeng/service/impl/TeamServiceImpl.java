@@ -48,73 +48,7 @@ public class TeamServiceImpl implements TeamService {
 		return lists;
 	}
 
-	/*@Override
-	public long update(final Team team) {
-
-		return mapper.update(team);
-	}*/
-
-	/*@Override
-	public long maxSize(final TeamView view) {
-
-		final long size = mapper.maxSize(view);
-		return size;
-	}*/
-
-	/*@Override
-	public Team findTeamById(final long id) {
-
-		final Team team = mapper.findTeamById(id);
-		return team;
-	}*/
-
-	/*@Override
-	public long saveTeamPhotoUrl(final Team team) {
-
-		final long ret = mapper.saveTeamPhotoUrl(team);
-		return ret;
-	}*/
-
-	/*@Override
-	public List<Team> getAll() {
-
-		final List<Team> list = mapper.getAll();
-		return list;
-	}*/
-
-	/*@Override
-	public Team doLogin(final String phoneNumber) {
-
-		final List<Team> team = mapper.checkTeam(phoneNumber);
-		if (team != null) {
-			if (team.size() == 1) {
-				return team.get(0);
-			} else {
-				logger.error("数据库中存在多个相同手机号：" + phoneNumber);
-			}
-		} else {
-			logger.error("数据库中不存在该供应商 手机号：" + phoneNumber);
-		}
-		return null;
-	}*/
-
-	/*@Override
-	public long checkExist(final Team team) {
-
-		final TeamView view = new TeamView();
-		if (team.getPhoneNumber() != null && !"".equals(team.getPhoneNumber())) {
-
-			view.setPhoneNumber(team.getPhoneNumber());
-		}
-
-		if (team.getLoginName() != null && !"".equals(team.getLoginName())) {
-
-			view.setLoginName(team.getLoginName());
-		}
-
-		final long count = mapper.checkExist(view);
-		return count;
-	}*/
+	
 
 	@Override
 	public Team register(final Team original) {
@@ -132,20 +66,6 @@ public class TeamServiceImpl implements TeamService {
 		final long ret = mapper.recover(original);
 		return ret;
 	}
-
-	/*@Override
-	public long updateTeamInfomation(final Team team) {
-
-		final long ret = mapper.updateTeamInfomation(team);
-		return ret;
-	}*/
-
-	/*@Override
-	public long updatePasswordByLoginName(final Team team) {
-
-		final long ret = mapper.updatePasswordByLoginName(team);
-		return ret;
-	}*/
 
 	@Override
 	public long updateTeamStatus(final long teamId) {
@@ -166,13 +86,6 @@ public class TeamServiceImpl implements TeamService {
 		final List<Team> list = mapper.verificationTeamExist(team);
 		return list;
 	}
-
-	/*@Override
-	public long updateUniqueId(final Team provider) {
-
-		final long ret = mapper.updateUniqueId(provider);
-		return ret;
-	}*/
 
 	@Override
 	public BaseMsg bind(Team provider) {
@@ -303,21 +216,6 @@ public class TeamServiceImpl implements TeamService {
 		return team;
 	}
 
-	/*@Override
-	public long updateTeamAccount(Team original) {
-		return mapper.updateTeamAccount(original);
-	}
-*/
-	/*@Override
-	@Transactional
-	public boolean setMasterWork(Product product) {
-		// 重置所有代表作初始值
-		mapper.resetMasterWork(product.getTeamId());
-		// 更新当前作品master
-		mapper.setMasterWork(product);
-		return true;
-	}*/
-
 	public Map<String, Object> thirdStatus(Team t) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("qq", "0");
@@ -361,163 +259,6 @@ public class TeamServiceImpl implements TeamService {
 		}
 	}
 
-
-	/*@Override
-	public boolean teamInfoUnBind(Team team) {
-		mapper.unBindThird(team);
-		return true;
-	}*/
-
-	/*@Override
-	public long modifyTeamPhone(Team team) {
-		return mapper.modifyTeamPhone(team);
-	}
-*/
-	/*@Override
-	public Team getTeamInfo(Long teamId) {
-		return mapper.getTeamInfo(teamId);
-	}*/
-
-	/*@Override
-	public List<String> getTags(final List<Integer> ids) {
-		List<String> tags = new ArrayList<>();
-		for (int i = 0; i < ids.size(); i++) {
-			tags.add(TeamBusiness.get(ids.get(i)));
-		}
-		return tags;
-	}*/
-
-	/*@Override
-	public long updateTeamDescription(Team team) {
-		return  mapper.updateTeamDescription(team);
-	}*/
-
-	/*@Override
-	public void dealTeamTmp(Team team) {
-		TeamTmp tmp = new TeamTmp();
-		tmp.setCheckStatus(0);
-		if(null != team.getAddress()){
-			tmp.setAddress(team.getAddress());
-		}
-		if(null != team.getBusiness()){
-			tmp.setBusiness(team.getBusiness());
-		}
-		if(null != team.getBusinessDesc()){
-			tmp.setBusinessDescription(team.getBusinessDesc());
-		}
-		if(null != team.getEmail()){
-			tmp.setEmail(team.getEmail());
-		}
-		if(null != team.getEstablishDate()){
-			tmp.setEstablishDate(team.getEstablishDate());
-		}
-		tmp.setInfoResource(team.getInfoResource());
-		if(null != team.getLinkman()){
-			tmp.setLinkMan(team.getLinkman());
-		}
-		if(null != team.getOfficialSite()){
-			tmp.setOfficialSite(team.getOfficialSite());
-		}
-		tmp.setPriceRange(team.getPriceRange());
-		
-		if(null != team.getQq()){
-			tmp.setQq(team.getQq());
-		}
-		if(null != team.getScale()){
-			tmp.setScale(team.getScale());
-		}
-		tmp.setStatus(true);
-		if(null != team.getTeamCity()){
-			tmp.setTeamCity(team.getTeamCity());
-		}
-		if(null != team.getTeamDescription()){
-			tmp.setTeamDescription(team.getTeamDescription());
-		}
-		tmp.setTeamId(team.getTeamId());
-		if(null != team.getTeamName()){
-			tmp.setTeamName(team.getTeamName());
-		}
-		if(null != team.getTeamProvince()){
-			tmp.setTeamProvince(team.getTeamProvince());
-		}
-		if(null != team.getWebchat()){
-			tmp.setWebchat(team.getWebchat());
-		}
-		if(null != team.getDemand()){
-			tmp.setDemand(team.getDemand());
-		}
-		if(null != team.getTeamPhotoUrl()){
-			tmp.setTeamPhotoUrl(team.getTeamPhotoUrl());
-		}
-		//删除其他tmp
-		teamTmpMapper.delTeamMapperByTeamId(tmp);
-		//增加一条记录
-		teamTmpMapper.addTeamTmp(tmp);
-	}*/
-
-	/*@Override
-	public Team findLatestTeamById(Long teamId) {
-		//查询是否有待审核的供应商
-		List<TeamTmp> list = teamTmpMapper.doesHaveLatestEnableTmpByTeamId(teamId);
-		if(null != list && list.size() > 0){
-			//返回供应商最新信息
-			Team team = mapper.getLatestTmpByTeamId(teamId);
-			return team;
-		}else{
-			//返回team信息
-			return mapper.findTeamById(teamId);
-		}
-	}*/
-
-	
-	/*@Override
-	public boolean moveUp(long teamId) {
-		Team team = mapper.findTeamById(teamId);
-		int index = team.getRecommendSort();
-		//1.降低上一个的排序
-		int flag1 = mapper.downSortByRecommendSort(index);
-		//2.提升当前id的排序
-		int flag2 =mapper.upSortByTeamId(teamId);
-		return flag1>0 && flag2>0;
-	}*/
-
-	/*@Override
-	public boolean moveDown(long teamId) {
-		Team team = mapper.findTeamById(teamId);
-		int index = team.getRecommendSort();
-		//1.提升上一个的排序
-		int flag1 = mapper.upSortByRecommendSort(index);
-		//2.降低当前id的排序
-		int flag2 =mapper.downSortByTeamId(teamId);
-		return flag1>0 && flag2>0;
-	}*/
-/*
-	@Override
-	public boolean delRecommend(long teamId) {
-		Team team = mapper.findTeamById(teamId);
-		int index = team.getRecommendSort();
-		//1.删除当前供应商（不推荐而已）
-		int flag1 = mapper.updateRecommendByTeamId(false,teamId);
-		//2.提升index之下的所有排序
-		int flag2 = mapper.upAllAboveIndex(index);
-		return flag1>0 && flag2>=0;
-	}*/
-
-	/*@Override
-	public List<Team> getAllNoRecommend() {
-		return mapper.getAllNoRecommend();
-	}
-
-	@Override
-	public boolean addRecommend(long teamId) {
-		return mapper.addRecommend(teamId)>0;
-	}
-
-	@Override
-	public List<Team> teamRecommendList() {
-		return mapper.teamRecommendList();
-	}*/
-	
 	private static String[] header = {"公司名称","登陆名","审核状态","审核意见","所在省","所在城市","联系人","更新时间","创建时间",
 										"手机号码","微信号","QQ","邮箱","官网地址","公司地址","LOGO","公司介绍","成立时间","价格区间","审核意见",
 										"公司规模","业务范围","主要客户","对客户的要求","获知渠道","备注"};
@@ -703,8 +444,6 @@ public class TeamServiceImpl implements TeamService {
 				xssfCell=xssfRow.createCell(25);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getDescription());
-				
-				
 			}
 		}
 		

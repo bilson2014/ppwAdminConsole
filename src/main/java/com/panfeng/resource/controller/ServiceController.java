@@ -10,14 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
@@ -125,12 +123,4 @@ public class ServiceController extends BaseController{
 		return ret;
 	}
 	
-	
-	// --------------------------- 一下是 前端 展示 内容 ------------------
-	@RequestMapping("/service/static/loadService/{productId}")
-	public List<PmsService> loadService(@PathVariable("productId") final Integer productId){
-		
-		final List<PmsService> list = pmsServiceFacade.loadService(productId);
-		return list;
-	}
 }

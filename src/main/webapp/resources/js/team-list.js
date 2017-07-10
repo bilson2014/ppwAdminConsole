@@ -439,7 +439,7 @@ function cancelFuc(){ // 注册 取消按钮
 $.extend($.fn.validatebox.defaults.rules, {  
     vLoginName : {
         validator : function(value, param) {
-        	var url = getContextPath() + '/portal/team/static/checkIsExist';
+        	var url = getContextPath() + '/portal/team/isExist';
 			var isok = false;
         	if(isadd){
         		// 验证登录名
@@ -470,7 +470,7 @@ $.extend($.fn.validatebox.defaults.rules, {
 $.extend($.fn.validatebox.defaults.rules, {
     vPhoneNumber : {
         validator : function(value, param) {
-        	var url = getContextPath() + '/portal/team/static/checkIsExist';
+        	var url = getContextPath() + '/portal/team/isExist';
 			var isok = false;
         	if(isadd){
         		// 验证登录名

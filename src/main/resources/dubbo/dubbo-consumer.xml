@@ -6,6 +6,13 @@
         http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 	<!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
 	<dubbo:application name="pat-web-boss" /> 
+	
+	<!-- dubbo接口去除注册中心，采用直连的方式  -->
+  	<dubbo:registry address="N/A" ></dubbo:registry>
+  	
+  	<!-- 使用multicast广播注册中心暴露发现服务地址 -->
+    <dubbo:registry address="multicast://224.224.224.1:1234?unicast=false" />
+	
 	<!-- 使用zookeeper注册中心暴露服务地址 -->
 	<!-- 注册中心地址 -->
 	<!-- <dubbo:registry protocol="zookeeper" address="106.75.105.16:2181,106.75.105.16:2182,106.75.105.16:2183" /> -->
@@ -42,10 +49,10 @@
 	<dubbo:reference interface="com.paipianwang.pat.facade.sales.service.PmsSalesmanFacade" id="pmsSalesmanFacade" check="false" timeout="5000"/>
 	
 	<!--员工服务接口 -->
-	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsEmployeeFacade" id="pmsEmployeeFacade" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsEmployeeFacade" id="pmsEmployeeFacade" check="false" timeout="5000" url="dubbo://localhost:28880/com.paipianwang.pat.facade.right.service.PmsEmployeeFacade" />
 	<!--权限服务接口 -->
-	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsRightFacade" id="pmsRightFacade" check="false" timeout="8000"/>
-	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsRoleFacade" id="pmsRoleFacade" check="false" timeout="8000"/>
+	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsRightFacade" id="pmsRightFacade" check="false" timeout="8000" url="dubbo://localhost:28880/com.paipianwang.pat.facade.right.service.PmsRightFacade" />
+	<dubbo:reference interface="com.paipianwang.pat.facade.right.service.PmsRoleFacade" id="pmsRoleFacade" check="false" timeout="8000" url="dubbo://localhost:28880/com.paipianwang.pat.facade.right.service.PmsRoleFacade" />
 	
 	<!-- 员工简介 -->
 	<dubbo:reference interface="com.paipianwang.pat.facade.employee.service.PmsJobFacade" id="pmsJobFacade" check="false" timeout="5000" />

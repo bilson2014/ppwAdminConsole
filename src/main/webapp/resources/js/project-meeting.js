@@ -331,26 +331,6 @@ function openDialog(id,data){
 				}
 			});
 			
-			$('#referrerId').combobox({
-				url : getContextPath() + '/portal/staff/static/list',
-				valueField : 'staffId',
-				textField : 'staffName'
-			});
-			
-			$('#source').combobox({
-				url : getContextPath() + '/project/getProjectTags',
-				valueField : 'name',
-				textField : 'name',
-				onSelect : function(record){
-					if(record.name == '个人信息下单'){
-						$('#referrer-tr').show();
-					}else {
-						$('#referrer-tr').hide();
-						$('#referrerId').combobox('setValue','0');
-					}
-				}
-			});
-			
 			$('#userId').combobox({
 				url : getContextPath() + '/project/getAllVersionManager',
 				valueField : 'userId',

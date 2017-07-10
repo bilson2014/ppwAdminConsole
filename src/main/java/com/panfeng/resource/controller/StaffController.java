@@ -107,14 +107,4 @@ public class StaffController extends BaseController {
 		}
 	}
 
-	// ------------------------- 前台数据接口 ------------------------
-
-	/**
-	 * 获取所有人员信息
-	 */
-	@RequestMapping("/staff/static/list")
-	public List<PmsStaff> list(final HttpServletRequest request) {
-		List<PmsStaff> list = pmsStaffFacade.getAll();
-		return list;
-	}
 }

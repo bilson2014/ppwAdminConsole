@@ -14,7 +14,7 @@ $().ready(function(){
 			field : 'rightId',
 			width : 40
 		}]],
-		columns : [ [ {
+		columns : [[{
 			field : 'rightName',
 			title : '资源名称',
 			width : 200

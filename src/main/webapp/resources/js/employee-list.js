@@ -142,12 +142,11 @@ function save(){
 				var hireDate = $('input[name="hireDate"]').val();
 				if(hireDate == null || hireDate == undefined || hireDate == ''){
 					flag = false;
-					msg="请选择入职时间!"
+					$.message('请选择入职时间!');
 				}
 			}
 			
 			if(!flag){
-				$.message(msg);
 				progressClose();
 			}
 			return flag;

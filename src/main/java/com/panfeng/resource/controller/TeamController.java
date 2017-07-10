@@ -2,8 +2,6 @@ package com.panfeng.resource.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,13 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.google.gson.Gson;
 import com.paipianwang.pat.common.config.PublicConfig;
 import com.paipianwang.pat.common.constant.PmsConstant;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
-import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.right.entity.PmsRole;
 import com.paipianwang.pat.facade.right.service.PmsRightFacade;
@@ -41,7 +36,6 @@ import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
 import com.paipianwang.pat.facade.team.service.PmsTeamFacade;
 import com.panfeng.domain.BaseMsg;
-import com.panfeng.mq.service.SmsMQService;
 import com.panfeng.resource.model.Team;
 import com.panfeng.resource.view.TeamView;
 import com.panfeng.service.TeamService;
@@ -65,9 +59,6 @@ public class TeamController extends BaseController {
 
 	@Autowired
 	private final PmsRightFacade pmsRightFacade = null;
-
-	@Autowired
-	private final SmsMQService smsMQService = null;
 
 	@Autowired
 	private final PmsTeamFacade pmsTeamFacade = null;
@@ -111,6 +102,24 @@ public class TeamController extends BaseController {
 		final DataGrid<PmsTeam> dataGrid = pmsTeamFacade.listWithPagination(pageParam, paramMap);
 		return dataGrid;
 	}
+	
+	/**
+	 * 验证供应商是否存在
+	 * @param view
+	 * 			电话号码
+	 * 			登录名
+	 * @return true 不存在  
+	 * 		   false 存在
+	 */
+	@RequestMapping("/team/isExist")
+	public boolean isTeamExist(final TeamView view) {
+		
+		PmsTeam team = new PmsTeam();
+		team.setPhoneNumber(view.getPhoneNumber());
+		team.setLoginName(view.getLoginName());
+		long ret = pmsTeamFacade.checkExist(team);
+		return ret > 0 ? false : true;
+	}
 
 	@RequestMapping(value = "/team/save", method = RequestMethod.POST)
 	public BaseMsg save(final HttpServletRequest request, final HttpServletResponse response,
@@ -119,7 +128,6 @@ public class TeamController extends BaseController {
 		response.setContentType("text/html;charset=UTF-8");
 		// 先保存获取ID，然后更新
 		team.setPassword(DataUtil.md5(PublicConfig.INIT_PASSWORD));
-		// service.save(team);
 		long teamId = pmsTeamFacade.save(team);
 		team.setTeamId(teamId);
 		try {
@@ -127,7 +135,6 @@ public class TeamController extends BaseController {
 				String path = FastDFSClient.uploadFile(file);
 				team.setTeamPhotoUrl(path);
 			}
-			// service.saveTeamPhotoUrl(team);
 			pmsTeamFacade.saveTeamPhotoUrl(team);
 		} catch (Exception e) {
 			baseMsg.setErrorCode(BaseMsg.ERROR);
@@ -154,7 +161,6 @@ public class TeamController extends BaseController {
 		if (!file.isEmpty()) {
 			String path = FastDFSClient.uploadFile(file);
 			// 删除 原文件
-			// final Team originalTeam = service.findTeamById(team.getTeamId());
 			final PmsTeam originalTeam = pmsTeamFacade.findTeamById(team.getTeamId());
 			if (originalTeam != null) {
 				final String originalPath = originalTeam.getTeamPhotoUrl();
@@ -162,11 +168,9 @@ public class TeamController extends BaseController {
 			}
 			team.setTeamPhotoUrl(path);
 			// save photo path
-			// service.saveTeamPhotoUrl(team);
 			pmsTeamFacade.saveTeamPhotoUrl(team);
 		}
 
-		// long ret = service.update(team);
 		long ret = pmsTeamFacade.update(team);
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update team ...", sessionInfo);
@@ -208,375 +212,6 @@ public class TeamController extends BaseController {
 	// --------------------------------以下是前端展示内容 ----------------------------
 
 	/**
-	 * 根据 团队ID 获取团队信息
-	 * 
-	 * @param teamId
-	 *            团队唯一编号
-	 * @return 团队信息
-	 */
-	@RequestMapping("/team/static/data/{teamId}")
-	public PmsTeam loadData(@PathVariable("teamId") final Long teamId) {
-		final PmsTeam team = pmsTeamFacade.findTeamById(teamId);
-		team.setPassword(null);
-		return team;
-	}
-
-	/**
-	 * 更新供应商基础信息
-	 * 
-	 * @param team
-	 *            包含(供应商名称、简介、地址、邮箱等)
-	 * @return 结果
-	 */
-	@RequestMapping("/team/static/data/updateTeamInformation")
-	public boolean updateTeamInformation(@RequestBody final PmsTeam team, HttpServletRequest request) {
-		if (team != null) {
-			try {
-				// 解码
-				final String teamName = team.getTeamName();
-				final String teamDesc = team.getTeamDescription();
-				final String address = team.getAddress();
-				final String email = team.getEmail();
-				final String linkman = team.getLinkman();
-				final String webchat = team.getWebchat();
-				final String officialSite = team.getOfficialSite();
-				final String scale = team.getScale();
-				final String businessDesc = team.getBusinessDesc();
-				final String demand = team.getDemand();
-				final String description = team.getDescription();
-
-				if (teamName != null && !"".equals(teamName)) {
-					team.setTeamName(URLDecoder.decode(teamName, "UTF-8"));
-				}
-
-				if (teamDesc != null && !"".equals(teamDesc)) {
-					team.setTeamDescription(URLDecoder.decode(teamDesc, "UTF-8"));
-				}
-
-				if (address != null && !"".equals(address)) {
-					team.setAddress(URLDecoder.decode(address, "UTF-8"));
-				}
-
-				if (email != null && !"".equals(email)) {
-					team.setEmail(URLDecoder.decode(email, "UTF-8"));
-				}
-
-				if (linkman != null && !"".equals(linkman)) {
-					team.setLinkman(URLDecoder.decode(linkman, "UTF-8"));
-				}
-
-				if (webchat != null && !"".equals(webchat)) {
-					team.setWebchat(URLDecoder.decode(webchat, "UTF-8"));
-				}
-
-				if (officialSite != null && !"".equals(officialSite)) {
-					team.setOfficialSite(URLDecoder.decode(officialSite, "UTF-8"));
-				}
-
-				if (scale != null && !"".equals(scale)) {
-					team.setScale(URLDecoder.decode(scale, "UTF-8"));
-				}
-
-				if (businessDesc != null && !"".equals(businessDesc)) {
-					team.setBusinessDesc(URLDecoder.decode(businessDesc, "UTF-8"));
-				}
-
-				if (demand != null && !"".equals(demand)) {
-					team.setDemand(URLDecoder.decode(demand, "UTF-8"));
-				}
-
-				if (description != null && !"".equals(description)) {
-					team.setDescription(URLDecoder.decode(description, "UTF-8"));
-				}
-				// 将状态置为审核中
-				if (team.getFlag() == 2)
-					team.setFlag(0);
-
-				// final long ret = service.updateTeamInfomation(team);
-				final long ret = pmsTeamFacade.updateTeamInfomation(team);
-				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("update team ...", sessionInfo);
-				if (ret == 1) {
-					return true;
-				}
-			} catch (UnsupportedEncodingException e) {
-				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("Provider Infomation Decode error On Provider updateTeamInformation ...", sessionInfo);
-				e.printStackTrace();
-			}
-		}
-
-		return false;
-
-	}
-
-	/**
-	 * 注册供应商
-	 * 
-	 * @param team
-	 *            包含(供应商名称、简介、地址、邮箱等)
-	 * @return 结果
-	 */
-	@RequestMapping("/team/static/data/registerteam")
-	public boolean registerTeam(@RequestBody final PmsTeam team, HttpServletRequest request) {
-		if (team != null) {
-			try {
-				// 解码
-				final String teamName = team.getTeamName();
-				final String teamDesc = team.getTeamDescription();
-				final String address = team.getAddress();
-				final String email = team.getEmail();
-				final String linkman = team.getLinkman();
-				final String webchat = team.getWebchat();
-				final String officialSite = team.getOfficialSite();
-				final String scale = team.getScale();
-				final String businessDesc = team.getBusinessDesc();
-				final String demand = team.getDemand();
-				final String description = team.getDescription();
-
-				if (teamName != null && !"".equals(teamName)) {
-					team.setTeamName(URLDecoder.decode(teamName, "UTF-8"));
-				}
-
-				if (teamDesc != null && !"".equals(teamDesc)) {
-					team.setTeamDescription(URLDecoder.decode(teamDesc, "UTF-8"));
-				}
-
-				if (address != null && !"".equals(address)) {
-					team.setAddress(URLDecoder.decode(address, "UTF-8"));
-				}
-
-				if (email != null && !"".equals(email)) {
-					team.setEmail(URLDecoder.decode(email, "UTF-8"));
-				}
-
-				if (linkman != null && !"".equals(linkman)) {
-					team.setLinkman(URLDecoder.decode(linkman, "UTF-8"));
-				}
-
-				if (webchat != null && !"".equals(webchat)) {
-					team.setWebchat(URLDecoder.decode(webchat, "UTF-8"));
-				}
-
-				if (officialSite != null && !"".equals(officialSite)) {
-					team.setOfficialSite(URLDecoder.decode(officialSite, "UTF-8"));
-				}
-
-				if (scale != null && !"".equals(scale)) {
-					team.setScale(URLDecoder.decode(scale, "UTF-8"));
-				}
-
-				if (businessDesc != null && !"".equals(businessDesc)) {
-					team.setBusinessDesc(URLDecoder.decode(businessDesc, "UTF-8"));
-				}
-
-				if (demand != null && !"".equals(demand)) {
-					team.setDemand(URLDecoder.decode(demand, "UTF-8"));
-				}
-
-				if (description != null && !"".equals(description)) {
-					team.setDescription(URLDecoder.decode(description, "UTF-8"));
-				}
-
-				// ->modify to dubbo 2017-2-4 11:33:58 begin
-				// Team dbteam = service.register(team);
-				PmsTeam dbteam = pmsTeamFacade.register(team);
-				// ->modify to dubbo 2017-2-4 11:33:58 end
-				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("save team ...", sessionInfo);
-				if (dbteam != null && dbteam.getTeamId() > 0) {
-					// add by wlc 2016-11-11 11:19:36
-					// 供应商注册短信，发送短信 begin
-					smsMQService.sendMessage("132269", team.getPhoneNumber(), null);
-					Gson gson = new Gson();
-					String json = gson.toJson(dbteam);
-					return initSessionInfo(gson.fromJson(json, Team.class), request);
-				}
-			} catch (UnsupportedEncodingException e) {
-				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("Provider Infomation Decode error On Provider updateTeamInformation ...", sessionInfo);
-				e.printStackTrace();
-			}
-		}
-		return false;
-
-	}
-
-	@RequestMapping("/team/static/data/registerteamRetId")
-	public Team registerTeamRetId(@RequestBody final Team team, HttpServletRequest request) {
-		if (team != null) {
-			try {
-				// 解码
-				final String teamName = team.getTeamName();
-				final String teamDesc = team.getTeamDescription();
-				final String address = team.getAddress();
-				final String email = team.getEmail();
-				final String linkman = team.getLinkman();
-				final String webchat = team.getWebchat();
-				final String officialSite = team.getOfficialSite();
-				final String scale = team.getScale();
-				final String businessDesc = team.getBusinessDesc();
-				final String demand = team.getDemand();
-				final String description = team.getDescription();
-
-				if (teamName != null && !"".equals(teamName)) {
-					team.setTeamName(URLDecoder.decode(teamName, "UTF-8"));
-				}
-
-				if (teamDesc != null && !"".equals(teamDesc)) {
-					team.setTeamDescription(URLDecoder.decode(teamDesc, "UTF-8"));
-				}
-
-				if (address != null && !"".equals(address)) {
-					team.setAddress(URLDecoder.decode(address, "UTF-8"));
-				}
-
-				if (email != null && !"".equals(email)) {
-					team.setEmail(URLDecoder.decode(email, "UTF-8"));
-				}
-
-				if (linkman != null && !"".equals(linkman)) {
-					team.setLinkman(URLDecoder.decode(linkman, "UTF-8"));
-				}
-
-				if (webchat != null && !"".equals(webchat)) {
-					team.setWebchat(URLDecoder.decode(webchat, "UTF-8"));
-				}
-
-				if (officialSite != null && !"".equals(officialSite)) {
-					team.setOfficialSite(URLDecoder.decode(officialSite, "UTF-8"));
-				}
-
-				if (scale != null && !"".equals(scale)) {
-					team.setScale(URLDecoder.decode(scale, "UTF-8"));
-				}
-
-				if (businessDesc != null && !"".equals(businessDesc)) {
-					team.setBusinessDesc(URLDecoder.decode(businessDesc, "UTF-8"));
-				}
-
-				if (demand != null && !"".equals(demand)) {
-					team.setDemand(URLDecoder.decode(demand, "UTF-8"));
-				}
-
-				if (description != null && !"".equals(description)) {
-					team.setDescription(URLDecoder.decode(description, "UTF-8"));
-				}
-
-				Team dbteam = service.register(team);
-				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("save team ...", sessionInfo);
-				if (dbteam != null && dbteam.getTeamId() > 0) {
-					initSessionInfo(dbteam, request);
-				}
-				return dbteam;
-			} catch (UnsupportedEncodingException e) {
-				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("Provider Infomation Decode error On Provider updateTeamInformation ...", sessionInfo);
-				e.printStackTrace();
-				return null;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * 供应商登录
-	 * 
-	 * @param team
-	 *            供应商登录名和密码(已加密)
-	 * @return 供应商信息
-	 */
-	@RequestMapping("/team/static/data/doLogin")
-	public boolean doLogin(@RequestBody final PmsTeam original, final HttpServletRequest request) {
-		PmsTeam team = null;
-		if (null != original && null != original.getPhoneNumber() && !"".equals(original.getPhoneNumber())) {
-			// team = service.doLogin(original.getPhoneNumber());
-			team = pmsTeamFacade.doLogin(original.getPhoneNumber());
-		} else {
-			// team = service.findTeamByLoginNameAndPwd(original);
-			team = pmsTeamFacade.findTeamByLoginNameAndPwd(original);
-		}
-		if (team != null) {
-			// 存入session
-			Gson gson = new Gson();
-			String json = gson.toJson(team);
-			return initSessionInfo(gson.fromJson(json, Team.class), request);
-		}
-		return false;
-	}
-
-	/**
-	 * 供应商 注册
-	 * 
-	 * @param original
-	 *            包含(手机号、用户名、密码(已加密))
-	 * @return 保存之后的 team
-	 */
-	@RequestMapping("/team/static/register")
-	public boolean register(@RequestBody final Team original, final HttpServletRequest request) {
-		if (original != null) {
-			final Team team = service.register(original);
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("save team ...", sessionInfo);
-			return initSessionInfo(team, request);
-		}
-		return false;
-	}
-
-	/**
-	 * 供应商密码重置
-	 * 
-	 * @param provider
-	 *            供应商信息(包含 手机号 和 密码)
-	 * @return 成功返回 true; 失败返回false
-	 */
-	@RequestMapping("/team/static/recoverPassword")
-	public boolean recoverPassword(@RequestBody final Team team, HttpServletRequest request) {
-
-		try {
-			// 转码
-			final String password = URLDecoder.decode(team.getPassword(), "UTF-8");
-			team.setPassword(password);
-			final long ret = service.recover(team);
-			if (ret == 1) {
-				return true;
-			} else {
-				SessionInfo sessionInfo = getCurrentInfo(request);
-				Log.error("Recover Provider Password error ...,LoginName=" + team.getLoginName(), sessionInfo);
-			}
-		} catch (UnsupportedEncodingException e) {
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("Decoder Password Error On Provider RecoverPassword ...", sessionInfo);
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	/**
-	 * 更新供应商审核状态为 审核中
-	 * 
-	 * @param team
-	 *            包含供应商唯一编号
-	 */
-	@RequestMapping("/team/static/data/updateStatus")
-	public boolean updateStatus(@RequestBody final Team team, HttpServletRequest request) {
-
-		if (team != null) {
-			final Long id = team.getTeamId();
-			if (id != null && !"".equals(id)) {
-				final long ret = service.updateTeamStatus(id);
-				if (ret == 1) {
-					SessionInfo sessionInfo = getCurrentInfo(request);
-					Log.error("update team ...", sessionInfo);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * 通过供应商公司名或者联系人搜索供应商
 	 * 
 	 * @param team
@@ -586,32 +221,6 @@ public class TeamController extends BaseController {
 	public List<Team> getTeamByName(@RequestBody final Team team) {
 		List<Team> teams = service.findTeamByName(team);
 		return teams != null ? teams : new ArrayList<Team>();
-	}
-
-	@RequestMapping("/team/thirdLogin/isExist")
-	public boolean verificationTeamExist(@RequestBody final Team provider, final HttpServletRequest request) {
-
-		final List<Team> list = service.verificationTeamExist(provider);
-		if (ValidateUtil.isValid(list)) {
-			if (list.size() == 1) {
-				if (ValidateUtil.isValid(list.get(0).getPhoneNumber())) {
-					// 绑定账户
-					// 清除当前session
-					// sessionService.removeSession(request);
-					request.getSession().removeAttribute(PmsConstant.SESSION_INFO);
-					final Team team = list.get(0);
-					// 存入session中
-					return initSessionInfo(team, request);
-				}
-			}
-		}
-		return false;
-	}
-
-	@RequestMapping("/team/thirdLogin/bind")
-	public BaseMsg bind(@RequestBody final Team provider, final HttpServletRequest request) {
-		final BaseMsg baseMsg = service.bind(provider);
-		return baseMsg;
 	}
 
 	/**
@@ -666,51 +275,6 @@ public class TeamController extends BaseController {
 	}
 
 	/**
-	 * 用户资料页面绑定第三方
-	 */
-	@RequestMapping("/team/info/bind")
-	public boolean userInfoBind(@RequestBody final Team team, HttpServletRequest request) {
-		return service.teamInfoBind(team);
-	}
-
-	/**
-	 * 用户资料页面解除绑定第三方
-	 */
-	@RequestMapping("/team/info/unbind")
-	public boolean userInfoUnBind(@RequestBody final PmsTeam team, HttpServletRequest request) {
-		// return service.teamInfoUnBind(team);
-		return pmsTeamFacade.teamInfoUnBind(team);
-	}
-
-	@RequestMapping("/team/tags")
-	public List<String> getTags(@RequestBody List<Integer> ids, HttpServletRequest request) {
-		if (ValidateUtil.isValid(ids)) {
-			List<String> tags = pmsTeamFacade.getTags(ids);
-			return tags;
-		} else {
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("ids is null ...", sessionInfo);
-		}
-		return null;
-	}
-
-	@RequestMapping("/team/update/newphone")
-	public BaseMsg updateNewphone(@RequestBody PmsTeam team, HttpServletRequest request) {
-
-		// final long count = service.checkExist(team);
-		final long count = pmsTeamFacade.checkExist(team);
-		if (count > 0) {
-			return new BaseMsg(0, "手机号码已被占用");
-		}
-		// final long ret = service.modifyTeamPhone(team);
-		final long ret = pmsTeamFacade.modifyTeamPhone(team);
-		if (ret > 0) {
-			return new BaseMsg(1, "success");
-		}
-		return new BaseMsg(0, "error");
-	}
-
-	/**
 	 * 处理team临时表,更新team备注
 	 */
 	@RequestMapping("/team/deal/teamTmpAndTeamDesc")
@@ -720,8 +284,6 @@ public class TeamController extends BaseController {
 				String description = null == team.getDescription() ? "" : team.getDescription();
 				team.setDescription(description);
 				// 更新备注信息
-				// service.updateTeamDescription(team);
-				// service.dealTeamTmp(team);
 				pmsTeamFacade.updateTeamDescription(team);
 				pmsTeamFacade.dealTeamTmp(team);
 				return true;
@@ -734,21 +296,6 @@ public class TeamController extends BaseController {
 	}
 
 	/**
-	 * 根据 团队ID 获取团队信息
-	 * 
-	 * @param teamId
-	 *            团队唯一编号
-	 * @return 团队信息
-	 */
-	@RequestMapping("/team/static/latest/{teamId}")
-	public PmsTeam loadLatestData(@PathVariable("teamId") final Long teamId) {
-		// final Team team = service.findLatestTeamById(teamId);
-		final PmsTeam team = pmsTeamFacade.findLatestTeamById(teamId);
-		team.setPassword(null);
-		return team;
-	}
-
-	/**
 	 * 首页供应商推荐排序或者删除 action 排序动作 up down del index 当前排序
 	 */
 	@RequestMapping("/team/recommend/sort")
@@ -757,15 +304,12 @@ public class TeamController extends BaseController {
 		long id = Long.valueOf(teamId);
 		switch (action) {
 		case "up":
-			// flag = service.moveUp(id);
 			flag = pmsTeamFacade.moveUp(id);
 			break;
 		case "down":
-			// flag = service.moveDown(id);
 			flag = pmsTeamFacade.moveDown(id);
 			break;
 		case "del":
-			// flag = service.delRecommend(id);
 			flag = pmsTeamFacade.delRecommend(id);
 			break;
 		}
@@ -789,15 +333,6 @@ public class TeamController extends BaseController {
 	public boolean addRecommend(long teamId) {
 		// return service.addRecommend(teamId);
 		return pmsTeamFacade.addRecommend(teamId);
-	}
-
-	/**
-	 * 获取首页供应商推荐
-	 */
-	@RequestMapping(value = "/team/recommend", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<PmsTeam> teamRecommendList() {
-		// return service.teamRecommendList();
-		return pmsTeamFacade.teamRecommendList();
 	}
 
 	/**

@@ -126,11 +126,8 @@ public class IndentController extends BaseController {
 			// 如果按产品下单，那么下单之后的订单信息需要与数据库进行对比
 			if (teamId != -1 && productId != -1 && serviceId != -1) {
 				// 产品下单
-				// final Product product =
-				// productService.findProductById(productId);
 				final PmsProduct product = pmsProductFacade.findProductById(productId);
 				productName = product.getProductName();
-				// final Service ser = serService.getServiceById(serviceId);
 				final PmsService ser = pmsServiceFacade.getServiceById(serviceId);
 				indent.setSecond(ser.getMcoms());
 				indent.setIndentPrice(ser.getServiceRealPrice());

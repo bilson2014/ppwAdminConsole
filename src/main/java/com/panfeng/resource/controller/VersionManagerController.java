@@ -22,7 +22,6 @@ import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.service.EmployeeService;
 import com.panfeng.util.DataUtil;
-import com.panfeng.util.Log;
 
 /**
  * 视频管家管理
@@ -34,8 +33,6 @@ import com.panfeng.util.Log;
 @RestController
 @RequestMapping("/portal")
 public class VersionManagerController extends BaseController {
-
-	// private static Logger logger = LoggerFactory.getLogger("error");
 
 	@Autowired
 	private final PmsEmployeeFacade pmsEmployeeFacade = null;
@@ -99,34 +96,6 @@ public class VersionManagerController extends BaseController {
 			}
 		}
 		return baseMsg;
-	}
-
-	/**
-	 * 修改密码
-	 */
-	@RequestMapping("/manager/static/editPwd")
-	public boolean editPassword(final HttpServletRequest request, @RequestBody final PmsEmployee e) {
-
-		if (e != null) {
-			if (ValidateUtil.isValid(e.getPhoneNumber())) {
-				// 在视频管家范围内查找该手机号码的人员
-				final List<PmsEmployee> list = pmsEmployeeFacade.getEmployeesWithinVersionManager(e.getPhoneNumber());
-				if (ValidateUtil.isValid(list)) {
-					if (list.size() == 1) {
-						final PmsEmployee originalEmployee = list.get(0);
-						originalEmployee.setEmployeePassword(e.getEmployeePassword());
-						final long ret = pmsEmployeeFacade.updatePwdById(originalEmployee);
-						if (ret > 0)
-							return true;
-					} else {
-						SessionInfo sessionInfo = getCurrentInfo(request);
-						Log.error("VersionManagerController method:editPassword() error,becase phoneNumber is not unique ...",
-								sessionInfo);
-					}
-				}
-			}
-		}
-		return false;
 	}
 
 	/**
