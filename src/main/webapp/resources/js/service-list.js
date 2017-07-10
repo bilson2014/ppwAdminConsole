@@ -83,7 +83,7 @@ $().ready(function(){
 var service = {
 	dataInit : function(){
 		$('#search-name').combobox({
-			url : getContextPath() + '/portal/service/productSelect',
+			url : getContextPath() + '/portal/service/productService',
 			valueField : 'productName',
 			textField : 'productName',
 			filter: function(q, row){
@@ -198,7 +198,7 @@ function openDialog(id,data){
 				multiple: true
 			});
 			$("#productId").combobox({
-				url : getContextPath() + '/portal/service/productSelect',
+				url : getContextPath() + '/portal/service/productService',
 				valueField:'productId',
 				textField:'productName',
 				filter: function(q, row){

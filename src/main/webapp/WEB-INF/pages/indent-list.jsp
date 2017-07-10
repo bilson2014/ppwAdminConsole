@@ -201,7 +201,7 @@
 	        </div>
 	        <div class="fitem">
                 <label>CRM备注:</label>
-                <input name="indent_description" class="easyui-textbox">
+                <input name="cSRecomment" class="easyui-textbox">
 	        </div>
 	        <div class="fitem">
                 <label>分销渠道:</label>

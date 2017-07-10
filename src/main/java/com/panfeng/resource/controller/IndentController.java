@@ -188,7 +188,7 @@ public class IndentController extends BaseController {
 		final List<PmsIndent> list = pmsIndentFacade.listWithCondition(JsonUtil.objectToMap(view));
 		// 完成数据csv文件的封装
 		String displayColNames = "订单名称,订单编号,下单时间,订单金额,订单状态,客户电话,订单备注,CRM备注,分销渠道";
-		String matchColNames = "indentName,indentId,orderDate,indentPrice,indentType,indent_tele,indent_recomment,indent_description,salesmanUniqueId";
+		String matchColNames = "indentName,indentId,orderDate,indentPrice,indentType,indent_tele,indent_recomment,cSRecomment,salesmanUniqueId";
 		String fileName = "indent_report_";
 		String content = CsvWriter.formatCsvData(JsonUtil.getValueListMap(list), displayColNames, matchColNames);
 		try {

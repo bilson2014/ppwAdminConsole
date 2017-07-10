@@ -91,6 +91,24 @@ public class ServiceController extends BaseController{
 		}
 		return jaArray.toString();
 	}
+	/**
+	 * 获取全部产品,填充下拉列表
+	 */
+	@RequestMapping(value = "/service/productService",method = RequestMethod.POST,
+			produces = "application/json; charset=UTF-8")
+	public String selectService(){
+		final List<PmsProduct> list = pmsProductFacade.getApprovedProductList();
+		JsonArray jaArray = new JsonArray();
+		if(ValidateUtil.isValid(list)){
+			for (PmsProduct product : list) {
+				JsonObject jo = new JsonObject();
+				jo.addProperty("productId", product.getProductId());
+				jo.addProperty("productName", product.getProductName());
+				jaArray.add(jo);
+			}
+		}
+		return jaArray.toString();
+	}
 	
 	@RequestMapping(value = "/service/save",method = RequestMethod.POST)
 	public long save(final PmsService service,HttpServletRequest request){

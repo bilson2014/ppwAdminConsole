@@ -309,7 +309,7 @@ var team = {
 					}
 				});
 			}
-			$('#search-business').combo('setValue', idList).combo('setText', list).combo('hidePanel');
+			$('#search-business').combo('setValue', list).combo('setText', list).combo('hidePanel');
 		});
 	}
 }
@@ -366,6 +366,7 @@ function editFuc(){ // 注册 修改 按钮
 				});
 			}
 		}
+		
 		var first =true;
 		$('#teamProvince').combobox({
 			url : getContextPath() + '/portal/get/provinces',

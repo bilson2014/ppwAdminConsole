@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.paipianwang.pat.common.util.Constants;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.common.web.poi.util.PoiReportUtils;
 import com.paipianwang.pat.facade.team.entity.PmsTeam;
@@ -388,6 +389,7 @@ public class TeamServiceImpl implements TeamService {
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getEstablishDate());
 				
+				//价格区间
 				String priceRange="";
 				switch (team.getPriceRange()) {
 				case 0:
@@ -437,9 +439,12 @@ public class TeamServiceImpl implements TeamService {
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getDemand());
 				
+				//获知渠道
 				xssfCell=xssfRow.createCell(24);
 				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getInfoResource());
+				
+				xssfCell.setCellValue(Constants.INFO_RESOURCE_MAP.get(team.getInfoResource()+""));
+				
 				
 				xssfCell=xssfRow.createCell(25);
 				xssfCell.setCellStyle(cs);

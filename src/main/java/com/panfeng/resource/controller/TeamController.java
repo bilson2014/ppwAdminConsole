@@ -102,18 +102,17 @@ public class TeamController extends BaseController {
 		final DataGrid<PmsTeam> dataGrid = pmsTeamFacade.listWithPagination(pageParam, paramMap);
 		return dataGrid;
 	}
-	
+
 	/**
 	 * 验证供应商是否存在
+	 * 
 	 * @param view
-	 * 			电话号码
-	 * 			登录名
-	 * @return true 不存在  
-	 * 		   false 存在
+	 *            电话号码 登录名
+	 * @return true 不存在 false 存在
 	 */
 	@RequestMapping("/team/isExist")
 	public boolean isTeamExist(final TeamView view) {
-		
+
 		PmsTeam team = new PmsTeam();
 		team.setPhoneNumber(view.getPhoneNumber());
 		team.setLoginName(view.getLoginName());
@@ -207,6 +206,56 @@ public class TeamController extends BaseController {
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("delete teams ... ids" + ids.toString(), sessionInfo);
 		return 0l;
+	}
+
+	/**
+	 * 供应商数据导出
+	 * 
+	 * @param view
+	 * @param response
+	 */
+	@RequestMapping(value = "/team/export", method = RequestMethod.POST)
+	public void export(final TeamView view, final HttpServletResponse response) {
+		OutputStream outputStream = null;
+		try {
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("application/octet-stream");
+			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
+			String filename = URLEncoder.encode("供应商列表" + dateString + ".xlsx", "UTF-8");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
+			outputStream = response.getOutputStream();
+
+			// 封装查询参数
+			Map<String, Object> paramMap = new HashMap<>();
+			paramMap.put("teamId", view.getTeamId());
+			paramMap.put("flag", view.getFlag());
+			paramMap.put("phoneNumber", view.getPhoneNumber());
+			paramMap.put("priceRange", view.getPriceRange());
+			paramMap.put("business", view.getBusiness());
+			paramMap.put("teamName", view.getTeamName());
+			paramMap.put("recommend", view.isRecommend());
+			paramMap.put("linkman", view.getLinkman());
+			paramMap.put("cityID", view.getCityID());
+			paramMap.put("provinceID", view.getProvinceID());
+
+			List<PmsTeam> teamList = pmsTeamFacade.listWithParam(paramMap);
+
+			// 报表导出
+			teamService.generateReport(teamList, outputStream);
+
+			outputStream.flush();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	// --------------------------------以下是前端展示内容 ----------------------------
@@ -335,54 +384,12 @@ public class TeamController extends BaseController {
 		return pmsTeamFacade.addRecommend(teamId);
 	}
 
-	/**
-	 * 供应商数据导出
-	 * 
-	 * @param view
-	 * @param response
+	/*
+	 * 获取首页供应商推荐
 	 */
-	@RequestMapping(value = "/team/export", method = RequestMethod.POST)
-	public void export(final TeamView view, final HttpServletResponse response) {
-		OutputStream outputStream = null;
-		try {
-			response.setCharacterEncoding("utf-8");
-			response.setContentType("application/octet-stream");
-			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
-			String filename = URLEncoder.encode("供应商列表" + dateString + ".xlsx", "UTF-8");
-			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
-			outputStream = response.getOutputStream();
-
-			// 封装查询参数
-			Map<String, Object> paramMap = new HashMap<>();
-			paramMap.put("teamId", view.getTeamId());
-			paramMap.put("flag", view.getFlag());
-			paramMap.put("phoneNumber", view.getPhoneNumber());
-			paramMap.put("priceRange", view.getPriceRange());
-			paramMap.put("business", view.getBusiness());
-			paramMap.put("teamName", view.getTeamName());
-			paramMap.put("recommend", view.isRecommend());
-			paramMap.put("linkman", view.getLinkman());
-			paramMap.put("cityID", view.getCityID());
-			paramMap.put("provinceID", view.getProvinceID());
-
-			List<PmsTeam> teamList = pmsTeamFacade.listWithParam(paramMap);
-
-			// 报表导出
-			teamService.generateReport(teamList, outputStream);
-
-			outputStream.flush();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (outputStream != null) {
-				try {
-					outputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	@RequestMapping(value = "/team/recommend", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public List<PmsTeam> teamRecommendList() {
+		return pmsTeamFacade.teamRecommendList();
 	}
 
 }
