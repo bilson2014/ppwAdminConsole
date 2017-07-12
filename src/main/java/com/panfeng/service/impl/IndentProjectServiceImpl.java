@@ -310,18 +310,24 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 		} else {
 			list = indentProjectMapper.listWithPaginationAllAndSynergy(view);
 		}
-		Map<Long, PmsEmployee> eMap = employeeService.getEmployeeMap();
+		Map<Long, PmsEmployee> eMap = employeeService.getAllEmployeeMap();
 		Map<Long, List<Synergy>> sMap = synergyService.findSynergyMap();
 		for (final IndentProject pro : list) {
 			final PmsEmployee user = eMap.get(pro.getUserId());
 			final PmsEmployee referer = eMap.get(pro.getReferrerId());
 			final List<Synergy> sList = sMap.get(pro.getId());
 			if (user != null)
-				pro.setEmployeeRealName(eMap.get(pro.getUserId()).getEmployeeRealName());
-
+			{
+				PmsEmployee vv = eMap.get(pro.getUserId());
+				Integer dimissionStatus = vv.getDimissionStatus();
+				if(dimissionStatus == PmsEmployee.DIMISSIONSTATUS_DIMISSION){
+					pro.setEmployeeRealName(vv.getEmployeeRealName()+"(离职)");
+				}else{
+					pro.setEmployeeRealName(vv.getEmployeeRealName());
+				}
+			}
 			if (referer != null)
 				pro.setReferrerName(eMap.get(pro.getReferrerId()).getEmployeeRealName());
-
 			if (ValidateUtil.isValid(sList)) {
 				pro.setSynergys(sList);
 			}

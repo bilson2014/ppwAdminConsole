@@ -50,6 +50,8 @@
 						    <option value="5">线下-直销</option>
 						    <option value="6">线下-活动</option>
 						    <option value="7">线下-渠道</option>
+						    <option value="9">线下-400</option>
+						    <option value="10">线下-商桥</option>
 						    <option value="8">复购</option>
 		                </select>
 					</td>
@@ -125,9 +127,9 @@
 						class="easyui-combobox" editable="false" style="width: 90%;">
 							<option value="0" selected>新订单</option>
 							<option value="1">处理中</option>
-							<option value="2">完成</option>
+							<!-- <option value="2">完成</option>
 							<option value="3">停滞</option>
-							<option value="4">再次沟通</option>
+							<option value="4">再次沟通</option> -->
 							<option value="5">真实</option>
 							<option value="6">虚假</option>
 							<option value="7">提交</option>
@@ -175,6 +177,8 @@
 				    <option value="5">线下-直销</option>
 				    <option value="6">线下-活动</option>
 				    <option value="7">线下-渠道</option>
+				    <option value="9">线下-400</option>
+				    <option value="10">线下-商桥</option>
 				    <option value="8">复购</option>
                 </select>
             </div>
@@ -183,9 +187,9 @@
             	 <select name="indentType" class="easyui-combobox" required="true" style="width: 46%;">
                 	<option value="0">新订单</option>
 					<option value="1">处理中</option>
-					<option value="2">完成</option>
+					<!-- <option value="2">完成</option>
 					<option value="3">停滞</option>
-					<option value="4">再次沟通</option>
+					<option value="4">再次沟通</option> -->
 					<option value="5">真实</option>
 					<option value="6">虚假</option>
 					<option value="7">提交</option>

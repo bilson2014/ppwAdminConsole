@@ -101,6 +101,10 @@ $().ready(function(){
 								return '<span style=color:green; >C</span>' ;
 							} else if( value == 3){
 								return '<span style=color:black; >S</span>' ;
+							} else if( value == 4){
+								return '<span style=color:orange; >D</span>' ;
+							}else{
+								return '<span style=color:orange; >未分级</span>' ;
 							}
 						}
 					},{
@@ -109,7 +113,7 @@ $().ready(function(){
 						align : 'center'
 					},{
 						field : 'referrerName',
-						title : '项目来源人',
+						title : '项目推荐人',
 						align : 'center'
 					},{
 						field : 'teamName',
@@ -157,7 +161,7 @@ $().ready(function(){
 						hidden: true
 					},{
 						field : 'referrerId' ,
-						title : '项目来源人ID' ,
+						title : '项目推荐人ID' ,
 						align : 'center' ,
 						hidden: true
 					},{
