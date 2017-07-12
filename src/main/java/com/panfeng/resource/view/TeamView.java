@@ -25,6 +25,12 @@ public class TeamView extends Pagination {
 	private String provinceID = null; // 省ID
 
 	private String cityID = null; // 市ID
+	
+	private String[] skill = null; // 业务技能区间
+	
+	private Long productLine=null;//产品线
+	
+	private String teamNature=null;//公司性质
 
 	public Long getTeamId() {
 		return teamId;
@@ -113,5 +119,30 @@ public class TeamView extends Pagination {
 	public void setCityID(String cityID) {
 		this.cityID = cityID;
 	}
+
+	public String[] getSkill() {
+		return skill;
+	}
+
+	public void setSkill(String[] skill) {
+		this.skill = skill;
+	}
+
+	public Long getProductLine() {
+		return productLine;
+	}
+
+	public void setProductLine(Long productLine) {
+		this.productLine = productLine;
+	}
+
+	public String getTeamNature() {
+		return teamNature;
+	}
+
+	public void setTeamNature(String teamNature) {
+		this.teamNature = teamNature;
+	}
+	
 
 }

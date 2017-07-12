@@ -3,6 +3,7 @@ var flag  ;	  //判断新增和修改方法
 var formUrl;
 var datagrid;
 var recommend_datagrid;
+var productLineCache;
 // 验证
 var isadd = false;
 var originalLoginName = '';
@@ -10,6 +11,8 @@ var originalPhoneNumber = '';
 
 var list = new Array();
 var idList = new Array();
+var skillList=new Array();
+var skillIdList=new Array();
 $().ready(function(){
 	
 	// 初始化DataGrid
@@ -202,6 +205,42 @@ $().ready(function(){
 						width : 80,
 						align : 'center',
 						hidden : true
+					},{
+						field : 'skill',
+						title : '业务技能',
+						width : 80,
+						align : 'center',
+						hidden : true
+					},{
+						field : 'productLine',
+						title : '产品线',
+						width : 80,
+						align : 'center',
+						hidden : true
+					},{
+						field : 'teamNature',
+						title : '公司性质',
+						width : 80,
+						align : 'center',
+						hidden : true
+					},{
+						field : 'certificateUrl',
+						title : '公司营业执照/身份证',
+						width : 80,
+						align : 'center',
+						hidden : true
+					},{
+						field : 'idCardfrontUrl',
+						title : '法人手持身份证正面',
+						width : 80,
+						align : 'center',
+						hidden : true
+					},{
+						field : 'idCardbackUrl',
+						title : '法人手持身份证背面',
+						width : 80,
+						align : 'center',
+						hidden : true
 					}]] ,
 		pagination: true ,
 		pageSize : 20,
@@ -284,6 +323,26 @@ var team = {
 				return row.city.indexOf(q) >= 0;
 			}
 		});
+		
+		syncLoadData(function(res) {
+			productLineCache = res;
+			$("#search-productLine").combotree({
+			    idField : 'id',
+			    treeField : 'text',
+				data:productLineCache,
+				onBeforeSelect: function(node) {  //只能选择叶子节点
+		            if (!$(this).tree('isLeaf', node.target)) {  
+		                return false;  
+		            }  
+		        },  
+		        onClick: function(node) {  
+		            if (!$(this).tree('isLeaf', node.target)) {  
+		                $('#search-productLine').combo('showPanel');  
+		            }  
+		        }  
+		 });
+		}, getContextPath() + "/portal/config/listTree", null);
+		
 	},
 	initCombox : function(){
 		$('#search-business').combo({
@@ -311,7 +370,80 @@ var team = {
 			}
 			$('#search-business').combo('setValue', list).combo('setText', list).combo('hidePanel');
 		});
+		
+		//业务技能
+		$('#search-skill').combo({
+			editable:false
+		});
+		$('#sp-skill').appendTo($('#search-skill').combo('panel'));
+		skillList = new Array();
+		skillIdList=new Array();
+		$('#sp-skill input').click(function(){
+			var v = $(this).val();
+			var s = $(this).next('span').text();
+			// 判断选中状态
+			if(this.checked == true){
+				// 选中则添加
+				skillList.push(s);
+				skillIdList.push(v);
+			}else {
+				// 取消则删除
+				$.each(skillIdList,function(i,n){
+					if(n == v){
+						skillList.splice(i,1);
+						skillIdList.splice(i,1);
+					}
+				});
+			}
+			$('#search-skill').combo('setValue', skillIdList).combo('setText', skillList).combo('hidePanel');
+		});
 	}
+}
+
+function addProductLine(lId){
+	var module = $(".productLineModule");
+	 //添加模板
+	var html = createBaseModuleView(lId);
+	var newModule = $(html).appendTo(".productLineModule");
+	 //渲染easyUI
+	 $.parser.parse($(newModule));
+
+	 var box =  $(".productLine").length - 1;
+	 $(".productLine:eq("+box+")").combotree({
+		    idField : 'id',
+		    treeField : 'text',
+			data:productLineCache,
+			onBeforeSelect: function(node) {  
+	            if (!$(this).tree('isLeaf', node.target)) {  
+	                return false;  
+	            }  
+	        },  
+	        onClick: function(node) {  
+	            if (!$(this).tree('isLeaf', node.target)) {  
+	            	$(".productLine:eq("+box+')').combo('showPanel');  
+	            }  
+	        } ,
+	        onLoadSuccess: function () { //数据加载完毕事件
+				if(lId != null && lId != undefined)
+				$(".productLine:eq("+box+')').combotree('setValue', lId);
+         	}
+	 });
+	 delProductLine();
+}
+
+function createBaseModuleView(cpmId){
+	var $body=['<div class="moduleBlock">',
+	'<select id="productLine" name="productLine" style="width: 260px" class=" productLine easyui-combotree" required="true"></select>',
+	'<a href="javascript:void(0);" class="easyui-linkbutton productLine-del" data-options="plain:true,iconCls:\'icon-remove\'"></a>',
+    '</div>',
+    ''].join('');
+	return $body;
+}
+
+function delProductLine(){
+	$(".productLine-del").unbind('click').on("click",function(){
+		$(this).parent().remove();
+	});
 }
 
 function addFuc(){ // 注册 增加按钮
@@ -360,7 +492,19 @@ function editFuc(){ // 注册 修改 按钮
 			var arr = business.split(',');
 			for(var i = 0;i < arr.length;i ++){
 				// 遍历checkbox
-				$('input[name="business"]').each(function(){
+				$('#dlg input[name="business"]').each(function(){
+					if(this.value == arr[i])
+						this.checked = 'checked';
+				});
+			}
+		}
+		//数据回显--业务技能
+		var skill = rows[0].skill;
+		if(skill != null && skill != '' && skill != undefined){
+			var arr = skill.split(',');
+			for(var i = 0;i < arr.length;i ++){
+				// 遍历checkbox
+				$('#dlg input[name="skill"]').each(function(){
 					if(this.value == arr[i])
 						this.checked = 'checked';
 				});
@@ -399,6 +543,15 @@ function editFuc(){ // 注册 修改 按钮
 		});
 		openDialog('dlg');
 		formUrl = getContextPath() + '/portal/team/update';
+		
+		//数据回显--产品线
+		var productLine=rows[0].productLine;
+		if(productLine!=null && productLine!='' && productLine!=undefined){
+			var arr=productLine.split(',');
+			for(var i=0;i<arr.length;i++){
+				addProductLine(arr[i]);
+			}
+		}
 	} else {
 		$.message('只能选择一条记录进行修改!');
 	}
@@ -526,7 +679,7 @@ function openDialog(id){
 	modal : true,
 	$('#' + id).dialog({
 		onOpen : function(event, ui) {
-			
+			$(".productLineModule").html('');
 		}
 	}).dialog('open').dialog('center');
 }
@@ -553,6 +706,7 @@ function searchFun(){
 			return ;
 		}
 	}
+	datagrid.datagrid('clearSelections');
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
 
@@ -561,7 +715,10 @@ function cleanFun() {
 	$('#searchForm').form('clear');
 	list = new Array();
 	idList = new Array();
+	skillList=new Array();
+	skillIdList=new Array();
 	$('#sp').find('input').attr('checked',false);
+	$('#sp-skill').find('input').attr('checked',false);
 	datagrid.datagrid('load', {});
 }
 function recommendFuc(){

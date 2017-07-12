@@ -87,9 +87,9 @@ $().ready(function(){
 						sortable : true ,
 						formatter : function(value , record , index){
 							if( value == 1){
-								return '<span style=color:green; >线上-网站</span>' ; 
+								return '<span style=color:black; >线上-网站</span>' ; 
 							} else if( value == 2){
-								return '<span style=color:blue; >线上-活动</span>' ;
+								return '<span style=color:black; >线上-活动</span>' ;
 							} else if( value == 3){
 								return '<span style=color:black; >线上-新媒体</span>' ;
 							}else if( value == 4){
@@ -102,6 +102,10 @@ $().ready(function(){
 								return '<span style=color:black; >线下-渠道</span>' ;
 							}else if( value == 8){
 								return '<span style=color:black; >复购</span>' ;
+							}else if( value == 9){
+								return '<span style=color:black; >线下-400</span>' ;
+							}else if( value == 10){
+								return '<span style=color:black; >线下-商桥</span>' ;
 							}
 						}
 					},{
@@ -119,8 +123,20 @@ $().ready(function(){
 							return '';
 						}
 					},{
+						field : 'realName',
+						title : '客户联系人',
+						width : 120,
+						align : 'center',
+						sortable : true 
+					},{
 						field : 'indent_tele',
 						title : '客户电话',
+						width : 120,
+						align : 'center',
+						sortable : true 
+					},{
+						field : 'userCompany',
+						title : '客户公司',
 						width : 120,
 						align : 'center',
 						sortable : true 

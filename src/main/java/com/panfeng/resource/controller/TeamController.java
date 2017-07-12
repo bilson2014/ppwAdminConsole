@@ -99,7 +99,13 @@ public class TeamController extends BaseController {
 		paramMap.put("linkman", view.getLinkman());
 		paramMap.put("cityID", view.getCityID());
 		paramMap.put("provinceID", view.getProvinceID());
+		paramMap.put("skill", view.getSkill());
+		paramMap.put("productLine", view.getProductLine());
+		paramMap.put("teamNature", view.getTeamNature());
 		final DataGrid<PmsTeam> dataGrid = pmsTeamFacade.listWithPagination(pageParam, paramMap);
+		dataGrid.getRows().forEach(team->{
+			System.out.println();
+		});
 		return dataGrid;
 	}
 
@@ -122,53 +128,86 @@ public class TeamController extends BaseController {
 
 	@RequestMapping(value = "/team/save", method = RequestMethod.POST)
 	public BaseMsg save(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam("file") final MultipartFile file, final PmsTeam team) {
+			@RequestParam("file") final MultipartFile file, @RequestParam("certificateFile") final MultipartFile certificateFile,
+			@RequestParam("idCardfrontFile") final MultipartFile idCardfrontFile,
+			@RequestParam("idCardbackFile") final MultipartFile idCardbackFile, final PmsTeam team) {
 		BaseMsg baseMsg = new BaseMsg();
 		response.setContentType("text/html;charset=UTF-8");
 		// 先保存获取ID，然后更新
 		team.setPassword(DataUtil.md5(PublicConfig.INIT_PASSWORD));
+		
 		long teamId = pmsTeamFacade.save(team);
 		team.setTeamId(teamId);
-		try {
-			if (!file.isEmpty()) {
-				String path = FastDFSClient.uploadFile(file);
-				team.setTeamPhotoUrl(path);
-			}
-			pmsTeamFacade.saveTeamPhotoUrl(team);
-		} catch (Exception e) {
-			baseMsg.setErrorCode(BaseMsg.ERROR);
-			baseMsg.setErrorMsg("更新logo失败！");
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("TeamController method:save() upload team logo error ...", sessionInfo);
-			e.printStackTrace();
-			throw new RuntimeException("Team Image upload error ...", e);
-		}
+		
+		uploadFile(request, file, team, baseMsg, 1, "LOGO");
+		uploadFile(request, certificateFile, team, baseMsg, 2, team.getTeamNature()==0?"营业执照":"身份证");
+		uploadFile(request, idCardfrontFile, team, baseMsg, 3, "法人手持身份证正面");
+		uploadFile(request, idCardbackFile, team, baseMsg, 4, "法人手持身份证背面");
+		
+		pmsTeamFacade.saveTeamPhotoUrl(team);
+		
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save team ...", sessionInfo);
 		baseMsg.setErrorCode(BaseMsg.NORMAL);
 		baseMsg.setErrorMsg("保存成功！");
 		return baseMsg;
 	}
+	
+	private BaseMsg uploadFile(HttpServletRequest request,MultipartFile file,PmsTeam team,BaseMsg baseMsg,int type,String FileName){
+		try {
+			if (!file.isEmpty()) {
+				String path = FastDFSClient.uploadFile(file);
+				
+				switch (type) {
+				case 1://上传LOGO
+					team.setTeamPhotoUrl(path);
+					break;
+				case 2://上传营业执照/身份证
+					team.setCertificateUrl(path);
+					break;
+				case 3://上传法人手持身份证正面
+					team.setIdCardfrontUrl(path);
+					break;
+				case 4://上传法人手持身份证背面
+					team.setIdCardbackUrl(path);
+					break;
+				default:
+					break;
+				}
+			}
+
+		} catch (Exception e) {
+			baseMsg.setErrorCode(BaseMsg.ERROR);
+			baseMsg.setErrorMsg("更新"+FileName+"失败！");
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error("TeamController method:save() upload team "+FileName+" error ...", sessionInfo);
+			e.printStackTrace();
+//			throw new RuntimeException("Team Image upload error ...", e);
+		}
+		return baseMsg;
+	}
 
 	@RequestMapping(value = "/team/update", method = RequestMethod.POST)
 	public BaseMsg update(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam("file") final MultipartFile file, final PmsTeam team) throws Exception {
+			@RequestParam("file") final MultipartFile file, @RequestParam("certificateFile") final MultipartFile certificateFile,
+			@RequestParam("idCardfrontFile") final MultipartFile idCardfrontFile,
+			@RequestParam("idCardbackFile") final MultipartFile idCardbackFile, final PmsTeam team) throws Exception {
 		BaseMsg baseMsg = new BaseMsg();
 		response.setContentType("text/html;charset=UTF-8");
 
 		// 如果上传文件不为空时，更新 url;反之亦然
-		if (!file.isEmpty()) {
-			String path = FastDFSClient.uploadFile(file);
-			// 删除 原文件
-			final PmsTeam originalTeam = pmsTeamFacade.findTeamById(team.getTeamId());
-			if (originalTeam != null) {
-				final String originalPath = originalTeam.getTeamPhotoUrl();
-				FastDFSClient.deleteFile(originalPath);
-			}
-			team.setTeamPhotoUrl(path);
-			// save photo path
-			pmsTeamFacade.saveTeamPhotoUrl(team);
-		}
+		final PmsTeam originalTeam = pmsTeamFacade.findTeamById(team.getTeamId());
+		team.setCertificateUrl(originalTeam.getCertificateUrl());
+		team.setIdCardfrontUrl(originalTeam.getIdCardbackUrl());
+		team.setIdCardfrontUrl(originalTeam.getIdCardfrontUrl());
+		team.setTeamPhotoUrl(originalTeam.getTeamPhotoUrl());
+		
+		updateFile(file,team,originalTeam,1);
+		updateFile(certificateFile,team,originalTeam,2);
+		updateFile(idCardfrontFile,team,originalTeam,3);
+		updateFile(idCardbackFile,team,originalTeam,4);
+		
+		pmsTeamFacade.saveTeamPhotoUrl(team);
 
 		long ret = pmsTeamFacade.update(team);
 		SessionInfo sessionInfo = getCurrentInfo(request);
@@ -182,6 +221,38 @@ public class TeamController extends BaseController {
 		}
 		return baseMsg;
 	}
+	private void updateFile(MultipartFile file,PmsTeam team,PmsTeam originalTeam,int type){
+		if (!file.isEmpty()) {
+			String path = FastDFSClient.uploadFile(file);
+			// 删除 原文件
+			// final Team originalTeam = service.findTeamById(team.getTeamId());
+//			final PmsTeam originalTeam = pmsTeamFacade.findTeamById(team.getTeamId());
+			if (originalTeam != null) {
+				final String originalPath = originalTeam.getTeamPhotoUrl();
+				FastDFSClient.deleteFile(originalPath);
+			}
+			switch (type) {
+			case 1://上传LOGO
+				team.setTeamPhotoUrl(path);
+				break;
+			case 2://上传营业执照/身份证
+				team.setCertificateUrl(path);
+				break;
+			case 3://上传法人手持身份证正面
+				team.setIdCardfrontUrl(path);
+				break;
+			case 4://上传法人手持身份证背面
+				team.setIdCardbackUrl(path);
+				break;
+			default:
+				break;
+			}
+//			team.setTeamPhotoUrl(path);
+			// save photo path
+			// service.saveTeamPhotoUrl(team);
+//			pmsTeamFacade.saveTeamPhotoUrl(team);
+		}
+	}
 
 	@RequestMapping(value = "/team/delete", method = RequestMethod.POST)
 	public long delete(final long[] ids, HttpServletRequest request) {
@@ -194,6 +265,15 @@ public class TeamController extends BaseController {
 				for (final PmsTeam team : list) {
 					if (team.getTeamPhotoUrl() != null && !"".equals(team.getTeamPhotoUrl())) {
 						FastDFSClient.deleteFile(team.getTeamPhotoUrl());
+					}
+					if (team.getCertificateUrl() != null && !"".equals(team.getCertificateUrl())) {
+						FastDFSClient.deleteFile(team.getCertificateUrl());
+					}
+					if (team.getIdCardfrontUrl() != null && !"".equals(team.getIdCardfrontUrl())) {
+						FastDFSClient.deleteFile(team.getIdCardfrontUrl());
+					}
+					if (team.getIdCardbackUrl() != null && !"".equals(team.getIdCardbackUrl())) {
+						FastDFSClient.deleteFile(team.getIdCardbackUrl());
 					}
 				}
 			}
@@ -237,6 +317,7 @@ public class TeamController extends BaseController {
 			paramMap.put("linkman", view.getLinkman());
 			paramMap.put("cityID", view.getCityID());
 			paramMap.put("provinceID", view.getProvinceID());
+			paramMap.put("skill", view.getSkill());
 
 			List<PmsTeam> teamList = pmsTeamFacade.listWithParam(paramMap);
 

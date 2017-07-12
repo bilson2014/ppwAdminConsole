@@ -21,5 +21,7 @@ public interface EmployeeService {
 	 * @return
 	 */
 	public Map<Long, PmsEmployee> getEmployeeMap();
+	
+	public Map<Long, PmsEmployee> getAllEmployeeMap();
 
 }

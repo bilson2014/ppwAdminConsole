@@ -7,6 +7,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.paipianwang.pat.common.entity.DataGrid;
+import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.facade.right.entity.PmsEmployee;
 import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
@@ -108,8 +110,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public Map<Long, PmsEmployee> getEmployeeMap() {
 		final List<PmsEmployee> list = pmsEmployeeFacade.findEmployeeList();
 		final Map<Long, PmsEmployee> map = new HashMap<Long, PmsEmployee>();
-		if(ValidateUtil.isValid(list)) {
+		if (ValidateUtil.isValid(list)) {
 			for (final PmsEmployee employee : list) {
+				map.put(employee.getEmployeeId(), employee);
+			}
+		}
+		return map;
+	}
+	
+	@Override
+	public Map<Long, PmsEmployee> getAllEmployeeMap() {
+		PageParam pp = new PageParam();
+		DataGrid<PmsEmployee> listWithPagination = pmsEmployeeFacade.listWithPagination(new HashMap<String, Object>(), pp);
+		final Map<Long, PmsEmployee> map = new HashMap<Long, PmsEmployee>();
+		if (ValidateUtil.isValid(listWithPagination.getRows())) {
+			for (final PmsEmployee employee : listWithPagination.getRows()) {
 				map.put(employee.getEmployeeId(), employee);
 			}
 		}
