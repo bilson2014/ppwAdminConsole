@@ -15,6 +15,7 @@ import com.paipianwang.pat.common.entity.BaseEntity;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
+import com.paipianwang.pat.facade.product.entity.ChanPinLineTree;
 import com.paipianwang.pat.facade.product.entity.PmsChanPinConfiguration;
 import com.paipianwang.pat.facade.product.service.PmsChanPinConfigurationFacade;
 import com.panfeng.domain.BaseMsg;
@@ -29,6 +30,11 @@ public class ChanPinConfigurationController extends BaseController {
 	@RequestMapping("/chanpinconfiguration-list")
 	public ModelAndView activityView() {
 		return new ModelAndView("/chanpinconfiguration-list");
+	}
+	
+	@RequestMapping("/config/listTree")
+	public List<ChanPinLineTree> getChanPinLineTree(){
+		return PmsChanPinConfigurationFacade.getConfigurationTree();
 	}
 
 	@RequestMapping("/config/list")

@@ -474,16 +474,19 @@ function initModule(obj){
 
 function delBaseModule(){
 	$(".basemodule-del").unbind('click').on("click",function(){
+		$(this).parent().next('br').remove();
 		$(this).parent().remove();
 	});
 }
 function delAdditiveModule(){
 	$(".additivemodule-del").unbind('click').on("click",function(){
+		$(this).parent().next('br').remove();
 		$(this).parent().remove();
 	});
 }
 function delDimension(){
 	$(".dimension-del").unbind('click').on("click",function(){
+		$(this).parent().next('br').remove();
 		$(this).parent().remove();
 	});
 }

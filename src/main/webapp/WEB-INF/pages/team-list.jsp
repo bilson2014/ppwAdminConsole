@@ -24,7 +24,7 @@
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
-	<div data-options="region:'north',border:false" style="height: 70px; overflow: hidden;background-color: #fff">
+	<div data-options="region:'north',border:false" style="height: 100px; overflow: hidden;background-color: #fff">
 			<form id="searchForm" method="post">
 				<table>
 					<tr>
@@ -41,7 +41,7 @@
 								<option value="2">未通过审核</option>
 							</select>
 						</td>
-						<th>价格区间</th>
+						<th>价格区间:</th>
 						<td>
 							<select id="search-price" name="priceRange">
 								<option value="" selected="selected">-- 请选择 --</option>
@@ -53,9 +53,8 @@
 	            				<option value="5" >10万元及以上</option>
 							</select>
 						</td>
-						
-					</tr>
 					
+					</tr>
 					<tr>
 						<th>联系人:</th>
 						<td><input id="search-linkman" name="linkman" placeholder="请输入联系人"/></td>
@@ -65,7 +64,7 @@
 						<th>所在市：</th>
 						<td><input id="search-cityID" name="cityID" placeholder="请输入市"/></td>
 						
-						<th>业务范围</th>
+						<th>业务范围:</th>
 						<td>
 							<select id="search-business" name="business" style="width:180px"></select>
 							<div id="sp">
@@ -90,12 +89,48 @@
 							</div>
 									
 						</td>
+						
+					</tr>
+					<tr>
+						<th>业务技能:</th>
+						<td>
+						<select id="search-skill" name="skill" style="width:180px"></select>
+							<div id="sp-skill">
+								<div style="padding:10px">
+									<input type="checkbox" name="skill" value="解说词" /> <span>解说词</span>
+									<input type="checkbox" name="skill" value="广告语" /> <span>广告语</span>
+									<input type="checkbox" name="skill" value="故事" /> <span>故事</span>
+									<input type="checkbox" name="skill" value="贴图分镜" /> <span>贴图分镜</span>
+									<input type="checkbox" name="skill" value="手绘分镜" /> <span>手绘分镜</span>
+									<input type="checkbox" name="skill" value="美术设计" /> <span>美术设计</span>
+									<input type="checkbox" name="skill" value="影片策略" /> <span>影片策略</span>
+									<input type="checkbox" name="skill" value="导演" /> <span>导演</span>
+									<input type="checkbox" name="skill" value="制片" /> <span>制片</span>
+									<input type="checkbox" name="skill" value="摄影" /> <span>摄影</span>
+									<input type="checkbox" name="skill" value="剪辑" /> <span>剪辑</span>
+									<input type="checkbox" name="skill" value="包装" /> <span>包装</span>
+									<input type="checkbox" name="skill" value="调色" /> <span>调色</span>
+								</div>
+							</div></td>
+							<th>产品线:</th>
+							<td>
+							<select id="search-productLine" name="productLine" style="width: 180px" class="easyui-combotree" ></select>
+							</td>
+							<th>公司性质：</th>
+						<td>
+							<select id="search-teamNature" name="teamNature">
+								<option value="" selected="selected">-- 请选择 --</option>
+								<option value="0">公司</option>
+								<option value="1">工作室</option>
+							</select>
+						</td>
+						<th></th>
 						<td>
 							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
 							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 							<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="exportFun();">报表导出</a>
 						</td>
-					</tr>
+					</tr>	
 				</table>
 			</form>
 		</div>
@@ -137,13 +172,21 @@
 	            	<tr>
 	            		<th >公司名称</th>
 	            		<td><input name="teamName" class="easyui-textbox" required="true"></td>
+	            		<th>公司性质</th>
+	            		<td>
+	            			<select id="teamNature" name="teamNature" class="easyui-combobox" style="width: 150px;height:22px;line-height: 28px;" required="true" editable="false">
+								<option value="0">公司</option>
+								<option value="1" >工作室</option>
+							</select>
+	            		</td>
 	            	</tr>
 	            	<tr>
 	            		<th >登录名</th>
-	            		<td><input name="loginName" validtype="vLoginName" class="easyui-validatebox textbox" id="loginName"></td>
+	            		<td><input name="loginName"  class="easyui-validatebox easyui-textbox" id="loginName"></td>
+	            		<!-- validtype="vLoginName" -->
 	            		<th>审核状态</th>
 	            		<td>
-	            			<select id="flag" name="flag" class="easyui-combobox" style="width: 150px;height:28px;line-height: 28px;" required="true" editable="false">
+	            			<select id="flag" name="flag" class="easyui-combobox" style="width: 150px;height:22px;line-height: 28px;" required="true" editable="false">
 								<option value="0">审核中</option>
 								<option value="1" >审核通过</option>
 								<option value="2">未通过审核</option>
@@ -155,14 +198,15 @@
 	            		<th>联系人姓名</th>
 	            		<td><input name="linkman" class="easyui-textbox" required="true"/></td>
 	            		<th>手机号码</th>
-	            		<td><input class="easyui-validatebox textbox" data-options="validType:['mobile','vPhoneNumber']"  name="phoneNumber" id="phoneNumber" required="true" /></td>
+	            		<td><input class="easyui-validatebox easyui-textbox"   name="phoneNumber" id="phoneNumber" required="true" /></td>
+	            		<!-- data-options="validType:['mobile','vPhoneNumber']" -->
 	            	</tr>
 	            	
 	            	<tr>
 	            		<th>微信号</th>
 	            		<td><input name="webchat" class="easyui-textbox" required="true"/></td>
 	            		<th>QQ</th>
-	            		<td><input name="qq" class="easyui-validatebox textbox" validtype="qq" /></td>
+	            		<td><input name="qq" class="easyui-validatebox easyui-textbox" validtype="qq" /></td>
 	            	</tr>
 	            	
 	            	<tr>
@@ -172,9 +216,9 @@
 	            	
 	            	<tr>
 	            		<th>邮箱</th>
-	            		<td><input class="easyui-validatebox textbox" validType="email" name="email" required="true"/></td>
+	            		<td><input class="easyui-validatebox easyui-textbox" validType="email" name="email" required="true"/></td>
 	            		<th>官方网站</th>
-	            		<td><input class="easyui-validatebox textbox" validType="url" name="officialSite" invalidMessage="url格式不正确[http://www.example.com]"/></td>
+	            		<td><input class="easyui-validatebox easyui-textbox" validType="url" name="officialSite" invalidMessage="url格式不正确[http://www.example.com]"/></td>
 	            	</tr>
 	            	
 	            	<tr>
@@ -197,6 +241,18 @@
 	            				
 	            			</select>
 	            		</td>
+	            	</tr>
+	            	<tr>
+	            	<th id="certName" colspan="2">营业执照</th>
+	            	<td colspan="2"><input name="certificateFile" id="certificateFile" type="file" prompt="选择一个照片" /></td>
+	            	</tr>
+	            	<tr>
+	            	<th colspan="2">法人持身份证正面</th>
+	            	<td colspan="2"><input name="idCardfrontFile" id="idCardfrontFile" type="file" prompt="选择一个照片" /></td>
+	            	</tr>
+	            	<tr>
+	            	<th colspan="2">法人持身份证背面</th>
+	            	<td colspan="2"><input name="idCardbackFile" id="idCardbackFile" type="file" prompt="选择一个照片" /></td>
 	            	</tr>
 	            	
 	            	<tr>
@@ -226,8 +282,49 @@
 	            			<input type="checkbox" name="business" value="包装"/> 包装
 	            		</td>
 	            	</tr>
+	            	<tr>
+	            		<th colspan="4">业务技能</th>
+	            	</tr>
 	            	
 	            	<tr>
+	            		<td colspan="4">
+	            			创意策划:
+	            			<input type="checkbox" name="skill" value="解说词" /> 解说词
+	            			<input type="checkbox" name="skill" value="广告语" /> 广告语
+	            			<input type="checkbox" name="skill" value="故事" /> 故事
+	            			<input type="checkbox" name="skill" value="贴图分镜" /> 贴图分镜
+	            			<input type="checkbox" name="skill" value="手绘分镜" /> 手绘分镜
+	            			<input type="checkbox" name="skill" value="美术设计" /> 美术设计
+	            			<input type="checkbox" name="skill" value="影片策略" /> 影片策略	
+	            			<br>		
+
+	            			创作团队:
+	            			<input type="checkbox" name="skill" value="导演" /> 导演
+	            			<input type="checkbox" name="skill" value="制片" /> 制片
+	            			<input type="checkbox" name="skill" value="摄影" /> 摄影
+	            			<br>		
+
+	            			后期制作:
+	            			<input type="checkbox" name="skill" value="剪辑" /> 剪辑
+	            			<input type="checkbox" name="skill" value="包装" /> 包装
+	            			<input type="checkbox" name="skill" value="调色" /> 调色		
+	            		</td>
+	            	 </tr>
+	            	 <tr>
+	            	 <th colspan="4"><a onclick="addProductLine()" id="add-Module" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">添加产品线</a></th>
+	            	 </tr>
+	            	 <tr>
+	            	 
+	            	 <td colspan="4">
+	            	 	<div class="productLineModule"> 					
+						</div>
+					<hr/>
+	            	 </td>
+	            	 
+				
+				</tr>
+	            	
+	            	<tr> 
 	            		<th>价格区间</th>
 	            		<td>
 	            			<select name="priceRange" class="easyui-combobox" editable="false" required="true">
