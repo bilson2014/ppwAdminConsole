@@ -146,7 +146,7 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : '网站',
+						field : 'qq',
 						title : 'QQ',
 						width : 80,
 						align : 'center',
@@ -287,7 +287,12 @@ $().ready(function(){
 						field : 'officialSite' ,
 						title : '网址',
 						width : 110,
-						align : 'center' ,
+						align : 'center',
+						formatter : function(value , record , index){
+							if(value != '')
+								return value.trim();
+							return value;
+						}
 					},{
 						field : 'position' ,
 						title : '职位',

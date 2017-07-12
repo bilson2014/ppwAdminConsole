@@ -335,6 +335,10 @@ public class ProjectController extends BaseController {
 	@RequestMapping("/getProjectWithProduct")
 	public List<IndentProject> getAllProject() {
 		final List<IndentProject> list = indentProjectService.getAllProject();
+		// 添加项目名称
+		for (IndentProject indentProject : list) {
+			indentProject.setProjectName(indentProject.getProjectName() + '-' + indentProject.getDescription());
+		}
 		IndentProject project = new IndentProject();
 		project.setProjectId(-1);
 		project.setProjectName("其他");

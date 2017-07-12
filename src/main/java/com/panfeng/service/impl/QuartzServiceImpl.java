@@ -29,15 +29,15 @@ import com.panfeng.service.QuartzService;
  * @author wang
  *
  */
-@Service
+/*@Service
 public class QuartzServiceImpl implements QuartzService {
 	@Autowired
 	private SchedulerFactoryBean schedulerFactoryBean;
 	String PARAMKEY = "paramkey";
 
-	/**
+	*//**
 	 * 任务动态新增或更新
-	 */
+	 *//*
 	public void addOrUpdateJob(BaseJob baseJob) throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
 		// 唯一主键
@@ -69,9 +69,9 @@ public class QuartzServiceImpl implements QuartzService {
 		}
 	}
 
-	/**
+	*//**
 	 * 删除定时器
-	 */
+	 *//*
 	public void removeJob(BaseJob baseJob) throws SchedulerException {
 		Scheduler scheduler = schedulerFactoryBean.getScheduler();
 		TriggerKey triggerKey = baseJob.getTriggerKey();
@@ -144,4 +144,4 @@ public class QuartzServiceImpl implements QuartzService {
 		return null;
 	}
 
-}
+}*/

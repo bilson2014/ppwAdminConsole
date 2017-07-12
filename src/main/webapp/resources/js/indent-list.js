@@ -71,9 +71,9 @@ $().ready(function(){
 							} else if(value == 4){
 								return '<span style=color:black; >再次沟通</span>' ;
 							}  else if(value == 5){
-								return '<span style=color:black; >真实</span>' ;
+								return '<span style=color:green; >真实</span>' ;
 							} else if(value == 6){
-								return '<span style=color:black; >虚假</span>' ;
+								return '<span style=color:red; >虚假</span>' ;
 							} else if(value == 7){
 								return '<span style=color:black; >提交</span>' ;
 							}

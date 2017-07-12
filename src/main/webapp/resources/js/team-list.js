@@ -309,7 +309,7 @@ var team = {
 					}
 				});
 			}
-			$('#search-business').combo('setValue', idList).combo('setText', list).combo('hidePanel');
+			$('#search-business').combo('setValue', list).combo('setText', list).combo('hidePanel');
 		});
 	}
 }
@@ -366,6 +366,7 @@ function editFuc(){ // 注册 修改 按钮
 				});
 			}
 		}
+		
 		var first =true;
 		$('#teamProvince').combobox({
 			url : getContextPath() + '/portal/get/provinces',
@@ -439,7 +440,7 @@ function cancelFuc(){ // 注册 取消按钮
 $.extend($.fn.validatebox.defaults.rules, {  
     vLoginName : {
         validator : function(value, param) {
-        	var url = getContextPath() + '/portal/team/static/checkIsExist';
+        	var url = getContextPath() + '/portal/team/isExist';
 			var isok = false;
         	if(isadd){
         		// 验证登录名
@@ -470,7 +471,7 @@ $.extend($.fn.validatebox.defaults.rules, {
 $.extend($.fn.validatebox.defaults.rules, {
     vPhoneNumber : {
         validator : function(value, param) {
-        	var url = getContextPath() + '/portal/team/static/checkIsExist';
+        	var url = getContextPath() + '/portal/team/isExist';
 			var isok = false;
         	if(isadd){
         		// 验证登录名

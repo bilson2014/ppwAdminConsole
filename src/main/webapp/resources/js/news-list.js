@@ -106,10 +106,7 @@ $().ready(function(){
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar',
-		onLoadSuccess:function(){
-			sort();//排序操作
-		}
+		toolbar : '#toolbar'
 	});
 });
 function editorBeReady(valueName){
@@ -243,26 +240,4 @@ function searchFun(){
 function cleanFun() {
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {});
-}
-function sort(){
-	$(".sort").off("click").on("click",function(){
-		var action = $(this).attr("data-target");
-		var id = $(this).attr("data-id");
-		//TODO 移除提示
-		$.ajax({
-			url : getContextPath() + '/portal/news/sort',
-			type : 'POST',
-			data : {
-				'action' : action,
-				'id' : id,
-			},
-			success : function(data){
-				if(data){
-					datagrid.datagrid('clearSelections');
-					datagrid.datagrid('load', {});
-				}
-			}
-		});
-		
-	})
 }

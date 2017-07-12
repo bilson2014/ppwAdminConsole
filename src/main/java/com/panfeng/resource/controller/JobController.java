@@ -1,11 +1,8 @@
 package com.panfeng.resource.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,12 +21,8 @@ import com.panfeng.util.Log;
 @RequestMapping("/portal")
 public class JobController extends BaseController {
 
-	/*@Autowired
-	private final JobService service = null;*/
-	
 	@Autowired
 	private final PmsJobFacade pmsJobFacade = null;
-	
 	
 	@RequestMapping("/job-list")
 	public ModelAndView view(){
@@ -77,21 +70,4 @@ public class JobController extends BaseController {
 		return ret;
 	}
 	
-	// -------------------------- 前端请求 -------------------------------
-	@RequestMapping("/job/static/list")
-	public List<PmsJob> list(final HttpServletRequest request){
-		
-		final List<PmsJob> list = pmsJobFacade.getAll();
-		return list;
-	}
-	
-	@RequestMapping("/job/static/{id}")
-	public PmsJob job(final HttpServletRequest request,@PathVariable("id") final Long id){
-		
-		if(id != null){
-			final PmsJob job = pmsJobFacade.findJobById(id);
-			return job;
-		}
-		return null;
-	}
 }

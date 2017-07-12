@@ -698,7 +698,18 @@
 			SELECT 
 				i.IP_ID AS id,
 				i.IP_ID AS projectId,
-				i.IP_PROJECT_NAME AS projectName
+				i.IP_PROJECT_NAME AS projectName,
+				CASE i.ip_state
+					WHEN 0 THEN '正常'
+					WHEN 1 THEN
+						'取消'
+					WHEN 2 THEN
+						'已完成'
+					WHEN 3 THEN
+						'暂停'
+					ELSE
+						'已取消'
+				END AS 'description'
 			FROM INDENT_PROJECT i 
 			WHERE 1 = 1
 		]]>

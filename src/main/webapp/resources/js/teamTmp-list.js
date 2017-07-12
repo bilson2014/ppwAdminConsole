@@ -99,21 +99,7 @@ $().ready(function(){
 								field : 'business' ,
 								title : '业务范围' ,
 								align : 'center' ,
-								width : 80,
-								formatter : function(value , record , index){
-									var str = "";
-									var business = teamTmp_list.businessMap();
-									if(value != null && value != '' && value != undefined){
-										var arr = value.split(',');
-										for(var i = 0;i < arr.length;i++){
-											str +=business.get(arr[i]);
-											if(i!=arr.length-1){
-												str+=","
-											}
-										}
-									}
-									return str;
-								}
+								width : 80
 							},{
 								field : 'teamDescription' ,
 								title : '公司简介' ,
@@ -180,29 +166,6 @@ $().ready(function(){
 				showFooter : false,
 				toolbar : '#toolbar',
 			});
-		},
-		businessMap:function(){
-			var businessMap = new Map();
-			businessMap.set('0',"广告");
-			businessMap.set('1',"宣传片");
-			businessMap.set('2',"真人秀");
-			businessMap.set('3',"纪录片");
-			businessMap.set('4',"病毒视频");
-			businessMap.set('5',"电视栏目");
-			businessMap.set('6',"三维动画");
-			businessMap.set('7',"MG动画");
-			businessMap.set('8',"体育赛事");
-			businessMap.set('9',"专题片");
-			businessMap.set('10',"VR拍摄");
-			businessMap.set('11',"产品拍摄");
-			businessMap.set('12',"微电影");
-			businessMap.set('13',"航拍");
-			businessMap.set('14',"活动视频");
-			businessMap.set('15',"后期制作");
-			businessMap.set('16',"TVC");
-			businessMap.set('17',"MV");
-			businessMap.set('18',"包装");
-			return businessMap;
 		}
 	}
 	teamTmp_list.init();

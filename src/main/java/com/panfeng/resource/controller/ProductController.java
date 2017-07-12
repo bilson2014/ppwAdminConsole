@@ -1,7 +1,5 @@
 package com.panfeng.resource.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -306,120 +304,6 @@ public class ProductController extends BaseController {
 	// add by wliming, 2016/02/24 18:53 end
 
 	// --------------------------------以下是前端展示内容 ----------------------------
-	/**
-	 * 首页 装载 更多作品页-手机端
-	 */
-	@RequestMapping(value = "/product/static/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-	public List<Product> data(@RequestBody final ProductView view) {
-
-		final List<Product> list = proService.loadData(view);
-		return list;
-	}
-
-
-	@RequestMapping("/product/static/redirect")
-	public ModelAndView redirect(final ModelMap model) {
-
-		return new ModelAndView("/static/production", model);
-	}
-
-	/**
-	 * 获取作品总数
-	 * 
-	 * @param view
-	 *            分类标准
-	 * @return 总数
-	 */
-	@RequestMapping("/product/static/pageSize")
-	public long maxSize(@RequestBody final ProductView view) {
-
-		final long size = proService.conditionSize(view);
-		return size;
-	}
-
-	/**
-	 * 作品页 数据
-	 * 
-	 * @param itemId
-	 *            分类标准
-	 * @param order
-	 *            排序规则
-	 */
-	@RequestMapping(value = "/product/static/listWithCondition")
-	public List<Product> listWithCondition(@RequestBody final ProductView view) {
-
-		final List<Product> list = proService.listWithCondition(view);
-		return list;
-	}
-
-	/**
-	 * 查询 团队的作品信息
-	 * 
-	 * @param teamId
-	 * @param productId
-	 * @param model
-	 */
-	@RequestMapping(value = "/product/static/view/{teamId}/{productId}")
-	public ModelAndView redirect(@PathVariable("teamId") final Integer teamId,
-			@PathVariable("productId") final Integer productId, final ModelMap model) {
-		model.addAttribute("teamId", teamId);
-		model.addAttribute("productId", productId);
-		Product product = proService.loadProduct(productId);
-		model.addAttribute("product", product);
-		return new ModelAndView("/static/team", model);
-	}
-
-	/**
-	 * 装配相关视频
-	 * 
-	 * @param teamId
-	 */
-	@RequestMapping("/product/static/team/{teamId}")
-	public List<Product> productInformationByTeam(@PathVariable("teamId") final Integer teamId) {
-
-		final List<Product> list = proService.loadProductByTeam(teamId);
-		return list;
-	}
-
-	/**
-	 * 
-	 * 
-	 * @param teamId
-	 */
-	@RequestMapping("/product/static/order/team/{teamId}")
-	public List<Product> productInformationByTeamOrder(@PathVariable("teamId") final Integer teamId) {
-
-		final List<Product> list = proService.loadProductByTeamOrder(teamId);
-		return list;
-	}
-
-	@RequestMapping("/product/static/information/{productId}")
-	public PmsProduct information(@PathVariable("productId") final Integer productId) {
-		final PmsProduct product = pmsProductFacade.loadProduct(productId);
-		if (product.getTeamId() != null && !"".equals(product.getTeamId())) {
-			final PmsTeam team = pmsTeamFacade.findTeamById(product.getTeamId());
-			if (team != null) {
-				product.setTeamDescription(team.getTeamDescription());
-				product.setTeamName(team.getTeamName());
-				product.setTeamPhotoUrl(team.getTeamPhotoUrl());
-			}
-		}
-		return product;
-	}
-
-	/**
-	 * 通过 供应商ID 获取已审核及审核中的视频
-	 * 
-	 * @param providerId
-	 *            供应商唯一编码
-	 * @return 已审核的产品列表
-	 */
-	@RequestMapping("/product/static/data/loadProducts/{providerId}")
-	public List<PmsProduct> loadProductByProviderId(@PathVariable("providerId") final long teamId) {
-
-		final List<PmsProduct> list = pmsProductFacade.loadProductByProviderId(teamId);
-		return list;
-	}
 
 	/**
 	 * 供应商根据 产品ID 删除视频
@@ -433,7 +317,6 @@ public class ProductController extends BaseController {
 
 		long[] ids = new long[1];
 		ids[0] = productId;
-		// List<Product> list = proService.delete(ids); // 删除视频信息
 		List<PmsProduct> list = pmsProductFacade.delete(ids); // 删除视频信息
 
 		// 删除搜索索引
@@ -476,117 +359,6 @@ public class ProductController extends BaseController {
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("delete product ... ", sessionInfo);
 		return true;
-	}
-
-	/**
-	 * 根据 视频ID 获取视频
-	 * 
-	 * @param productId
-	 *            视频唯一编号
-	 */
-	@RequestMapping("/product/static/data/{videoId}")
-	public PmsProduct findProductById(@PathVariable("videoId") final long productId) {
-		final PmsProduct product = pmsProductFacade.findProductById(productId);
-		return product;
-	}
-
-	/**
-	 * 更新 视频基本信息，除了 推荐值等外
-	 * 
-	 * @return 服务ID
-	 */
-	@RequestMapping("/product/static/data/update/info")
-	public boolean updateProductInfo(@RequestBody final PmsProduct product, HttpServletRequest request) {
-		// 解码
-		try {
-			PmsProduct oldProduct = pmsProductFacade.findProductById(product.getProductId());
-			oldProduct.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
-			oldProduct.setCreationTime(product.getCreationTime());
-			if (StringUtils.isNotEmpty(product.getTags())) {
-				oldProduct.setTags(URLDecoder.decode(product.getTags(), "UTF-8"));
-			}
-			oldProduct.setFlag(product.getFlag());
-			if (StringUtils.isNotBlank(product.getPicLDUrl())) {
-				oldProduct.setPicLDUrl(product.getPicLDUrl());
-				if (StringUtils.isNotBlank(oldProduct.getPicLDUrl())
-						&& !product.getPicLDUrl().equals(oldProduct.getPicLDUrl())) {
-					FastDFSClient.deleteFile(oldProduct.getPicLDUrl());
-				}
-			}
-			long l = pmsProductFacade.updateProductInfo(oldProduct); // 更新视频信息
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("update product ... ", sessionInfo);
-			return l >= 0;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	/**
-	 * 保存 视频信息
-	 * 
-	 * @return 保存后视频ID
-	 */
-	@RequestMapping("/product/static/data/save/info")
-	public long saveProductInfo(@RequestBody final PmsProduct product, HttpServletRequest request) {
-		try {
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			product.setProductName(URLDecoder.decode(product.getProductName(), "UTF-8"));
-			// proService.save(product); // 保存视频信息
-			long proId = pmsProductFacade.save(product); // 保存视频信息
-			product.setProductId(proId);
-			final PmsTeam team = pmsTeamFacade.findTeamById(sessionInfo.getReqiureId());
-			if (team.getFlag() != 4) {// ghost不需要添加service
-				// 添加service信息
-				PmsService service = new PmsService();
-				service.setProductId(product.getProductId());
-				service.setProductName(product.getProductName());
-				service.setServiceDiscount(1);
-				service.setServiceName("service" + product.getProductId() + "-" + product.getProductName());
-				service.setServiceOd(0);
-				service.setServicePrice(0d);
-				service.setServiceRealPrice(0d);
-				service.setMcoms(Long.parseLong(product.getVideoLength()));
-				pmsProductFacade.save(service);
-			}
-			// 加入文件转换队列
-			fileConvertMQService.sendMessage(product.getProductId(), product.getVideoUrl());
-			Log.error("save product ... ", sessionInfo);
-			return product.getProductId();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
-	/**
-	 * 更新文件路径
-	 * 
-	 * @param product
-	 *            包含 视频唯一编号、缩略图、封面、视频路径
-	 */
-	/*
-	 * @RequestMapping("/product/static/data/updateFilePath") public long
-	 * updateFilePath(@RequestBody final Product product) { return
-	 * proService.saveFileUrl(product); }
-	 */
-
-	/**
-	 * 获取单个作品ID
-	 * 
-	 * @param teamId
-	 *            供应商唯一编号
-	 * @return 作品ID
-	 */
-	@RequestMapping("/product/static/data/loadSingleProduct/{teamId}")
-	public long loadSingleProduct(@PathVariable("teamId") final long teamId) {
-
-		final Product product = proService.loadSingleProduct(teamId);
-		if (product != null)
-			return product.getProductId();
-		else
-			return 0l;
 	}
 
 	/**
@@ -660,14 +432,6 @@ public class ProductController extends BaseController {
 		} else {
 			return new BaseMsg(0, "修改失败");
 		}
-	}
-
-	/**
-	 * 修改作品可见性
-	 */
-	@RequestMapping(value = "/product/visibility")
-	public boolean productVisibility(@RequestBody final PmsProduct product) {
-		return pmsProductFacade.updateProductVisibility(product);
 	}
 
 	@RequestMapping(value = "/product/updateChanPin")
