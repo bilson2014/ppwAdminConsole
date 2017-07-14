@@ -69,22 +69,38 @@
 							<select id="search-business" name="business" style="width:180px"></select>
 							<div id="sp">
 								<div style="padding:10px">
-									<input type="checkbox" name="business" value="广告" /> <span>广告</span>
-			            			<input type="checkbox" name="business" value="宣传片"/> <span>宣传片</span>
-			            			<input type="checkbox" name="business" value="真人秀"/> <span>真人秀</span>
-			            			<input type="checkbox" name="business" value="纪录片"/> <span>纪录片</span>
-			            			<input type="checkbox" name="business" value="病毒视频"/> <span>病毒视频</span>
-			            			<input type="checkbox" name="business" value="电视栏目"/> <span>电视栏目</span>
-			            			<input type="checkbox" name="business" value="三维动画"/> <span>三维动画</span>
-			            			<input type="checkbox" name="business" value="MG动画"/> <span>MG动画</span>
-			            			<input type="checkbox" name="business" value="体育赛事"/> <span>体育赛事</span>
-			            			<input type="checkbox" name="business" value="专题片"/> <span>专题片</span>
-			            			<input type="checkbox" name="business" value="VR拍摄"/> <span>VR拍摄</span>
-			            			<input type="checkbox" name="business" value="产品拍摄"/> <span>产品拍摄</span>
-			            			<input type="checkbox" name="business" value="微电影"/> <span>微电影</span>
-			            			<input type="checkbox" name="business" value="航拍"/> <span>航拍</span>
-			            			<input type="checkbox" name="business" value="活动视频"/> <span>活动视频</span>
-			            			<input type="checkbox" name="business" value="后期制作"/> <span>后期制作</span>
+									<input type="checkbox" name="business" value="宣传片"/> <span>宣传片</span>
+									<input type="checkbox" name="business" value="活动视频"/> <span>活动视频</span>
+									<input type="checkbox" name="business" value="病毒视频"/> <span>病毒视频</span>
+									<input type="checkbox" name="business" value="微电影"/> <span>微电影</span>
+									<input type="checkbox" name="business" value="MG动画"/> <span>MG动画</span>
+									<input type="checkbox" name="business" value="广告TVC" /> <span>广告TVC</span>
+			            			<input type="checkbox" name="business" value="真人秀节目"/> <span>真人秀节目</span>
+			            			<input type="checkbox" name="business" value="VR视频"/> <span>VR视频</span>
+			            			<input type="checkbox" name="business" value="教学视频"/> <span>教学视频</span>
+			            			<input type="checkbox" name="business" value="网络节目"/> <span>网络节目</span>
+			            			<input type="checkbox" name="business" value="网络剧"/> <span>网络剧</span>
+			            			<input type="checkbox" name="business" value="网络电影"/> <span>网络电影</span>
+			            			<input type="checkbox" name="business" value="mv"/> <span>mv</span>
+			            			<input type="checkbox" name="business" value="实验影片"/> <span>实验影片</span>
+			            			<input type="checkbox" name="business" value="电影预告片"/> <span>电影预告片</span>
+			            			<input type="checkbox" name="business" value="花絮"/> <span>花絮</span>
+			            			<input type="checkbox" name="business" value="演播室栏目"/> <span>演播室栏目</span>
+			            			<input type="checkbox" name="business" value="真人秀节目"/> <span>真人秀节目</span>
+			            			<input type="checkbox" name="business" value="综艺节目"/> <span>综艺节目</span>
+			            			<input type="checkbox" name="business" value="访谈"/> <span>访谈</span>
+			            			<input type="checkbox" name="business" value="三维建筑漫游动画"/> <span>三维建筑漫游动画</span>
+			            			<input type="checkbox" name="business" value="三维产品动画"/> <span>三维产品动画</span>
+			            			<input type="checkbox" name="business" value="三维角色动画"/> <span>三维角色动画</span>
+			            			<input type="checkbox" name="business" value="三维特效影片"/> <span>三维特效影片</span>
+			            			<input type="checkbox" name="business" value="Flash角色动画"/> <span>Flash角色动画</span>
+			            			<input type="checkbox" name="business" value="定格动画"/> <span>定格动画</span>
+			            			<input type="checkbox" name="business" value="二维逐帧动画"/> <span>二维逐帧动画</span>
+			            			<input type="checkbox" name="business" value="博物馆视频"/> <span>博物馆视频</span>
+			            			<input type="checkbox" name="business" value="展览视频"/> <span>展览视频</span>
+			            			<input type="checkbox" name="business" value="体验馆视频"/> <span>体验馆视频</span>
+			            			<input type="checkbox" name="business" value="异形投影视频"/> <span>异形投影视频</span>
+			            			<input type="checkbox" name="business" value="AR视频"/> <span>AR视频</span>		
 								</div>
 							</div>
 									
@@ -202,7 +218,7 @@
 	            	
 	            	<tr>
 	            		<th>微信号</th>
-	            		<td><input name="webchat" class="easyui-textbox" required="true"/></td>
+	            		<td><input name="webchat" class="easyui-textbox"/></td>
 	            		<th>QQ</th>
 	            		<td><input name="qq" class="easyui-validatebox easyui-textbox" validtype="qq" /></td>
 	            	</tr>
@@ -263,25 +279,38 @@
 	            	
 	            	<tr>
 	            		<td colspan="4">
-	            			<input type="checkbox" name="business" value="广告" /> 广告
-	            			<input type="checkbox" name="business" value="TVC" /> TVC
 	            			<input type="checkbox" name="business" value="宣传片"/> 宣传片
-	            			<input type="checkbox" name="business" value="真人秀"/> 真人秀
-	            			<input type="checkbox" name="business" value="纪录片"/> 纪录片
-	            			<input type="checkbox" name="business" value="病毒视频"/> 病毒视频
-	            			<input type="checkbox" name="business" value="电视栏目"/> 电视栏目
-	            			<input type="checkbox" name="business" value="MV"/> MV
-	            			<input type="checkbox" name="business" value="三维动画"/> 三维动画
-	            			<input type="checkbox" name="business" value="MG动画"/> MG动画
-	            			<input type="checkbox" name="business" value="体育赛事"/> 体育赛事
-	            			<input type="checkbox" name="business" value="专题片"/> 专题片
-	            			<input type="checkbox" name="business" value="VR拍摄"/> VR拍摄
-	            			<input type="checkbox" name="business" value="产品拍摄"/> 产品拍摄
-	            			<input type="checkbox" name="business" value="微电影"/> 微电影
-	            			<input type="checkbox" name="business" value="航拍"/> 航拍
-	            			<input type="checkbox" name="business" value="活动视频"/> 活动视频
-	            			<input type="checkbox" name="business" value="后期制作"/> 后期制作
-	            			<input type="checkbox" name="business" value="包装"/> 包装
+							<input type="checkbox" name="business" value="活动视频"/> 活动视频
+							<input type="checkbox" name="business" value="病毒视频"/> 病毒视频
+							<input type="checkbox" name="business" value="微电影"/> 微电影
+							<input type="checkbox" name="business" value="MG动画"/> MG动画
+							<input type="checkbox" name="business" value="广告TVC" /> 广告TVC
+			            	<input type="checkbox" name="business" value="真人秀节目"/> 真人秀节目
+			            	<input type="checkbox" name="business" value="VR视频"/> VR视频
+			            	<input type="checkbox" name="business" value="教学视频"/> 教学视频
+			            	<input type="checkbox" name="business" value="网络节目"/> 网络节目
+			            	<input type="checkbox" name="business" value="网络剧"/> 网络剧
+			            	<input type="checkbox" name="business" value="网络电影"/> 网络电影
+			            	<input type="checkbox" name="business" value="mv"/> mv
+			            	<input type="checkbox" name="business" value="实验影片"/> 实验影片
+			            	<input type="checkbox" name="business" value="电影预告片"/> 电影预告片
+			            	<input type="checkbox" name="business" value="花絮"/> 花絮
+			            	<input type="checkbox" name="business" value="演播室栏目"/> 演播室栏目
+			            	<input type="checkbox" name="business" value="真人秀节目"/> 真人秀节目
+			            	<input type="checkbox" name="business" value="综艺节目"/> 综艺节目
+			            	<input type="checkbox" name="business" value="访谈"/> 访谈
+			            	<input type="checkbox" name="business" value="三维建筑漫游动画"/> 三维建筑漫游动画
+			            	<input type="checkbox" name="business" value="三维产品动画"/> 三维产品动画
+			            	<input type="checkbox" name="business" value="三维角色动画"/> 三维角色动画
+			            	<input type="checkbox" name="business" value="三维特效影片"/> 三维特效影片
+			            	<input type="checkbox" name="business" value="Flash角色动画"/> Flash角色动画
+			            	<input type="checkbox" name="business" value="定格动画"/> 定格动画
+			            	<input type="checkbox" name="business" value="二维逐帧动画"/> 二维逐帧动画
+			            	<input type="checkbox" name="business" value="博物馆视频"/> 博物馆视频
+			            	<input type="checkbox" name="business" value="展览视频"/> 展览视频
+			            	<input type="checkbox" name="business" value="体验馆视频"/> 体验馆视频
+			            	<input type="checkbox" name="business" value="异形投影视频"/> 异形投影视频
+			            	<input type="checkbox" name="business" value="AR视频"/> AR视频
 	            		</td>
 	            	</tr>
 	            	<tr>
