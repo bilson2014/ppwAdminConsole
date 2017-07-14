@@ -118,7 +118,7 @@
 							</td>
 							<th>公司性质：</th>
 						<td>
-							<select id="search-teamNature" name="teamNature">
+							 <select id="search-teamNature" name="teamNature" >
 								<option value="" selected="selected">-- 请选择 --</option>
 								<option value="0">公司</option>
 								<option value="1">工作室</option>
@@ -175,14 +175,12 @@
 	            		<th>公司性质</th>
 	            		<td>
 	            			<select id="teamNature" name="teamNature" class="easyui-combobox" style="width: 150px;height:22px;line-height: 28px;" required="true" editable="false">
-								<option value="0">公司</option>
-								<option value="1" >工作室</option>
 							</select>
 	            		</td>
 	            	</tr>
 	            	<tr>
 	            		<th >登录名</th>
-	            		<td><input name="loginName"  class="easyui-validatebox easyui-textbox" id="loginName"></td>
+	            		<td><input name="loginName" class="easyui-validatebox easyui-textbox" id="loginName"></td>
 	            		<!-- validtype="vLoginName" -->
 	            		<th>审核状态</th>
 	            		<td>
@@ -198,7 +196,7 @@
 	            		<th>联系人姓名</th>
 	            		<td><input name="linkman" class="easyui-textbox" required="true"/></td>
 	            		<th>手机号码</th>
-	            		<td><input class="easyui-validatebox easyui-textbox"   name="phoneNumber" id="phoneNumber" required="true" /></td>
+	            		<td><input class="easyui-validatebox easyui-textbox"  name="phoneNumber" id="phoneNumber" required="true" /></td>
 	            		<!-- data-options="validType:['mobile','vPhoneNumber']" -->
 	            	</tr>
 	            	
@@ -241,6 +239,10 @@
 	            				
 	            			</select>
 	            		</td>
+	            	</tr>
+	            	<tr>
+	            		<th >固定电话</th>
+	            		<td ><input class="easyui-textbox"  name="telNumber"/></td>
 	            	</tr>
 	            	<tr>
 	            	<th id="certName" colspan="2">营业执照</th>
