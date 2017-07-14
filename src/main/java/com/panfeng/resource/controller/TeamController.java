@@ -198,8 +198,8 @@ public class TeamController extends BaseController {
 		// 如果上传文件不为空时，更新 url;反之亦然
 		final PmsTeam originalTeam = pmsTeamFacade.findTeamById(team.getTeamId());
 		team.setCertificateUrl(originalTeam.getCertificateUrl());
-		team.setIdCardfrontUrl(originalTeam.getIdCardbackUrl());
 		team.setIdCardfrontUrl(originalTeam.getIdCardfrontUrl());
+		team.setIdCardbackUrl(originalTeam.getIdCardbackUrl());
 		team.setTeamPhotoUrl(originalTeam.getTeamPhotoUrl());
 		
 		updateFile(file,team,originalTeam,1);
@@ -318,6 +318,8 @@ public class TeamController extends BaseController {
 			paramMap.put("cityID", view.getCityID());
 			paramMap.put("provinceID", view.getProvinceID());
 			paramMap.put("skill", view.getSkill());
+			paramMap.put("productLine", view.getProductLine());
+			paramMap.put("teamNature", view.getTeamNature());
 
 			List<PmsTeam> teamList = pmsTeamFacade.listWithParam(paramMap);
 

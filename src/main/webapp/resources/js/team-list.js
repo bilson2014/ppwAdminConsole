@@ -9,6 +9,8 @@ var isadd = false;
 var originalLoginName = '';
 var originalPhoneNumber = '';
 
+var teamNatureData=[{'id':0,'text':'公司'},{'id':1,text:'工作室'}];
+
 var list = new Array();
 var idList = new Array();
 var skillList=new Array();
@@ -159,17 +161,32 @@ $().ready(function(){
 							}
 						}
 					},{
-						field : 'recommendation',
-						title : '审核意见',
+						field : 'certificateUrl',
+						title : '公司营业执照/身份证',
 						width : 80,
-						align : 'center',
-						formatter : function(value , record , index){
-							if(value == 'null'){
-								return '' ;
-							}
-						},
-						hidden : true
+						align : 'center'
 					},{
+						field : 'idCardfrontUrl',
+						title : '法人手持身份证正面',
+						width : 80,
+						align : 'center'
+					},{
+						field : 'idCardbackUrl',
+						title : '法人手持身份证背面',
+						width : 80,
+						align : 'center'
+					},{
+//						field : 'recommendation',
+//						title : '审核意见',
+//						width : 80,
+//						align : 'center',
+//						formatter : function(value , record , index){
+//							if(value == 'null'){
+//								return '' ;
+//							}
+//						},
+//						hidden : true
+//					},{
 						field : 'scale',
 						title : '公司规模',
 						width : 80,
@@ -223,24 +240,6 @@ $().ready(function(){
 						width : 80,
 						align : 'center',
 						hidden : true
-					},{
-						field : 'certificateUrl',
-						title : '公司营业执照/身份证',
-						width : 80,
-						align : 'center',
-						hidden : true
-					},{
-						field : 'idCardfrontUrl',
-						title : '法人手持身份证正面',
-						width : 80,
-						align : 'center',
-						hidden : true
-					},{
-						field : 'idCardbackUrl',
-						title : '法人手持身份证背面',
-						width : 80,
-						align : 'center',
-						hidden : true
 					}]] ,
 		pagination: true ,
 		pageSize : 20,
@@ -248,7 +247,7 @@ $().ready(function(){
 		showFooter : false,
 		toolbar : '#toolbar',
 		onDblClickCell:function(index,field,value){
-			if(field == 'teamPhotoUrl'){
+			if(field == 'teamPhotoUrl' ||field == 'certificateUrl' ||field == 'idCardfrontUrl' ||field == 'idCardbackUrl'){
 				$('#picture-condition').removeClass('hide');
 				$('#teamPicture').attr('src',getDfsHostName() + value);
 				
@@ -326,6 +325,7 @@ var team = {
 		
 		syncLoadData(function(res) {
 			productLineCache = res;
+		
 			$("#search-productLine").combotree({
 			    idField : 'id',
 			    treeField : 'text',
@@ -335,11 +335,18 @@ var team = {
 		                return false;  
 		            }  
 		        },  
-		        onClick: function(node) {  
+		        onClick: function(node) {
+		        	var snode =node;
 		            if (!$(this).tree('isLeaf', node.target)) {  
-		                $('#search-productLine').combo('showPanel');  
-		            }  
-		        }  
+		                $('#search-productLine').combo('showPanel'); 
+		                
+		                snode = $('#search-productLine').combotree('tree').tree('getSelected'); 
+		            }
+		            if(snode!=null){
+		            	 $('#search-productLine').combo('setText', snode.parentText+'_'+snode.text);
+		            } 
+		        }
+		        
 		 });
 		}, getContextPath() + "/portal/config/listTree", null);
 		
@@ -418,14 +425,34 @@ function addProductLine(lId){
 	                return false;  
 	            }  
 	        },  
-	        onClick: function(node) {  
+	        onClick: function(node) { 
+	        	var snode =node;
 	            if (!$(this).tree('isLeaf', node.target)) {  
-	            	$(".productLine:eq("+box+')').combo('showPanel');  
-	            }  
+	            	$(".productLine:eq("+box+')').combo('showPanel');
+	            	 
+		            snode = $(".productLine:eq("+box+')').combotree('tree').tree('getSelected'); 
+	            }
+	            
+	            if(snode!=null){
+	            	$(".productLine:eq("+box+')').combo('setText', snode.parentText+'_'+snode.text);
+	            }
 	        } ,
 	        onLoadSuccess: function () { //数据加载完毕事件
-				if(lId != null && lId != undefined)
-				$(".productLine:eq("+box+')').combotree('setValue', lId);
+				if(lId != null && lId != undefined){
+					$(".productLine:eq("+box+')').combotree('setValue', lId);
+					
+					for(var i=0;i<productLineCache.length;i++){
+						var nodes=productLineCache[i].children;
+						if(nodes!=null){
+							for(var j=0;j<nodes.length;j++){
+								var node=nodes[j];
+								if(node!=null && node!=undefined && node.id==lId){
+									$(".productLine:eq("+box+')').combo('setText', node.parentText+'_'+node.text);
+								}
+							}
+						}
+					}
+				}		
          	}
 	 });
 	 delProductLine();
@@ -470,6 +497,11 @@ function addFuc(){ // 注册 增加按钮
 				textField : 'city'
 			});
 		}
+	});
+	$('#teamNature').combobox({
+		valueField : 'id',
+		textField : 'text',
+		data:teamNatureData	
 	});
 	openDialog('dlg');
 	formUrl = getContextPath() + '/portal/team/save';
@@ -541,7 +573,19 @@ function editFuc(){ // 注册 修改 按钮
 				$('#teamProvince').combobox('setValue',rows[0].teamProvince);
 			}
 		});
+		//数据回显-公司性质
+		$('#teamNature').combobox({
+			valueField : 'id',
+			textField : 'text',
+			data:teamNatureData,
+			onLoadSuccess: function(){
+				console.log(1);
+				$('#teamNature').combobox('setValue',rows[0].teamNature);
+			}
+		});
+		
 		openDialog('dlg');
+		
 		formUrl = getContextPath() + '/portal/team/update';
 		
 		//数据回显--产品线
