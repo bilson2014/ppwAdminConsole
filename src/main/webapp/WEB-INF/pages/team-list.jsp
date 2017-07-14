@@ -180,7 +180,7 @@
 	            	</tr>
 	            	<tr>
 	            		<th >登录名</th>
-	            		<td><input name="loginName" class="easyui-validatebox easyui-textbox" id="loginName"></td>
+	            		<td><input name="loginName" validtype="vLoginName" class="easyui-validatebox easyui-textbox" id="loginName"></td>
 	            		<!-- validtype="vLoginName" -->
 	            		<th>审核状态</th>
 	            		<td>
@@ -196,7 +196,7 @@
 	            		<th>联系人姓名</th>
 	            		<td><input name="linkman" class="easyui-textbox" required="true"/></td>
 	            		<th>手机号码</th>
-	            		<td><input class="easyui-validatebox easyui-textbox"  name="phoneNumber" id="phoneNumber" required="true" /></td>
+	            		<td><input class="easyui-validatebox easyui-textbox" data-options="validType:['mobile','vPhoneNumber']"  name="phoneNumber" id="phoneNumber" required="true" /></td>
 	            		<!-- data-options="validType:['mobile','vPhoneNumber']" -->
 	            	</tr>
 	            	

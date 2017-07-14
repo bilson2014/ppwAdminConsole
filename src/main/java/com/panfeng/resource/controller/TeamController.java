@@ -29,6 +29,7 @@ import com.paipianwang.pat.common.constant.PmsConstant;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.right.entity.PmsRole;
 import com.paipianwang.pat.facade.right.service.PmsRightFacade;
@@ -116,9 +117,11 @@ public class TeamController extends BaseController {
 	 *            电话号码 登录名
 	 * @return true 不存在 false 存在
 	 */
-	@RequestMapping("/team/isExist")
-	public boolean isTeamExist(final TeamView view) {
-
+	@RequestMapping(value="/team/isExist", method = RequestMethod.POST)
+	public boolean isTeamExist(@RequestBody final TeamView view) {
+		if(!ValidateUtil.isValid(view.getPhoneNumber()) && !ValidateUtil.isValid(view.getLoginName())){
+			return true;//空不做重复校验
+		}
 		PmsTeam team = new PmsTeam();
 		team.setPhoneNumber(view.getPhoneNumber());
 		team.setLoginName(view.getLoginName());
