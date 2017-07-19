@@ -120,11 +120,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 	
 	@Override
 	public Map<Long, PmsEmployee> getAllEmployeeMap() {
-		PageParam pp = new PageParam();
-		DataGrid<PmsEmployee> listWithPagination = pmsEmployeeFacade.listWithPagination(new HashMap<String, Object>(), pp);
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("flag", 1);
+		List<PmsEmployee> employeeList = pmsEmployeeFacade.findEmployeeByCondition(paramMap);
 		final Map<Long, PmsEmployee> map = new HashMap<Long, PmsEmployee>();
-		if (ValidateUtil.isValid(listWithPagination.getRows())) {
-			for (final PmsEmployee employee : listWithPagination.getRows()) {
+		if (ValidateUtil.isValid(employeeList)) {
+			for (final PmsEmployee employee : employeeList) {
 				map.put(employee.getEmployeeId(), employee);
 			}
 		}

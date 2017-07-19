@@ -316,15 +316,18 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 			final PmsEmployee user = eMap.get(pro.getUserId());
 			final PmsEmployee referer = eMap.get(pro.getReferrerId());
 			final List<Synergy> sList = sMap.get(pro.getId());
-			if (user != null)
-			{
+			if (user != null) {
 				PmsEmployee vv = eMap.get(pro.getUserId());
 				Integer dimissionStatus = vv.getDimissionStatus();
-				if(dimissionStatus == PmsEmployee.DIMISSIONSTATUS_DIMISSION){
-					pro.setEmployeeRealName(vv.getEmployeeRealName()+"(离职)");
-				}else{
+				if (dimissionStatus == null) {
+					dimissionStatus = -1;
+				}
+				if (dimissionStatus == PmsEmployee.DIMISSIONSTATUS_DIMISSION) {
+					pro.setEmployeeRealName(vv.getEmployeeRealName() + "(离职)");
+				} else {
 					pro.setEmployeeRealName(vv.getEmployeeRealName());
 				}
+
 			}
 			if (referer != null)
 				pro.setReferrerName(eMap.get(pro.getReferrerId()).getEmployeeRealName());

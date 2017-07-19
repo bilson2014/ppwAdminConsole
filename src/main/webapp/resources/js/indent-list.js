@@ -5,7 +5,7 @@ var EmployeeListCache;
 $().ready(function(){
 	syncLoadData(function(res){
 		EmployeeListCache = res
-	}, getContextPath() + '/portal/getEmployeeList',null);
+	}, getContextPath() + '/portal/employee/getAll',null);
 	
 	$('#tIndentSource').combobox({
 		url : getContextPath() + '/portal/getCustomerService',

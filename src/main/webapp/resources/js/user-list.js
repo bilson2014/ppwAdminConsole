@@ -215,22 +215,7 @@ $().ready(function(){
 								editable : false
 							}
 						}
-					}
-/*					,{
-						field : 'followTime',
-						title : '跟进日期',
-						width : 120,
-						align : 'center',
-						sortable : true,
-						editor : {
-							type : 'datebox' ,
-							options:{
-									required:true , 
-									missingMessage : '请填写跟进日期!'
-								}
-						}
-					}*/
-					,{
+					},{
 						field : 'kindlySend',
 						title : '是否推送',
 						width : 80,
@@ -289,7 +274,7 @@ $().ready(function(){
 						width : 110,
 						align : 'center',
 						formatter : function(value , record , index){
-							if(value != '')
+							if(value != '' && value != null && value != undefined)
 								return value.trim();
 							return value;
 						}

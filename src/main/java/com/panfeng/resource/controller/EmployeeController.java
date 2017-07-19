@@ -1,7 +1,9 @@
 package com.panfeng.resource.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -206,6 +208,15 @@ public class EmployeeController extends BaseController {
 		return list;
 	}
 
+	@RequestMapping("/employee/getAll")
+	public List<PmsEmployee> getAll() {
+		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("flag", 1);
+		final List<PmsEmployee> list = pmsEmployeeFacade.findEmployeeByCondition(paramMap);
+		return list;
+	}
+	
 	/**
 	 * 获取客服
 	 * 
