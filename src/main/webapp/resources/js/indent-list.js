@@ -2,6 +2,9 @@ var editing ; //判断用户是否处于编辑状态
 var flag  ;	  //判断新增和修改方法
 var datagrid;
 var EmployeeListCache;
+var path;
+var filmUrl;
+
 $().ready(function(){
 	syncLoadData(function(res){
 		EmployeeListCache = res
@@ -13,6 +16,7 @@ $().ready(function(){
 		textField : 'employeeRealName'
 	});
 	
+	filmUrl=$('#filmUrl').val();
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -103,9 +107,9 @@ $().ready(function(){
 							}else if( value == 8){
 								return '<span style=color:black; >复购</span>' ;
 							}else if( value == 9){
-								return '<span style=color:black; >线下-400</span>' ;
+								return '<span style=color:black; >线上-400</span>' ;
 							}else if( value == 10){
-								return '<span style=color:black; >线下-商桥</span>' ;
+								return '<span style=color:black; >线上-商桥</span>' ;
 							}
 						}
 					},{
@@ -140,6 +144,17 @@ $().ready(function(){
 						width : 120,
 						align : 'center',
 						sortable : true 
+					},{
+						field : 'requireId',
+						title : '需求文档',
+						width : 120,
+						align : 'center',
+						formatter : function(value , record , index){
+							if(record.indentType==7){
+								return "<a href='http://"+filmUrl+"/require/"+value+"' target='_blank'>链接</a>";
+							}
+							return "";	
+						}
 					},{
 						field : 'indent_recomment',
 						title : '订单备注',
@@ -177,6 +192,7 @@ $().ready(function(){
 	});
 	
 });
+
 
 //修改
 function editFuc(){

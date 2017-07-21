@@ -60,6 +60,7 @@ public class IndentController extends BaseController {
 
 	@RequestMapping("/indent-list")
 	public ModelAndView view(final ModelMap model) {
+		model.addAttribute("filmUrl", PublicConfig.FILM_URL);
 		return new ModelAndView("indent-list", model);
 	}
 
@@ -186,9 +187,78 @@ public class IndentController extends BaseController {
 
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		final List<PmsIndent> list = pmsIndentFacade.listWithCondition(JsonUtil.objectToMap(view));
+		//处理订单状态、订单来源显示值
+		if (ValidateUtil.isValid(list)) {
+			for (PmsIndent indent : list) {
+				switch (indent.getIndentType()) {
+				case PmsIndent.ORDER_NEW:
+					indent.setIndentTypeName("新订单");
+					break;
+				case PmsIndent.ORDER_HANDLING:
+					indent.setIndentTypeName("处理中");
+					break;
+				case PmsIndent.ORDER_DONE:
+					indent.setIndentTypeName("完成");
+					break;
+				case PmsIndent.ORDER_STOP:
+					indent.setIndentTypeName("停滞");
+					break;
+				case PmsIndent.ORDER_AGAIN:
+					indent.setIndentTypeName("再次沟通");
+					break;
+				case PmsIndent.ORDER_REAL:
+					indent.setIndentTypeName("真实");
+					break;
+				case PmsIndent.ORDER_SHAM:
+					indent.setIndentTypeName("虚假");
+					break;
+				case PmsIndent.ORDER_SUBMIT:
+					indent.setIndentTypeName("提交");
+					break;
+				}
+
+				if (indent.getIndentSource() != null) {
+					switch (indent.getIndentSource()) {
+					case PmsIndent.SOURCE_ONLINE_WEBSITE:
+						indent.setIndentSourceName("线上-网站");
+						break;
+					case PmsIndent.SOURCE_ONLINE_ACTIVITY:
+						indent.setIndentSourceName("线上-活动");
+						break;
+					case PmsIndent.SOURCE_ONLINE_NEW_MEDIA:
+						indent.setIndentSourceName("线下-新媒体");
+						break;
+					case PmsIndent.SOURCE_OFFLINE_TELEMARKETING:
+						indent.setIndentSourceName("线下-电销");
+						break;
+					case PmsIndent.SOURCE_OFFLINE_DIRECT_SELLING:
+						indent.setIndentSourceName("线下-直销");
+						break;
+					case PmsIndent.SOURCE_OFFLINE_ACTIVITY:
+						indent.setIndentSourceName("线下-活动");
+						break;
+					case PmsIndent.SOURCE_OFFLINE_CHANNEL:
+						indent.setIndentSourceName("线下-渠道");
+						break;
+					case PmsIndent.SOURCE_REPEAT:
+						indent.setIndentSourceName("复购");
+						break;
+					case PmsIndent.SOURCE_ONLINE_400:
+						indent.setIndentSourceName("线上-400");
+						break;
+					case PmsIndent.SOURCE_ONLINE_BRIDGE:
+						indent.setIndentSourceName("线上-商桥");
+						break;
+					}
+				}
+				indent.setIndentId(indent.getId());
+			}
+		}
+		
+		
 		// 完成数据csv文件的封装
-		String displayColNames = "订单名称,订单编号,下单时间,订单金额,订单状态,客户电话,订单备注,CRM备注,分销渠道";
-		String matchColNames = "indentName,indentId,orderDate,indentPrice,indentType,indent_tele,indent_recomment,cSRecomment,salesmanUniqueId";
+		String displayColNames = "订单名称,订单编号,下单时间,订单金额,订单状态,客户电话,订单备注,CRM备注,分销渠道,订单来源";
+		String matchColNames = "indentName,indentId,orderDate,indentPrice,indentTypeName,indent_tele,indent_recomment,cSRecomment,salesmanUniqueId,indentSourceName";
 		String fileName = "indent_report_";
 		String content = CsvWriter.formatCsvData(JsonUtil.getValueListMap(list), displayColNames, matchColNames);
 		try {

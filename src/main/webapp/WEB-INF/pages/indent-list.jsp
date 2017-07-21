@@ -21,6 +21,7 @@
 <script src="${WdatePickerJs }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
+<input type="hidden" id="filmUrl" value="${filmUrl}">
 	<div data-options="region:'north',border:false"
 		style="height: 40px; overflow: hidden; background-color: #fff">
 		<form id="searchForm" method="post">
@@ -50,8 +51,8 @@
 						    <option value="5">线下-直销</option>
 						    <option value="6">线下-活动</option>
 						    <option value="7">线下-渠道</option>
-						    <option value="9">线下-400</option>
-						    <option value="10">线下-商桥</option>
+						    <option value="9">线上-400</option>
+						    <option value="10">线上-商桥</option>
 						    <option value="8">复购</option>
 		                </select>
 					</td>
@@ -177,8 +178,8 @@
 				    <option value="5">线下-直销</option>
 				    <option value="6">线下-活动</option>
 				    <option value="7">线下-渠道</option>
-				    <option value="9">线下-400</option>
-				    <option value="10">线下-商桥</option>
+				    <option value="9">线上-400</option>
+				    <option value="10">线上-商桥</option>
 				    <option value="8">复购</option>
                 </select>
             </div>

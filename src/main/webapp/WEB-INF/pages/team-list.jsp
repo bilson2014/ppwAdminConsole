@@ -24,6 +24,7 @@
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
+	
 	<div data-options="region:'north',border:false" style="height: 100px; overflow: hidden;background-color: #fff">
 			<form id="searchForm" method="post">
 				<table>
@@ -46,11 +47,14 @@
 							<select id="search-price" name="priceRange">
 								<option value="" selected="selected">-- 请选择 --</option>
 								<option value="0" >看情况</option>
-	            				<option value="1" >1万元及以上</option>
-	            				<option value="2" >2万元及以上</option>
-	            				<option value="3" >3万元及以上</option>
-	            				<option value="4" >5万元及以上</option>
-	            				<option value="5" >10万元及以上</option>
+	            				<option value="8" >5千以内</option>
+	            				<option value="7" >5千-1万</option>
+	            				<option value="6" >1-3万</option>
+	            				<option value="5" >3-5万</option>
+	            				<option value="4" >5-10万</option>
+	            				<option value="3" >10-20万</option>
+	            				<option value="2" >20-50万</option>
+	            				<option value="1" >50万以上</option>
 							</select>
 						</td>
 					
@@ -174,8 +178,10 @@
 			<a  id="cancel-btn" onclick="recommendFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">首页推荐</a>
 			
 			<r:permission uri="/portal/product/listByTeam">
-				<a  id="cancel-btn" onclick="getProductsFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">作品列表</a>
+				<a  id="listproduct-btn" onclick="getProductsFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-tip'">作品列表</a>
 			</r:permission>
+			
+			<a  id="upload-btn" onclick="uploadFile();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">上传资质</a>
 			
 		</div>
 		
@@ -223,10 +229,10 @@
 	            		<td><input name="qq" class="easyui-validatebox easyui-textbox" validtype="qq" /></td>
 	            	</tr>
 	            	
-	            	<tr>
+	         <!--    	 <tr>
 	            		<th colspan="2">公司LOGO</th>
-	                	<td colspan="2"><input name="file" id="file" type="file" prompt="选择一个照片" /></td>
-	            	</tr>
+	                	<td colspan="2"><input name="file" id="file" type="file" prompt="选择一个照片" required="true"/></td>
+	            	</tr>  -->
 	            	
 	            	<tr>
 	            		<th>邮箱</th>
@@ -238,8 +244,9 @@
 	            	<tr>
 	            		<th>公司地址</th>
 	            		<td><input class="easyui-textbox" name="address" required="true"/></td>
-	            		<th>成立时间</th>
-	            		<td><input class="textbox" name="establishDate" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly"/></td>
+	            		<th>从业时间</th>
+	            		<td><input  name="establishDate" type="text" class="easyui-datebox" required="true"/></td>
+	            		
 	            	</tr>
 	            	
 	            	<tr>
@@ -260,7 +267,7 @@
 	            		<th >固定电话</th>
 	            		<td ><input class="easyui-textbox"  name="telNumber"/></td>
 	            	</tr>
-	            	<tr>
+	            	<!-- <tr>
 	            	<th id="certName" colspan="2">营业执照</th>
 	            	<td colspan="2"><input name="certificateFile" id="certificateFile" type="file" prompt="选择一个照片" /></td>
 	            	</tr>
@@ -271,7 +278,7 @@
 	            	<tr>
 	            	<th colspan="2">法人持身份证背面</th>
 	            	<td colspan="2"><input name="idCardbackFile" id="idCardbackFile" type="file" prompt="选择一个照片" /></td>
-	            	</tr>
+	            	</tr> -->
 	            	
 	            	<tr>
 	            		<th colspan="4">业务范围</th>
@@ -314,13 +321,13 @@
 	            		</td>
 	            	</tr>
 	            	<tr>
-	            		<th colspan="4">业务技能</th>
+	            		<th colspan="2">业务技能</th><td colspan="2" id="skillMsg"></td>
 	            	</tr>
 	            	
 	            	<tr>
 	            		<td colspan="4">
 	            			创意策划:
-	            			<input type="checkbox" name="skill" value="解说词" /> 解说词
+	            			<input type="checkbox" name="skill" value="解说词"/> 解说词
 	            			<input type="checkbox" name="skill" value="广告语" /> 广告语
 	            			<input type="checkbox" name="skill" value="故事" /> 故事
 	            			<input type="checkbox" name="skill" value="贴图分镜" /> 贴图分镜
@@ -360,11 +367,14 @@
 	            		<td>
 	            			<select name="priceRange" class="easyui-combobox" editable="false" required="true">
 	            				<option value="0" selected>看情况</option>
-	            				<option value="1" >1万元及以上</option>
-	            				<option value="2" >2万元及以上</option>
-	            				<option value="3" >3万元及以上</option>
-	            				<option value="4" >5万元及以上</option>
-	            				<option value="5" >10万元及以上</option>
+	            				<option value="8" >5千以内</option>
+	            				<option value="7" >5千-1万</option>
+	            				<option value="6" >1-3万</option>
+	            				<option value="5" >3-5万</option>
+	            				<option value="4" >5-10万</option>
+	            				<option value="3" >10-20万</option>
+	            				<option value="2" >20-50万</option>
+	            				<option value="1" >50万以上</option>
 	            			</select>
 	            		</td>
 	            		
@@ -381,16 +391,19 @@
 	            	</tr>
 	            	
 	            	<tr>
-	            		<th colspan="4">公司规模</th>
+	            		<th colspan="1">公司规模</th>
+	            		<td><select class="easyui-combobox" name="scale" editable="false" required="true">
+	            				<option value="0">5人以下</option>
+								<option value="1">5-10人</option>
+								<option value="2">11-50人</option>
+								<option value="3">51-100人</option>
+								<option value="4">101-500人</option>
+								<option value="5">500人以上</option>
+	            			</select></td>
 	            	</tr>
+	           
 	            	
-	            	<tr>
-	            		<td colspan="4">
-	            			<input class="easyui-textbox" name="scale" multiline="true" style="height: 100px;width: 92%;" prompt="坐班人数及坐班导演或合作导演,坐班后期" required="true"/>
-	            		</td>
-	            	</tr>
-	            	
-	            	<tr>
+	            	<!-- <tr>
 	            		<th colspan="4">主要客户/作品及价格</th>
 	            	</tr>
 	            	
@@ -408,15 +421,15 @@
 	            		<td colspan="4">
 	            			<input class="easyui-textbox text-area" name="demand" multiline="true" style="height: 100px;width: 92%;" prompt="在此填写对客户的要求" />
 	            		</td>
-	            	</tr>
+	            	</tr> -->
 	            	
 	            	<tr>
-	            		<th colspan="4">描述</th>
+	            		<th colspan="4">公司简介</th>
 	            	</tr>
 	            	
 	            	<tr>
 	            		<td colspan="4">
-							<input class="easyui-textbox text-area" name="teamDescription" multiline="true" style="height: 100px;width: 92%;" prompt="在此填写对公司的描述"/>
+							<input class="easyui-textbox text-area" name="teamDescription" multiline="true" style="height: 100px;width: 92%;" prompt="在此填写对公司的描述" required="true"/>
 	            		</td>
 	            	</tr>
 	            	
@@ -452,7 +465,7 @@
 	    	
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
-		<%-- image/video show content begin --%>
+		<%-- image/video show content begin 
 		<div id="picture-condition" class="picture-condition hide">
 			<div class="picture-modalDialog">
 				<div class="picture-condition-body">
@@ -465,7 +478,7 @@
 				</div>
 			</div>
 		</div>
-		<%-- image/video show content end --%>
+		 image/video show content end --%>
 		
 		
 	<div id="recommend-dlg" class="easyui-dialog" style="width:520px; height:480px;padding:10px 20px"
@@ -494,9 +507,66 @@
 		</div>
 		<!-- video show content end-->
     </div>
-    
-		
-     <div id="recommend-dlg-buttons">
-    </div>
+
+
+	<div id="upload-dlg" class="easyui-dialog"
+		style="width: 620px; height: 530px; padding: 10px 20px" closed="true"
+		buttons="#apt-buttons" title="上传资质">
+		<form id="af" method="post" enctype="multipart/form-data">
+			<input name="teamId" type="hidden">
+			<table style="width: 98%;">
+				<tr>
+					<th colspan="2">公司LOGO</th>
+					<td><img src="" id="fileImg" class="aptimg"></td>
+					<td><input name="file" id="file" type="file"
+						onchange="changeImg(this)" /></td>
+
+				</tr>
+				<tr>
+					<th id="certName" colspan="2">营业执照</th>
+					<td><img src="" id="certificateFileImg" class="aptimg"></td>
+					<td><input name="certificateFile" id="certificateFile"
+						type="file" onchange="changeImg(this)" /></td>
+				</tr>
+				<tr>
+					<th colspan="2">法人持身份证正面</th>
+					<td><img src="" id="idCardfrontFileImg" class="aptimg"></td>
+					<td><input name="idCardfrontFile" id="idCardfrontFile"
+						type="file" onchange="changeImg(this)" /></td>
+				</tr>
+				<tr>
+					<th colspan="2">法人持身份证背面</th>
+					<td><img src="" id="idCardbackFileImg" class="aptimg"></td>
+					<td><input name="idCardbackFile" id="idCardbackFile"
+						type="file" onchange="changeImg(this)" /></td>
+				</tr>
+			</table>
+		</form>
+
+		<div id="picture-condition" class="picture-condition hide">
+			<div class="picture-modalDialog">
+				<div class="picture-condition-body">
+					<div class="operation-panel">
+						<img id="teamPicture" src=""
+							style="height: 350px; width: 500px">
+						<div class="p-label">
+							<a href="#" class="button p-submit" id="p-cancel">取消</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div id="apt-buttons">
+
+		<a id="saveapt-btn" onclick="saveAptFuc();" href="javascript:void(0)"
+			class="easyui-linkbutton c6" iconCls="icon-ok">保存</a> <a
+			href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-cancel"
+			onclick="javascript:$('#upload-dlg').dialog('close')">取消</a>
+	</div>
+
+	<div id="recommend-dlg-buttons"></div>
 </body>
 </html>
