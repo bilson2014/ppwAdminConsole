@@ -46,7 +46,6 @@
 						<td>
 							<select id="search-price" name="priceRange">
 								<option value="" selected="selected">-- 请选择 --</option>
-								<option value="0" >看情况</option>
 	            				<option value="8" >5千以内</option>
 	            				<option value="7" >5千-1万</option>
 	            				<option value="6" >1-3万</option>
@@ -366,7 +365,6 @@
 	            		<th>价格区间</th>
 	            		<td>
 	            			<select name="priceRange" class="easyui-combobox" editable="false" required="true">
-	            				<option value="0" selected>看情况</option>
 	            				<option value="8" >5千以内</option>
 	            				<option value="7" >5千-1万</option>
 	            				<option value="6" >1-3万</option>
