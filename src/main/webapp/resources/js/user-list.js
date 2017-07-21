@@ -499,7 +499,7 @@ $.extend($.fn.validatebox.defaults.rules, {
     			}, url, null);
     			return isok;
         	}else{
-        		if(value != originalPhoneNumber){
+        		if(value.trim() != originalPhoneNumber.trim()){
         			// 验证手机
         			syncLoadData(function (res) {
         				isok = !res;

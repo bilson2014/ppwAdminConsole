@@ -46,9 +46,6 @@ import com.panfeng.util.Log;
 public class EmployeeController extends BaseController {
 
 	@Autowired
-	private final PmsEmployeeFacade pmsEmployeeFacade = null;
-
-	@Autowired
 	private final PmsEmployeeFacade employeeFacade = null;
 
 	@Autowired
@@ -188,10 +185,16 @@ public class EmployeeController extends BaseController {
 		// 修改为dfs上传end
 	}
 
+	/**
+	 * 获取内部员工
+	 * @param bizBean
+	 * @return
+	 */
 	@RequestMapping(value = "/search/employee/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public List<PmsEmployee> searchEmployee(@RequestBody BizBean bizBean) {
 		if (bizBean != null && bizBean.getName() != null && !"".equals(bizBean.getName())) {
-			return pmsEmployeeFacade.findEmployeeByRealNameWithinVersionManager(bizBean.getName());
+			// 根据名字获取 在职状态下的所有员工
+			return employeeFacade.findEmployeeByRealNameWithinVersionManager(bizBean.getName());
 		}
 		return null;
 	}
@@ -204,7 +207,7 @@ public class EmployeeController extends BaseController {
 	@RequestMapping("/getEmployeeList")
 	public List<PmsEmployee> getEmployeeList() {
 
-		final List<PmsEmployee> list = pmsEmployeeFacade.findEmployeeList();
+		final List<PmsEmployee> list = employeeFacade.findEmployeeList();
 		return list;
 	}
 
@@ -213,7 +216,7 @@ public class EmployeeController extends BaseController {
 		
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("flag", 1);
-		final List<PmsEmployee> list = pmsEmployeeFacade.findEmployeeByCondition(paramMap);
+		final List<PmsEmployee> list = employeeFacade.findEmployeeByCondition(paramMap);
 		return list;
 	}
 	
@@ -224,7 +227,7 @@ public class EmployeeController extends BaseController {
 	 */
 	@RequestMapping("/getCustomerService")
 	public List<PmsEmployee> getCustomerService() {
-		final List<PmsEmployee> list = pmsEmployeeFacade.findEmployeeList();
+		final List<PmsEmployee> list = employeeFacade.findEmployeeList();
 		List<PmsEmployee> rrr = new ArrayList<>();
 		if (ValidateUtil.isValid(list)) {
 			for (PmsEmployee pmsEmployee : list) {
