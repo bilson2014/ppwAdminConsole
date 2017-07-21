@@ -925,6 +925,8 @@ function recommendFuc(){
 function getProductsFuc(){
 	var rows = datagrid.datagrid('getSelections');
 	if(rows.length == 1){
+		$('#video-condition').addClass('hide');
+		$('#productVideo').attr('src','');
 		openDialog('product-dlg');
 		$('#product-gride').datagrid({  
 	        url:getContextPath() + '/portal/product/listByTeam',
@@ -1117,6 +1119,8 @@ function uploadFile(){
 			$('#certName').html("营业执照");
 		}
 		
+		$('#picture-condition').addClass('hide');
+		$('#teamPicture').attr('src','');
 		openDialog('upload-dlg');	
 		
 		//图片双击显示大图

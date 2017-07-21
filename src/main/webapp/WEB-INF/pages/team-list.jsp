@@ -222,7 +222,7 @@
 	            	</tr>
 	            	
 	            	<tr>
-	            		<th>微信号</th>
+	            		<th>微信</th>
 	            		<td><input name="webchat" class="easyui-textbox"/></td>
 	            		<th>QQ</th>
 	            		<td><input name="qq" class="easyui-validatebox easyui-textbox" validtype="qq" /></td>
@@ -236,12 +236,12 @@
 	            	<tr>
 	            		<th>邮箱</th>
 	            		<td><input class="easyui-validatebox easyui-textbox" validType="email" name="email" required="true"/></td>
-	            		<th>官方网站</th>
+	            		<th>官网网址</th>
 	            		<td><input class="easyui-validatebox easyui-textbox" validType="url" name="officialSite" invalidMessage="url格式不正确[http://www.example.com]"/></td>
 	            	</tr>
 	            	
 	            	<tr>
-	            		<th>公司地址</th>
+	            		<th>详细地址</th>
 	            		<td><input class="easyui-textbox" name="address" required="true"/></td>
 	            		<th>从业时间</th>
 	            		<td><input  name="establishDate" type="text" class="easyui-datebox" required="true"/></td>
@@ -263,7 +263,7 @@
 	            		</td>
 	            	</tr>
 	            	<tr>
-	            		<th >固定电话</th>
+	            		<th >座机</th>
 	            		<td ><input class="easyui-textbox"  name="telNumber"/></td>
 	            	</tr>
 	            	<!-- <tr>
@@ -376,7 +376,7 @@
 	            			</select>
 	            		</td>
 	            		
-	            		<th>信息来源</th>
+	            		<!-- <th>信息来源</th>
 	            		<td>
 	            			<select name="infoResource" class="easyui-combobox" editable="false" required="true">
 	            				<option value="0" selected>友情推荐</option>
@@ -385,11 +385,8 @@
 	            				<option value="3" >拍片网</option>
 	            				<option value="4" >电销</option>
 	            			</select>
-	            		</td>
-	            	</tr>
-	            	
-	            	<tr>
-	            		<th colspan="1">公司规模</th>
+	            		</td> -->
+	            		<th>规模</th>
 	            		<td><select class="easyui-combobox" name="scale" editable="false" required="true">
 	            				<option value="0">5人以下</option>
 								<option value="1">5-10人</option>
@@ -399,6 +396,18 @@
 								<option value="5">500人以上</option>
 	            			</select></td>
 	            	</tr>
+	            	
+	            	<!-- <tr>
+	            		<th colspan="1">公司规模</th>
+	            		<td><select class="easyui-combobox" name="scale" editable="false" required="true">
+	            				<option value="0">5人以下</option>
+								<option value="1">5-10人</option>
+								<option value="2">11-50人</option>
+								<option value="3">51-100人</option>
+								<option value="4">101-500人</option>
+								<option value="5">500人以上</option>
+	            			</select></td>
+	            	</tr> -->
 	           
 	            	
 	            	<!-- <tr>
@@ -512,32 +521,37 @@
 		buttons="#apt-buttons" title="上传资质">
 		<form id="af" method="post" enctype="multipart/form-data">
 			<input name="teamId" type="hidden">
-			<table style="width: 98%;">
+			<table style="width: 100%;"  border="0" cellspacing="1" >
 				<tr>
-					<th colspan="2">公司LOGO</th>
+					<th >公司LOGO</th>
 					<td><img src="" id="fileImg" class="aptimg"></td>
+					
 					<td><input name="file" id="file" type="file"
 						onchange="changeImg(this)" /></td>
 
 				</tr>
 				<tr>
-					<th id="certName" colspan="2">营业执照</th>
+					<th id="certName" >营业执照</th>
 					<td><img src="" id="certificateFileImg" class="aptimg"></td>
+					
 					<td><input name="certificateFile" id="certificateFile"
 						type="file" onchange="changeImg(this)" /></td>
 				</tr>
 				<tr>
-					<th colspan="2">法人持身份证正面</th>
+					<th >法人持身份证正面</th>
 					<td><img src="" id="idCardfrontFileImg" class="aptimg"></td>
+					
 					<td><input name="idCardfrontFile" id="idCardfrontFile"
 						type="file" onchange="changeImg(this)" /></td>
 				</tr>
 				<tr>
-					<th colspan="2">法人持身份证背面</th>
+					<th >法人持身份证背面</th>
 					<td><img src="" id="idCardbackFileImg" class="aptimg"></td>
+					
 					<td><input name="idCardbackFile" id="idCardbackFile"
 						type="file" onchange="changeImg(this)" /></td>
 				</tr>
+				
 			</table>
 		</form>
 
