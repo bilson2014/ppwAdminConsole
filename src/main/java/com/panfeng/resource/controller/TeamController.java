@@ -31,6 +31,8 @@ import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
+import com.paipianwang.pat.facade.product.entity.ChanPinLineTree;
+import com.paipianwang.pat.facade.product.service.PmsChanPinConfigurationFacade;
 import com.paipianwang.pat.facade.right.entity.PmsRole;
 import com.paipianwang.pat.facade.right.service.PmsRightFacade;
 import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
@@ -66,6 +68,9 @@ public class TeamController extends BaseController {
 
 	@Autowired
 	private final TeamService teamService = null;
+	
+	@Autowired
+	private PmsChanPinConfigurationFacade pmsChanPinConfigurationFacade;
 
 	@RequestMapping("team-list")
 	public ModelAndView view(final HttpServletRequest request, final ModelMap model) {
@@ -104,10 +109,36 @@ public class TeamController extends BaseController {
 		paramMap.put("productLine", view.getProductLine());
 		paramMap.put("teamNature", view.getTeamNature());
 		final DataGrid<PmsTeam> dataGrid = pmsTeamFacade.listWithPagination(pageParam, paramMap);
-		dataGrid.getRows().forEach(team->{
-			System.out.println();
-		});
+		//设置回显产品线名称		
+		setProductLineName(dataGrid.getRows());
 		return dataGrid;
+	}
+	
+	/**
+	 * 设置产品线名称
+	 * @param teamList
+	 */
+	private void setProductLineName(List<PmsTeam> teamList){
+		List<ChanPinLineTree> productLine=pmsChanPinConfigurationFacade.getConfigurationTree();
+		Map<String,String> lineMap=new HashMap<>();
+		for(ChanPinLineTree parent:productLine){
+			for(ChanPinLineTree child:parent.getChildren()){
+				lineMap.put(child.getId(), child.getParentText()+"_"+child.getText());
+			}
+		}
+		teamList.stream().forEach(team->{
+			String lines=team.getProductLine();
+			StringBuffer lineName=new StringBuffer();
+			if(ValidateUtil.isValid(lines)){
+				String[] lineArray=lines.split(",");
+				for(String line:lineArray){
+					lineName.append(",").append(lineMap.get(line));
+				}
+				team.setProductLineName(lineName.toString().substring(1));
+			}
+			
+		});
+		
 	}
 
 	/**
@@ -131,9 +162,10 @@ public class TeamController extends BaseController {
 
 	@RequestMapping(value = "/team/save", method = RequestMethod.POST)
 	public BaseMsg save(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam("file") final MultipartFile file, @RequestParam("certificateFile") final MultipartFile certificateFile,
-			@RequestParam("idCardfrontFile") final MultipartFile idCardfrontFile,
-			@RequestParam("idCardbackFile") final MultipartFile idCardbackFile, final PmsTeam team) {
+//			@RequestParam("file") final MultipartFile file, @RequestParam("certificateFile") final MultipartFile certificateFile,
+//			@RequestParam("idCardfrontFile") final MultipartFile idCardfrontFile,
+//			@RequestParam("idCardbackFile") final MultipartFile idCardbackFile, 
+			final PmsTeam team) {
 		BaseMsg baseMsg = new BaseMsg();
 		response.setContentType("text/html;charset=UTF-8");
 		// 先保存获取ID，然后更新
@@ -142,12 +174,12 @@ public class TeamController extends BaseController {
 		long teamId = pmsTeamFacade.save(team);
 		team.setTeamId(teamId);
 		
-		uploadFile(request, file, team, baseMsg, 1, "LOGO");
-		uploadFile(request, certificateFile, team, baseMsg, 2, team.getTeamNature()==0?"营业执照":"身份证");
-		uploadFile(request, idCardfrontFile, team, baseMsg, 3, "法人手持身份证正面");
-		uploadFile(request, idCardbackFile, team, baseMsg, 4, "法人手持身份证背面");
-		
-		pmsTeamFacade.saveTeamPhotoUrl(team);
+//		uploadFile(request, file, team, baseMsg, 1, "LOGO");
+//		uploadFile(request, certificateFile, team, baseMsg, 2, team.getTeamNature()==0?"营业执照":"身份证");
+//		uploadFile(request, idCardfrontFile, team, baseMsg, 3, "法人手持身份证正面");
+//		uploadFile(request, idCardbackFile, team, baseMsg, 4, "法人手持身份证背面");
+//		
+//		pmsTeamFacade.saveTeamPhotoUrl(team);
 		
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save team ...", sessionInfo);
@@ -192,9 +224,46 @@ public class TeamController extends BaseController {
 
 	@RequestMapping(value = "/team/update", method = RequestMethod.POST)
 	public BaseMsg update(final HttpServletRequest request, final HttpServletResponse response,
+//			@RequestParam("file") final MultipartFile file, @RequestParam("certificateFile") final MultipartFile certificateFile,
+//			@RequestParam("idCardfrontFile") final MultipartFile idCardfrontFile,
+//			@RequestParam("idCardbackFile") final MultipartFile idCardbackFile, 
+			final PmsTeam team) throws Exception {
+		BaseMsg baseMsg = new BaseMsg();
+		response.setContentType("text/html;charset=UTF-8");
+
+		// 如果上传文件不为空时，更新 url;反之亦然
+		final PmsTeam originalTeam = pmsTeamFacade.findTeamById(team.getTeamId());
+		team.setCertificateUrl(originalTeam.getCertificateUrl());
+		team.setIdCardfrontUrl(originalTeam.getIdCardfrontUrl());
+		team.setIdCardbackUrl(originalTeam.getIdCardbackUrl());
+		team.setTeamPhotoUrl(originalTeam.getTeamPhotoUrl());
+		
+//		updateFile(file,team,originalTeam,1);
+//		updateFile(certificateFile,team,originalTeam,2);
+//		updateFile(idCardfrontFile,team,originalTeam,3);
+//		updateFile(idCardbackFile,team,originalTeam,4);
+//		
+//		pmsTeamFacade.saveTeamPhotoUrl(team);
+
+		long ret = pmsTeamFacade.update(team);
+		SessionInfo sessionInfo = getCurrentInfo(request);
+		Log.error("update team ...", sessionInfo);
+		if (ret > 0) {
+			baseMsg.setErrorCode(BaseMsg.NORMAL);
+			baseMsg.setErrorMsg("更新成功！");
+		} else {
+			baseMsg.setErrorCode(BaseMsg.ERROR);
+			baseMsg.setErrorMsg("更新失败！");
+		}
+		return baseMsg;
+	}
+	@RequestMapping(value = "/team/updateFile", method = RequestMethod.POST)
+	public BaseMsg updateFile(final HttpServletRequest request, final HttpServletResponse response,
 			@RequestParam("file") final MultipartFile file, @RequestParam("certificateFile") final MultipartFile certificateFile,
 			@RequestParam("idCardfrontFile") final MultipartFile idCardfrontFile,
-			@RequestParam("idCardbackFile") final MultipartFile idCardbackFile, final PmsTeam team) throws Exception {
+			@RequestParam("idCardbackFile") final MultipartFile idCardbackFile,
+			final PmsTeam team
+			) throws Exception {
 		BaseMsg baseMsg = new BaseMsg();
 		response.setContentType("text/html;charset=UTF-8");
 
@@ -210,9 +279,8 @@ public class TeamController extends BaseController {
 		updateFile(idCardfrontFile,team,originalTeam,3);
 		updateFile(idCardbackFile,team,originalTeam,4);
 		
-		pmsTeamFacade.saveTeamPhotoUrl(team);
-
-		long ret = pmsTeamFacade.update(team);
+		Long ret=pmsTeamFacade.saveTeamPhotoUrl(team);
+		
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update team ...", sessionInfo);
 		if (ret > 0) {
@@ -228,8 +296,6 @@ public class TeamController extends BaseController {
 		if (!file.isEmpty()) {
 			String path = FastDFSClient.uploadFile(file);
 			// 删除 原文件
-			// final Team originalTeam = service.findTeamById(team.getTeamId());
-//			final PmsTeam originalTeam = pmsTeamFacade.findTeamById(team.getTeamId());
 			if (originalTeam != null) {
 				final String originalPath = originalTeam.getTeamPhotoUrl();
 				FastDFSClient.deleteFile(originalPath);
@@ -250,10 +316,6 @@ public class TeamController extends BaseController {
 			default:
 				break;
 			}
-//			team.setTeamPhotoUrl(path);
-			// save photo path
-			// service.saveTeamPhotoUrl(team);
-//			pmsTeamFacade.saveTeamPhotoUrl(team);
 		}
 	}
 
@@ -325,7 +387,7 @@ public class TeamController extends BaseController {
 			paramMap.put("teamNature", view.getTeamNature());
 
 			List<PmsTeam> teamList = pmsTeamFacade.listWithParam(paramMap);
-
+			setProductLineName(teamList);
 			// 报表导出
 			teamService.generateReport(teamList, outputStream);
 

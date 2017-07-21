@@ -260,9 +260,8 @@ public class TeamServiceImpl implements TeamService {
 		}
 	}
 
-	private static String[] header = {"公司名称","登陆名","审核状态","审核意见","所在省","所在城市","联系人","更新时间","创建时间",
-										"手机号码","微信号","QQ","邮箱","官网地址","公司地址","LOGO","公司介绍","成立时间","价格区间","审核意见",
-										"公司规模","业务范围","主要客户","对客户的要求","获知渠道","备注"};
+	private static String[] header = { "团队名称", "审核状态", "审核意见", "业务", "技能", "产品线", "团队性质", "价格范围", "所在省", "所在市", "通讯地址",
+			"成立时间", "联系人" };
 	/**
 	 * 供应商导出
 	 */
@@ -306,10 +305,6 @@ public class TeamServiceImpl implements TeamService {
 				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
 				xssfCell.setCellValue(team.getTeamName());
 				
-				xssfCell=xssfRow.createCell(1);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getLoginName());
-				
 				String flag="";//审核状态
 				switch(team.getFlag()){
 					case 0:
@@ -325,69 +320,39 @@ public class TeamServiceImpl implements TeamService {
 						flag="幽灵模式";
 						break;
 				}
-				xssfCell=xssfRow.createCell(2);
+				xssfCell=xssfRow.createCell(1);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(flag);
 				
-				xssfCell=xssfRow.createCell(3);
+				xssfCell=xssfRow.createCell(2);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getRecommendation());
 				
+				xssfCell=xssfRow.createCell(3);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getBusiness());
+				
 				xssfCell=xssfRow.createCell(4);
 				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getTeamProvinceName());
+				xssfCell.setCellValue(team.getSkill());
 				
 				xssfCell=xssfRow.createCell(5);
 				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getTeamCityName());
+				xssfCell.setCellValue(team.getProductLineName());
 				
+				//团队性质
+				String teamNature="";
+				switch(team.getTeamNature()){
+				case 0:
+					teamNature="公司";
+					break;
+				case 1:
+					teamNature="工作室";
+					break;
+				}
 				xssfCell=xssfRow.createCell(6);
 				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getLinkman());
-				
-				xssfCell=xssfRow.createCell(7);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getUpdateDate());
-				
-				xssfCell=xssfRow.createCell(8);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getCreateDate());
-				
-				xssfCell=xssfRow.createCell(9);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getPhoneNumber());
-				
-				xssfCell=xssfRow.createCell(10);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getWebchat());
-				
-				xssfCell=xssfRow.createCell(11);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getQq());
-				
-				xssfCell=xssfRow.createCell(12);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getEmail());
-				
-				xssfCell=xssfRow.createCell(13);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getOfficialSite());
-				
-				xssfCell=xssfRow.createCell(14);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getAddress());
-				
-				xssfCell=xssfRow.createCell(15);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getTeamPhotoUrl());
-				
-				xssfCell=xssfRow.createCell(16);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getTeamDescription());
-				
-				xssfCell=xssfRow.createCell(17);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getEstablishDate());
+				xssfCell.setCellValue(teamNature);
 				
 				//价格区间
 				String priceRange="";
@@ -415,40 +380,30 @@ public class TeamServiceImpl implements TeamService {
 				default:
 					break;
 				}
-				xssfCell=xssfRow.createCell(18);
+				xssfCell=xssfRow.createCell(7);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(priceRange);
 				
-				xssfCell=xssfRow.createCell(19);
+				xssfCell=xssfRow.createCell(8);
 				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getRecommendation());
+				xssfCell.setCellValue(team.getTeamProvinceName());
 				
-				xssfCell=xssfRow.createCell(20);
+				xssfCell=xssfRow.createCell(9);
 				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getScale());
+				xssfCell.setCellValue(team.getTeamCityName());
 				
-				xssfCell=xssfRow.createCell(21);
+				xssfCell=xssfRow.createCell(10);
 				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getBusiness());
+				xssfCell.setCellValue(team.getAddress());
 				
-				xssfCell=xssfRow.createCell(22);
+				xssfCell=xssfRow.createCell(11);
 				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getBusinessDesc());
+				xssfCell.setCellValue(team.getEstablishDate());
 				
-				xssfCell=xssfRow.createCell(23);
+				xssfCell=xssfRow.createCell(12);
 				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getDemand());
+				xssfCell.setCellValue(team.getLinkman());
 				
-				//获知渠道
-				xssfCell=xssfRow.createCell(24);
-				xssfCell.setCellStyle(cs);
-				
-				xssfCell.setCellValue(Constants.INFO_RESOURCE_MAP.get(team.getInfoResource()+""));
-				
-				
-				xssfCell=xssfRow.createCell(25);
-				xssfCell.setCellStyle(cs);
-				xssfCell.setCellValue(team.getDescription());
 			}
 		}
 		

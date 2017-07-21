@@ -96,7 +96,7 @@ public class UserController extends BaseController {
 	@RequestMapping(value = "/user/update", method = RequestMethod.POST, produces = "application/json; chartset=UTF-8")
 	public long update(final PmsUser user, HttpServletRequest request) {
 
-		int computeScore = pmsUserFacade.computeScore(user);
+		Integer computeScore = pmsUserFacade.computeScore(user);
 		user.setClientLevel(computeScore);
 		final long ret = pmsUserFacade.update(user);
 		SessionInfo sessionInfo = getCurrentInfo(request);

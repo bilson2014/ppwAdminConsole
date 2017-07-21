@@ -9,6 +9,7 @@ var isadd = false;
 var originalLoginName = '';
 var originalPhoneNumber = '';
 
+
 var teamNatureData=[{'id':0,'text':'公司'},{'id':1,text:'工作室'}];
 
 var list = new Array();
@@ -16,7 +17,7 @@ var idList = new Array();
 var skillList=new Array();
 var skillIdList=new Array();
 $().ready(function(){
-	
+
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/team/list',
@@ -32,13 +33,8 @@ $().ready(function(){
 		columns:[[
 					{
 						field : 'teamName',
-						title : '公司名称',
+						title : '团队名称',
 						width : 160,
-						align : 'center'
-					},{
-						field : 'loginName',
-						title : '登录名',
-						width : 100,
 						align : 'center'
 					},{
 						field : 'flag' ,
@@ -63,83 +59,32 @@ $().ready(function(){
 						width : 200,
 						align : 'center'
 					},{
-						field : 'teamProvinceName',
-						title : '所在省',
-						width : 100,
+						field : 'business',
+						title : '业务',
+						width : 80,
 						align : 'center'
 					},{
-						field : 'teamCityName',
-						title : '所在城市',
-						width : 100,
+						field : 'skill',
+						title : '技能',
+						width : 80,
 						align : 'center'
 					},{
-						field : 'linkman',
-						title : '联系人',
-						width : 100,
+						field : 'productLineName',
+						title : '产品线',
+						width : 80,
 						align : 'center'
 					},{
-						field : 'updateDate' ,
-						title : '更新时间' ,
-						align : 'center' ,
-						width : 150,
-						sortable : true 
-					},{
-						field : 'createDate' ,
-						title : '创建时间' ,
-						align : 'center' ,
-						width : 150,
-						sortable : true 
-					},{
-						field : 'phoneNumber',
-						title : '手机号码',
-						width : 100,
-						align : 'center'
-					},{
-						field : 'webchat',
-						title : '微信号',
-						width : 100,
-						align : 'center'
-					},{
-						field : 'qq',
-						title : 'QQ',
-						width : 100,
-						align : 'center'
-					},{
-						field : 'email',
-						title : '邮箱',
-						width : 150,
-						align : 'center'
-					},{
-						field : 'officialSite',
-						title : '官网地址',
-						width : 150,
+						field : 'teamNature',
+						title : '团队性质',
+						width : 80,
 						align : 'center',
 						formatter : function(value , record , index){
-							if(value != null && value != undefined && value != ''){
-								return '<a href="'+ value +'" target="_blank">'+ value +'</a>' ;
+							if(value == 0){
+								return "公司";
+							}else if(value==1){
+								return "工作室";
 							}
 						}
-					},{
-						field : 'address',
-						title : '公司地址',
-						width : 150,
-						align : 'center'
-					},{
-						field : 'teamPhotoUrl',
-						title : 'LOGO',
-						width : 150,
-						align : 'center'
-					},{
-						field : 'teamDescription' ,
-						title : '公司介绍' ,
-						align : 'center' ,
-						width : 200,
-						align : 'center'
-					},{
-						field : 'establishDate' ,
-						title : '成立时间' ,
-						align : 'center' ,
-						width : 100
 					},{
 						field : 'priceRange' ,
 						title : '价格区间' ,
@@ -149,32 +94,143 @@ $().ready(function(){
 							if(value == 0){
 								return '<span style=color:red; >看情况</span>' ;
 							} else if( value == 1){
-								return '<span style=color:red; > >= 1W</span>' ; 
+								return '<span style=color:red; > >= 50W</span>' ; 
 							} else if( value == 2){
-								return '<span style=color:red; > >= 2W</span>' ;
+								return '<span style=color:red; > 20-50W</span>' ;
 							} else if( value == 3){
-								return '<span style=color:red; > >= 3W</span>' ;
+								return '<span style=color:red; > 10-20W</span>' ;
 							} else if(value == 4){
-								return '<span style=color:red; > >= 5W</span>' ;
+								return '<span style=color:red; > 5-10W</span>' ;
 							} else if(value == 5){
-								return '<span style=color:red; > >= 10W</span>' ;
+								return '<span style=color:red; > 3-5W</span>' ;
+							}else if(value == 6){
+								return '<span style=color:red; > 1-3W</span>' ;
+							}else if(value == 7){
+								return '<span style=color:red; > 5Q-1W</span>' ;
+							}else if(value == 8){
+								return '<span style=color:red; > <=5Q</span>' ;
+							}else{
+								return '<span style=color:red; >看情况</span>' ;
 							}
 						}
+					},{
+						field : 'teamProvinceName',
+						title : '所在省',
+						width : 100,
+						align : 'center'
+					},{
+						field : 'teamCityName',
+						title : '所在市',
+						width : 100,
+						align : 'center'
+					},{
+						field : 'address',
+						title : '通讯地址',
+						width : 150,
+						align : 'center'
+					},{
+						field : 'establishDate' ,
+						title : '成立时间' ,
+						align : 'center' ,
+						width : 100
+					},{
+						field : 'linkman',
+						title : '联系人',
+						width : 100,
+						align : 'center'
+					},{
+						field : 'productLine',
+						title : '产品线',
+						width : 80,
+						align : 'center',
+						hidden : true
+					}					
+					,{
+						field : 'loginName',
+						title : '登录名',
+						width : 100,
+						align : 'center',
+						hidden : true
+					},{
+						field : 'updateDate' ,
+						title : '更新时间' ,
+						align : 'center' ,
+						width : 150,
+						sortable : true ,
+						hidden : true
+					},{
+						field : 'createDate' ,
+						title : '创建时间' ,
+						align : 'center' ,
+						width : 150,
+						sortable : true ,
+						hidden : true
+					},{
+						field : 'phoneNumber',
+						title : '手机号码',
+						width : 100,
+						align : 'center',
+						hidden : true
+					},{
+						field : 'webchat',
+						title : '微信号',
+						width : 100,
+						align : 'center',
+						hidden : true
+					},{
+						field : 'qq',
+						title : 'QQ',
+						width : 100,
+						align : 'center',
+						hidden : true
+					},{
+						field : 'email',
+						title : '邮箱',
+						width : 150,
+						align : 'center',
+						hidden : true
+					},{
+						field : 'officialSite',
+						title : '官网地址',
+						width : 150,
+						align : 'center',
+						formatter : function(value , record , index){
+							if(value != null && value != undefined && value != ''){
+								return '<a href="'+ value +'" target="_blank">'+ value +'</a>' ;
+							}
+						},
+						hidden : true
+					},{
+						field : 'teamPhotoUrl',
+						title : 'LOGO',
+						width : 150,
+						align : 'center',
+						hidden : true
+					},{
+						field : 'teamDescription' ,
+						title : '公司介绍' ,
+						align : 'center' ,
+						width : 200,
+						align : 'center',
+						hidden : true
 					},{
 						field : 'certificateUrl',
 						title : '公司营业执照/身份证',
 						width : 80,
-						align : 'center'
+						align : 'center',
+						hidden : true
 					},{
 						field : 'idCardfrontUrl',
 						title : '法人手持身份证正面',
 						width : 80,
-						align : 'center'
+						align : 'center',
+						hidden : true
 					},{
 						field : 'idCardbackUrl',
 						title : '法人手持身份证背面',
 						width : 80,
-						align : 'center'
+						align : 'center',
+						hidden : true
 					},{
 //						field : 'recommendation',
 //						title : '审核意见',
@@ -189,12 +245,6 @@ $().ready(function(){
 //					},{
 						field : 'scale',
 						title : '公司规模',
-						width : 80,
-						align : 'center',
-						hidden : true
-					},{
-						field : 'business',
-						title : '业务范围',
 						width : 80,
 						align : 'center',
 						hidden : true
@@ -222,41 +272,23 @@ $().ready(function(){
 						width : 80,
 						align : 'center',
 						hidden : true
-					},{
-						field : 'skill',
-						title : '业务技能',
-						width : 80,
-						align : 'center',
-						hidden : true
-					},{
-						field : 'productLine',
-						title : '产品线',
-						width : 80,
-						align : 'center',
-						hidden : true
-					},{
-						field : 'teamNature',
-						title : '公司性质',
-						width : 80,
-						align : 'center',
-						hidden : true
 					}]] ,
 		pagination: true ,
 		pageSize : 20,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar',
-		onDblClickCell:function(index,field,value){
-			if(field == 'teamPhotoUrl' ||field == 'certificateUrl' ||field == 'idCardfrontUrl' ||field == 'idCardbackUrl'){
-				$('#picture-condition').removeClass('hide');
-				$('#teamPicture').attr('src',getDfsHostName() + value);
-				
-				$('#p-cancel').on('click',function(){
-					$('#picture-condition').addClass('hide');
-					$('#teamPicture').attr('src','');
-				});
-			}
-		}
+		toolbar : '#toolbar'
+//		onDblClickCell:function(index,field,value){
+//			if(field == 'teamPhotoUrl' ||field == 'certificateUrl' ||field == 'idCardfrontUrl' ||field == 'idCardbackUrl'){
+//				$('#picture-condition').removeClass('hide');
+//				$('#teamPicture').attr('src',getDfsHostName() + value);
+//				
+//				$('#p-cancel').on('click',function(){
+//					$('#picture-condition').addClass('hide');
+//					$('#teamPicture').attr('src','');
+//				});
+//			}
+//		}
 	});
 	
 	team.dataInit();
@@ -501,7 +533,14 @@ function addFuc(){ // 注册 增加按钮
 	$('#teamNature').combobox({
 		valueField : 'id',
 		textField : 'text',
-		data:teamNatureData	
+		data:teamNatureData	,
+		onChange : function(n,o) {
+			if(n==1){
+				$('#certName').html("身份证");
+			}else if(n==0){
+				$('#certName').html("营业执照");
+			}
+		}
 	});
 	openDialog('dlg');
 	formUrl = getContextPath() + '/portal/team/save';
@@ -518,6 +557,7 @@ function editFuc(){ // 注册 修改 按钮
 		originalLoginName = rows[0].loginName;
 		originalPhoneNumber = rows[0].phoneNumber;
 		$('#fm').form('load',rows[0]);
+
 		// 数据回显 -- 业务范围
 		var business = rows[0].business;
 		if(business != null && business != '' && business != undefined){
@@ -542,60 +582,79 @@ function editFuc(){ // 注册 修改 按钮
 				});
 			}
 		}
-		
-		var first =true;
-		$('#teamProvince').combobox({
-			url : getContextPath() + '/portal/get/provinces',
-			valueField : 'provinceID',
-			textField : 'provinceName',
-			onSelect : function(record){
-				$('#teamCity').combobox('clear');
-				var id = $('#teamProvince').combobox('getValue');
-				$('#teamCity').combobox({
-					url : getContextPath() + '/portal/get/citys/'+id,
-					valueField : 'cityID',
-					textField : 'city'
-				});
-			}
-			,onLoadSuccess: function(record){
-				var id = $('#teamProvince').combobox('getValue');
-				$('#teamCity').combobox({
-					url : getContextPath() + '/portal/get/citys/'+rows[0].teamProvince,
-					valueField : 'cityID',
-					textField : 'city',
-					onLoadSuccess :function (){
-						if(first){
-							$('#teamCity').combobox('setValue',rows[0].teamCity);
-							first = false;
-						}
+
+		var first = true;
+		$('#teamProvince').combobox(
+				{
+					url : getContextPath() + '/portal/get/provinces',
+					valueField : 'provinceID',
+					textField : 'provinceName',
+					onSelect : function(record) {
+						$('#teamCity').combobox('clear');
+						var id = $('#teamProvince').combobox('getValue');
+						$('#teamCity').combobox({
+							url : getContextPath() + '/portal/get/citys/' + id,
+							valueField : 'cityID',
+							textField : 'city'
+						});
+					},
+					onLoadSuccess : function(record) {
+						var id = $('#teamProvince').combobox('getValue');
+						$('#teamCity').combobox(
+								{
+									url : getContextPath()
+											+ '/portal/get/citys/'
+											+ rows[0].teamProvince,
+									valueField : 'cityID',
+									textField : 'city',
+									onLoadSuccess : function() {
+										if (first) {
+											$('#teamCity').combobox('setValue',
+													rows[0].teamCity);
+											first = false;
+										}
+									}
+								});
+						$('#teamProvince').combobox('setValue',
+								rows[0].teamProvince);
 					}
 				});
-				$('#teamProvince').combobox('setValue',rows[0].teamProvince);
-			}
-		});
-		//数据回显-公司性质
+		// 数据回显-公司性质
 		$('#teamNature').combobox({
 			valueField : 'id',
 			textField : 'text',
-			data:teamNatureData,
-			onLoadSuccess: function(){
-				console.log(1);
-				$('#teamNature').combobox('setValue',rows[0].teamNature);
+			data : teamNatureData,
+			onLoadSuccess : function() {
+				$('#teamNature').combobox('setValue', rows[0].teamNature);
+			},
+			onChange : function(n, o) {
+				if (n == 1) {
+					$('#certName').html("身份证");
+				} else if (n == 0) {
+					$('#certName').html("营业执照");
+				}
 			}
 		});
-		
+		if (rows[0].teamNature == 1) {
+			$('#certName').html("身份证");
+		}
+
 		openDialog('dlg');
-		
+
 		formUrl = getContextPath() + '/portal/team/update';
-		
-		//数据回显--产品线
-		var productLine=rows[0].productLine;
-		if(productLine!=null && productLine!='' && productLine!=undefined){
-			var arr=productLine.split(',');
-			for(var i=0;i<arr.length;i++){
+
+		// 数据回显--产品线
+		var productLine = rows[0].productLine;
+		if (productLine != null && productLine != ''
+				&& productLine != undefined) {
+			var arr = productLine.split(',');
+			for (var i = 0; i < arr.length; i++) {
 				addProductLine(arr[i]);
 			}
 		}
+		// }, getContextPath() +"/portal/team/findById", $.toJSON({
+		//			teamId : rows[0].teamId
+		//		}));
 	} else {
 		$.message('只能选择一条记录进行修改!');
 	}
@@ -704,7 +763,36 @@ function saveFuc(){ // 注册 保存按钮
 			var flag = $(this).form('validate');
 			if(!flag){
 				progressClose();
+				return flag;
+			}else{
+				//validate business
+				flag=false;
+				$('#dlg input[name="business"]').each(function(){
+					if(this.checked){
+						flag=true;
+						return false;
+					}
+				});
+				if(!flag){
+                	progressClose();
+                	$.message("请选择业务范围");
+                	return flag;
+                }
+				//validate skill
+                flag=false;
+				$('#dlg input[name="skill"]').each(function(){
+					if(this.checked){
+						flag=true;
+						return false;
+					}
+				});
+				if(!flag){
+                	progressClose();
+                	$.message("请选择业务技能");
+                	return flag;
+                }
 			}
+			
 			return flag;
 		},
 		success : function(result) {
@@ -1004,6 +1092,66 @@ function exportFun(){
 		},
 		success : function(result) {
 			
+		}
+	});
+}
+
+
+
+//上传作品
+function uploadFile(){		
+	var rows = datagrid.datagrid('getSelections');
+	if(rows.length==1){
+		$('#af').form('clear');
+		$('#af').form('load', rows[0]);
+		//图片回显
+		document.getElementById('fileImg').setAttribute('src',getDfsHostName()+rows[0].teamPhotoUrl);
+		document.getElementById('certificateFileImg').setAttribute('src',getDfsHostName()+rows[0].certificateUrl);
+		document.getElementById('idCardfrontFileImg').setAttribute('src',getDfsHostName()+rows[0].idCardfrontUrl);
+		document.getElementById('idCardbackFileImg').setAttribute('src',getDfsHostName()+rows[0].idCardbackUrl);
+		
+		var nature=rows[0].teamNature;
+		if(nature==1){
+			$('#certName').html("身份证");
+		}else if(nature==0){
+			$('#certName').html("营业执照");
+		}
+		
+		openDialog('upload-dlg');	
+		
+		//图片双击显示大图
+		$('.aptimg').dblclick(function(e) {
+	        $('#picture-condition').removeClass('hide');
+			$('#teamPicture').attr('src',$(this).attr("src"));
+			
+			$('#p-cancel').on('click',function(){
+				$('#picture-condition').addClass('hide');
+				$('#teamPicture').attr('src','');
+			});
+	    });
+		openDialog('upload-dlg');
+	} else {
+		$.message('只能选择一条记录进行修改!');
+	}	
+}
+
+function changeImg(obj) {
+    var windowURL = window.URL || window.webkitURL;
+    var loadImg = windowURL.createObjectURL(obj.files[0]);
+    document.getElementById(obj.id+'Img').setAttribute('src',loadImg);
+}  
+
+function saveAptFuc(){//上传资质保存
+	progressLoad();
+	$('#af').form('submit',{
+		url : getContextPath() + '/portal/team/updateFile',
+		success : function(result) {
+			$('#upload-dlg').dialog('close');
+			datagrid.datagrid('clearSelections');
+			datagrid.datagrid('reload');
+			progressClose();
+			var obj = $.parseJSON(result);
+			$.message(obj.errorMsg);
 		}
 	});
 }
