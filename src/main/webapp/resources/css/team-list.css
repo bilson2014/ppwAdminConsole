@@ -165,8 +165,8 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	width: 600px;
-	height: 400px;
+	width: 550px;
+	height: 360px;
 	margin-top: -200px;
 	margin-left: -300px;
 	background-color: #ffffff;
@@ -174,8 +174,8 @@
 
 .picture-condition-body {
 	position: absolute;
-	width: 600px;
-	left: 0;
+	width: 550px;
+	left: 25px;
 	top: 0;
 	right: 0;
 	bottom: 0px;
@@ -229,8 +229,8 @@
 	position: absolute;
 	width: 500px;
 	height: 350px;
-	top: 25px;
-	left: 50px;
+	top: 5px;
+	left: 25px;
 }
 
 .p-submit{
@@ -243,8 +243,8 @@
 }
 
 .p-label{
-	margin-top:30px;
-	width:550px;
+	margin-top:10px;
+	width:528px;
 	height:28px;
 	line-height:28px;
 }
