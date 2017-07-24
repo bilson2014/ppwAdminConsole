@@ -84,7 +84,7 @@
 			            			<input type="checkbox" name="business" value="网络节目"/> <span>网络节目</span>
 			            			<input type="checkbox" name="business" value="网络剧"/> <span>网络剧</span>
 			            			<input type="checkbox" name="business" value="网络电影"/> <span>网络电影</span>
-			            			<input type="checkbox" name="business" value="mv"/> <span>mv</span>
+			            			<input type="checkbox" name="business" value="MV"/> <span>MV</span>
 			            			<input type="checkbox" name="business" value="实验影片"/> <span>实验影片</span>
 			            			<input type="checkbox" name="business" value="电影预告片"/> <span>电影预告片</span>
 			            			<input type="checkbox" name="business" value="花絮"/> <span>花絮</span>
@@ -297,7 +297,7 @@
 			            	<input type="checkbox" name="business" value="网络节目"/> 网络节目
 			            	<input type="checkbox" name="business" value="网络剧"/> 网络剧
 			            	<input type="checkbox" name="business" value="网络电影"/> 网络电影
-			            	<input type="checkbox" name="business" value="mv"/> mv
+			            	<input type="checkbox" name="business" value="MV"/> MV
 			            	<input type="checkbox" name="business" value="实验影片"/> 实验影片
 			            	<input type="checkbox" name="business" value="电影预告片"/> 电影预告片
 			            	<input type="checkbox" name="business" value="花絮"/> 花絮
@@ -336,9 +336,9 @@
 	            			<br>		
 
 	            			创作团队:
-	            			<input type="checkbox" name="skill" value="导演" /> 导演
-	            			<input type="checkbox" name="skill" value="制片" /> 制片
-	            			<input type="checkbox" name="skill" value="摄影" /> 摄影
+	            			<input type="checkbox" name="skill" value="导演" class="skill-require"/> 导演
+	            			<input type="checkbox" name="skill" value="制片" class="skill-require"/> 制片
+	            			<input type="checkbox" name="skill" value="摄影" class="skill-require"/> 摄影
 	            			<br>		
 
 	            			后期制作:

@@ -91,9 +91,7 @@ $().ready(function(){
 						align : 'center' ,
 						width : 100 ,
 						formatter : function(value , record , index){
-							if(value == 0){
-								return '<span style=color:red; >看情况</span>' ;
-							} else if( value == 1){
+							if( value == 1){
 								return '<span style=color:red; > >= 50W</span>' ; 
 							} else if( value == 2){
 								return '<span style=color:red; > 20-50W</span>' ;
@@ -106,13 +104,18 @@ $().ready(function(){
 							}else if(value == 6){
 								return '<span style=color:red; > 1-3W</span>' ;
 							}else if(value == 7){
-								return '<span style=color:red; > 5Q-1W</span>' ;
+								return '<span style=color:red; > 5K-1W</span>' ;
 							}else if(value == 8){
-								return '<span style=color:red; > <=5Q</span>' ;
+								return '<span style=color:red; > <=5K</span>' ;
 							}else{
 								return '<span style=color:red; >看情况</span>' ;
 							}
 						}
+					},{
+						field : 'linkman',
+						title : '联系人',
+						width : 100,
+						align : 'center'
 					},{
 						field : 'teamProvinceName',
 						title : '所在省',
@@ -133,11 +136,6 @@ $().ready(function(){
 						title : '成立时间' ,
 						align : 'center' ,
 						width : 100
-					},{
-						field : 'linkman',
-						title : '联系人',
-						width : 100,
-						align : 'center'
 					},{
 						field : 'productLine',
 						title : '产品线',
@@ -780,7 +778,7 @@ function saveFuc(){ // 注册 保存按钮
                 }
 				//validate skill
                 flag=false;
-				$('#dlg input[name="skill"]').each(function(){
+				$('#dlg input[class="skill-require"]').each(function(){
 					if(this.checked){
 						flag=true;
 						return false;
@@ -788,7 +786,7 @@ function saveFuc(){ // 注册 保存按钮
 				});
 				if(!flag){
                 	progressClose();
-                	$.message("请选择业务技能");
+                	$.message("请选择业务技能-创作团队");
                 	return flag;
                 }
 			}
