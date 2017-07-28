@@ -538,14 +538,14 @@
 						type="file" onchange="changeImg(this)" /></td>
 				</tr>
 				<tr>
-					<th >身份证正面照片</th>
+					<th id="frontImgName">身份证正面照片</th>
 					<td><img src="" id="idCardfrontFileImg" class="aptimg"></td>
 					
 					<td><input name="idCardfrontFile" id="idCardfrontFile"
 						type="file" onchange="changeImg(this)" /></td>
 				</tr>
 				<tr>
-					<th >身份证背面照片</th>
+					<th id="backImgName">身份证背面照片</th>
 					<td><img src="" id="idCardbackFileImg" class="aptimg"></td>
 					
 					<td><input name="idCardbackFile" id="idCardbackFile"

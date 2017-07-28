@@ -1098,9 +1098,13 @@ function uploadFile(){
 		if(nature==1){
 			$('#certName').html("手持身份证照片");
 			$('#logoName').html("工作室LOGO");
+			$('#frontImgName').html("身份证正面照片");
+			$('#backImgName').html("身份证背面照片");
 		}else if(nature==0){
 			$('#certName').html("营业执照照片");
 			$('#logoName').html("公司LOGO");
+			$('#frontImgName').html("法人身份证正面照片");
+			$('#backImgName').html("法人身份证背面照片");
 		}
 		
 		$('#picture-condition').addClass('hide');
