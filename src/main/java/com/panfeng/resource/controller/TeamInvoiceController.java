@@ -112,13 +112,22 @@ public class TeamInvoiceController extends BaseController {
 	 * @param pageParam
 	 */
 	@RequestMapping("/invoice/team/export")
-	public void export(final InvoiceView view, final PageParam pageParam, final HttpServletResponse response) {
+	public void export(final InvoiceView view, final PageParam pageParam, HttpServletRequest request,final HttpServletResponse response) {
 		OutputStream outputStream = null;
 		try {
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("application/octet-stream");
 			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
-			String filename = URLEncoder.encode("供应商发票管理" + dateString + ".xlsx", "UTF-8");
+			String filename = "供应商发票管理" + dateString + ".xlsx";
+			//---处理文件名
+			String userAgent = request.getHeader("User-Agent"); 		
+			if (userAgent.contains("MSIE")||userAgent.contains("Trident") ||userAgent.contains("Edge")) {
+				//针对IE或者以IE为内核或Microsoft Edge的浏览器：
+				filename = java.net.URLEncoder.encode(filename, "UTF-8");
+			} else {
+				//非IE浏览器的处理：
+				filename = new String(filename.getBytes("UTF-8"),"ISO-8859-1");
+			}
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
 			outputStream = response.getOutputStream();
 			

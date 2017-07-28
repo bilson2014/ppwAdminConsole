@@ -95,7 +95,9 @@ public class UserController extends BaseController {
 
 	@RequestMapping(value = "/user/update", method = RequestMethod.POST, produces = "application/json; chartset=UTF-8")
 	public long update(final PmsUser user, HttpServletRequest request) {
-
+		if(user.getCustomerType()==null || user.getCustomerType()!=PmsUser.TYPE_OFFLINE_DIRECT_SELLING){
+			user.setReferrerId(null);
+		}
 		Integer computeScore = pmsUserFacade.computeScore(user);
 		user.setClientLevel(computeScore);
 		final long ret = pmsUserFacade.update(user);
@@ -122,11 +124,13 @@ public class UserController extends BaseController {
 
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
 	public long save(final PmsUser user, HttpServletRequest request) {
-
+		if(user.getCustomerType()==null || user.getCustomerType()!=PmsUser.TYPE_OFFLINE_DIRECT_SELLING){
+			user.setReferrerId(null);
+		}
 		user.setPassword(DataUtil.md5(PublicConfig.INIT_PASSWORD));
 		user.setBirthday(DateUtils.nowDate());
 		user.setUpdateTime(DateUtils.nowTime());
-		int computeScore = pmsUserFacade.computeScore(user);
+		Integer computeScore = pmsUserFacade.computeScore(user);
 		user.setClientLevel(computeScore);
 		Map<String, Object> save = pmsUserFacade.save(user);
 		SessionInfo sessionInfo = getCurrentInfo(request);

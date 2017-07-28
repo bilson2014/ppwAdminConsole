@@ -84,7 +84,7 @@
 			            			<input type="checkbox" name="business" value="网络节目"/> <span>网络节目</span>
 			            			<input type="checkbox" name="business" value="网络剧"/> <span>网络剧</span>
 			            			<input type="checkbox" name="business" value="网络电影"/> <span>网络电影</span>
-			            			<input type="checkbox" name="business" value="mv"/> <span>mv</span>
+			            			<input type="checkbox" name="business" value="MV"/> <span>MV</span>
 			            			<input type="checkbox" name="business" value="实验影片"/> <span>实验影片</span>
 			            			<input type="checkbox" name="business" value="电影预告片"/> <span>电影预告片</span>
 			            			<input type="checkbox" name="business" value="花絮"/> <span>花絮</span>
@@ -297,7 +297,7 @@
 			            	<input type="checkbox" name="business" value="网络节目"/> 网络节目
 			            	<input type="checkbox" name="business" value="网络剧"/> 网络剧
 			            	<input type="checkbox" name="business" value="网络电影"/> 网络电影
-			            	<input type="checkbox" name="business" value="mv"/> mv
+			            	<input type="checkbox" name="business" value="MV"/> MV
 			            	<input type="checkbox" name="business" value="实验影片"/> 实验影片
 			            	<input type="checkbox" name="business" value="电影预告片"/> 电影预告片
 			            	<input type="checkbox" name="business" value="花絮"/> 花絮
@@ -336,9 +336,9 @@
 	            			<br>		
 
 	            			创作团队:
-	            			<input type="checkbox" name="skill" value="导演" /> 导演
-	            			<input type="checkbox" name="skill" value="制片" /> 制片
-	            			<input type="checkbox" name="skill" value="摄影" /> 摄影
+	            			<input type="checkbox" name="skill" value="导演" class="skill-require"/> 导演
+	            			<input type="checkbox" name="skill" value="制片" class="skill-require"/> 制片
+	            			<input type="checkbox" name="skill" value="摄影" class="skill-require"/> 摄影
 	            			<br>		
 
 	            			后期制作:
@@ -523,7 +523,7 @@
 			<input name="teamId" type="hidden">
 			<table style="width: 100%;"  border="0" cellspacing="1" >
 				<tr>
-					<th >公司LOGO</th>
+					<th id="logoName">公司LOGO</th>
 					<td><img src="" id="fileImg" class="aptimg"></td>
 					
 					<td><input name="file" id="file" type="file"
@@ -531,21 +531,21 @@
 
 				</tr>
 				<tr>
-					<th id="certName" >营业执照</th>
+					<th id="certName" >营业执照照片</th>
 					<td><img src="" id="certificateFileImg" class="aptimg"></td>
 					
 					<td><input name="certificateFile" id="certificateFile"
 						type="file" onchange="changeImg(this)" /></td>
 				</tr>
 				<tr>
-					<th >法人持身份证正面</th>
+					<th >身份证正面照片</th>
 					<td><img src="" id="idCardfrontFileImg" class="aptimg"></td>
 					
 					<td><input name="idCardfrontFile" id="idCardfrontFile"
 						type="file" onchange="changeImg(this)" /></td>
 				</tr>
 				<tr>
-					<th >法人持身份证背面</th>
+					<th >身份证背面照片</th>
 					<td><img src="" id="idCardbackFileImg" class="aptimg"></td>
 					
 					<td><input name="idCardbackFile" id="idCardbackFile"

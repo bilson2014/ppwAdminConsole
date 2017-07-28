@@ -18,7 +18,7 @@
 	<script src="${userListJs }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
-	<div data-options="region:'north',border:false" style="height: 70px; overflow: hidden;background-color: #fff">
+	<div data-options="region:'north',border:false" style="height: 100px; overflow: hidden;background-color: #fff">
 		<form id="searchForm">
 			<table>
 				<tr>
@@ -70,7 +70,15 @@
 						</select>
         			</td>
         			
-        			<td>
+        			
+				</tr>
+				<tr>
+					<th>创建时间:</th>
+					<td>
+						<input name="beginTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />~
+						<input name="endTime" style="width: 76px;" onclick="WdatePicker({readOnly:true,dateFmt:'yyyy-MM-dd'})" readonly="readonly" required="true" />
+					</td>
+					<td>
 					    <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
 					    <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 					</td>
@@ -102,7 +110,7 @@
 		
 		<a onclick="cancelFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'">取消操作</a>
 	</div>
-		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 520px;height: 500px;"
+		<div id="dlg" class="easyui-dialog" style="padding:10px 20px;width: 520px;height: 500px;"
             closed="true" buttons="#dlg-buttons" title="项目信息">
 	        <form id="fm" method="post">
 	        	<input type="hidden" name='id' id="userId">
@@ -152,8 +160,9 @@
 							</select>
 	        			</td>
 	        			<th class="referrer" style="display: none;">推荐人</th>
-						<td class="referrer" colspan="2" style="display: none;">
-							<input id="referrerId" name="referrerId" class="easyui-combobox" style="width: 155px;"/>
+						<td class="referrer" colspan="2" style="display: none;" >
+							<select id="referrerId" name="referrerId" class="easyui-combobox" style="width: 155px;" required="required">
+							</select>
 						</td>
 	        		</tr>
 	        		<tr>
@@ -207,7 +216,7 @@
 	        		</tr>
 	        		<tr>
 	        			<th>备注信息</th>
-	        			<td>
+	        			<td colspan="3">
 	        				<input class="easyui-textbox text-area" id="note" name="note" multiline="true" style="height: 100px;width: 92%;" prompt="在此填写备注信息" />
 	        			</td>
 	        		</tr>

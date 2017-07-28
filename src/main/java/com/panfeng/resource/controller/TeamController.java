@@ -360,14 +360,27 @@ public class TeamController extends BaseController {
 	 * @param response
 	 */
 	@RequestMapping(value = "/team/export", method = RequestMethod.POST)
-	public void export(final TeamView view, final HttpServletResponse response) {
+	public void export(final TeamView view, HttpServletRequest request, final HttpServletResponse response) {
 		OutputStream outputStream = null;
-		try {
+		try {			
 			response.setCharacterEncoding("utf-8");
 			response.setContentType("application/octet-stream");
+//			response.setContentType("application/vnd.ms-excel;charset=utf-8");
 			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
-			String filename = URLEncoder.encode("供应商列表" + dateString + ".xlsx", "UTF-8");
+			String filename = "供应商列表" + dateString + ".xlsx";
+			
+			//---处理文件名
+			String userAgent = request.getHeader("User-Agent"); 
+			if (userAgent.contains("MSIE")||userAgent.contains("Trident") ||userAgent.contains("Edge")) {
+				//针对IE或者以IE为内核或Microsoft Edge的浏览器：
+				filename = java.net.URLEncoder.encode(filename, "UTF-8");
+			} else {
+			//非IE浏览器的处理：
+				filename = new String(filename.getBytes("UTF-8"),"ISO-8859-1");
+			}
+			
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
+	
 			outputStream = response.getOutputStream();
 
 			// 封装查询参数

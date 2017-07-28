@@ -261,7 +261,8 @@ public class TeamServiceImpl implements TeamService {
 	}
 
 	private static String[] header = { "团队名称", "审核状态", "审核意见", "业务", "技能", "产品线", "团队性质", "价格范围", "所在省", "所在市", "通讯地址",
-			"成立时间", "联系人" };
+			"成立时间", "联系人","登录名" ,"更新时间","创建时间","手机号码","微信号","QQ","邮箱","官网地址","LOGO","公司介绍",
+			"营业执照照片/手持身份证照片","身份证正面照片","身份证背面照片","公司规模","获知渠道","备注"};
 	/**
 	 * 供应商导出
 	 */
@@ -294,13 +295,14 @@ public class TeamServiceImpl implements TeamService {
 	private void generateTeamContent(List<PmsTeam> list, XSSFWorkbook workbook, XSSFSheet sheet) {
 		if(ValidateUtil.isValid(list)){
 			for(int i=0;i<list.size();i++){
+				int j=0;
 				PmsTeam team=list.get(i);
 				XSSFRow xssfRow=sheet.createRow(i+1);
 				
 				// 样式
 				XSSFCellStyle cs = PoiReportUtils.getLeftCellStyle(workbook);
 				
-				XSSFCell xssfCell=xssfRow.createCell(0);
+				XSSFCell xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
 				xssfCell.setCellValue(team.getTeamName());
@@ -320,23 +322,23 @@ public class TeamServiceImpl implements TeamService {
 						flag="幽灵模式";
 						break;
 				}
-				xssfCell=xssfRow.createCell(1);
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(flag);
 				
-				xssfCell=xssfRow.createCell(2);
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getRecommendation());
 				
-				xssfCell=xssfRow.createCell(3);
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getBusiness());
 				
-				xssfCell=xssfRow.createCell(4);
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getSkill());
 				
-				xssfCell=xssfRow.createCell(5);
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getProductLineName());
 				
@@ -350,60 +352,108 @@ public class TeamServiceImpl implements TeamService {
 					teamNature="工作室";
 					break;
 				}
-				xssfCell=xssfRow.createCell(6);
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(teamNature);
 				
 				//价格区间
-				String priceRange="";
-				switch (team.getPriceRange()) {
-				case 0:
-					priceRange="看情况";
-					break;
-				case 1:
-					priceRange=">= 1W";
-					break;
-				case 2:
-					priceRange=">= 2W";
-					break;
-				case 3:
-					priceRange=">= 3W";
-					break;
-				case 4:
-					priceRange=">= 5W";
-					break;
-				case 5:
-					priceRange=">= 10W";
-					break;
-				
-
-				default:
-					break;
-				}
-				xssfCell=xssfRow.createCell(7);
+				String priceRange=Constants.PRICE_RANGE_MAP.get(team.getPriceRange()+"");
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(priceRange);
 				
-				xssfCell=xssfRow.createCell(8);
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getTeamProvinceName());
 				
-				xssfCell=xssfRow.createCell(9);
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getTeamCityName());
 				
-				xssfCell=xssfRow.createCell(10);
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getAddress());
 				
-				xssfCell=xssfRow.createCell(11);
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getEstablishDate());
 				
-				xssfCell=xssfRow.createCell(12);
+				xssfCell=xssfRow.createCell(j++);
 				xssfCell.setCellStyle(cs);
 				xssfCell.setCellValue(team.getLinkman());
+								
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getLoginName());
 				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getUpdateDate());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getCreateDate());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getPhoneNumber());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getWebchat());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getQq());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getEmail());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getOfficialSite());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getTeamPhotoUrl());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getTeamDescription());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getCertificateUrl());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getIdCardfrontUrl());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getIdCardbackUrl());
+				
+				String scaleName=Constants.SCALE_MAP.get(team.getScale());				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(scaleName==null?team.getScale():scaleName);
+				
+//				xssfCell=xssfRow.createCell(j++);
+//				xssfCell.setCellStyle(cs);
+//				xssfCell.setCellValue(team.getBusinessDesc());
+//				
+//				xssfCell=xssfRow.createCell(j++);
+//				xssfCell.setCellStyle(cs);
+//				xssfCell.setCellValue(team.getDemand());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(Constants.INFO_RESOURCE_MAP.get(team.getInfoResource()+""));
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellValue(team.getDescription());		
 			}
 		}
 		
