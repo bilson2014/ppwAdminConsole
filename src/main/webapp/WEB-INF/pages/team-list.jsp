@@ -523,7 +523,7 @@
 			<input name="teamId" type="hidden">
 			<table style="width: 100%;"  border="0" cellspacing="1" >
 				<tr>
-					<th >公司LOGO</th>
+					<th id="logoName">公司LOGO</th>
 					<td><img src="" id="fileImg" class="aptimg"></td>
 					
 					<td><input name="file" id="file" type="file"
@@ -531,21 +531,21 @@
 
 				</tr>
 				<tr>
-					<th id="certName" >营业执照</th>
+					<th id="certName" >营业执照照片</th>
 					<td><img src="" id="certificateFileImg" class="aptimg"></td>
 					
 					<td><input name="certificateFile" id="certificateFile"
 						type="file" onchange="changeImg(this)" /></td>
 				</tr>
 				<tr>
-					<th >法人持身份证正面</th>
+					<th >身份证正面照片</th>
 					<td><img src="" id="idCardfrontFileImg" class="aptimg"></td>
 					
 					<td><input name="idCardfrontFile" id="idCardfrontFile"
 						type="file" onchange="changeImg(this)" /></td>
 				</tr>
 				<tr>
-					<th >法人持身份证背面</th>
+					<th >身份证背面照片</th>
 					<td><img src="" id="idCardbackFileImg" class="aptimg"></td>
 					
 					<td><input name="idCardbackFile" id="idCardbackFile"

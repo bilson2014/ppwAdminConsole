@@ -3,7 +3,10 @@ package com.panfeng.resource.controller;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,18 +20,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.paipianwang.pat.common.config.PublicConfig;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.indent.entity.IndentSource;
 import com.paipianwang.pat.facade.indent.entity.PmsIndent;
 import com.paipianwang.pat.facade.indent.service.PmsIndentFacade;
 import com.paipianwang.pat.facade.product.entity.PmsProduct;
 import com.paipianwang.pat.facade.product.entity.PmsService;
 import com.paipianwang.pat.facade.product.service.PmsProductFacade;
 import com.paipianwang.pat.facade.product.service.PmsServiceFacade;
+import com.paipianwang.pat.facade.right.entity.PmsEmployee;
+import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
+import com.paipianwang.pat.facade.user.entity.Grade;
+import com.paipianwang.pat.facade.user.entity.PmsUser;
+import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.Result;
 import com.panfeng.mq.service.SmsMQService;
@@ -57,10 +67,24 @@ public class IndentController extends BaseController {
 	private PmsProductFacade pmsProductFacade = null;
 	@Autowired
 	private PmsServiceFacade pmsServiceFacade = null;
+	@Autowired
+	private PmsEmployeeFacade pmsEmployeeFacad=null;
+	@Autowired
+	private PmsUserFacade pmsUserFacade=null;
 
 	@RequestMapping("/indent-list")
 	public ModelAndView view(final ModelMap model) {
 		model.addAttribute("filmUrl", PublicConfig.FILM_URL);
+		//处理数据字典
+		List<Map<String,Object>> emlist=new ArrayList<Map<String,Object>>();
+		for(IndentSource source:IndentSource.values()){
+			Map<String,Object> map=new HashMap<>();
+			map.put("value", source.getValue());
+			map.put("text",source.getName());
+			emlist.add(map);
+		}
+		Object json=JSONArray.toJSON(emlist);
+		model.put("sourceCombobox", json);
 		return new ModelAndView("indent-list", model);
 	}
 
@@ -187,88 +211,119 @@ public class IndentController extends BaseController {
 
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		final List<PmsIndent> list = pmsIndentFacade.listWithCondition(JsonUtil.objectToMap(view));
-		//处理订单状态、订单来源显示值
-		if (ValidateUtil.isValid(list)) {
-			for (PmsIndent indent : list) {
-				switch (indent.getIndentType()) {
-				case PmsIndent.ORDER_NEW:
-					indent.setIndentTypeName("新订单");
-					break;
-				case PmsIndent.ORDER_HANDLING:
-					indent.setIndentTypeName("处理中");
-					break;
-				case PmsIndent.ORDER_DONE:
-					indent.setIndentTypeName("完成");
-					break;
-				case PmsIndent.ORDER_STOP:
-					indent.setIndentTypeName("停滞");
-					break;
-				case PmsIndent.ORDER_AGAIN:
-					indent.setIndentTypeName("再次沟通");
-					break;
-				case PmsIndent.ORDER_REAL:
-					indent.setIndentTypeName("真实");
-					break;
-				case PmsIndent.ORDER_SHAM:
-					indent.setIndentTypeName("虚假");
-					break;
-				case PmsIndent.ORDER_SUBMIT:
-					indent.setIndentTypeName("提交");
-					break;
-				}
 
-				if (indent.getIndentSource() != null) {
-					switch (indent.getIndentSource()) {
-					case PmsIndent.SOURCE_ONLINE_WEBSITE:
-						indent.setIndentSourceName("线上-网站");
-						break;
-					case PmsIndent.SOURCE_ONLINE_ACTIVITY:
-						indent.setIndentSourceName("线上-活动");
-						break;
-					case PmsIndent.SOURCE_ONLINE_NEW_MEDIA:
-						indent.setIndentSourceName("线下-新媒体");
-						break;
-					case PmsIndent.SOURCE_OFFLINE_TELEMARKETING:
-						indent.setIndentSourceName("线下-电销");
-						break;
-					case PmsIndent.SOURCE_OFFLINE_DIRECT_SELLING:
-						indent.setIndentSourceName("线下-直销");
-						break;
-					case PmsIndent.SOURCE_OFFLINE_ACTIVITY:
-						indent.setIndentSourceName("线下-活动");
-						break;
-					case PmsIndent.SOURCE_OFFLINE_CHANNEL:
-						indent.setIndentSourceName("线下-渠道");
-						break;
-					case PmsIndent.SOURCE_REPEAT:
-						indent.setIndentSourceName("复购");
-						break;
-					case PmsIndent.SOURCE_ONLINE_400:
-						indent.setIndentSourceName("线上-400");
-						break;
-					case PmsIndent.SOURCE_ONLINE_BRIDGE:
-						indent.setIndentSourceName("线上-商桥");
-						break;
-					}
-				}
-				indent.setIndentId(indent.getId());
-			}
-		}
-		
-		
 		// 完成数据csv文件的封装
-		String displayColNames = "订单名称,订单编号,下单时间,订单金额,订单状态,客户电话,订单备注,CRM备注,分销渠道,订单来源";
-		String matchColNames = "indentName,indentId,orderDate,indentPrice,indentTypeName,indent_tele,indent_recomment,cSRecomment,salesmanUniqueId,indentSourceName";
+		String displayColNames = "订单名称,订单编号,下单时间,订单金额,订单状态,客户电话,订单备注,CRM备注,分销渠道,订单来源"
+				+ ",处理人员,客户联系人,客户公司,推荐人,视频分钟数,项目经理,微信号,职位";
+		String matchColNames = "indentName,indentId,orderDate,indentPrice,indentTypeName,indent_tele,indent_recomment,cSRecomment,salesmanUniqueId,indentSourceName"
+				+ ",employeeRealName,userRealName,userCompany,referrerRealName,second,pMRealName,wechat,position";
+		List<Map<String, Object>> datas=JsonUtil.getValueListMap(list);
+		//数据处理
+		editExportData(datas);
+		
 		String fileName = "indent_report_";
-		String content = CsvWriter.formatCsvData(JsonUtil.getValueListMap(list), displayColNames, matchColNames);
+		String content = CsvWriter.formatCsvData(datas, displayColNames, matchColNames);
 		try {
 			Log.error("indent list export success ...", sessionInfo);
 			CsvWriter.exportCsv(fileName, content, response);
+			
 		} catch (IOException e) {
 			Log.error("indent list export error ...", sessionInfo);
 		}
 	}
+	
+	/**
+	 * 处理导出数据--显示值
+	 * @param datas
+	 */
+	private void editExportData(List<Map<String, Object>> datas) {
+		// 数据处理
+		List<PmsEmployee> employeeList = pmsEmployeeFacad.findEmployeeToSynergy();
+		List<PmsUser> userList = pmsUserFacade.all();
+		for (Map<String, Object> data : datas) {
+			Long employeeId = data.get("employeeId") == null ? null : Long.parseLong((String) data.get("employeeId"));
+			Long userId = data.get("userId") == null ? null : Long.parseLong((String) data.get("userId"));
+			Long referrerId = data.get("referrerId") == null ? null : Long.parseLong((String) data.get("referrerId"));
+			Long pMId = data.get("pMId") == null ? null : Long.parseLong((String) data.get("pMId"));
 
+			//处理人员名称、推荐人名称、项目经理名称
+			if (ValidateUtil.isValid(employeeList) && (employeeId != null || referrerId != null || pMId != null)) {
+				for (PmsEmployee employee : employeeList) {
+					if (employeeId != null && employee.getEmployeeId() == employeeId) {
+						data.put("employeeRealName", employee.getEmployeeRealName());
+					}
+					if (referrerId != null && employee.getEmployeeId() == referrerId) {
+						data.put("referrerRealName", employee.getEmployeeRealName());
+					}
+					if (pMId != null && employee.getEmployeeId() == pMId) {
+						data.put("pMRealName", employee.getEmployeeRealName());
+					}
+				}
+			}
+			//客户联系人
+			if (ValidateUtil.isValid(userList) && userId != null) {
+				for (PmsUser user : userList) {
+					if (user.getUserId() == userId) {
+						data.put("userRealName", user.getRealName());
+						break;
+					}
+				}
+			}
+			//职位
+			Integer position = data.get("position") == null ? null : Integer.parseInt((String) data.get("position"));
+			if (position != null) {
+				for (int i = 0; i < Grade.position.length; i++) {
+					if (Grade.position[i].getId() == position) {
+						data.put("position", Grade.position[i].getText());
+						break;
+					}
+				}
+			}
+			//订单状态显示值
+			Integer indentType=data.get("indentType")==null?null:Integer.parseInt((String)data.get("indentType"));
+			String indentTypeName="";
+			switch (indentType) {
+			case PmsIndent.ORDER_NEW:
+				indentTypeName="新订单";
+				break;
+			case PmsIndent.ORDER_HANDLING:
+				indentTypeName="处理中";
+				break;
+			case PmsIndent.ORDER_DONE:
+				indentTypeName="完成";
+				break;
+			case PmsIndent.ORDER_STOP:
+				indentTypeName="停滞";
+				break;
+			case PmsIndent.ORDER_AGAIN:
+				indentTypeName="再次沟通";
+				break;
+			case PmsIndent.ORDER_REAL:
+				indentTypeName="真实";
+				break;
+			case PmsIndent.ORDER_SHAM:
+				indentTypeName="虚假";
+				break;
+			case PmsIndent.ORDER_SUBMIT:
+				indentTypeName="提交";
+				break;
+			}
+			data.put("indentTypeName",indentTypeName);
+			//订单来源显示值
+			Integer indentSource=data.get("indentSource")==null?null:Integer.parseInt((String)data.get("indentSource"));
+			String indentSourceName="";
+			if (indentSource != null) {
+				for(IndentSource source:IndentSource.values()){
+					if(indentSource.equals(source.getValue())){
+						indentSourceName=source.getName();
+						break;
+					}
+				}
+			}
+			data.put("indentSourceName",indentSourceName);
+		}
+	}
+	
 	@RequestMapping(value = "/indent/updateCustomerService", method = RequestMethod.POST)
 	public BaseMsg updateCustomerService(String employeeIds, Long customerService) {
 		BaseMsg baseMsg = new BaseMsg();

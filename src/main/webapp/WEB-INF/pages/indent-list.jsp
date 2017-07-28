@@ -22,6 +22,7 @@
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 <input type="hidden" id="filmUrl" value="${filmUrl}">
+<input type="hidden" id='sourceCombobox' value='${sourceCombobox }'> 
 	<div data-options="region:'north',border:false"
 		style="height: 40px; overflow: hidden; background-color: #fff">
 		<form id="searchForm" method="post">
@@ -42,8 +43,8 @@
 						readonly="readonly" required="true" /></td>
 					<th>订单来源:</th>
 					<td>
-						<select name="indentSource" style="width: 110px;">
-							<option value="" selected="selected">-- 请选择 --</option>
+						<select name="indentSource" id="search_indentSource" style="width: 110px;"  class="easyui-combobox">
+							<!-- <option value="" selected="selected">-- 请选择 --</option>
 		               	    <option value="1">线上-网站</option>
 						    <option value="2">线上-活动</option>
 						    <option value="3">线上-新媒体</option>
@@ -53,7 +54,7 @@
 						    <option value="7">线下-渠道</option>
 						    <option value="9">线上-400</option>
 						    <option value="10">线上-商桥</option>
-						    <option value="8">复购</option>
+						    <option value="8">复购</option> -->
 		                </select>
 					</td>
 					<th>处理人员:</th>
@@ -66,7 +67,13 @@
 						onclick="searchFun();">查询</a><a href="javascript:void(0);"
 						class="easyui-linkbutton"
 						data-options="iconCls:'icon-cancel',plain:true"
-						onclick="cleanFun();">清空</a></td>
+						onclick="cleanFun();">清空</a>
+						<r:permission uri="/portal/indent/export">
+							<a href="javascript:void(0);" class="easyui-linkbutton"
+							data-options="iconCls:'icon-search',plain:true"
+							onclick="exportFun();">报表导出</a>
+						</r:permission>
+					</td>
 				</tr>
 			</table>
 		</form>
@@ -100,11 +107,11 @@
 				class="easyui-linkbutton"
 				data-options="plain:true,iconCls:'icon-save'">修改状态</a>
 		</r:permission>
-		<r:permission uri="/portal/indent/export">
+		<%-- <r:permission uri="/portal/indent/export">
 			<a href="javascript:void(0);" class="easyui-linkbutton"
 				data-options="iconCls:'icon-search',plain:true"
 				onclick="exportFun();">报表导出</a>
-		</r:permission>
+		</r:permission> --%>
 		
 		<r:permission uri="/portal/indent/updateCustomerService">
 			<a href="javascript:void(0);" class="easyui-linkbutton"
@@ -170,8 +177,8 @@
 	        </div>
 	        <div class="fitem">
             	 <label>订单来源:</label>
-            	 <select name="indentSource" class="easyui-combobox" required="true" style="width: 46%;">
-               	    <option value="1">线上-网站</option>
+            	 <select id="indentSource" name="indentSource" class="easyui-combobox" required="true" style="width: 46%;">
+               	    <!-- <option value="1">线上-网站</option>
 				    <option value="2">线上-活动</option>
 				    <option value="3">线上-新媒体</option>
 				    <option value="4">线下-电销</option>
@@ -180,7 +187,7 @@
 				    <option value="7">线下-渠道</option>
 				    <option value="9">线上-400</option>
 				    <option value="10">线上-商桥</option>
-				    <option value="8">复购</option>
+				    <option value="8">复购</option> -->
                 </select>
             </div>
 	        <div class="fitem">

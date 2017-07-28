@@ -4,6 +4,7 @@ var datagrid;
 var EmployeeListCache;
 var path;
 var filmUrl;
+var sourceCombobox;
 
 $().ready(function(){
 	syncLoadData(function(res){
@@ -16,7 +17,18 @@ $().ready(function(){
 		textField : 'employeeRealName'
 	});
 	
+	sourceCombobox=JSON.parse($('#sourceCombobox').val());
+	$('#sourceCombobox').remove();
+	
+	$('#search_indentSource').combobox({
+		data : sourceCombobox,
+		valueField : 'value',
+		textField : 'text'
+	});
+	
+	
 	filmUrl=$('#filmUrl').val();
+	
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -90,26 +102,10 @@ $().ready(function(){
 						width : 80,
 						sortable : true ,
 						formatter : function(value , record , index){
-							if( value == 1){
-								return '<span style=color:black; >线上-网站</span>' ; 
-							} else if( value == 2){
-								return '<span style=color:black; >线上-活动</span>' ;
-							} else if( value == 3){
-								return '<span style=color:black; >线上-新媒体</span>' ;
-							}else if( value == 4){
-								return '<span style=color:black; >线下-电销</span>' ;
-							}else if( value == 5){
-								return '<span style=color:black; >线下-直销</span>' ;
-							}else if( value == 6){
-								return '<span style=color:black; >线下-活动</span>' ;
-							}else if( value == 7){
-								return '<span style=color:black; >线下-渠道</span>' ;
-							}else if( value == 8){
-								return '<span style=color:black; >复购</span>' ;
-							}else if( value == 9){
-								return '<span style=color:black; >线上-400</span>' ;
-							}else if( value == 10){
-								return '<span style=color:black; >线上-商桥</span>' ;
+							for(var i=0;i<sourceCombobox.length;i++){
+								if(value==sourceCombobox[i].value){
+									return '<span style=color:black; >'+sourceCombobox[i].text+'</span>' ;
+								}
 							}
 						}
 					},{
@@ -209,7 +205,14 @@ function editFuc(){
 			valueField:'uniqueId',
 			textField:'salesmanName',
 		});	
+		$('#indentSource').combobox({
+			data:sourceCombobox,
+			valueField:'value',
+			textField:'text'
+		});
+		
 		$('#salesmanUnique').combobox('setValue',arr[0].salesmanUniqueId);
+		$('#indentSource').combobox('setValue',arr[0].indentSource);
 	}
 }
 

@@ -531,14 +531,7 @@ function addFuc(){ // 注册 增加按钮
 	$('#teamNature').combobox({
 		valueField : 'id',
 		textField : 'text',
-		data:teamNatureData	,
-		onChange : function(n,o) {
-			if(n==1){
-				$('#certName').html("身份证");
-			}else if(n==0){
-				$('#certName').html("营业执照");
-			}
-		}
+		data:teamNatureData
 	});
 	openDialog('dlg');
 	formUrl = getContextPath() + '/portal/team/save';
@@ -624,18 +617,9 @@ function editFuc(){ // 注册 修改 按钮
 			data : teamNatureData,
 			onLoadSuccess : function() {
 				$('#teamNature').combobox('setValue', rows[0].teamNature);
-			},
-			onChange : function(n, o) {
-				if (n == 1) {
-					$('#certName').html("身份证");
-				} else if (n == 0) {
-					$('#certName').html("营业执照");
-				}
 			}
 		});
-		if (rows[0].teamNature == 1) {
-			$('#certName').html("身份证");
-		}
+		
 
 		openDialog('dlg');
 
@@ -1112,9 +1096,11 @@ function uploadFile(){
 		
 		var nature=rows[0].teamNature;
 		if(nature==1){
-			$('#certName').html("身份证");
+			$('#certName').html("手持身份证照片");
+			$('#logoName').html("工作室LOGO");
 		}else if(nature==0){
-			$('#certName').html("营业执照");
+			$('#certName').html("营业执照照片");
+			$('#logoName').html("公司LOGO");
 		}
 		
 		$('#picture-condition').addClass('hide');

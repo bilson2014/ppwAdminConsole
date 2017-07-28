@@ -173,7 +173,7 @@ $().ready(function(){
 						field : 'customerType' ,
 						title : '客户来源' ,
 						align : 'center' ,
-						width : 60,
+						width : 100,
 						sortable : true ,
 						formatter : function(value , record , index){
 							switch (value) {
@@ -203,6 +203,49 @@ $().ready(function(){
 								return '<span style=color:blue; >4A有策划</span>' ;
 							case 13:
 								return '<span style=color:blue; >4A无策划</span>' ;
+							case 14:
+								return '<span style=color:blue; >直客-线上-网站</span>' ;
+							case 15:
+								return '<span style=color:blue; >直客-线上-活动</span>' ;
+							case 16:
+								return '<span style=color:blue; >直客-线上-新媒体</span>' ;
+							case 17:
+								return '<span style=color:blue; >直客-线下-电销</span>' ;
+							case 18:
+								return '<span style=color:blue; >直客-线下-直销</span>' ;
+							case 19:
+								return '<span style=color:blue; >直客-线下-活动</span>' ;
+							case 20:
+								return '<span style=color:blue; >直客-线下-渠道</span>' ;
+							case 21:
+								return '<span style=color:blue; >直客-线上-400</span>' ;
+							case 22:
+								return '<span style=color:blue; >直客-线上-商桥</span>' ;
+								
+							case 23:
+								return '<span style=color:blue; >直客-线上-PC-首页banner</span>' ;
+							case 24:
+								return '<span style=color:blue; >直客-线上-PC-直接下单</span>' ;
+							case 25:
+								return '<span style=color:blue; >直客-线上-PC-成本计算器</span>' ;
+							case 26:
+								return '<span style=color:blue; >直客-线上-PC-供应商首页</span>' ;
+							case 27:
+								return '<span style=color:blue; >直客-线上-PC-作品</span>' ;
+								
+							case 28:
+								return '<span style=color:blue; >直客-线上-移动-首页banner</span>' ;
+							case 29:
+								return '<span style=color:blue; >直客-线上-移动-成本计算器</span>' ;
+							case 30:
+								return '<span style=color:blue; >直客-线上-移动-作品</span>' ;
+								
+							case 31:
+								return '<span style=color:blue; >直客-线上-公众号-成本计算器</span>' ;
+							case 32:
+								return '<span style=color:blue; >直客-线上-公众号-直接下单</span>' ;
+							case 33:
+								return '<span style=color:blue; >直客-线上-公众号-作品</span>' ;
 							}
 						},
 						editor:{
@@ -405,7 +448,7 @@ function editFuc(){
 		$('#fm').form('clear');
 		$('#fm').form('load',rows[0]);
 		openDialog('dlg',rows[0]);
-		if(rows[0].customerType == 3)
+		if(rows[0].customerType == 18)//OFFLINE_DIRECT_SELLING
 			$('.referrer').show();
 		else
 			$('.referrer').hide();
@@ -556,7 +599,7 @@ function initRating(){
 			valueField : 'id',
 			textField : 'text',
 			onSelect : function(record){
-				if(record.text == '直客'){
+				if(record.text == '直客-线下-直销'){
 					$('.referrer').show();
 				}else{
 					$('.referrer').hide();

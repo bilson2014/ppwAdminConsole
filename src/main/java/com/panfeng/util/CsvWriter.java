@@ -69,6 +69,8 @@ public class CsvWriter {
   
         // 写出响应  
         OutputStream os = response.getOutputStream();  
+        //加上UTF-8文件的标识字符
+        os.write(new   byte []{( byte ) 0xEF ,( byte ) 0xBB ,( byte ) 0xBF }); 
         os.write(content.getBytes("UTF-8"));  
         os.flush();  
         os.close();  
