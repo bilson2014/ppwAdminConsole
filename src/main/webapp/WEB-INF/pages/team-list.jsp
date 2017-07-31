@@ -441,7 +441,7 @@
 	            	</tr>
 	            	
 	            	<tr>
-	            		<th colspan="4">备注</th>
+	            		<th colspan="4">备注（对供应商不可见）</th>
 	            	</tr>
 	            	
 	            	<tr>
@@ -451,7 +451,7 @@
 	            	</tr>
 	            	
 	            	<tr>
-	            		<th colspan="4">审核意见</th>
+	            		<th colspan="4">审核意见（对供应商可见）</th>
 	            	</tr>
 	            	
 	            	<tr>
