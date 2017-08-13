@@ -37,7 +37,6 @@ import com.paipianwang.pat.facade.product.service.PmsServiceFacade;
 import com.paipianwang.pat.facade.right.entity.PmsEmployee;
 import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
 import com.paipianwang.pat.facade.user.entity.Grade;
-import com.paipianwang.pat.facade.user.entity.PmsUser;
 import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.Result;
@@ -216,7 +215,7 @@ public class IndentController extends BaseController {
 		String displayColNames = "订单名称,订单编号,下单时间,订单金额,订单状态,客户电话,订单备注,CRM备注,分销渠道,订单来源"
 				+ ",处理人员,客户联系人,客户公司,推荐人,视频分钟数,项目经理,微信号,职位";
 		String matchColNames = "indentName,indentId,orderDate,indentPrice,indentTypeName,indent_tele,indent_recomment,cSRecomment,salesmanUniqueId,indentSourceName"
-				+ ",employeeRealName,userRealName,userCompany,referrerRealName,second,pMRealName,wechat,position";
+				+ ",employeeRealName,realName,userCompany,referrerRealName,second,pMRealName,wechat,position";
 		List<Map<String, Object>> datas=JsonUtil.getValueListMap(list);
 		//数据处理
 		editExportData(datas);
@@ -239,10 +238,10 @@ public class IndentController extends BaseController {
 	private void editExportData(List<Map<String, Object>> datas) {
 		// 数据处理
 		List<PmsEmployee> employeeList = pmsEmployeeFacad.findEmployeeToSynergy();
-		List<PmsUser> userList = pmsUserFacade.all();
+//		List<PmsUser> userList = pmsUserFacade.all();
 		for (Map<String, Object> data : datas) {
 			Long employeeId = data.get("employeeId") == null ? null : Long.parseLong((String) data.get("employeeId"));
-			Long userId = data.get("userId") == null ? null : Long.parseLong((String) data.get("userId"));
+//			Long userId = data.get("userId") == null ? null : Long.parseLong((String) data.get("userId"));
 			Long referrerId = data.get("referrerId") == null ? null : Long.parseLong((String) data.get("referrerId"));
 			Long pMId = data.get("pMId") == null ? null : Long.parseLong((String) data.get("pMId"));
 
@@ -261,14 +260,14 @@ public class IndentController extends BaseController {
 				}
 			}
 			//客户联系人
-			if (ValidateUtil.isValid(userList) && userId != null) {
-				for (PmsUser user : userList) {
-					if (user.getUserId() == userId) {
-						data.put("userRealName", user.getRealName());
-						break;
-					}
-				}
-			}
+//			if (ValidateUtil.isValid(userList) && userId != null) {
+//				for (PmsUser user : userList) {
+//					if (user.getUserId() == userId) {
+//						data.put("userRealName", user.getRealName());
+//						break;
+//					}
+//				}
+//			}
 			//职位
 			Integer position = data.get("position") == null ? null : Integer.parseInt((String) data.get("position"));
 			if (position != null) {
