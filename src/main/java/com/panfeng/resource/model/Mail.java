@@ -22,6 +22,25 @@ public class Mail implements Serializable {
 	private String createTime = null;
 	private String updateTime = null;
 	
+	/**
+	 * 收件人
+	 */
+	private String receiver;
+	private String receiverRole;
+	/**
+	 * 抄送人
+	 */
+	private String bcc;
+	private String bccRole;
+	/**
+	 * 发件人
+	 */
+	private String sender;//邮箱-以逗号分隔
+	private String senderRole;
+	/**
+	 * 附件
+	 */
+	private String mailFile;
 	
     
 	public Integer getId() {
@@ -60,4 +79,49 @@ public class Mail implements Serializable {
 	public void setUpdateTime(String updateTime) {
 		this.updateTime = updateTime;
 	}
+	
+	public String getBcc() {
+		return bcc;
+	}
+	public void setBcc(String bcc) {
+		this.bcc = bcc;
+	}
+	public String getBccRole() {
+		return bccRole;
+	}
+	public void setBccRole(String bccRole) {
+		this.bccRole = bccRole;
+	}
+	
+	public String getMailFile() {
+		return mailFile;
+	}
+	public void setMailFile(String mailFile) {
+		this.mailFile = mailFile;
+	}
+	public String getReceiver() {
+		return receiver;
+	}
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
+	}
+	public String getReceiverRole() {
+		return receiverRole;
+	}
+	public void setReceiverRole(String receiverRole) {
+		this.receiverRole = receiverRole;
+	}
+	public String getSender() {
+		return sender;
+	}
+	public void setSender(String sender) {
+		this.sender = sender;
+	}
+	public String getSenderRole() {
+		return senderRole;
+	}
+	public void setSenderRole(String senderRole) {
+		this.senderRole = senderRole;
+	}
+	
 }

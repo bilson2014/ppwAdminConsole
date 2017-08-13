@@ -92,6 +92,45 @@
 						<input id="mailType" name="mailType" class="easyui-textbox" required="true" />
 					</div>
 				</div>
+				<div>
+					<div >收件人</div>
+					<div >
+						<input id="receiver" name="receiver" class="easyui-textbox" style="width: 283px;"/> &
+						<select name="receiverRole" id="receiverRole"  class="easyui-combobox" style="width: 110px;">
+							<!-- <option value="1">项目客户</option>
+							<option value="2">项目策划供应商</option>
+							<option value="3">项目制作供应商</option> -->
+						</select>
+					</div>
+				</div>
+				<div class="online">
+					<div class="lable l-width">抄送人</div>
+					<div class="d-float f-width">
+						<input id="bcc" name="bcc" placeholder="多个抄送人以','分隔" class="easyui-textbox" style="width: 283px;"/>&
+						<select name="bccRole" id="bccRole" style="width: 283px;"  class="easyui-combobox"></select>
+					</div>
+				</div>
+				<div class="online">
+					<div class="lable l-width">发送人</div>
+					<div class="d-float f-width">
+						<input id="sender" name="sender" class="easyui-textbox" style="width: 155px;" validType="email" /> or
+						<select name="senderRole" id="senderRole" style="width: 110px;"  class="easyui-combobox"></select>
+					</div>
+				</div>
+				<div class="online">
+					<div class="lable l-width">附件</div>
+					<div class="d-float f-width">
+						 <select name="mailFile" id="mailFile" style="width: 283px;"  class="easyui-combobox" data-options="multiple:true">
+							<!-- <option value="1">项目简报</option>
+							<option value="2">项目排期</option>
+							<option value="3">策划方案</option>
+							<option value="4">报价单</option>
+							<option value="5">PPM</option>
+							<option value="6">影片修改表</option>
+							<option value="7">客户回复</option> -->
+						</select> 
+					</div>
+				</div>
 				<div class="textarea-position">
 					<div class="lable l-width">邮件内容</div>
 					<input name="content" class="ta-content" required="true" />
