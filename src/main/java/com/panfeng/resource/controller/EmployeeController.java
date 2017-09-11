@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.paipianwang.pat.common.constant.PmsConstant;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
@@ -24,10 +25,16 @@ import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
+import com.paipianwang.pat.facade.indent.entity.IndentSource;
 import com.paipianwang.pat.facade.right.entity.PmsEmployee;
 import com.paipianwang.pat.facade.right.entity.PmsRole;
 import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
 import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
+import com.paipianwang.pat.workflow.enums.ProjectRoleType;
+import com.panfeng.persist.ActivitiMemberShipMapper;
+import com.panfeng.persist.ActivitiUserMapper;
+import com.panfeng.resource.model.ActivitiMember;
+import com.panfeng.resource.model.ActivitiUser;
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.view.EmployeeView;
 import com.panfeng.util.AESSecurityUtil;
@@ -50,6 +57,10 @@ public class EmployeeController extends BaseController {
 
 	@Autowired
 	private PmsRoleFacade pmsRoleFacade;
+	@Autowired
+	private ActivitiUserMapper activitiUserMapper;
+	@Autowired
+	private ActivitiMemberShipMapper activitiMemberShipMapper;
 
 	/**
 	 * 跳转
@@ -121,7 +132,7 @@ public class EmployeeController extends BaseController {
 	 */
 	@RequestMapping(value = "/employee/update", method = RequestMethod.POST)
 	public void update(final HttpServletRequest request, HttpServletResponse response,
-			@RequestParam final MultipartFile employeeImage, final PmsEmployee employee) {
+			@RequestParam final MultipartFile employeeImage, final PmsEmployee employee,@RequestParam final String groupId) {
 		response.setContentType("text/html;charset=UTF-8");
 
 		// 判断密码是否为空
@@ -143,10 +154,31 @@ public class EmployeeController extends BaseController {
 		}
 
 		employeeFacade.updateWidthRelation(employee);
+		
+		String actid="employee_"+employee.getEmployeeId();
+		//更新用户角色
+		if(!ValidateUtil.isValid(groupId)){
+			//删除
+			activitiMemberShipMapper.delete(actid);
+			activitiUserMapper.delete(actid);
+		}else{
+			List<ActivitiMember> roles=activitiMemberShipMapper.findByUserId(actid);
+			if(ValidateUtil.isValid(roles)){
+				//更新
+				ActivitiMember activitiMember=new ActivitiMember();
+				activitiMember.setGroupId(groupId);
+				activitiMember.setId(actid);
+				activitiMemberShipMapper.update(activitiMember);
+			}else{
+				//添加
+				saveProjectRole(employee, groupId);
+			}
+		}
+		
+		
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update Employee info ...", sessionInfo);
 		processFile(employeeImage, employee);
-
 	}
 
 	/**
@@ -156,7 +188,7 @@ public class EmployeeController extends BaseController {
 	 */
 	@RequestMapping(value = "/employee/save", method = RequestMethod.POST)
 	public void save(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam final MultipartFile employeeImage, final PmsEmployee employee) {
+			@RequestParam final MultipartFile employeeImage, final PmsEmployee employee,@RequestParam final String groupId) {
 		response.setContentType("text/html;charset=UTF-8");
 
 		// 判断密码是否为空
@@ -169,9 +201,31 @@ public class EmployeeController extends BaseController {
 				e.printStackTrace();
 			}
 		}
-		employeeFacade.save(employee);
+		long employeeId=employeeFacade.save(employee);
+		employee.setEmployeeId(employeeId);
 		// 处理图像
 		processFile(employeeImage, employee);
+		//添加角色
+		if(ValidateUtil.isValid(groupId)){
+			saveProjectRole(employee, groupId);
+		}
+	}
+	
+	private void saveProjectRole(PmsEmployee employee,String groupId){
+		String actid="employee_"+employee.getEmployeeId();
+		ActivitiUser activitiUser=new ActivitiUser();
+		activitiUser.setEmail(employee.getEmail());
+		activitiUser.setFirst(employee.getEmployeeRealName());
+		activitiUser.setId(actid);
+		activitiUser.setLast(employee.getEmployeeLoginName());
+		activitiUser.setPictureId(employee.getEmployeeImg());
+		activitiUser.setPwd("000000");
+		activitiUser.setRev(1);
+		activitiUserMapper.save(activitiUser);
+		ActivitiMember activitiMember=new ActivitiMember();
+		activitiMember.setGroupId(groupId);
+		activitiMember.setId(actid);
+		activitiMemberShipMapper.save(activitiMember);
 	}
 
 	public void processFile(final MultipartFile employeeImage, final PmsEmployee employee) {
@@ -283,5 +337,4 @@ public class EmployeeController extends BaseController {
 		final List<PmsEmployee> list = employeeFacade.findEmployeeByRoleId(roleId);
 		return list;
 	}
-
 }

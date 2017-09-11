@@ -119,6 +119,10 @@
 	                <select name="roleIds" id="roleIds" style="width: 160px; height: auto;"></select>
 	            </div>
 	            <div class="fitem">
+	                <label>流程角色:</label>
+	                <select name="groupId" id="groupId" style="width: 160px; height: auto;" class="easyui-combobox"></select>
+	            </div>
+	            <div class="fitem">
 	                <label>头像:</label>
 	                <input name="employeeImage"  type="file" style="width: 160px;"/>
 	            </div>

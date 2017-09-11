@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.ActivitiMemberShipMapper">
+	<insert id="save">
+		<![CDATA[
+			INSERT INTO activiti.ACT_ID_MEMBERSHIP (
+				USER_ID_, 
+				GROUP_ID_
+			) VALUES(
+				#{id},
+				#{groupId}
+			);
+		]]>
+	</insert>
+
+	<update id="update">
+		<![CDATA[
+			UPDATE activiti.ACT_ID_MEMBERSHIP SET
+			 GROUP_ID_ = #{groupId}
+			WHERE
+				USER_ID_ = #{id};
+		]]>
+	</update>
+
+	<delete id="delete">
+		<![CDATA[
+			DELETE FROM activiti.ACT_ID_MEMBERSHIP WHERE USER_ID_ =#{id}
+		]]>
+	</delete>
+
+	<select id="findByRole" resultType="ActivitiMember">
+		<![CDATA[
+			SELECT  
+			    m.USER_ID_ id, 
+				m.GROUP_ID_ groupId,
+				u.REV_ rev, 
+				u.FIRST_ first, 
+				u.LAST_ last, 
+				u.EMAIL_ email,
+				u.PWD_ pwd,
+				u.PICTURE_ID_ pictureId
+			FROM activiti.ACT_ID_MEMBERSHIP m
+ 			LEFT JOIN activiti.ACT_ID_USER u on m.USER_ID_=u.ID_
+			WHERE m.GROUP_ID_=#{groupId}
+		]]>
+	</select>
+	<select id="findByUserId" resultType="ActivitiMember">
+		<![CDATA[
+			SELECT  
+			    m.USER_ID_ id, 
+				m.GROUP_ID_ groupId
+				
+			FROM activiti.ACT_ID_MEMBERSHIP m
+			WHERE m.USER_ID_=#{id}
+		]]>
+	</select>
+</mapper>
