@@ -459,6 +459,17 @@
 	            			<input class="easyui-textbox text-area" name="recommendation" multiline="true" style="height: 100px;width: 92%;" prompt="在此填写审核意见"/>
 	            		</td>
 	            	</tr>
+	            	<tr>
+	            	<th>公司昵称</th>
+	            		<td><input name="displayName" class="easyui-textbox"></td>
+	            	</tr>
+	            	<tr>
+					<th>公司显示图片</th>
+					<td><img src="" id="displayFileImg" class="aptimg"></td>
+					
+					<td colspan="2"><input name="displayFile" id="displayFile"
+						type="file" onchange="changeImg(this)" /></td>
+					</tr>
 	            	
 	            </table>
 	        </form>
@@ -551,6 +562,13 @@
 					<td><input name="idCardbackFile" id="idCardbackFile"
 						type="file" onchange="changeImg(this)" /></td>
 				</tr>
+				<!-- <tr>
+					<th id="displayImgName"></th>
+					<td><img src="" id="displayFileImg" class="aptimg"></td>
+					
+					<td><input name="displayFile" id="displayFile"
+						type="file" onchange="changeImg(this)" /></td>
+				</tr> -->
 				
 			</table>
 		</form>

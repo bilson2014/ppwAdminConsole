@@ -505,6 +505,7 @@ function delProductLine(){
 
 function addFuc(){ // 注册 增加按钮
 	$('#fm').form('clear');
+	document.getElementById('displayFileImg').setAttribute('src',"");
 	isadd = true;
 	$('#teamProvince').combobox({
 		url : getContextPath() + '/portal/get/provinces',
@@ -549,6 +550,7 @@ function editFuc(){ // 注册 修改 按钮
 		originalPhoneNumber = rows[0].phoneNumber;
 		$('#fm').form('load',rows[0]);
 
+		document.getElementById('displayFileImg').setAttribute('src',getDfsHostName()+rows[0].displayImg);
 		// 数据回显 -- 业务范围
 		var business = rows[0].business;
 		if(business != null && business != '' && business != undefined){
