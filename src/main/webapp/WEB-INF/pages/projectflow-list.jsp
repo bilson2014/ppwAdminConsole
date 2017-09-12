@@ -151,40 +151,44 @@
 	           <table style="width: 98%;">
 	           <tr>
 	           		<th>负责人</th>
-	            	<td><input name="principal" id="principal" style="width: 135px;"  class="easyui-combobox" ></td>
+	            	<td><input name="sale" id="sale" style="width: 135px;"  class="easyui-combobox" required="required" editable="false"></td>
 	            	<th>供应商管家</th>
-	            	<td><input name="teamProvider" id="teamProvider" style="width: 135px;"  class="easyui-combobox" ></td>
+	            	<td><input name="teamProvider" id="teamProvider" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
 	           </tr>
 	           <tr>
 	           		<th>创意总监</th>
-	            	<td><input name="creativityDirector" id="creativityDirector" style="width: 135px;"  class="easyui-combobox"></td>
-	            	<th>客服总监</th>
-	            	<td><input name="customerDirector" id="customerDirector" style="width: 135px;"  class="easyui-combobox" ></td>
+	            	<td><input name="creativityDirector" id="creativityDirector" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
+	            	<th>项目助理</th>
+	            	<td><input name="customerDirector" id="customerDirector" style="width: 135px;"  class="easyui-combobox" disabled="disabled" ></td>
 	           </tr>
 	           <tr>
 	           		<th>销售总监</th>
-	            	<td><input name="saleDirector" id="saleDirector" style="width: 135px;"  class="easyui-combobox" ></td>
-	            	<th>财务总监</th>
-	            	<td><input name="financeDirector" id="financeDirector" style="width: 135px;"  class="easyui-combobox" ></td>
+	            	<td><input name="saleDirector" id="saleDirector" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
+	            	<th>财务主管</th>
+	            	<td><input name="financeDirector" id="financeDirector" style="width: 135px;"  class="easyui-combobox" disabled="disabled" ></td>
 	           </tr>
 	            <tr>
 	           		<th>供应商总监</th>
-	            	<td><input name="teamDirector" id="teamDirector" style="width: 135px;"  class="easyui-combobox" ></td>
+	            	<td><input name="teamDirector" id="teamDirector" style="width: 135px;"  class="easyui-combobox" disabled="disabled" ></td>
 	            	<th>监制总监</th>
-	            	<td><input name="superviseDirector" id="superviseDirector" style="width: 135px;"  class="easyui-combobox" ></td>
+	            	<td><input name="superviseDirector" id="superviseDirector" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
 	           </tr>
 	           <tr>
 	           		<th>财务</th>
-	            	<td><input name="finance" id="finance" style="width: 135px;"  class="easyui-combobox" ></td>
+	            	<td><input name="finance" id="finance" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
 	            	<th>策划</th>
-	            	<td><input name="scheme" id="scheme" style="width: 135px;"  class="easyui-combobox" ></td>
+	            	<td><input name="scheme" id="scheme" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
 	           </tr>
 	           <tr>
 	           		<th>监制</th>
-	            	<td><input name="supervise" id="supervise" style="width: 135px;"  class="easyui-combobox" ></td>
+	            	<td><input name="supervise" id="supervise" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
 	           </tr>
 	           </table>
 				<div id="employee-buttons">
+					<r:permission uri="/portal/project-synergy/update">
+						<a href="javascript:void(0)" class="easyui-linkbutton c6"  iconCls="icon-ok" onclick="updateEmployeeFuc();">保存</a>
+					</r:permission>
+			
 					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#employeeDlg').dialog('close')" >取消</a>
 				</div>
 	        </form>

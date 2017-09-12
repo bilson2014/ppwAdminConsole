@@ -87,7 +87,6 @@ $().ready(function() {
 				}else if(value=='0'){
 					grade= 'E';
 				}
-				console.log(row.user);
 				if(row.user!='' && row.user!=undefined){
 					grade+= row.user.userLevel;
 				}
@@ -338,70 +337,41 @@ function employeeDetail() {
 		return ;
 	}
 	$('#employeef').form('clear');
-//	if(rows[0].synergyList!='' && rows[0].synergyList!=undefined){
-//		var employees=rows[0].synergyList;
-//		
-//		var html='';
-//		for(var i=0;i<employees.length;i++){
-//			var groupName='';
-//			if(employees[i].employeeGroup=='sale'){
-//				groupName='销售';
-//			}else if(employees[i].employeeGroup=='saleDirector'){
-//				groupName='销售总监';
-//			}else if(employees[i].employeeGroup=='creativityDirector'){
-//				groupName='创意总监';
-//			}else if(employees[i].employeeGroup=='superviseDirector'){
-//				groupName='监制总监';
-//			}else if(employees[i].employeeGroup=='teamProvider'){
-//				groupName='供应商管家';
-//			}else if(employees[i].employeeGroup=='teamPurchase'){
-//				groupName='供应商采购';
-//			}else if(employees[i].employeeGroup=='scheme'){
-//				groupName='策划';
-//			}else if(employees[i].employeeGroup=='finance'){
-//				groupName='财务';
-//			}else if(employees[i].employeeGroup=='supervise'){
-//				groupName='监制';
-//			}else if(employees[i].employeeGroup=='teamDirector'){
-//				groupName='供应商总监';
-//			}else if(employees[i].employeeGroup=='financeDirector'){
-//				groupName='财务总监';
-//			}else if(employees[i].employeeGroup=='customerDirector'){
-//				groupName='客服总监';
-//			}else if(employees[i].employeeGroup=='crm'){
-//				groupName='CRM';
-//			}else if(employees[i].employeeGroup=='produce'){
-//				groupName='制作';
-//			}
-//			html+="<div class='employeeItem'>"+employees[i].employeeName+"("+groupName+")</div>";
-//		}
-//		$('.employeeContent').html(html);
-//	}
+	$('#employeef').form('load',rows[0]);
 	
 	var synergies=rows[0].synergyList;
-	for(var i=0;i<synergies.length;i++){
-//		$("#"+synergies[i].employeeGroup).textbox("setValue", synergies[i]['employeeName']);
-		
-		$("#"+synergies[i].employeeGroup).combobox({
-			data : members[synergies[i]['employeeGroup']],
+	
+	for(var key in members){
+//		var dis=true;
+		$("#"+key).combobox({
+			data : members[key],
 			valueField : 'id',
 			textField : 'first',
-			onLoadSuccess : function(record) {
-				$("#"+synergies[i].employeeGroup).combobox('setValue',
-						"employee_"+synergies[i]['employeeId']);
+			onLoadSuccess : function(record) {			
+				for(var i=0;i<synergies.length;i++){
+					if(key==synergies[i].employeeGroup){
+//						dis=false;
+						$("#"+key).combobox('setValue',
+								"employee_"+synergies[i]['employeeId']);
+						break;
+					}
+				}
 			}
 		});
+		//只能修改不能设置
+//		if(dis){
+//			$("#"+key).combobox({disabled:true});
+//		}
 	}
-//	$('#principal').textbox('setValue',rows[0].principalName);
 
-	$("#principal").combobox({
-		data : members.sale,
-		valueField : 'id',
-		textField : 'first',
-		onLoadSuccess : function(record) {
-			$("#principal").combobox('setValue',"employee_"+rows[0].principal);
-		}
-	});
+//	$("#sale").combobox({
+//		data : members.sale,
+//		valueField : 'id',
+//		textField : 'first',
+//		onLoadSuccess : function(record) {
+//			$("#sale").combobox('setValue',"employee_"+rows[0].principal);
+//		}
+//	});
 
 	$('#employeeDlg').dialog({
 		modal : true,
@@ -643,4 +613,24 @@ function cleanFun(){
 	$('#searchForm').form('clear');
 	datagrid.datagrid('load', {});
 	datagrid.datagrid('clearSelections');
+}
+function updateEmployeeFuc(){
+	progressLoad();
+	$('#employeef').form('submit',{
+		url : getContextPath() + '/portal/project-synergy/update',
+		onSubmit : function() {
+			
+		},
+		success : function(result) {
+			var obj = $.parseJSON(result);
+			if(obj.errorCode==200){
+				$('#employeeDlg').dialog('close');
+				datagrid.datagrid('clearSelections');
+				datagrid.datagrid('reload');
+			}
+			
+			progressClose();
+			$.message(obj.errorMsg);
+		}
+	});
 }

@@ -1,12 +1,15 @@
 package com.panfeng.service.impl;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -16,15 +19,26 @@ import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.facade.indent.entity.IndentSource;
+import com.paipianwang.pat.facade.right.entity.PmsEmployee;
+import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
 import com.paipianwang.pat.workflow.entity.PmsProjectFlow;
+import com.paipianwang.pat.workflow.entity.PmsProjectSynergy;
 import com.paipianwang.pat.workflow.enums.ProjectRoleType;
+import com.paipianwang.pat.workflow.facade.PmsProjectFlowFacade;
+import com.paipianwang.pat.workflow.facade.PmsProjectSynergyFacade;
+import com.panfeng.domain.BaseMsg;
 import com.panfeng.service.ProjectFlowService;
 import com.panfeng.util.CsvWriter;
 import com.panfeng.util.Log;
 
 @Service
 public class ProjectFlowServiceImpl implements ProjectFlowService {
-
+	@Autowired
+	private PmsProjectSynergyFacade pmsProjectSynergyFacade;
+	@Autowired
+	private PmsEmployeeFacade pmsEmployeeFacade;
+	@Autowired
+	private PmsProjectFlowFacade pmsProjectFlowFacade;
 	/**
 	 * 流程数据导出
 	 */
@@ -161,6 +175,61 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 
 		} catch (IOException e) {
 			Log.error("project list export error ...", sessionInfo);
+		}
+	}
+
+	/**
+	 * 修改项目协同人
+	 */
+	@Override
+	public void updateProjectSynergy(HttpServletRequest request, BaseMsg result) {
+//		Map m=request.getParameterMap();
+		
+		String projectId=request.getParameter("projectId");
+		if(!ValidateUtil.isValid(projectId)){
+			result.setCode(BaseMsg.ERROR);
+			result.setErrorMsg("数据错误，修改失败");
+			return ;
+		}
+		
+		Map<String,PmsProjectSynergy> synergyAll=pmsProjectSynergyFacade.getSynergysByProjectId(projectId);
+		
+		for (ProjectRoleType role : ProjectRoleType.values()) {
+			String select=request.getParameter(role.getId());
+			if(ValidateUtil.isValid(select)){
+				String id=select.split("_")[1];
+				//变更则修改
+				PmsProjectSynergy synergy=synergyAll.get(role.getId());
+				if(synergy==null){
+					//添加
+					PmsEmployee employee=pmsEmployeeFacade.findEmployeeById(Long.parseLong(id));
+					synergy=new PmsProjectSynergy();
+					synergy.setEmployeeGroup(role.getId());
+					synergy.setEmployeeId(Integer.parseInt(id));
+					synergy.setEmployeeName(employee.getEmployeeRealName());
+					synergy.setImgUrl(employee.getEmployeeImg());
+					synergy.setProjectId(projectId);
+					synergy.setTelephone(employee.getPhoneNumber());
+					pmsProjectSynergyFacade.insert(synergy);
+				}else{
+					//比较 变更则修改
+					if(!synergy.getEmployeeId().equals(Integer.parseInt(id))){
+						PmsEmployee employee=pmsEmployeeFacade.findEmployeeById(Long.parseLong(id));
+						synergy.setEmployeeId(Integer.parseInt(id));
+						synergy.setEmployeeName(employee.getEmployeeRealName());
+						synergy.setImgUrl(employee.getEmployeeImg());
+						synergy.setTelephone(employee.getPhoneNumber());
+						pmsProjectSynergyFacade.update(synergy);
+						//负责人
+						if(ProjectRoleType.sale.getId().equals(role.getId())){
+							Map<String,Object> metaData=new HashMap();
+							metaData.put("principal", synergy.getEmployeeId());
+							metaData.put("principalName",synergy.getEmployeeName());
+							pmsProjectFlowFacade.update(metaData, projectId);
+						}
+					}
+				}
+			}
 		}
 	}
 
