@@ -27,6 +27,7 @@ import com.paipianwang.pat.workflow.enums.ProjectRoleType;
 import com.paipianwang.pat.workflow.facade.PmsProjectFlowFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectSynergyFacade;
 import com.panfeng.domain.BaseMsg;
+import com.panfeng.mq.service.ProjectSynergyChangeMQService;
 import com.panfeng.service.ProjectFlowService;
 import com.panfeng.util.CsvWriter;
 import com.panfeng.util.Log;
@@ -39,6 +40,8 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 	private PmsEmployeeFacade pmsEmployeeFacade;
 	@Autowired
 	private PmsProjectFlowFacade pmsProjectFlowFacade;
+	@Autowired
+	private ProjectSynergyChangeMQService projectSynergyChangeMQService;
 	/**
 	 * 流程数据导出
 	 */
@@ -231,6 +234,7 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 				}
 			}
 		}
+		projectSynergyChangeMQService.sendMessage(projectId);
 	}
 
 }
