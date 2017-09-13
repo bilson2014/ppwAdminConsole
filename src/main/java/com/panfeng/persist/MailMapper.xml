@@ -7,7 +7,14 @@
 				m.ID,m.SUBJECT,m.CONTENT,
 				m.MAIL_TYPE mailType,
 				m.CREATE_TIME createTime,
-				m.UPDATE_TIME updateTime
+				m.UPDATE_TIME updateTime,
+				m.RECEIVER receiver,
+				m.RECEIVER_ROLE receiverRole,
+				m.BCC bcc,
+				m.BCC_ROLE bccRole,
+				m.SENDER sender,
+				m.SENDER_ROLE senderRole,
+				m.MAIL_FILE mailFile
 			FROM MAIL m
 			WHERE 1 = 1
 		]]>
@@ -22,7 +29,14 @@
 				m.ID,m.SUBJECT,m.CONTENT,
 				m.MAIL_TYPE mailType,
 				m.CREATE_TIME createTime,
-				m.UPDATE_TIME updateTime
+				m.UPDATE_TIME updateTime,
+				m.RECEIVER receiver,
+				m.RECEIVER_ROLE receiverRole,
+				m.BCC bcc,
+				m.BCC_ROLE bccRole,
+				m.SENDER sender,
+				m.SENDER_ROLE senderRole,
+				m.MAIL_FILE mailFile
 			FROM MAIL m
 		]]>
 	</select>
@@ -41,13 +55,27 @@
 				CONTENT,
 				MAIL_TYPE,
 				CREATE_TIME,
-				UPDATE_TIME
+				UPDATE_TIME,
+				RECEIVER,
+				RECEIVER_ROLE,
+				BCC,
+				BCC_ROLE,
+				SENDER,
+				SENDER_ROLE,
+				MAIL_FILE
 			) VALUES(
 				#{subject},
 				#{content},
 				#{mailType},
 				CURRENT_TIMESTAMP,
-				CURRENT_TIMESTAMP
+				CURRENT_TIMESTAMP,
+				#{receiver},
+				#{receiverRole},
+				#{bcc},
+				#{bccRole},
+				#{sender},
+				#{senderRole},
+				#{mailFile}
 			)
 		]]>
 	</insert>
@@ -58,7 +86,14 @@
 		      SET m.SUBJECT = #{subject},
 		      m.CONTENT = #{content},
 		      m.MAIL_TYPE = #{mailType},
-		      m.UPDATE_TIME = CURRENT_TIMESTAMP
+		      m.UPDATE_TIME = CURRENT_TIMESTAMP,
+		      m.RECEIVER = #{receiver},
+			  m.RECEIVER_ROLE = #{receiverRole},
+			  m.BCC = #{bcc},
+			  m.BCC_ROLE = #{bccRole},
+			  m.SENDER = #{sender},
+			  m.SENDER_ROLE = #{senderRole},
+			  m.MAIL_FILE = #{mailFile}
 	      WHERE m.ID = ${id}
 		]]>
 	</update>
@@ -77,7 +112,14 @@
 				m.ID,m.SUBJECT,m.CONTENT,
 				m.MAIL_TYPE mailType,
 				m.CREATE_TIME createTime,
-				m.UPDATE_TIME updateTime
+				m.UPDATE_TIME updateTime,
+				m.RECEIVER ,
+				m.RECEIVER_ROLE receiverRole,
+				m.BCC bcc,
+				m.BCC_ROLE bccRole,
+				m.SENDER sender,
+				m.SENDER_ROLE senderRole,
+				m.MAIL_FILE mailFile
 			FROM MAIL m
 			WHERE m.ID = ${mailId}
 		]]>
@@ -89,7 +131,14 @@
 				m.ID,m.SUBJECT,m.CONTENT,
 				m.MAIL_TYPE mailType,
 				m.CREATE_TIME createTime,
-				m.UPDATE_TIME updateTime
+				m.UPDATE_TIME updateTime,
+				m.RECEIVER receiver,
+				m.RECEIVER_ROLE receiverRole,
+				m.BCC bcc,
+				m.BCC_ROLE bccRole,
+				m.SENDER sender,
+				m.SENDER_ROLE senderRole,
+				m.MAIL_FILE mailFile
 			FROM MAIL m
 			WHERE m.MAIL_TYPE = #{type}
 		]]>

@@ -3,9 +3,47 @@ var formUrl;
 var datagrid;
 var sessionId;
 var editor;
+var roleTree;
+var fileItems;
+
 $.base64.utf8encode = true;
 editorBeReady("content");
 $().ready(function(){
+	fileItems=[{value:'projectBrief',text:'项目简报'},
+		{value:'projectPlan',text:'项目排期'},
+		{value:'planning',text:'策划方案'},	
+		{value:'ppm',text:'PPM'},
+		{value:'vedioRevise',text:'影片修改表'},
+		{value:'customerReply',text:'客户验收函回复截图'},
+		{value:'priceSheet',text:'报价单'},
+		{value:'autoProjectSheet',text:'项目制作单'},
+		{value:'autoCpsl',text:'客户项目服务函'},
+		{value:'watermark',text:'拍片网专用水印'}];
+	
+	roleTree=[{value:'customer',text:'项目客户'},
+		{value:'teamPlan',text:'项目策划供应商'},
+		{value:'teamProduct',text:'项目制作供应商'},
+		{value:'sale',text:'销售（负责人）'},
+		
+		{value:'saleDirector',text:'销售总监'},
+		{value:'creativityDirector',text:'创意总监'},
+		{value:'superviseDirector',text:'监制总监'},
+		{value:'teamProvider',text:'供应商管家'},
+		{value:'teamPurchase',text:'供应商采购'},
+		{value:'scheme',text:'策划'},
+		{value:'finance',text:'财务'},
+		{value:'supervise',text:'监制'},
+		
+		{value:'teamDirector',text:'供应商总监'},
+		{value:'financeDirector',text:'财务总监'},
+		{value:'customerDirector',text:'客服总监'},
+		{value:'crm',text:'CRM'},
+		];
+	
+//	syncLoadData(function(msg){
+//		roleTree = msg;
+//	}, getContextPath() + '/portal/role/tree2',null);
+	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
 		url : getContextPath() + '/portal/mail/list',
@@ -92,6 +130,28 @@ function createEditor(name){
 function addFuc(){
 	$('#fm').form('clear');
 	formUrl = getContextPath() + '/portal/mail/save';
+	$('#receiverRole').combobox({
+		data : roleTree,
+		valueField : 'value',
+		textField : 'text'
+	});
+	$('#bccRole').combobox({
+		data : roleTree,
+		valueField : 'value',
+		textField : 'text',
+		multiple:true
+	});
+	$('#senderRole').combobox({
+		data : roleTree,
+		valueField : 'value',
+		textField : 'text'
+	});
+	$('#mailFile').combobox({
+		data : fileItems,
+		valueField : 'value',
+		textField : 'text'
+	});
+	console.log(fileItems);
 	openDialog(null);
 	$('#mailId').val(0);
 }
@@ -101,13 +161,56 @@ function editFuc(){
 	var rows = datagrid.datagrid('getSelections');
 	if(rows.length == 1){
 		$('#fm').form('clear');
+		if(rows[0].bccRole==null){
+			rows[0].bccRole='';
+		}
+		if(rows[0].mailFile==null){
+			rows[0].mailFile='';
+		}
 		$('#fm').form('load',rows[0]);
 		// 回显编辑器
 		$.base64.utf8encode = true;
 		var html=$.trim($.base64.atob($.trim(rows[0].content),true));
 		editor.html(html);
 		formUrl = getContextPath() + '/portal/mail/update';
+		
+		$('#receiverRole').combobox({
+			data : roleTree,
+			valueField : 'value',
+			textField : 'text',
+			onLoadSuccess : function() {
+				$('#receiverRole').combobox('setValue', rows[0].receiverRole);
+			}
+		});
+		$('#bccRole').combobox({
+			data : roleTree,
+			valueField : 'value',
+			textField : 'text',
+			multiple:true
+		});
+		$('#senderRole').combobox({
+			data : roleTree,
+			valueField : 'value',
+			textField : 'text',
+			onLoadSuccess : function() {
+				$('#senderRole').combobox('setValue', rows[0].senderRole);
+			}
+		});
+		$('#mailFile').combobox({
+			data : fileItems,
+			valueField : 'value',
+			textField : 'text',
+			multiple:true
+		});
+		if(rows[0].bccRole!=null && rows[0].bccRole!=''){
+			$('#bccRole').combobox('setValues',rows[0].bccRole.split(','));
+		}
+		if(rows[0].mailFile!=null && rows[0].mailFile!=''){
+			$('#mailFile').combobox('setValues',rows[0].mailFile.split(','));
+		}
+		
 		openDialog(rows[0]);
+	
 	} else {
 		$.message('只能选择一条记录进行修改!');
 	}
@@ -159,6 +262,11 @@ function save(){
 			var flag = $(this).form('validate');
 			if(!flag){
 				progressClose();
+				return flag;
+			}
+			if(!validate()){
+				progressClose();
+				return false;
 			}
 			return flag;
 		},
@@ -170,6 +278,34 @@ function save(){
 			$.message('操作成功!');
 		}
 	});
+}
+
+function validate(){
+	var receiver=$('#receiver').val();
+	if(receiver!='' && receiver!=null){
+		var receiverArray=receiver.split(',');
+		var checkReceiver=true;
+		for(var i = 0;i < receiverArray.length;i ++){
+			checkReceiver=checkEmail(receiverArray[i]);
+			if(!checkReceiver){
+				$.message('请输入正确格式的抄送人：邮箱,邮箱!');
+				return false;
+			}
+		}
+	}
+	var mailBcc=$('#bcc').val();
+	if(mailBcc!='' && mailBcc!=null){
+		var mailBccArray=mailBcc.split(',');
+		var checkBcc=true;
+		for(var i = 0;i < mailBccArray.length;i ++){
+			checkBcc=checkEmail(mailBccArray[i]);
+			if(!checkBcc){
+				$.message('请输入正确格式的抄送人：邮箱,邮箱!');
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 function openDialog(data){
@@ -188,6 +324,14 @@ function openDialog(data){
 			KindEditor.remove('input[name="content"]');
 		}
 	}).dialog('open').dialog('center');
+}
+
+function checkEmail(str){
+	reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+	if(str.match(reg))
+		return true; 
+	else
+		return false;
 }
 
 //查询

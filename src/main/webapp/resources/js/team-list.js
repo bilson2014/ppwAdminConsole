@@ -505,6 +505,7 @@ function delProductLine(){
 
 function addFuc(){ // 注册 增加按钮
 	$('#fm').form('clear');
+	document.getElementById('displayFileImg').setAttribute('src',"");
 	isadd = true;
 	$('#teamProvince').combobox({
 		url : getContextPath() + '/portal/get/provinces',
@@ -549,6 +550,7 @@ function editFuc(){ // 注册 修改 按钮
 		originalPhoneNumber = rows[0].phoneNumber;
 		$('#fm').form('load',rows[0]);
 
+		document.getElementById('displayFileImg').setAttribute('src',getDfsHostName()+rows[0].displayImg);
 		// 数据回显 -- 业务范围
 		var business = rows[0].business;
 		if(business != null && business != '' && business != undefined){
@@ -1098,9 +1100,13 @@ function uploadFile(){
 		if(nature==1){
 			$('#certName').html("手持身份证照片");
 			$('#logoName').html("工作室LOGO");
+			$('#frontImgName').html("身份证正面照片");
+			$('#backImgName').html("身份证背面照片");
 		}else if(nature==0){
 			$('#certName').html("营业执照照片");
 			$('#logoName').html("公司LOGO");
+			$('#frontImgName').html("法人身份证正面照片");
+			$('#backImgName').html("法人身份证背面照片");
 		}
 		
 		$('#picture-condition').addClass('hide');

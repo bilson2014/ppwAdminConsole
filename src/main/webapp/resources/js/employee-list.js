@@ -94,7 +94,7 @@ var employee = {
 // 增加
 function addFuc(){
 	$('#fm').form('clear');
-	openDialog('dlg',null);
+	openDialog('dlg',null,null);
 	formUrl = getContextPath() + '/portal/employee/save';
 	$('input[name="employeeId"]').val(0);
 }
@@ -105,7 +105,7 @@ function editFuc(){
 	if(rows.length == 1){
 		$('#fm').form('clear');
 		$('#fm').form('load',rows[0]);
-		openDialog('dlg',rows[0].roleIds);
+		openDialog('dlg',rows[0].roleIds,rows[0].employeeId);
 		formUrl = getContextPath() + '/portal/employee/update';
 	} else {
 		$.message('只能选择一条记录进行修改!');
@@ -162,7 +162,7 @@ function save(){
 }
 
 // 打开dialog
-function openDialog(id,data){
+function openDialog(id,data,employeeId){
 	$('#' + id).dialog({
 		modal : true,
 		onOpen : function(event, ui) {
@@ -179,6 +179,23 @@ function openDialog(id,data){
 				onCheck : function(node,checked){
 					// 改变选择后，触发功能
 					createRoleInfo();
+				}
+			});
+			//流程角色
+			$('#groupId').combobox({
+			    url: getContextPath() + '/portal/project/groups',
+				valueField : 'value',
+				textField : 'text',
+				onLoadSuccess : function() {
+					//获取用户流程角色
+					if(employeeId!=null){
+						syncLoadData(function(res) {
+							
+							$("#groupId").combobox('setValue',res.groupId);
+							console.log(res.groupId);
+//							console.log($("#groupId").combobox('getValue'));
+						}, getContextPath() + "/portal/project/userGroup/"+employeeId, null);
+					}
 				}
 			});
 			

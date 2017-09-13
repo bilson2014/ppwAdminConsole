@@ -83,7 +83,7 @@
 	            </div>
 	             <div class="fitem">
 	                <label>排序:</label>
-	                <input name="serviceOd"  class="easyui-numberbox"  min='0' max="999999"/>
+	                <input name="serviceOd"  class="easyui-numberbox"  min='0' max="999999" required="true"/>
 	            </div>
 	             <div class="fitem">
 	                <label>所属项目:</label>

@@ -210,7 +210,7 @@ $().ready(function(){
 							case 16:
 								return '<span style=color:blue; >直客-线上-新媒体</span>' ;
 							case 17:
-								return '<span style=color:blue; >直客-线下-电销</span>' ;
+								return '<span style=color:blue; >直客-线上-电销</span>' ;
 							case 18:
 								return '<span style=color:blue; >直客-线下-直销</span>' ;
 							case 19:

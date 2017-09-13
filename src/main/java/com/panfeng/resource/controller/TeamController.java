@@ -162,24 +162,19 @@ public class TeamController extends BaseController {
 
 	@RequestMapping(value = "/team/save", method = RequestMethod.POST)
 	public BaseMsg save(final HttpServletRequest request, final HttpServletResponse response,
-//			@RequestParam("file") final MultipartFile file, @RequestParam("certificateFile") final MultipartFile certificateFile,
-//			@RequestParam("idCardfrontFile") final MultipartFile idCardfrontFile,
-//			@RequestParam("idCardbackFile") final MultipartFile idCardbackFile, 
-			final PmsTeam team) {
+			@RequestParam("displayFile") final MultipartFile displayFile,
+			final PmsTeam team) throws Exception {
 		BaseMsg baseMsg = new BaseMsg();
 		response.setContentType("text/html;charset=UTF-8");
 		// 先保存获取ID，然后更新
 		team.setPassword(DataUtil.md5(PublicConfig.INIT_PASSWORD));
+		updateFile(displayFile,team,null,5);
 		
 		long teamId = pmsTeamFacade.save(team);
 		team.setTeamId(teamId);
 		
-//		uploadFile(request, file, team, baseMsg, 1, "LOGO");
-//		uploadFile(request, certificateFile, team, baseMsg, 2, team.getTeamNature()==0?"营业执照":"身份证");
-//		uploadFile(request, idCardfrontFile, team, baseMsg, 3, "法人手持身份证正面");
-//		uploadFile(request, idCardbackFile, team, baseMsg, 4, "法人手持身份证背面");
-//		
 //		pmsTeamFacade.saveTeamPhotoUrl(team);
+		
 		
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("save team ...", sessionInfo);
@@ -188,45 +183,46 @@ public class TeamController extends BaseController {
 		return baseMsg;
 	}
 	
-	private BaseMsg uploadFile(HttpServletRequest request,MultipartFile file,PmsTeam team,BaseMsg baseMsg,int type,String FileName){
-		try {
-			if (!file.isEmpty()) {
-				String path = FastDFSClient.uploadFile(file);
-				
-				switch (type) {
-				case 1://上传LOGO
-					team.setTeamPhotoUrl(path);
-					break;
-				case 2://上传营业执照/身份证
-					team.setCertificateUrl(path);
-					break;
-				case 3://上传法人手持身份证正面
-					team.setIdCardfrontUrl(path);
-					break;
-				case 4://上传法人手持身份证背面
-					team.setIdCardbackUrl(path);
-					break;
-				default:
-					break;
-				}
-			}
-
-		} catch (Exception e) {
-			baseMsg.setErrorCode(BaseMsg.ERROR);
-			baseMsg.setErrorMsg("更新"+FileName+"失败！");
-			SessionInfo sessionInfo = getCurrentInfo(request);
-			Log.error("TeamController method:save() upload team "+FileName+" error ...", sessionInfo);
-			e.printStackTrace();
-//			throw new RuntimeException("Team Image upload error ...", e);
-		}
-		return baseMsg;
-	}
+//	private BaseMsg uploadFile(HttpServletRequest request,MultipartFile file,PmsTeam team,BaseMsg baseMsg,int type,String FileName){
+//		try {
+//			if (!file.isEmpty()) {
+//				String path = FastDFSClient.uploadFile(file);
+//				
+//				switch (type) {
+//				case 1://上传LOGO
+//					team.setTeamPhotoUrl(path);
+//					break;
+//				case 2://上传营业执照/身份证
+//					team.setCertificateUrl(path);
+//					break;
+//				case 3://上传法人手持身份证正面
+//					team.setIdCardfrontUrl(path);
+//					break;
+//				case 4://上传法人手持身份证背面
+//					team.setIdCardbackUrl(path);
+//					break;
+//				default:
+//					break;
+//				}
+//			}
+//
+//		} catch (Exception e) {
+//			baseMsg.setErrorCode(BaseMsg.ERROR);
+//			baseMsg.setErrorMsg("更新"+FileName+"失败！");
+//			SessionInfo sessionInfo = getCurrentInfo(request);
+//			Log.error("TeamController method:save() upload team "+FileName+" error ...", sessionInfo);
+//			e.printStackTrace();
+////			throw new RuntimeException("Team Image upload error ...", e);
+//		}
+//		return baseMsg;
+//	}
 
 	@RequestMapping(value = "/team/update", method = RequestMethod.POST)
 	public BaseMsg update(final HttpServletRequest request, final HttpServletResponse response,
 //			@RequestParam("file") final MultipartFile file, @RequestParam("certificateFile") final MultipartFile certificateFile,
 //			@RequestParam("idCardfrontFile") final MultipartFile idCardfrontFile,
 //			@RequestParam("idCardbackFile") final MultipartFile idCardbackFile, 
+			@RequestParam("displayFile") final MultipartFile displayFile,
 			final PmsTeam team) throws Exception {
 		BaseMsg baseMsg = new BaseMsg();
 		response.setContentType("text/html;charset=UTF-8");
@@ -237,6 +233,7 @@ public class TeamController extends BaseController {
 		team.setIdCardfrontUrl(originalTeam.getIdCardfrontUrl());
 		team.setIdCardbackUrl(originalTeam.getIdCardbackUrl());
 		team.setTeamPhotoUrl(originalTeam.getTeamPhotoUrl());
+		team.setDisplayImg(originalTeam.getDisplayImg());
 		
 //		updateFile(file,team,originalTeam,1);
 //		updateFile(certificateFile,team,originalTeam,2);
@@ -244,6 +241,7 @@ public class TeamController extends BaseController {
 //		updateFile(idCardbackFile,team,originalTeam,4);
 //		
 //		pmsTeamFacade.saveTeamPhotoUrl(team);
+		updateFile(displayFile,team,originalTeam,5);
 
 		long ret = pmsTeamFacade.update(team);
 		SessionInfo sessionInfo = getCurrentInfo(request);
@@ -262,6 +260,7 @@ public class TeamController extends BaseController {
 			@RequestParam("file") final MultipartFile file, @RequestParam("certificateFile") final MultipartFile certificateFile,
 			@RequestParam("idCardfrontFile") final MultipartFile idCardfrontFile,
 			@RequestParam("idCardbackFile") final MultipartFile idCardbackFile,
+//			@RequestParam("displayFile") final MultipartFile displayFile,
 			final PmsTeam team
 			) throws Exception {
 		BaseMsg baseMsg = new BaseMsg();
@@ -273,11 +272,14 @@ public class TeamController extends BaseController {
 		team.setIdCardfrontUrl(originalTeam.getIdCardfrontUrl());
 		team.setIdCardbackUrl(originalTeam.getIdCardbackUrl());
 		team.setTeamPhotoUrl(originalTeam.getTeamPhotoUrl());
+//		team.setDisplayImg(originalTeam.getDisplayImg());
+		
 		
 		updateFile(file,team,originalTeam,1);
 		updateFile(certificateFile,team,originalTeam,2);
 		updateFile(idCardfrontFile,team,originalTeam,3);
 		updateFile(idCardbackFile,team,originalTeam,4);
+//		updateFile(displayFile,team,originalTeam,5);
 		
 		Long ret=pmsTeamFacade.saveTeamPhotoUrl(team);
 		
@@ -312,6 +314,9 @@ public class TeamController extends BaseController {
 				break;
 			case 4://上传法人手持身份证背面
 				team.setIdCardbackUrl(path);
+				break;
+			case 5://上传显示图片
+				team.setDisplayImg(path);
 				break;
 			default:
 				break;
