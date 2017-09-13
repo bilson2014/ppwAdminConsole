@@ -185,7 +185,7 @@
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" style="width:520px; height:480px;padding:10px 20px"
-            closed="true" buttons="#dlg-buttons" title="人员信息">
+            closed="true" buttons="#dlg-buttons" title="供应商信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input name="teamId" type="hidden">
 	            

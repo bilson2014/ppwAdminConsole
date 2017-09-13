@@ -50,4 +50,9 @@
 		<property name="defaultDestinationName" value="${fileConverQueue}"/>
 	</bean>
 	
+	<bean id="projectSynergyJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="defaultDestinationName" value="${projectSynergyQueue}"/>
+	</bean>
+	
 </beans>
