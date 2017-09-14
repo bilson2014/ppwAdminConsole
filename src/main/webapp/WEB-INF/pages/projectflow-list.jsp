@@ -235,7 +235,7 @@
 	            		<td><input name="projectName" class="easyui-textbox" ></td>
 	            		<th>评级</th>
 	            		<td>
-	            		<select id="projectGrade" name="projectGrade" style="width: 135px;"  class="easyui-combobox">
+	            		<select id="projectGrade" name="projectGrade" style="width: 155px;"  class="easyui-combobox" disabled="disabled">
 								<option value="5">S</option>
 								<option value="4">A</option>
 								<option value="5">B</option>
@@ -246,7 +246,7 @@
 	            	</tr>
 	            	<tr>
 	            		<th>来源</th>
-	            		<td><select name="projectSource" id="projectSource" style="width: 135px;"  class="easyui-combobox"></select></td>
+	            		<td><select name="projectSource" id="projectSource" style="width: 155px;"  class="easyui-combobox"></select></td>
 	            		<th>产品线</th>
 	            		<td><input name="productName" class="easyui-textbox" ></td>
 	            	</tr>
@@ -269,7 +269,7 @@
 	            	<tr><th colspan="4">项目描述</th></tr>
 	            	<tr>
 	            	<td colspan="4">
-	            		<input class="easyui-textbox text-area" name="projectDescription" multiline="true" style="height: 100px;width: 92%;" />
+	            		<input class="easyui-textbox text-area" name="projectDescription" multiline="true" style="height: 100px;width: 98%;" disabled="disabled"/>
 	            	</td>
 	            	</tr>
 	            </table>
