@@ -233,15 +233,18 @@ public class TeamController extends BaseController {
 		team.setIdCardfrontUrl(originalTeam.getIdCardfrontUrl());
 		team.setIdCardbackUrl(originalTeam.getIdCardbackUrl());
 		team.setTeamPhotoUrl(originalTeam.getTeamPhotoUrl());
-		team.setDisplayImg(originalTeam.getDisplayImg());
 		
-//		updateFile(file,team,originalTeam,1);
-//		updateFile(certificateFile,team,originalTeam,2);
-//		updateFile(idCardfrontFile,team,originalTeam,3);
-//		updateFile(idCardbackFile,team,originalTeam,4);
-//		
-//		pmsTeamFacade.saveTeamPhotoUrl(team);
-		updateFile(displayFile,team,originalTeam,5);
+		if(displayFile!=null && !displayFile.isEmpty()){
+			updateFile(displayFile,team,originalTeam.getDisplayImg(),5);
+		}else{
+			if(!ValidateUtil.isValid(team.getDisplayImg())){
+				//移除头像
+				if (originalTeam.getDisplayImg()!=null) {
+					final String originalPath = originalTeam.getDisplayImg();
+					FastDFSClient.deleteFile(originalPath);
+				}
+			}
+		}
 
 		long ret = pmsTeamFacade.update(team);
 		SessionInfo sessionInfo = getCurrentInfo(request);
@@ -272,14 +275,12 @@ public class TeamController extends BaseController {
 		team.setIdCardfrontUrl(originalTeam.getIdCardfrontUrl());
 		team.setIdCardbackUrl(originalTeam.getIdCardbackUrl());
 		team.setTeamPhotoUrl(originalTeam.getTeamPhotoUrl());
-//		team.setDisplayImg(originalTeam.getDisplayImg());
 		
 		
-		updateFile(file,team,originalTeam,1);
-		updateFile(certificateFile,team,originalTeam,2);
-		updateFile(idCardfrontFile,team,originalTeam,3);
-		updateFile(idCardbackFile,team,originalTeam,4);
-//		updateFile(displayFile,team,originalTeam,5);
+		updateFile(file,team,originalTeam.getTeamPhotoUrl(),1);
+		updateFile(certificateFile,team,originalTeam.getCertificateUrl(),2);
+		updateFile(idCardfrontFile,team,originalTeam.getIdCardfrontUrl(),3);
+		updateFile(idCardbackFile,team,originalTeam.getIdCardbackUrl(),4);
 		
 		Long ret=pmsTeamFacade.saveTeamPhotoUrl(team);
 		
@@ -294,14 +295,12 @@ public class TeamController extends BaseController {
 		}
 		return baseMsg;
 	}
-	private void updateFile(MultipartFile file,PmsTeam team,PmsTeam originalTeam,int type){
+	private void updateFile(MultipartFile file,PmsTeam team,String originalPath,int type){
 		if (!file.isEmpty()) {
 			String path = FastDFSClient.uploadFile(file);
 			// 删除 原文件
-			if (originalTeam != null) {
-				final String originalPath = originalTeam.getTeamPhotoUrl();
-				FastDFSClient.deleteFile(originalPath);
-			}
+			FastDFSClient.deleteFile(originalPath);
+			
 			switch (type) {
 			case 1://上传LOGO
 				team.setTeamPhotoUrl(path);

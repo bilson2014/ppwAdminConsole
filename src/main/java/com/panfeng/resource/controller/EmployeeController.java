@@ -145,13 +145,10 @@ public class EmployeeController extends BaseController {
 				e.printStackTrace();
 			}
 		}
-
+		
 		// 获取employee，删除之前的文件
 		final PmsEmployee e = employeeFacade.findEmployeeById(employee.getEmployeeId());
-		final String imagePath = e.getEmployeeImg();
-		if (ValidateUtil.isValid(imagePath)) {
-			FastDFSClient.deleteFile(imagePath);
-		}
+		
 
 		employeeFacade.updateWidthRelation(employee);
 		
@@ -171,6 +168,9 @@ public class EmployeeController extends BaseController {
 				activitiMemberShipMapper.update(activitiMember);
 			}else{
 				//添加
+				if(!ValidateUtil.isValid(employee.getEmployeeImg())){
+					employee.setEmployeeImg(e.getEmployeeImg());
+				}
 				saveProjectRole(employee, groupId);
 			}
 		}
@@ -178,7 +178,7 @@ public class EmployeeController extends BaseController {
 		
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		Log.error("update Employee info ...", sessionInfo);
-		processFile(employeeImage, employee);
+		processFile(employeeImage, employee,e);
 	}
 
 	/**
@@ -204,7 +204,7 @@ public class EmployeeController extends BaseController {
 		long employeeId=employeeFacade.save(employee);
 		employee.setEmployeeId(employeeId);
 		// 处理图像
-		processFile(employeeImage, employee);
+		processFile(employeeImage, employee,null);
 		//添加角色
 		if(ValidateUtil.isValid(groupId)){
 			saveProjectRole(employee, groupId);
@@ -228,10 +228,13 @@ public class EmployeeController extends BaseController {
 		activitiMemberShipMapper.save(activitiMember);
 	}
 
-	public void processFile(final MultipartFile employeeImage, final PmsEmployee employee) {
+	public void processFile(final MultipartFile employeeImage, final PmsEmployee employee, PmsEmployee old) {
 		// modify by wlc 2016-11-4 12:42:16
 		// 修改为dfs上传begin
 		if (!employeeImage.isEmpty()) {
+			if (old!=null && ValidateUtil.isValid(old.getEmployeeImg())) {
+				FastDFSClient.deleteFile(old.getEmployeeImg());
+			}
 			String fileId = FastDFSClient.uploadFile(employeeImage);
 			employee.setEmployeeImg(fileId);
 			employeeFacade.updateImagePath(employee);

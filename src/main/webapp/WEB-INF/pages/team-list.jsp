@@ -188,6 +188,7 @@
             closed="true" buttons="#dlg-buttons" title="供应商信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input name="teamId" type="hidden">
+	        	<input type="hidden" name="displayImg" id="displayImg">
 	            
 	            <table style="width: 98%;">
 	            	<tr>
@@ -460,15 +461,20 @@
 	            		</td>
 	            	</tr>
 	            	<tr>
-	            	<th>公司昵称</th>
+	            	<th>公司显示昵称</th>
 	            		<td><input name="displayName" class="easyui-textbox"></td>
 	            	</tr>
 	            	<tr>
 					<th>公司显示图片</th>
 					<td><img src="" id="displayFileImg" class="aptimg"></td>
 					
-					<td colspan="2"><input name="displayFile" id="displayFile"
-						type="file" onchange="changeImg(this)" /></td>
+					<td colspan="2">
+						
+						<input name="displayFile" id="displayFile"
+						type="file" onchange="changeImg(this)" />
+						<button id="remove-btn" onclick="removeFileFuc();" class='removeBtn'>移除文件</button>
+					</td>
+					
 					</tr>
 	            	
 	            </table>

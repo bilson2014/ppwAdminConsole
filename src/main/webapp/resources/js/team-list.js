@@ -1133,7 +1133,21 @@ function changeImg(obj) {
     var windowURL = window.URL || window.webkitURL;
     var loadImg = windowURL.createObjectURL(obj.files[0]);
     document.getElementById(obj.id+'Img').setAttribute('src',loadImg);
-}  
+} 
+
+function removeFileFuc(obj){
+	$('#displayFileImg').attr('src','');
+	$('#displayFile').val('');
+	$('#displayImg').val('');
+	
+//	$("input[name='displayImg']").each(  
+//  
+//function(){  
+//  
+//alert($(this).val());  
+//  
+//}  );
+}
 
 function saveAptFuc(){//上传资质保存
 	progressLoad();
