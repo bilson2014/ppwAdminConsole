@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,15 +33,12 @@ import com.paipianwang.pat.facade.indent.entity.IndentSource;
 import com.paipianwang.pat.workflow.entity.PmsProjectFlow;
 import com.paipianwang.pat.workflow.entity.PmsProjectMessage;
 import com.paipianwang.pat.workflow.entity.PmsProjectResource;
-import com.paipianwang.pat.workflow.entity.PmsProjectSynergy;
 import com.paipianwang.pat.workflow.enums.ProjectRoleType;
 import com.paipianwang.pat.workflow.facade.PmsProjectFlowFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectMessageFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectResourceFacade;
-import com.paipianwang.pat.workflow.facade.PmsProjectSynergyFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.persist.ActivitiMemberShipMapper;
-import com.panfeng.persist.ActivitiUserMapper;
 import com.panfeng.resource.model.ActivitiMember;
 import com.panfeng.resource.view.ProjectFlowView;
 import com.panfeng.service.ProjectFlowService;
@@ -61,8 +57,8 @@ public class ProjectFlowController extends BaseController {
 	private PmsFinanceFacade pmsFinanceFacade;
 	@Autowired
 	private ProjectFlowService projectFlowService;
-	@Autowired
-	private ActivitiUserMapper activitiUserMapper;
+//	@Autowired
+//	private ActivitiUserMapper activitiUserMapper;
 	@Autowired
 	private ActivitiMemberShipMapper activitiMemberShipMapper;
 	

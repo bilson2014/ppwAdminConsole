@@ -302,6 +302,9 @@ function teamDetail() {
 					$("#"+teams[i].teamType+"_"+key).textbox("setValue", teams[i][key]);
 				}
 			}
+			$('#teamf').find("input").each(function () {
+                $(this).attr("disabled",true)
+            });
 		}
 	}).dialog('open').dialog('center');
 }
@@ -322,7 +325,9 @@ function userDetail() {
 	$('#userDlg').dialog({
 		modal : true,
 		onOpen : function(event, ui) {
-			
+			$('#userDlg').find("input").each(function () {
+                $(this).attr("disabled",true)
+            });
 		}
 	}).dialog('open').dialog('center');
 }
@@ -402,7 +407,11 @@ function projectDetail() {
 
 	$('#projectDlg').dialog({
 		modal : true,
-		onOpen : function(event, ui) {		
+		onOpen : function(event, ui) {	
+			$('#projectDlg').find("input").each(function () {
+                $(this).attr("disabled",true)
+            });
+			$("#projectSource").combobox({disabled:true});
 		}
 	}).dialog('open').dialog('center');
 }
@@ -477,7 +486,7 @@ function fileDetail(){
 				sortable : true 
 			} ,{
 				field : 'flag' ,
-				title : '是否选中' ,
+				title : '最终版' ,
 				align : 'center' ,
 				width : 60,
 				sortable : true,
@@ -588,6 +597,9 @@ function financeDetail() {
 	$('#financeDlg').dialog({
 		modal : true,
 		onOpen : function(event, ui) {		
+			$('#financeDlg').find("input").each(function () {
+                $(this).attr("disabled",true)
+            });
 		}
 	}).dialog('open').dialog('center');
 }
