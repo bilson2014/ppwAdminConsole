@@ -168,9 +168,6 @@ public class EmployeeController extends BaseController {
 				activitiMemberShipMapper.update(activitiMember);
 			}else{
 				//添加
-				if(!ValidateUtil.isValid(employee.getEmployeeImg())){
-					employee.setEmployeeImg(e.getEmployeeImg());
-				}
 				saveProjectRole(employee, groupId);
 			}
 		}
@@ -218,7 +215,7 @@ public class EmployeeController extends BaseController {
 		activitiUser.setFirst(employee.getEmployeeRealName());
 		activitiUser.setId(actid);
 		activitiUser.setLast(employee.getEmployeeLoginName());
-		activitiUser.setPictureId(employee.getEmployeeImg());
+//		activitiUser.setPictureId(employee.getEmployeeImg());
 		activitiUser.setPwd("000000");
 		activitiUser.setRev(1);
 		activitiUserMapper.save(activitiUser);
