@@ -286,7 +286,8 @@ public class ProjectFlowController extends BaseController {
 	@RequestMapping("/project-synergy/update")
 	public BaseMsg updateProjectSynergy(final HttpServletRequest request, final HttpServletResponse response,ModelMap model){
 		BaseMsg result=new BaseMsg(BaseMsg.NORMAL, "修改成功", null);
-		projectFlowService.updateProjectSynergy(request,result);
+		SessionInfo sessionInfo=getCurrentInfo(request);
+		projectFlowService.updateProjectSynergy(request,result,sessionInfo);
 		return result;
 	}
 }

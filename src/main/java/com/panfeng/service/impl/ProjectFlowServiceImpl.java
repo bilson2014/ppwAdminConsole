@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +23,11 @@ import com.paipianwang.pat.facade.indent.entity.IndentSource;
 import com.paipianwang.pat.facade.right.entity.PmsEmployee;
 import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
 import com.paipianwang.pat.workflow.entity.PmsProjectFlow;
+import com.paipianwang.pat.workflow.entity.PmsProjectMessage;
 import com.paipianwang.pat.workflow.entity.PmsProjectSynergy;
 import com.paipianwang.pat.workflow.enums.ProjectRoleType;
 import com.paipianwang.pat.workflow.facade.PmsProjectFlowFacade;
+import com.paipianwang.pat.workflow.facade.PmsProjectMessageFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectSynergyFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.mq.service.ProjectSynergyChangeMQService;
@@ -42,6 +45,8 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 	private PmsProjectFlowFacade pmsProjectFlowFacade;
 	@Autowired
 	private ProjectSynergyChangeMQService projectSynergyChangeMQService;
+	@Autowired
+	private PmsProjectMessageFacade pmsProjectMessageFacade;
 	/**
 	 * 流程数据导出
 	 */
@@ -185,7 +190,7 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 	 * 修改项目协同人
 	 */
 	@Override
-	public void updateProjectSynergy(HttpServletRequest request, BaseMsg result) {
+	public void updateProjectSynergy(HttpServletRequest request, BaseMsg result,SessionInfo sessionInfo) {
 //		Map m=request.getParameterMap();
 		
 		String projectId=request.getParameter("projectId");
@@ -199,6 +204,14 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 		
 		for (ProjectRoleType role : ProjectRoleType.values()) {
 			String select=request.getParameter(role.getId());
+			String roleName=null;
+			if(role.equals(ProjectRoleType.sale)){
+				roleName="负责人";
+			}else{
+				roleName=ProjectRoleType.getEnum(role.getId()).getText();
+			}
+		
+			
 			if(ValidateUtil.isValid(select)){
 				String id=select.split("_")[1];
 				//变更则修改
@@ -214,6 +227,7 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 					synergy.setProjectId(projectId);
 					synergy.setTelephone(employee.getPhoneNumber());
 					pmsProjectSynergyFacade.insert(synergy);
+					insertDetailOperationLog(projectId, "为项目添加了\""+roleName+"\"协同人:"+employee.getEmployeeRealName(), sessionInfo.getReqiureId(), sessionInfo.getRealName());
 				}else{
 					//比较 变更则修改
 					if(!synergy.getEmployeeId().equals(Integer.parseInt(id))){
@@ -230,11 +244,24 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 							metaData.put("principalName",synergy.getEmployeeName());
 							pmsProjectFlowFacade.update(metaData, projectId);
 						}
+						insertDetailOperationLog(projectId, "修改项目\""+roleName+"\"为:"+employee.getEmployeeRealName(), sessionInfo.getReqiureId(), sessionInfo.getRealName());
 					}
 				}
 			}
 		}
 		projectSynergyChangeMQService.sendMessage(projectId);
+	}
+	
+	public void insertDetailOperationLog(String projectId, String content,
+			Long fromId, String fromName) {
+		PmsProjectMessage message = new PmsProjectMessage();
+		message.setFromId("employee_"+fromId);
+		message.setFromGroup("manager");//管理员
+		message.setProjectId(projectId);
+		message.setContent(content);
+		message.setMessageType(PmsProjectMessage.TYPE_LOG);
+		message.setFromName(fromName);
+		pmsProjectMessageFacade.insert(message);
 	}
 
 }

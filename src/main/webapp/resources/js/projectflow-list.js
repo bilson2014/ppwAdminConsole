@@ -270,7 +270,18 @@ $().ready(function() {
 
 function initData(){
 	syncLoadData(function(res) {
-		chanpincache = res.rows;
+		chanpincache=[];
+		//全部
+		var all={chanpinName:'-----全部----'}
+		chanpincache.push(all);
+		//添加-非标准化产品 
+		var noChanpin={chanpinName:'非标准化产品',chanpinId:'0'};
+		chanpincache.push(noChanpin);
+		for(var item in res.rows)
+        { 
+			chanpincache.push(res.rows[item]);
+        }
+		
 	}, getContextPath() + "/portal/chanpin/list", null);
 	syncLoadData(function(res) {
 		chanpinConfig = res.rows;

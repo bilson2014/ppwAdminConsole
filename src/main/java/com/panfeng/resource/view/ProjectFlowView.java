@@ -17,7 +17,7 @@ public class ProjectFlowView extends Pagination {
 	
 	private String projectSource;//项目来源
 	private String projectStage;//项目阶段
-	private Integer productId;//产品线
+	private String productId;//产品线
 	private Integer productConfigLevelId;//等级
 	private String beginTime = null;//创建时间 起始时间	
 	private String endTime = null;//创建时间 结束时间
@@ -102,11 +102,11 @@ public class ProjectFlowView extends Pagination {
 		this.projectStage = projectStage;
 	}
 
-	public Integer getProductId() {
+	public String getProductId() {
 		return productId;
 	}
 
-	public void setProductId(Integer productId) {
+	public void setProductId(String productId) {
 		this.productId = productId;
 	}
 
