@@ -26,17 +26,17 @@ $().ready(function() {
 		columns : [ [ {
 			field : 'projectId',
 			title : '项目ID',
-			width : 60,
+			width : 80,
 			align : 'center'
 		}, {
 			field : 'projectName',
 			title : '项目名称',
-			width : 60,
+			width : 100,
 			align : 'center'
 		}, {
 			field : 'projectStatus',
 			title : '项目状态',
-			width : 60,
+			width : 40,
 			align : 'center',
 			formatter : function(value,row,index){
 				if(value=='' || value== undefined){
@@ -52,7 +52,7 @@ $().ready(function() {
 		}, {
 			field : 'projectStage',
 			title : '项目阶段',
-			width : 60,
+			width : 40,
 			align : 'center',
 			formatter : function(value,row,index){
 				if(value=='1'){
@@ -70,7 +70,7 @@ $().ready(function() {
 		}, {
 			field : 'projectGrade',
 			title : '评级',
-			width : 60,
+			width : 40,
 			align : 'center',
 			formatter:function(value,row,index){
 				var grade='';
@@ -122,12 +122,12 @@ $().ready(function() {
 			field : 'principalName',
 			title : '负责人',
 			align : 'center',
-			width : 60
+			width : 40
 		}, {
 			field : 'b',
 			title : '策划',
 			align : 'center',
-			width : 60,
+			width : 40,
 			formatter : function(value,row,index){
 				if(row.synergyList!='' && row.synergyList!=undefined){
 					var employees=row.synergyList;
@@ -144,7 +144,7 @@ $().ready(function() {
 			field : 'c',
 			title : '监制',
 			align : 'center',
-			width : 60,
+			width : 40,
 			formatter : function(value,row,index){
 				if(row.synergyList!='' && row.synergyList!=undefined){
 					var employees=row.synergyList;
@@ -204,12 +204,12 @@ $().ready(function() {
 			field : 'createDate',
 			title : '创建时间',
 			align : 'center',
-			width : 60
+			width : 80
 		}, {
 			field : 'updateDate',
 			title : '更新时间',
 			align : 'center',
-			width : 60
+			width : 80
 		}, {
 			field : 'teamList',
 			title : '供应商信息',
@@ -454,7 +454,7 @@ function fileDetail(){
         	{
 				field : 'resourceType',
 				title : '文件类型',
-				width : 120,
+				width : 70,
 				align : 'center',
 				formatter : function(value , record , index){
 					if(value == 'projectBrief'){
@@ -481,7 +481,7 @@ function fileDetail(){
 				field : 'resourceName' ,
 				title : '名称' ,
 				align : 'center' ,
-				width : 170,
+				width : 260,
 				sortable : true 
 			}, {
 				field : 'uploaderName' ,
@@ -499,7 +499,7 @@ function fileDetail(){
 				field : 'flag' ,
 				title : '最终版' ,
 				align : 'center' ,
-				width : 60,
+				width : 50,
 				sortable : true,
 				formatter : function(value , record , index){
 					if(value==1){
@@ -510,7 +510,7 @@ function fileDetail(){
 				field : 'resourcePath' ,
 				title : '操作' ,
 				align : 'center' ,
-				width : 60,
+				width : 50,
 				sortable : true,
 				formatter : function(value , record , index){
 					if(value!=undefined && value!='' ){

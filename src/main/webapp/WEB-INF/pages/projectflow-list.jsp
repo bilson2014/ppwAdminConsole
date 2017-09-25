@@ -279,7 +279,7 @@
 				</div>
 	        </form>
 	    </div>
-	     <div id="fileDlg" class="easyui-dialog" style="width:700px; height:400px;padding:10px 20px"
+	     <div id="fileDlg" class="easyui-dialog" style="width:710px; height:400px;padding:10px 20px"
             closed="true" title="文件列表">
 				<table id="file-gride" data-options="fit:true,border:false"></table>
 	    </div>
