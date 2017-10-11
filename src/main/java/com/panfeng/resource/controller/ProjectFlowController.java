@@ -40,6 +40,7 @@ import com.paipianwang.pat.facade.right.entity.PmsTree;
 import com.paipianwang.pat.workflow.entity.PmsProjectFlow;
 import com.paipianwang.pat.workflow.entity.PmsProjectMessage;
 import com.paipianwang.pat.workflow.entity.PmsProjectResource;
+import com.paipianwang.pat.workflow.entity.ProjectColumn;
 import com.paipianwang.pat.workflow.enums.ProjectRoleType;
 import com.paipianwang.pat.workflow.facade.PmsProjectFlowFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectGroupColumnShipFacade;
@@ -47,6 +48,7 @@ import com.paipianwang.pat.workflow.facade.PmsProjectGroupColumnUpdateShipFacade
 import com.paipianwang.pat.workflow.facade.PmsProjectGroupResourceUpdateFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectMessageFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectResourceFacade;
+import com.paipianwang.pat.workflow.facade.PmsProjectResourceRightFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.persist.ActivitiMemberShipMapper;
 import com.panfeng.resource.model.ActivitiMember;
@@ -395,9 +397,6 @@ public class ProjectFlowController extends BaseController {
 		return result;
 	}
 	
-<<<<<<< HEAD
-=======
-	
 	@RequestMapping("/project-right/grant")
 	public String grantProjectRoleRight(final String roleId,final String[] resourceIds){
 		Group group=new GroupEntity(roleId);
@@ -497,5 +496,5 @@ public class ProjectFlowController extends BaseController {
 		}
 		return columnChildren;
 	}
->>>>>>> feb2c6fb52e931c143c477e3e1140c529f724083
+	
 }
