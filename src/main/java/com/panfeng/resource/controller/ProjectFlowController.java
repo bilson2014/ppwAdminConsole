@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,9 +13,12 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.engine.identity.Group;
+import org.activiti.engine.impl.persistence.entity.GroupEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,17 +28,23 @@ import com.alibaba.fastjson.JSONArray;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
+import com.paipianwang.pat.common.enums.FileType;
 import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.finance.entity.PmsDealLog;
 import com.paipianwang.pat.facade.finance.service.PmsFinanceFacade;
 import com.paipianwang.pat.facade.indent.entity.IndentSource;
+import com.paipianwang.pat.facade.right.entity.PmsRole;
+import com.paipianwang.pat.facade.right.entity.PmsTree;
 import com.paipianwang.pat.workflow.entity.PmsProjectFlow;
 import com.paipianwang.pat.workflow.entity.PmsProjectMessage;
 import com.paipianwang.pat.workflow.entity.PmsProjectResource;
 import com.paipianwang.pat.workflow.enums.ProjectRoleType;
 import com.paipianwang.pat.workflow.facade.PmsProjectFlowFacade;
+import com.paipianwang.pat.workflow.facade.PmsProjectGroupColumnShipFacade;
+import com.paipianwang.pat.workflow.facade.PmsProjectGroupColumnUpdateShipFacade;
+import com.paipianwang.pat.workflow.facade.PmsProjectGroupResourceUpdateFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectMessageFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectResourceFacade;
 import com.panfeng.domain.BaseMsg;
@@ -60,6 +70,15 @@ public class ProjectFlowController extends BaseController {
 	@Autowired
 	private ActivitiMemberShipMapper activitiMemberShipMapper;
 
+	@Autowired
+	private PmsProjectGroupColumnShipFacade pmsProjectGroupColumnShipFacade;
+	@Autowired
+	private PmsProjectGroupColumnUpdateShipFacade pmsProjectGroupColumnUpdateShipFacade;
+	@Autowired
+	private PmsProjectGroupResourceUpdateFacade pmsProjectGroupResourceUpdateFacade;
+	@Autowired
+	private PmsProjectResourceRightFacade pmsProjectResourceRightFacade;
+	
 	/**
 	 * 项目管理页面
 	 * @param model
@@ -283,8 +302,200 @@ public class ProjectFlowController extends BaseController {
 	@RequestMapping("/project-synergy/update")
 	public BaseMsg updateProjectSynergy(final HttpServletRequest request, final HttpServletResponse response,ModelMap model){
 		BaseMsg result=new BaseMsg(BaseMsg.NORMAL, "修改成功", null);
-		projectFlowService.updateProjectSynergy(request,result);
+		SessionInfo sessionInfo=getCurrentInfo(request);
+		projectFlowService.updateProjectSynergy(request,result,sessionInfo);
 		return result;
 	}
 	
+	/**
+	 * 获取项目角色权限树
+	 * @return
+	 */
+	@RequestMapping("/project-right/tree")
+	public List<PmsTree> getProjectRightTree(){
+		//-----------构造权限树
+		List<PmsTree> result=new ArrayList<>();
+		//项目信息查看
+		PmsTree columnRight=new PmsTree();
+		columnRight.setId(ProjectColumn.COLUMN_VIEW_RIGHT);
+		columnRight.setText("项目信息查看");
+		columnRight.setChildren(getColumnChildren(columnRight.getId()));
+		result.add(columnRight);
+		//项目信息修改
+		PmsTree columnEditRight=new PmsTree();
+		columnEditRight.setId(ProjectColumn.COLUMN_EDIT_RIGHT);
+		columnEditRight.setText("项目信息修改");
+		columnEditRight.setChildren(getColumnChildren(columnEditRight.getId()));
+		result.add(columnEditRight);
+		//项目文件查看
+		PmsTree resourceRight=new PmsTree();
+		resourceRight.setId(ProjectColumn.FILE_VIEW_RIGHT);
+		resourceRight.setText("项目文件查看");
+		resourceRight.setChildren(getFileChildren(resourceRight.getId()));
+		result.add(resourceRight);
+		//项目文件更新
+		PmsTree resourceEditRight=new PmsTree();
+		resourceEditRight.setId(ProjectColumn.FILE_EDIT_RIGHT);
+		resourceEditRight.setText("项目文件更新");
+		resourceEditRight.setChildren(getFileChildren(resourceEditRight.getId()));
+		
+		result.add(resourceEditRight);
+		return result;
+	}
+	private static String split="-";//tree父子id分隔符
+	
+	/**
+	 * 获取项目角色权限：
+	 * 		项目信息查看
+	 * 		项目信息修改
+	 * 		项目文件查看
+	 * 		项目文件修改
+	 * @param role
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/project-right")
+	public List<String> getProjectRoleRight(@RequestBody final PmsRole role,final HttpServletRequest request){
+		List<Group> groups=new ArrayList<>();
+		Group group = new GroupEntity();
+		group.setId(role.getRoleValue());
+		groups.add(group);
+		
+		//获取权限数据
+		Map<String,List<String>> columnRights=pmsProjectGroupColumnShipFacade.getColumns(groups);
+		Map<String,List<String>> columnUpdateRights=pmsProjectGroupColumnUpdateShipFacade.getColumns(groups);
+		List<String> fileRights=pmsProjectResourceRightFacade.getResources(groups);
+		List<String> fileUpdateRights=pmsProjectGroupResourceUpdateFacade.getResources(groups);
+		
+		//数据格式化：类别id+（表id）+权限节点id
+		List<String> result=new ArrayList<>();
+		
+		Iterator<String> iterator=columnRights.keySet().iterator();
+		while(iterator.hasNext()){
+			String key=(String)iterator.next();
+			List<String> values=columnRights.get(key);
+			for(String value:values){
+				result.add(ProjectColumn.COLUMN_VIEW_RIGHT+split+key+split+value);
+			}
+		}
+		iterator=columnUpdateRights.keySet().iterator();
+		while(iterator.hasNext()){
+			String key=(String)iterator.next();
+			List<String> values=columnUpdateRights.get(key);
+			for(String value:values){
+				result.add(ProjectColumn.COLUMN_EDIT_RIGHT+split+key+split+value);
+			}
+		}
+		for(String fileRight:fileRights){
+			result.add(ProjectColumn.FILE_VIEW_RIGHT+split+fileRight);
+		}
+		for(String fileRight:fileUpdateRights){
+			result.add(ProjectColumn.FILE_EDIT_RIGHT+split+fileRight);
+		}
+		return result;
+	}
+	
+<<<<<<< HEAD
+=======
+	
+	@RequestMapping("/project-right/grant")
+	public String grantProjectRoleRight(final String roleId,final String[] resourceIds){
+		Group group=new GroupEntity(roleId);
+		Map<String,List<String>> columns=new HashMap<>();
+		Map<String,List<String>> editColumns=new HashMap<>();
+		List<String> resources=new ArrayList<>();
+		List<String> editResources=new ArrayList<>();
+		
+		
+		for(String resourceId:resourceIds){
+			String[] ids=resourceId.split(split);
+			switch (ids[0]) {
+			case ProjectColumn.COLUMN_VIEW_RIGHT:{
+				//信息查看权限
+				if(!columns.containsKey(ids[1])){
+					columns.put(ids[1],new ArrayList<String>());
+				}
+				columns.get(ids[1]).add(ids[2]);
+				break;	
+			}
+			case ProjectColumn.COLUMN_EDIT_RIGHT:{
+				//项目信息修改
+				if(!editColumns.containsKey(ids[1])){
+					editColumns.put(ids[1],new ArrayList<String>());
+					//添加id
+					if("PROJECT_USER".equals(ids[1])){
+						editColumns.get(ids[1]).add("projectUserId");
+					}else if("PROJECT_TEAM".equals(ids[1])){
+						editColumns.get(ids[1]).add("projectTeamId");
+					}
+				}
+				editColumns.get(ids[1]).add(ids[2]);
+				break;
+			}
+			case ProjectColumn.FILE_VIEW_RIGHT:{
+				//项目文件查看
+				resources.add(ids[1]);
+				break;
+			}
+			case ProjectColumn.FILE_EDIT_RIGHT:{
+				//项目文件修改
+				editResources.add(ids[1]);
+				break;
+			}
+
+			default:
+				break;
+			}
+		}
+		
+		pmsProjectGroupColumnShipFacade.updateColumnShip(group, columns);
+		pmsProjectGroupColumnUpdateShipFacade.updateColumnShip(group, editColumns);
+		pmsProjectResourceRightFacade.updateResourceShip(group, resources);
+		pmsProjectGroupResourceUpdateFacade.updateResourceShip(group, editResources);
+		
+		return "";
+	}
+	
+	private static List<PmsTree> getFileChildren(String rootId) {
+		// 文件信息
+		List<PmsTree> fileChildren = new ArrayList<>();
+		for (FileType file : FileType.values()) {
+			if (file.getType() == 1) {
+				PmsTree fileItem = new PmsTree();
+				fileItem.setId(rootId+split+file.getId());
+				fileItem.setText(file.getText());
+				fileChildren.add(fileItem);
+			}
+		}
+		return fileChildren;
+	}
+	
+	/*
+	 * id规则：父id+当前节点id
+	 * 		表级层id：表名
+	 * 		字段级层id:字段名
+	 */
+	private static List<PmsTree> getColumnChildren(String rootId) {
+		List<PmsTree> columnChildren = new ArrayList<>();
+		ProjectColumn[] columnArray=ProjectColumn.getArrayInstance();
+		if(columnArray!=null){
+			for(ProjectColumn column:columnArray){
+				PmsTree tableNode = new PmsTree();
+				tableNode.setId(rootId+split+column.getTableKey());
+				tableNode.setText(column.getTableName());
+				//字段项叶子节点
+				List<PmsTree> children = new ArrayList<>();
+				tableNode.setChildren(children);
+				for (ProjectColumn.ColumnItem item : column.getItems()) {
+					PmsTree syItem = new PmsTree();
+					syItem.setId(tableNode.getId()+split+item.getValue());
+					syItem.setText(item.getText());
+					children.add(syItem);
+				}
+				columnChildren.add(tableNode);
+			}
+		}
+		return columnChildren;
+	}
+>>>>>>> feb2c6fb52e931c143c477e3e1140c529f724083
 }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.ActivitiGroupMapper">
+	<insert id="save" useGeneratedKeys="true" keyProperty="ID_">
+		<![CDATA[
+			INSERT INTO activiti.ACT_ID_GROUP (
+				ID_, 
+				REV_, 
+				NAME_, 
+				TYPE_
+			) VALUES(
+				#{id},
+				${rev},
+				#{name},
+				#{type}
+			);
+		]]>
+	</insert>
+
+	<delete id="delete">
+		<![CDATA[
+			DELETE FROM activiti.ACT_ID_GROUP WHERE ID_ = #{id}
+		]]>
+	</delete>
+	
+	<sql id="condition_sql">
+		<if test="name!=null and name != ''"> AND NAME_ LIKE CONCAT(CONCAT('%',#{name}),'%')</if>
+	</sql>
+	
+	<select id="count" resultType="Long">
+		SELECT COUNT(1)
+		FROM activiti.ACT_ID_GROUP
+		<where> 1=1
+			<include refid="condition_sql"></include>
+		</where> 
+	</select>
+	
+	<select id="listWithPagination" resultType="ActivitiGroup">
+		SELECT 
+			ID_  id, 
+			REV_ rev, 
+			NAME_ name, 
+			TYPE_ type
+		FROM activiti.ACT_ID_GROUP
+		where 1=1
+			<include refid="condition_sql"></include>
+		LIMIT ${begin} , ${limit}
+	</select>
+
+</mapper>

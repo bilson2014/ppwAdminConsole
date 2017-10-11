@@ -2,6 +2,7 @@ var editing ; //判断用户是否处于编辑状态
 var flag  ;	  //判断新增和修改方法
 var resourceTree;
 var datagrid;
+var grantUrl;
 $().ready(function(){
 		
 	// 初始化DataGrid
@@ -51,9 +52,22 @@ $().ready(function(){
 						width : 120,
 						formatter : function(value, row, index) {
 							var str = '&nbsp;';
+							var projectIndex=-1;
+							if(row.roleValue!=null && row.roleValue != undefined){
+								projectIndex=row.roleValue.indexOf('project_');
+							}
+							if(projectIndex>-1){
+								str += $.formatString('<a href="javascript:void(0)" onclick="grantProjectFun(\'{0}\');" >授权</a>', row.roleValue);
+							}else{
 								str += $.formatString('<a href="javascript:void(0)" onclick="grantFun(\'{0}\');" >授权</a>', row.roleId);
+							}
+								
 							return str;
 						}
+					},{
+						field:'roleValue',
+						title:'角色值',
+						hidden : true
 					}]],
 		pagination: true ,
 		pageSize : 50,
@@ -129,7 +143,7 @@ function delFuc(){
 					// 加载数据
 					// 获取当前页码
 					datagrid.datagrid('reload');
-					
+					datagrid.datagrid('clearSelections');
 					$.messager.show({
 						title:'提示信息',
 						msg:'操作成功!'
@@ -163,6 +177,7 @@ function cancelFuc(){
 function grantFun(id){
 	$('#roleGrantForm').form('clear');
 	$('#role-id').val(id);
+	grantUrl='/portal/role/grant';
 	openDialog('dlg',id);
 }
 
@@ -244,7 +259,7 @@ function uncheckAll() {
 function grantRight(){
 	
 	$('#roleGrantForm').form('submit',{
-		url : getContextPath() + '/portal/role/grant',
+		url : getContextPath() + grantUrl,
 		onSubmit : function() {
 			var isValid = $(this).form('validate');
 			var checknodes = resourceTree.tree('getChecked');
@@ -260,8 +275,52 @@ function grantRight(){
 		success : function(result) {
 			$('#dlg').dialog('close');
 			datagrid.datagrid('reload');
+			datagrid.datagrid('clearSelections');
 		}
 	});
+}
+//新版项目角色授权
+function grantProjectFun(id){
+	grantUrl='/portal/project-right/grant';
+	$('#dlg').dialog({
+		modal : true,
+		onOpen : function(event, ui) {
+			resourceTree = $('#resourceTree').tree({
+				url : getContextPath() + '/portal/project-right/tree',
+//				parentField : 'pid',
+				lines : true,
+				checkbox : true,
+				panelHeight : '200',
+				onClick : function(node) {
+				},
+				onLoadSuccess : function(node, data) {
+					
+					if(id == undefined){
+						var rows = dataGrid.datagrid('getSelections');
+						id = rows[0].roleValue;
+					}
+					
+					id=id.split("_")[1];
+					$('#role-id').val(id);
+					
+					loadData(function(list){
+						$.each(list,function(i,rightId){
+							if(rightId != null && rightId != '' && rightId != undefined){
+								if (resourceTree.tree('find', rightId)) {
+									resourceTree.tree('check', resourceTree.tree('find', rightId).target);
+								}
+							}
+						});
+					}, getContextPath() + '/portal/project-right', $.toJSON({
+						'roleValue' : id
+					}));
+				},
+				cascadeCheck : false
+			});
+			
+		}
+	}).dialog('open').dialog('center');
+
 }
 
 //查询

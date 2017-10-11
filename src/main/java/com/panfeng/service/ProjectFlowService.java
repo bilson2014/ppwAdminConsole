@@ -19,6 +19,6 @@ public interface ProjectFlowService {
 	 */
 	void exportProjectFlow(List<PmsProjectFlow> list, HttpServletResponse response, SessionInfo sessionInfo);
 
-	void updateProjectSynergy(HttpServletRequest request, BaseMsg result);
+	void updateProjectSynergy(HttpServletRequest request, BaseMsg result, SessionInfo sessionInfo);
 
 }
