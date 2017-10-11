@@ -376,7 +376,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	public List<IndentProject> getAllProject() {
 
 		List<IndentProject> list = indentProjectMapper.getAllProject();
-
 		return list;
 	}
 
@@ -1019,4 +1018,5 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	public void export2Excel(final List<IndentProject> list, final OutputStream outputStream) {
 
 	}
+
 }

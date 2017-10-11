@@ -21,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.workflow.entity.PmsProjectFlow;
+import com.paipianwang.pat.workflow.facade.PmsProjectFlowFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.resource.model.BizBean;
 import com.panfeng.resource.model.IndentProject;
@@ -41,6 +43,9 @@ public class ProjectController extends BaseController {
 
 	@Autowired
 	private IndentResourceService resourceService = null;
+	
+	@Autowired
+	private PmsProjectFlowFacade flowFacade = null;
 
 	@RequestMapping("/save")
 	public Boolean save(@RequestBody final IndentProject indentProject, HttpServletRequest request) {
@@ -95,11 +100,6 @@ public class ProjectController extends BaseController {
 		Log.error("update indentProject ...", sessionInfo);
 		return indentProjectService.updateIndentProject(indentProject, true);
 	}
-
-	/*@RequestMapping("/getProjectTags")
-	public List<BizBean> getProjectTags() {
-		return indentProjectService.getTags();
-	}*/
 
 	/**
 	 * @param indentProject
@@ -230,21 +230,6 @@ public class ProjectController extends BaseController {
 		}
 
 		project.setSynergys(list);
-		// add by wanglc,2016-06-23 10:30 end
-		// if (project.getState() == 3) { // 暂停动作同时调用工作流引擎暂停
-		// activitiService.suspendProcess(project,true);
-		// }
-		//
-		// // 如果之前项目状态为暂停，那么应该启动引擎
-		// if (project.getState() == 0) {
-		// final IndentProject originalProject =
-		// indentProjectService.getProjectInfo(project);
-		// if (originalProject != null) {
-		// if (originalProject.getState() == 3) { // 之前项目状态为3，那么恢复流程
-		// activitiService.resumeProcess(project,true);
-		// }
-		// }
-		// }
 
 		final long ret = indentProjectService.update(project);
 		SessionInfo sessionInfo = getCurrentInfo(request);
@@ -333,6 +318,20 @@ public class ProjectController extends BaseController {
 	}
 	
 	@RequestMapping("/getProjectWithProduct")
+	public List<PmsProjectFlow> getAllProject() {
+		final List<PmsProjectFlow> list = flowFacade.getProjectsByRelationView();
+		// 添加项目名称
+		for (PmsProjectFlow projectFlow : list) {
+			projectFlow.setProjectName(projectFlow.getProjectName() + '-' + projectFlow.getProjectStatus());
+		}
+		PmsProjectFlow project = new PmsProjectFlow();
+		project.setProjectId("-1");
+		project.setProjectName("其他");
+		list.add(project);
+		return list;
+	}
+	
+	/*@RequestMapping("/getProjectWithProduct")
 	public List<IndentProject> getAllProject() {
 		final List<IndentProject> list = indentProjectService.getAllProject();
 		// 添加项目名称
@@ -344,7 +343,7 @@ public class ProjectController extends BaseController {
 		project.setProjectName("其他");
 		list.add(project);
 		return list;
-	}
+	}*/
 
 	@RequestMapping(value = "/export", method = RequestMethod.POST)
 	public void export(final IndentProjectView view, final HttpServletResponse response) {
@@ -423,8 +422,13 @@ public class ProjectController extends BaseController {
 	}
 	// -------------------------------- 验证流程资源完整度------------------------------
 
-	// public boolean verifyIntegrity(){
-	//
-	// return true;
-	// }
+	/**
+	 * 获取 新旧所有项目
+	 * @return
+	 */
+	@RequestMapping("/get/projectsall")
+	public List<PmsProjectFlow> allProjects() {
+		final List<PmsProjectFlow> list = flowFacade.getProjectsWithView();
+		return list;
+	}
 }

@@ -57,11 +57,8 @@ public class ProjectFlowController extends BaseController {
 	private PmsFinanceFacade pmsFinanceFacade;
 	@Autowired
 	private ProjectFlowService projectFlowService;
-//	@Autowired
-//	private ActivitiUserMapper activitiUserMapper;
 	@Autowired
 	private ActivitiMemberShipMapper activitiMemberShipMapper;
-	
 
 	/**
 	 * 项目管理页面
@@ -289,4 +286,5 @@ public class ProjectFlowController extends BaseController {
 		projectFlowService.updateProjectSynergy(request,result);
 		return result;
 	}
+	
 }

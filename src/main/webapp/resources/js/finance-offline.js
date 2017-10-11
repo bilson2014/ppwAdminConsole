@@ -105,7 +105,7 @@ var finance = {
 		initData : function() {
 			// 加载项目信息
 			$('#search-projectId').combobox({
-				url : getContextPath() + '/project/getAllProject',
+				url : getContextPath() + '/project/get/projectsall',
 				valueField : 'projectName',
 				textField : 'projectName'
 			});
@@ -217,7 +217,7 @@ function openDialog(id,data){
 				}
 			});
 			$('#projectId').combobox({
-				url : getContextPath() + '/project/all',
+				url : getContextPath() + '/project/get/projectsall',
 				valueField : 'projectId',
 				textField : 'projectName',
 				filter: function(q, row){
@@ -230,7 +230,6 @@ function openDialog(id,data){
 				var userId = data.userId;
 				var projectId = data.projectId;
 				var logType = data.logType;
-				console.log(0=='')
 				if(logType != null && logType != undefined && logType !== ''){
 					$('#logType').combobox('setValue',logType);
 					changeTradeMan();

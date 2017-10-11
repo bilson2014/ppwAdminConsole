@@ -94,7 +94,7 @@ var finance = {
 		initData : function() {
 			// 加载项目信息
 			$('#search-projectId').combobox({
-				url : getContextPath() + '/project/getAllProject',
+				url : getContextPath() + '/project/get/projectsall',
 				valueField : 'projectName',
 				textField : 'projectName'
 			});
