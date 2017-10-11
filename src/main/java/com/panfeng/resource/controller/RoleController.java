@@ -1,7 +1,9 @@
 package com.panfeng.resource.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,8 @@ import com.paipianwang.pat.facade.right.entity.PmsTree;
 import com.paipianwang.pat.facade.right.service.PmsRightFacade;
 import com.paipianwang.pat.facade.right.service.PmsRoleFacade;
 import com.panfeng.biz.PmsRoleControllerBiz;
+import com.panfeng.persist.ActivitiGroupMapper;
+import com.panfeng.resource.model.ActivitiGroup;
 import com.panfeng.resource.view.RoleView;
 
 /**
@@ -37,6 +41,9 @@ public class RoleController extends BaseController {
 	
 	@Autowired
 	private final PmsRightFacade pmsRightFacade = null;
+	
+	@Autowired
+	private ActivitiGroupMapper activitiGroupMapper=null;
 	
 	@RequestMapping("/role-list")
 	public ModelAndView view(){
@@ -59,17 +66,56 @@ public class RoleController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/role/list",method = RequestMethod.POST,produces = "application/json; charset=UTF-8")
-	public DataGrid<PmsRole> list(RoleView view,final PageParam pageParam){
-		
+	public DataGrid<PmsRole> list(RoleView view, final PageParam pageParam) {
+
 		final long page = pageParam.getPage();
 		final long rows = pageParam.getRows();
 		pageParam.setBegin((page - 1) * rows);
 		pageParam.setLimit(rows);
-		
-		final DataGrid<PmsRole> dataGrid = pmsRoleFacade.listWithPagination(pageParam,JsonUtil.objectToMap(view));
-		
+
+		DataGrid<PmsRole> dataGrid = pmsRoleFacade.listWithPagination(pageParam, JsonUtil.objectToMap(view));
+		List<PmsRole> roles = dataGrid.getRows();
+
+		// 追加项目角色
+
+		Map<String, Object> paramMap = new HashMap<>();
+		long count = activitiGroupMapper.count(paramMap);
+
+		// 计算
+		long begin = 0;
+		long limit = 0;
+		long total = page * rows;
+		if (total <= dataGrid.getTotal()) {
+			// 不需要
+		} else if (total > dataGrid.getTotal()) {
+			if ((page-1) * rows > dataGrid.getTotal()) {
+				// 翻页需要
+				begin = (((total - dataGrid.getTotal()) / rows) - 1) * rows + (total - dataGrid.getTotal()) % rows;
+				limit = rows;
+			} else {
+				// 首次
+				begin = 0;
+				limit = rows-roles.size() ;
+			}
+		}
+
+		paramMap.put("begin", begin);
+		paramMap.put("limit", limit);
+		paramMap.put("name",view.getRoleName());
+		List<ActivitiGroup> groups = activitiGroupMapper.listWithPagination(paramMap);
+
+		for (ActivitiGroup group : groups) {
+			PmsRole role = new PmsRole();
+			role.setRoleName("新版项目角色_" + group.getName());
+			role.setRoleValue("project_" + group.getId());
+			roles.add(role);
+		}
+
+		dataGrid.setTotal(dataGrid.getTotal() + count);
+
 		return dataGrid;
 	}
+	
 	
 	@RequestMapping("/role/update")
 	public long update(final PmsRole role){
