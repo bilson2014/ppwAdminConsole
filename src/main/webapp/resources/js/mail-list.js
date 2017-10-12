@@ -11,9 +11,11 @@ editorBeReady("content");
 $().ready(function(){
 	fileItems=[{value:'projectBrief',text:'项目简报'},
 		{value:'projectPlan',text:'项目排期'},
-		{value:'planning',text:'策划方案'},	
+		{value:'planning',text:'策划方案'},
+		{value:'planningDemo',text:'策划方案模板'},
 		{value:'ppm',text:'PPM'},
-		{value:'vedioRevise',text:'影片修改表'},
+		{value:'vedioRevise',text:'客户影片修改表'},
+		{value:'demoUpdate',text:'会审影片修改表'},
 		{value:'customerReply',text:'客户验收函回复截图'},
 		{value:'priceSheet',text:'报价单'},
 		{value:'autoProjectSheet',text:'项目制作单'},
