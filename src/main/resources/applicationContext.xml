@@ -17,7 +17,7 @@
 
 	<import resource="spring-mq.xml" />
 
-	<import resource="dubbo/dubbo-consumer-redirect.xml" />
+	<import resource="dubbo/dubbo-consumer.xml" />
 
 	<import resource="ActivitiConfig.xml" />
 
