@@ -1,5 +1,6 @@
 package com.panfeng.service;
 
+import java.io.OutputStream;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ public interface ProjectFlowService {
 	 * @param response
 	 * @param sessionInfo
 	 */
-	void exportProjectFlow(List<PmsProjectFlow> list, HttpServletResponse response, SessionInfo sessionInfo);
+	void exportProjectFlow(List<PmsProjectFlow> list, OutputStream os, SessionInfo sessionInfo);
 
 	void updateProjectSynergy(HttpServletRequest request, BaseMsg result, SessionInfo sessionInfo);
 

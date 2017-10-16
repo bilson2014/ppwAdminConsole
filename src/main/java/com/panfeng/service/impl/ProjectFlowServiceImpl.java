@@ -1,38 +1,42 @@
 package com.panfeng.service.impl;
 
-import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.paipianwang.pat.common.entity.SessionInfo;
-import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.common.web.poi.util.PoiReportUtils;
 import com.paipianwang.pat.facade.indent.entity.IndentSource;
 import com.paipianwang.pat.facade.right.entity.PmsEmployee;
 import com.paipianwang.pat.facade.right.service.PmsEmployeeFacade;
 import com.paipianwang.pat.workflow.entity.PmsProjectFlow;
 import com.paipianwang.pat.workflow.entity.PmsProjectMessage;
+import com.paipianwang.pat.workflow.entity.PmsProjectResource;
 import com.paipianwang.pat.workflow.entity.PmsProjectSynergy;
+import com.paipianwang.pat.workflow.entity.PmsProjectTeam;
+import com.paipianwang.pat.workflow.entity.PmsProjectUser;
 import com.paipianwang.pat.workflow.enums.ProjectRoleType;
+import com.paipianwang.pat.workflow.enums.ProjectTeamType;
 import com.paipianwang.pat.workflow.facade.PmsProjectFlowFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectMessageFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectSynergyFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.mq.service.ProjectSynergyChangeMQService;
 import com.panfeng.service.ProjectFlowService;
-import com.panfeng.util.CsvWriter;
 import com.panfeng.util.Log;
 
 @Service
@@ -47,144 +51,7 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 	private ProjectSynergyChangeMQService projectSynergyChangeMQService;
 	@Autowired
 	private PmsProjectMessageFacade pmsProjectMessageFacade;
-	/**
-	 * 流程数据导出
-	 */
-	@Override
-	public void exportProjectFlow(List<PmsProjectFlow> list, HttpServletResponse response, SessionInfo sessionInfo) {
-		// 完成数据csv文件的封装
-		String displayColNames = "项目ID,项目名称,项目状态,项目阶段,评级,产品线,等级,配置" 
-				+ ",负责人,项目来源,项目预算,预估价格,对标影片网址,项目描述,项目周期,创建时间,更新时间"
-				+ ",客户名称 ,客户联系人,联系人电话,客户邮箱,客户评级,客户启动函约定付款时间,客户启动函项目交付时间"
-				+ ",策划供应商名称,策划供应商联系人,策划供应商联系人电话,策划供应商预算价格,策划供应商支付价格,对接人姓名,对接人电话,供应商策划内容,项目策划交付时间,策划供应商分配时间"
-				+ ",制作供应商名称,制作供应商联系人,制作供应商联系人电话,制作供应商预算价格,制作供应商支付价格,发票带头,供应商制作内容,项目制作交付时间,制作供应商分配时间"
-				+ ",团队信息,文件信息";
-		String matchColNames = "projectId,projectName,projectStatus,projectStage,projectGrade,productName,productConfigLevelName,productConfigName"
-				+ ",principalName,projectSource,projectBudget,estimatedPrice,filmDestPath,projectDescription,projectCycle,createDate,updateDate"
-				+ ",userName,linkman,telephone,email,userLevel,appointedTime,deliveryTime"
-				+ ",scheme_teamName,scheme_linkman,scheme_telephone,scheme_budget,scheme_actualPrice,scheme_accessMan,scheme_accessManTelephone,scheme_planContent,scheme_planTime,scheme_createDate"
-				+ ",produce_teamName,produce_linkman,produce_telephone,produce_budget,produce_actualPrice,produce_invoiceHead,produce_makeContent,produce_makeTime,produce_createDate"
-				+ ",synergyInfo,resourceInfo";
-		List<Map<String, Object>> datas = JsonUtil.getValueListMap(list);
-		// 数据处理
-		for (Map<String, Object> data : datas) {
-			// 客户信息
-			String user = (String) data.get("user");
-			if (user != null) {
-				Map<String, Object> userMap = JSON.parseObject(user);
-				data.putAll(userMap);
-			}
 
-			// 供应商信息
-			String teamList = (String) data.get("teamList");
-			JSONArray teamArray = JSONArray.parseArray(teamList);
-			for (int i = 0; i < teamArray.size(); i++) {
-				JSONObject team = teamArray.getJSONObject(i);
-				Iterator<String> iterator = team.keySet().iterator();
-				while (iterator.hasNext()) {
-					String key = iterator.next();
-					data.put(team.get("teamType") + "_" + key, team.get(key));
-				}
-			}
-			// 团队信息
-			String synergyList = (String) data.get("synergyList");
-			JSONArray synergyArray = JSONArray.parseArray(synergyList);
-			StringBuilder synergyInfo = new StringBuilder();
-			for (int i = 0; i < synergyArray.size(); i++) {
-				JSONObject synergy = synergyArray.getJSONObject(i);
-				synergyInfo.append(",").append(synergy.getString("employeeName")).append("(")
-						.append(ProjectRoleType.getEnum(synergy.getString("employeeGroup")).getText()).append(")");
-			}
-			data.put("synergyInfo", synergyInfo.toString().substring(1));
-			// 文件信息
-			String resourceList = (String) data.get("resourceList");
-			JSONArray resourceArray = JSONArray.parseArray(resourceList);
-			if (resourceArray != null && resourceArray.size() > 0) {
-				StringBuilder resourceInfo = new StringBuilder();
-				for (int i = 0; i < resourceArray.size(); i++) {
-					JSONObject resource = resourceArray.getJSONObject(i);
-					resourceInfo.append(",").append(resource.getString("resourceName")).append("(")
-							.append(resource.getString("uploaderName")).append(")");
-				}
-				data.put("resourceInfo", resourceInfo.toString().substring(1));
-			}
-
-			// ------------显示值处理------------------
-			// 项目状态
-			String projectStatus = (String) data.get("projectStatus");
-			if ("finished".equals(projectStatus)) {
-				data.put("projectStatus", "已完成");
-			} else if ("cancel".equals(projectStatus)) {
-				data.put("projectStatus", "已取消");
-			} else if ("suspend".equals(projectStatus)) {
-				data.put("projectStatus", "挂起");
-			} else {
-				data.put("projectStatus", "进行中");
-			}
-			// 项目评级
-			String projectGrade = (String) data.get("projectGrade");
-			switch (projectGrade) {
-			case "5":
-				data.put("projectGrade", "S");
-				break;
-			case "4":
-				data.put("projectGrade", "A");
-				break;
-			case "3":
-				data.put("projectGrade", "B");
-				break;
-			case "2":
-				data.put("projectGrade", "C");
-				break;
-			case "1":
-				data.put("projectGrade", "D");
-				break;
-			case "0":
-				data.put("projectGrade", "E");
-				break;
-			default:
-				data.put("projectGrade", "");
-				break;
-			}
-			// 项目配置
-			String lengthName = data.get("productConfigLengthName") == null ? ""
-					: (String) data.get("productConfigLengthName");
-			String addiName = data.get("productConfigAdditionalPackageName") == null ? ""
-					: (String) data.get("productConfigAdditionalPackageName");
-
-			data.put("productConfigName", (ValidateUtil.isValid(lengthName) && ValidateUtil.isValid(addiName))
-					? lengthName + "+" + addiName : lengthName + addiName);
-			// 项目来源
-			if (data.get("projectSource") != null) {
-				data.put("projectSource",
-						IndentSource.enumOf(Integer.parseInt((String) data.get("projectSource"))).getName());
-			}
-			// 项目阶段
-			String projectStage = (String) data.get("projectStage");
-			if (projectStage == "1") {
-				projectStage = "沟通阶段";
-			} else if (projectStage == "2") {
-				projectStage = "方案阶段";
-			} else if (projectStage == "3") {
-				projectStage = "商务阶段";
-			} else if (projectStage == "4") {
-				projectStage = "制作阶段";
-			} else if (projectStage == "5") {
-				projectStage = "交付阶段";
-			}
-			data.put("projectStage", projectStage);
-		}
-
-		String fileName = "project_report_";
-		String content = CsvWriter.formatCsvData(datas, displayColNames, matchColNames);
-		try {
-			Log.error("project list export success ...", sessionInfo);
-			CsvWriter.exportCsv(fileName, content, response);
-
-		} catch (IOException e) {
-			Log.error("project list export error ...", sessionInfo);
-		}
-	}
 
 	/**
 	 * 修改项目协同人
@@ -239,7 +106,7 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 						pmsProjectSynergyFacade.update(synergy);
 						//负责人
 						if(ProjectRoleType.sale.getId().equals(role.getId())){
-							Map<String,Object> metaData=new HashMap();
+							Map<String,Object> metaData=new HashMap<>();
 							metaData.put("principal", synergy.getEmployeeId());
 							metaData.put("principalName",synergy.getEmployeeName());
 							pmsProjectFlowFacade.update(metaData, projectId);
@@ -262,6 +129,400 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 		message.setMessageType(PmsProjectMessage.TYPE_LOG);
 		message.setFromName(fromName);
 		pmsProjectMessageFacade.insert(message);
+	}
+	
+	/**
+	 * 流程数据导出
+	 */
+	@Override
+	public void exportProjectFlow(List<PmsProjectFlow> list, OutputStream os, SessionInfo sessionInfo) {
+		String header = "项目ID,项目名称,项目状态,项目阶段,评级,产品线,等级,配置" 
+				+ ",负责人,项目来源,项目预算,预估价格,对标影片网址,项目描述,项目周期,创建时间,更新时间"
+				+ ",客户名称 ,客户联系人,联系人电话,客户邮箱,客户评级,客户启动函约定付款时间,客户启动函项目交付时间"
+				+ ",策划供应商名称,策划供应商联系人,策划供应商联系人电话,策划供应商预算价格,策划供应商支付价格,对接人姓名,对接人电话,供应商策划内容,项目策划交付时间,策划供应商分配时间"
+				+ ",制作供应商名称,制作供应商联系人,制作供应商联系人电话,制作供应商预算价格,制作供应商支付价格,发票带头,供应商制作内容,项目制作交付时间,制作供应商分配时间"
+				+ ",团队信息,文件信息";
+		
+		
+		// 创建文档
+		XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
+		// 创建一个新的页
+		XSSFSheet sheet = xssfWorkbook.createSheet("供应商列表信息");
+		// 生成头部信息
+		PoiReportUtils.generateHeader(new ArrayList<String>(Arrays.asList(header.split(","))), xssfWorkbook, sheet);
+
+		//冻结头
+		sheet.createFreezePane(0, 1, 0, 1);
+		
+		// 生成数据信息
+		this.generateFlowContent(list, xssfWorkbook, sheet);
+
+		
+		// 写出响应
+		try {
+			xssfWorkbook.write(os);
+			xssfWorkbook.close();
+			Log.error("project list export success ...", sessionInfo);
+		} catch (Exception e) {
+			Log.error("project list export error:"+e.getMessage(), sessionInfo);
+		}
+	}
+
+	/**
+	 * 导出各行数据
+	 * @param list
+	 * @param workbook
+	 * @param sheet
+	 */
+	private void generateFlowContent(List<PmsProjectFlow> list, XSSFWorkbook workbook, XSSFSheet sheet) {
+		if(ValidateUtil.isValid(list)){
+			for(int i=0;i<list.size();i++){
+				int j=0;
+				PmsProjectFlow flow=list.get(i);
+				
+				
+				//----------值处理-----------
+				// 项目状态
+				String projectStatus = flow.getProjectStatus();
+				if ("finished".equals(projectStatus)) {
+					projectStatus= "已完成";
+				} else if ("cancel".equals(projectStatus)) {
+					projectStatus="已取消";
+				} else if ("suspend".equals(projectStatus)) {
+					projectStatus= "挂起";
+				} else {
+					projectStatus= "进行中";
+				}
+				// 项目阶段
+				String projectStage = flow.getProjectStage()+"";
+				if (projectStage == "1") {
+					projectStage = "沟通阶段";
+				} else if (projectStage == "2") {
+					projectStage = "方案阶段";
+				} else if (projectStage == "3") {
+					projectStage = "商务阶段";
+				} else if (projectStage == "4") {
+					projectStage = "制作阶段";
+				} else if (projectStage == "5") {
+					projectStage = "交付阶段";
+				}
+
+				// 项目评级
+				String projectGrade = flow.getProjectGrade();
+				switch (projectGrade) {
+				case "5":
+					projectGrade="S";
+					break;
+				case "4":
+					projectGrade="A";
+					break;
+				case "3":
+					projectGrade="B";
+					break;
+				case "2":
+					projectGrade="C";
+					break;
+				case "1":
+					projectGrade= "D";
+					break;
+				case "0":
+					projectGrade="E";
+					break;
+				default:
+					projectGrade= "";
+					break;
+				}
+				// 项目配置
+				String lengthName = flow.getProductConfigLengthName() == null ? ""
+						: flow.getProductConfigLengthName();
+				String addiName = flow.getProductConfigAdditionalPackageName() == null ? ""
+						: flow.getProductConfigAdditionalPackageName();
+
+				String productConfigName= (ValidateUtil.isValid(lengthName) && ValidateUtil.isValid(addiName))
+						? lengthName + "+" + addiName : lengthName + addiName;
+				// 项目来源
+				String projectSource="";
+				if (flow.getProjectSource() != null) {
+					projectSource=IndentSource.enumOf(Integer.parseInt((String) flow.getProjectSource())).getName();
+				}
+				
+				
+				//单元格生成、数据填充
+				
+				XSSFRow xssfRow=sheet.createRow(i+1);
+				// 样式
+				XSSFCellStyle cs = PoiReportUtils.getLeftCellStyle(workbook);
+				
+				//项目信息
+				XSSFCell xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(flow.getProjectId());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(flow.getProjectName());
+						
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(projectStatus);
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(projectStage);
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(projectGrade);
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(flow.getProductName());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(flow.getProductConfigLevelName());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(productConfigName);
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(flow.getPrincipalName());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(projectSource);
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				if(flow.getProjectBudget()!=null){
+					xssfCell.setCellValue(flow.getProjectBudget());
+				}
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				if(flow.getEstimatedPrice()!=null){
+					xssfCell.setCellValue(flow.getEstimatedPrice());
+				}
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(flow.getFilmDestPath());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(flow.getProjectDescription());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				if(flow.getProjectCycle()!=null){
+					xssfCell.setCellValue(flow.getProjectCycle());
+				}
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(flow.getCreateDate());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(flow.getUpdateDate());
+				
+				//客户信息
+				PmsProjectUser user=flow.getUser();
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(user.getUserName());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(user.getLinkman());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(user.getTelephone());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(user.getEmail());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(user.getUserLevel());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(user.getAppointedTime());
+				
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				xssfCell.setCellValue(user.getDeliveryTime());
+				
+				//供应商信息
+				List<PmsProjectTeam> teams=flow.getTeamList();
+				PmsProjectTeam scheme=null;
+				PmsProjectTeam produce=null;
+				if(ValidateUtil.isValid(teams)){
+					for(PmsProjectTeam team:teams){
+						if(ProjectTeamType.scheme.getCode().equals(team.getTeamType())){
+							scheme=team;
+						}else if(ProjectTeamType.produce.getCode().equals(team.getTeamType())){
+							produce=team;
+						}
+					}
+				}
+				//策划
+				if(scheme==null){
+					scheme=new PmsProjectTeam();
+					scheme.setTeamType(ProjectTeamType.scheme.getCode());
+				}
+				j=generateTeamCell(scheme, xssfRow, cs, j);
+				//制作
+				if(produce==null){
+					produce=new PmsProjectTeam();
+					produce.setTeamType(ProjectTeamType.produce.getCode());
+				}
+				j=generateTeamCell(produce, xssfRow, cs, j);
+				
+				
+				// 团队信息
+				List<PmsProjectSynergy> synergyList = flow.getSynergyList();
+				StringBuilder synergyInfo = new StringBuilder();
+				for (PmsProjectSynergy synergy:synergyList) {
+					synergyInfo.append(",").append(synergy.getEmployeeName()).append("(")
+							.append(ProjectRoleType.getEnum(synergy.getEmployeeGroup()).getText()).append(")");
+				}
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				if(ValidateUtil.isValid(synergyList)){
+					xssfCell.setCellValue(synergyInfo.toString().substring(1));
+				}
+				// 文件信息
+				List<PmsProjectResource> resourceList =flow.getResourceList();
+				StringBuilder resourceInfo = new StringBuilder();
+				for (PmsProjectResource resource:resourceList) {
+						resourceInfo.append(",").append(resource.getResourceName()).append("(")
+								.append(resource.getUploaderName()).append(")");
+				}
+				xssfCell=xssfRow.createCell(j++);
+				xssfCell.setCellStyle(cs);
+				xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+				if(ValidateUtil.isValid(resourceList)){
+					xssfCell.setCellValue(resourceInfo.toString().substring(1));
+				}
+			}
+			
+		}
+		
+	}
+	
+	/**
+	 * 生成各行供应商数据
+	 * @param team
+	 * @param xssfRow
+	 * @param cs
+	 * @param j
+	 * @return
+	 */
+	private int generateTeamCell(PmsProjectTeam team,XSSFRow xssfRow,XSSFCellStyle cs,int j){
+		
+		XSSFCell xssfCell=xssfRow.createCell(j++);
+		xssfCell.setCellStyle(cs);
+		xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+		xssfCell.setCellValue(team.getTeamName());
+		
+		xssfCell=xssfRow.createCell(j++);
+		xssfCell.setCellStyle(cs);
+		xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+		xssfCell.setCellValue(team.getLinkman());
+		
+		xssfCell=xssfRow.createCell(j++);
+		xssfCell.setCellStyle(cs);
+		xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+		xssfCell.setCellValue(team.getTelephone());
+		
+		xssfCell=xssfRow.createCell(j++);
+		xssfCell.setCellStyle(cs);
+		xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+		if(team.getBudget()!=null){
+			xssfCell.setCellValue(team.getBudget());
+		}
+		
+		xssfCell=xssfRow.createCell(j++);
+		xssfCell.setCellStyle(cs);
+		xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+		if(team.getActualPrice()!=null){
+			xssfCell.setCellValue(team.getActualPrice());
+		}
+		
+		//邮件相关信息-策划、制作
+		if(ProjectTeamType.scheme.getCode().equals(team.getTeamType())){
+			xssfCell=xssfRow.createCell(j++);
+			xssfCell.setCellStyle(cs);
+			xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+			xssfCell.setCellValue(team.getAccessMan());
+			
+			xssfCell=xssfRow.createCell(j++);
+			xssfCell.setCellStyle(cs);
+			xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+			xssfCell.setCellValue(team.getAccessManTelephone());
+			
+			xssfCell=xssfRow.createCell(j++);
+			xssfCell.setCellStyle(cs);
+			xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+			xssfCell.setCellValue(team.getPlanContent());
+			
+			xssfCell=xssfRow.createCell(j++);
+			xssfCell.setCellStyle(cs);
+			xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+			xssfCell.setCellValue(team.getPlanTime());
+		}else if(ProjectTeamType.produce.getCode().equals(team.getTeamType())){
+			xssfCell=xssfRow.createCell(j++);
+			xssfCell.setCellStyle(cs);
+			xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+			xssfCell.setCellValue(team.getInvoiceHead());
+			
+			xssfCell=xssfRow.createCell(j++);
+			xssfCell.setCellStyle(cs);
+			xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+			xssfCell.setCellValue(team.getMakeContent());
+			
+			xssfCell=xssfRow.createCell(j++);
+			xssfCell.setCellStyle(cs);
+			xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+			xssfCell.setCellValue(team.getMakeTime());
+		}
+		
+		xssfCell=xssfRow.createCell(j++);
+		xssfCell.setCellStyle(cs);
+		xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
+		xssfCell.setCellValue(team.getCreateDate());
+		return j;
 	}
 
 }
