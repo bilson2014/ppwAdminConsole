@@ -35,7 +35,7 @@
             FLOW_DATE fd 
             ON 
             	f.IF_FLOW_ID=fd.FD_FLOW_ID 
-			HAVING  f.IF_INDENT_ID =${id}
+			HAVING  f.IF_INDENT_ID = ${id}
 			AND 
 				f.IF_STATE ='Y'
 		]]>

@@ -436,6 +436,7 @@
      	WHERE i.IP_ID =${id}
 		]]>
 	</select>
+	
 	<select id="findProjectInfo2" resultType="IndentProject">
 		<![CDATA[
 			SELECT 

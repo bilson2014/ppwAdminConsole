@@ -137,6 +137,7 @@ public class IndentFlow extends BaseEntity {
 	 * @param indentFlows
 	 */
 	public static void indentProjectFillDate(IndentProject indentProject, List<IndentFlow> indentFlows) {
+		if(indentProject != null) {
 		Map<String, String> time = new HashMap<>();
 		if (null != indentFlows && indentFlows.size() > 0) {
 			for (IndentFlow flowDate : indentFlows) {
@@ -150,7 +151,9 @@ public class IndentFlow extends BaseEntity {
 				}
 			}
 		}
-		indentProject.setTime(time);
+			
+			indentProject.setTime(time);
+		}
 	}
 
 	/**

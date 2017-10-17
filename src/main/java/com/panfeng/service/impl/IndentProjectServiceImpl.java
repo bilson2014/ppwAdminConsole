@@ -169,13 +169,17 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	@Override
 	public IndentProject getRedundantProject(IndentProject indentProject) {
 		indentProject = indentProjectMapper.findProjectInfo(indentProject);
-		List<IndentFlow> listDates = indentFlowMapper.findFlowDateByIndentId(indentProject);
-		IndentFlow.indentProjectFillDate(indentProject, listDates);
-		// add Synergys by laowang begin 2016-5-25 16:00
-		indentProject.setSynergys(synergyService.findSynergyByProjectId(indentProject.getId()));
-		// add Synergys by laowang end 2016-5-25 16:00
-
-		return indentProject;
+		if(indentProject != null) {
+			
+			List<IndentFlow> listDates = indentFlowMapper.findFlowDateByIndentId(indentProject);
+			IndentFlow.indentProjectFillDate(indentProject, listDates);
+			// add Synergys by laowang begin 2016-5-25 16:00
+			indentProject.setSynergys(synergyService.findSynergyByProjectId(indentProject.getId()));
+			// add Synergys by laowang end 2016-5-25 16:00
+			return indentProject;
+		}
+		
+		return null;
 	}
 
 	/**

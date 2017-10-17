@@ -218,7 +218,7 @@ function openDialog(id,data){
 			});
 			$('#projectId').combobox({
 				url : getContextPath() + '/project/get/projectsall',
-				valueField : 'projectId',
+				valueField : 'id',
 				textField : 'projectName',
 				filter: function(q, row){
 					if(row.projectName == null)
