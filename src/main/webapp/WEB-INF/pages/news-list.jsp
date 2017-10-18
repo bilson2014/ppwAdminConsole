@@ -107,6 +107,21 @@
 				</div>
 				<br>
 				<div class="online">
+					<label class="lable l-width">seo标题</label>
+					<input id="seoTitle" name="seoTitle"  class="easyui-textbox" required="true"/>
+				</div>
+				<br>
+				<div class="online">
+					<label class="lable l-width">seo描述</label>
+					<input id="seoDescription" name="seoDescription" multiline="true" class="easyui-textbox text-area" required="true" style="height: 100px;width: 82%;"/>
+				</div>
+				<br>
+				<div class="online">
+					<label class="lable l-width">seo关键字</label>
+					<input id="seoKeywords" name="seoKeywords" class="easyui-textbox" style="width: 82%"/>
+				</div>13 10.50
+				<br>
+				<div class="online">
 					<label class="lable l-width">新闻封面</label>
 					<input type="file" id="picLDUrlFile" name="picLDUrlFile"/>
 				</div>
