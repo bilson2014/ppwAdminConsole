@@ -170,7 +170,6 @@ public class IndentProjectServiceImpl implements IndentProjectService {
 	public IndentProject getRedundantProject(IndentProject indentProject) {
 		indentProject = indentProjectMapper.findProjectInfo(indentProject);
 		if(indentProject != null) {
-			
 			List<IndentFlow> listDates = indentFlowMapper.findFlowDateByIndentId(indentProject);
 			IndentFlow.indentProjectFillDate(indentProject, listDates);
 			// add Synergys by laowang begin 2016-5-25 16:00
