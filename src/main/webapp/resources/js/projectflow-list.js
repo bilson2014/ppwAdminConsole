@@ -122,12 +122,14 @@ $().ready(function() {
 			field : 'principalName',
 			title : '负责人',
 			align : 'center',
+			sortable : true ,
 			width : 40
 		}, {
-			field : 'b',
+			field : 'scheme',
 			title : '策划',
 			align : 'center',
 			width : 40,
+			sortable : true ,
 			formatter : function(value,row,index){
 				if(row.synergyList!='' && row.synergyList!=undefined){
 					var employees=row.synergyList;
@@ -141,10 +143,11 @@ $().ready(function() {
 				return "";
 			}
 		}, {
-			field : 'c',
+			field : 'supervise',
 			title : '监制',
 			align : 'center',
 			width : 40,
+			sortable : true ,
 			formatter : function(value,row,index){
 				if(row.synergyList!='' && row.synergyList!=undefined){
 					var employees=row.synergyList;
@@ -199,16 +202,19 @@ $().ready(function() {
 			field : 'projectBudget',
 			title : '项目预算',
 			align : 'center',
+			sortable : true ,
 			width : 60
 		}, {
 			field : 'createDate',
 			title : '创建时间',
 			align : 'center',
+			sortable : true ,
 			width : 80
 		}, {
 			field : 'updateDate',
 			title : '更新时间',
 			align : 'center',
+			sortable : true ,
 			width : 80
 		}, {
 			field : 'teamList',

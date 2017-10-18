@@ -1,9 +1,11 @@
 package com.panfeng.resource.controller;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.identity.Group;
 import org.activiti.engine.impl.persistence.entity.GroupEntity;
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -105,7 +108,7 @@ public class ProjectFlowController extends BaseController {
 	 * 分页查看项目信息
 	 * @param view
 	 * @param pageParam
-	 * @return
+	 * @return TODO 后续需优化，查询出页面全部；信息详情再reload
 	 */
 	@RequestMapping(value = "/projectflow/list", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public DataGrid<PmsProjectFlow> listWithPagination(final ProjectFlowView view, PageParam pageParam) {
@@ -235,11 +238,42 @@ public class ProjectFlowController extends BaseController {
 	@RequestMapping(value = "/project/export", method = RequestMethod.POST)
 	public void export(final ProjectFlowView view, final HttpServletResponse response,
 			final HttpServletRequest request) {
+		OutputStream os=null;
+		try {
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("application/octet-stream");
+			String dateString = DateUtils.formatDate(new Date(), "yyyy-MM-dd");
+			String filename = "项目信息列表" + dateString + ".xlsx";
+			
+			//---处理文件名
+			String userAgent = request.getHeader("User-Agent"); 
+			if (userAgent.contains("MSIE")||userAgent.contains("Trident") ||userAgent.contains("Edge")) {
+				//针对IE或者以IE为内核或Microsoft Edge的浏览器：
+				filename = java.net.URLEncoder.encode(filename, "UTF-8");
+			} else {
+			//非IE浏览器的处理：
+				filename = new String(filename.getBytes("UTF-8"),"ISO-8859-1");
+			}
+			
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"\r\n");
+			
+			final List<PmsProjectFlow> list = pmsProjectFlowFacade.getProjectFlowDetailByParam(JsonUtil.objectToMap(view));
 
-		SessionInfo sessionInfo = getCurrentInfo(request);
-		final List<PmsProjectFlow> list = pmsProjectFlowFacade.getProjectFlowDetailByParam(JsonUtil.objectToMap(view));
-
-		projectFlowService.exportProjectFlow(list,response,sessionInfo);	
+			os = response.getOutputStream();
+			projectFlowService.exportProjectFlow(list,os,sessionInfo);
+			os.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			if (os != null) {
+				try {
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}	
 	}
 	
 	/**
