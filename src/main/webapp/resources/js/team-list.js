@@ -505,7 +505,7 @@ function delProductLine(){
 
 function addFuc(){ // 注册 增加按钮
 	$('#fm').form('clear');
-	document.getElementById('displayFileImg').setAttribute('src',"");
+	document.getElementById('displayFileImg').setAttribute('src',"/resources/img/portal/user/default.png");
 	isadd = true;
 	$('#teamProvince').combobox({
 		url : getContextPath() + '/portal/get/provinces',
@@ -550,7 +550,12 @@ function editFuc(){ // 注册 修改 按钮
 		originalPhoneNumber = rows[0].phoneNumber;
 		$('#fm').form('load',rows[0]);
 
-		document.getElementById('displayFileImg').setAttribute('src',getDfsHostName()+rows[0].displayImg);
+		if(rows[0].displayImg==undefined || rows[0].displayImg=='' || rows[0].displayImg==null){
+			document.getElementById('displayFileImg').setAttribute('src',"/resources/img/portal/user/default.png");
+		}else{
+			document.getElementById('displayFileImg').setAttribute('src',getDfsHostName()+rows[0].displayImg);
+		}
+		
 		// 数据回显 -- 业务范围
 		var business = rows[0].business;
 		if(business != null && business != '' && business != undefined){
@@ -1096,6 +1101,7 @@ function uploadFile(){
 		document.getElementById('idCardfrontFileImg').setAttribute('src',getDfsHostName()+rows[0].idCardfrontUrl);
 		document.getElementById('idCardbackFileImg').setAttribute('src',getDfsHostName()+rows[0].idCardbackUrl);
 		
+		
 		var nature=rows[0].teamNature;
 		if(nature==1){
 			$('#certName').html("手持身份证照片");
@@ -1136,7 +1142,7 @@ function changeImg(obj) {
 } 
 
 function removeFileFuc(obj){
-	$('#displayFileImg').attr('src','');
+	$('#displayFileImg').attr('src','/resources/img/portal/user/default.png');
 	$('#displayFile').val('');
 	$('#displayImg').val('');
 	
