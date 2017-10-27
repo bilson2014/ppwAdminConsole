@@ -195,15 +195,15 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 				}
 				// 项目阶段
 				String projectStage = flow.getProjectStage()+"";
-				if (projectStage == "1") {
+				if ("1".equals(projectStage)) {
 					projectStage = "沟通阶段";
-				} else if (projectStage == "2") {
+				} else if ("2".equals(projectStage)) {
 					projectStage = "方案阶段";
-				} else if (projectStage == "3") {
+				} else if ("3".equals(projectStage)) {
 					projectStage = "商务阶段";
-				} else if (projectStage == "4") {
+				} else if ("4".equals(projectStage)) {
 					projectStage = "制作阶段";
-				} else if (projectStage == "5") {
+				} else if ("5".equals(projectStage)) {
 					projectStage = "交付阶段";
 				}
 
