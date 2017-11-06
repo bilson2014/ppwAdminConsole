@@ -199,8 +199,14 @@ $().ready(function() {
 				}
 			}
 		}, {
-			field : 'projectBudget',
+			field : 'estimatedPrice',
 			title : '项目预算',
+			align : 'center',
+			sortable : true ,
+			width : 60
+		}, {
+			field : 'projectBudget',
+			title : '客户预算',
 			align : 'center',
 			sortable : true ,
 			width : 60

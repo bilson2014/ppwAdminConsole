@@ -152,6 +152,7 @@ $().ready(function(){
 						title : '视频外链' ,
 						align : 'center' ,
 						width : 60,
+						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
