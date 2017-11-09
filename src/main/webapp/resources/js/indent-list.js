@@ -27,6 +27,7 @@ $().ready(function(){
 	});
 	
 	
+	
 	filmUrl=$('#filmUrl').val();
 	
 	
@@ -210,9 +211,15 @@ function editFuc(){
 			valueField:'value',
 			textField:'text'
 		});
+		$('#referrerId').combobox({
+			data:EmployeeListCache,
+			valueField:'employeeId',
+			textField:'employeeRealName'
+		}); 
 		
 		$('#salesmanUnique').combobox('setValue',arr[0].salesmanUniqueId);
 		$('#indentSource').combobox('setValue',arr[0].indentSource);
+		$('#referrerId').combobox('setValue',arr[0].referrerId);
 	}
 }
 
@@ -340,6 +347,25 @@ function saveFun(){
 	progressLoad();
 	$('#fm2').form('submit',{
 		url : getContextPath() + '/portal/indent/update',
+		onSubmit : function() {
+			var flag = $(this).form('validate');
+			if(!flag){
+				progressClose();
+				return flag;
+			}else{
+				var indentSource = $('#indentSource').combobox('getValue');
+				if(indentSource==5){
+					var referrerId = $('#referrerId').combobox('getValue');
+					if(referrerId==undefined || referrerId==''){
+						progressClose();
+						$.message("线下-直销订单需指定推荐人");
+						return false;
+					}
+				}
+				return true;
+			}
+			
+		},
 		success : function(result) {
 			$('#dlg2').dialog('close');
 			datagrid.datagrid('clearSelections');

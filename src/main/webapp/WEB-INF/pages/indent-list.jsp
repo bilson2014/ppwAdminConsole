@@ -190,6 +190,11 @@
 				    <option value="8">复购</option> -->
                 </select>
             </div>
+            <div class="fitem">
+            	 <label style="padding-left:12px;">推荐人:</label>
+            	 <select id="referrerId" name="referrerId" class="easyui-combobox"  style="width: 46%;">
+                </select>
+            </div>
 	        <div class="fitem">
             	 <label>订单状态:</label>
             	 <select name="indentType" class="easyui-combobox" required="true" style="width: 46%;">
