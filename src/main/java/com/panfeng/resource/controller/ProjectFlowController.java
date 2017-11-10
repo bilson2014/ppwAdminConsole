@@ -179,6 +179,9 @@ public class ProjectFlowController extends BaseController {
 	public Map<String, Object> listMessageByProject(@PathVariable("projectId") String projectId) {
 		List<PmsDealLog> finances = pmsFinanceFacade.listByProjectId(projectId);
 		Map<String, Object> result = new HashMap<>();
+		List<PmsDealLog> providerFinances=new ArrayList<>();
+		result.put("providerFinances", providerFinances);
+		
 		if (ValidateUtil.isValid(finances)) {
 			for (PmsDealLog finance : finances) {
 				if ("role_customer".equals(finance.getUserType())) {
@@ -186,7 +189,10 @@ public class ProjectFlowController extends BaseController {
 					result.put("customerAmount", finance.getPayPrice());
 				} else if ("role_provider".equals(finance.getUserType())) {
 					// 供应商实发金额
-					result.put("providerAmount", finance.getPayPrice());
+					/*Map<String,Object> produceFinance=new HashMap<>();
+					produceFinance.put("userId", finance.getUserId());
+					produceFinance.put("payPrice", finance.getPayPrice());*/
+					providerFinances.add(finance);
 				}
 			}
 		}

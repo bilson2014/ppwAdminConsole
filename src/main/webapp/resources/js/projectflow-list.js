@@ -613,9 +613,74 @@ function financeDetail() {
 	}
 	
 	$('#financef').form('clear');
+	//var html=" <table style='width: 98%;'><tr><th>付给供应商金额</th><th>供应商制作内容</th></tr>";
+	var data=[];
 	syncLoadData(function(res) {
 		$('#financef').form('load',res);
+		var finances=res.providerFinances;
+		if(finances!=null && finances!='' && finances!=undefined){
+			for(var i=0;i<finances.length;i++){
+				var finance={};
+				for(var j=0;j<rows[0].teamList.length;j++){
+					if(rows[0].teamList[j].teamType=='produce' && rows[0].teamList[j].projectTeamId==finances[i].userId){
+						finance.makeContent=rows[0].teamList[j].makeContent;
+						finance.invoiceHead=rows[0].teamList[j].invoiceHead;
+						break;
+					}
+				}
+				
+				finance.payPrice=finances[i].payPrice;
+				finance.projectTeamId=finances[i].userId;
+				finance.userName=finances[i].userName;
+				finance.payTime=finances[i].payTime;
+				data.push(finance);
+			}
+		}
+		
 	}, getContextPath() + "/portal/project-finance/"+rows[0].projectId,null);
+
+	
+	var loggrid=$('#finalce-gride').datagrid({  
+        idField : 'projectTeamId',
+        data:data,
+        striped : true ,
+		loadMsg : '数据正在加载,请耐心的等待...' ,
+		rownumbers : true , 
+		pagination: false ,
+		pageSize : 20,
+		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
+		showFooter : false,
+        columns:[[
+        	{
+				field : 'userName' ,
+				title : '供应商名称' ,
+				align : 'center' ,
+				width : 80
+			},{
+				field : 'makeContent' ,
+				title : '供应商制作内容' ,
+				align : 'center' ,
+				width : 100
+			},
+        	{
+				field : 'payPrice',
+				title : '付给供应商金额',
+				width : 100,
+				align : 'center'
+			},{
+				field : 'invoiceHead' ,
+				title : '发票抬头' ,
+				align : 'center' ,
+				width : 100
+			},{
+				field : 'payTime' ,
+				title : '付款时间' ,
+				align : 'center' ,
+				width : 100
+			}
+        ]]    
+    });  
+	
 
 	$('#financeDlg').dialog({
 		modal : true,
@@ -626,6 +691,7 @@ function financeDetail() {
 		}
 	}).dialog('open').dialog('center');
 }
+
 //导出
 function exportInfo(){
 	$('#searchForm').form('submit',{

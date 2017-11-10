@@ -287,24 +287,34 @@
             closed="true" title="项目日志">
 				<table id="log-gride" data-options="fit:true,border:false"></table>
 	    </div>
-	     <div id="financeDlg" class="easyui-dialog" style="width:500px; height:150px;padding:10px 20px"
-            closed="true" buttons="#finance-buttons" title="财务信息">
-            <form id="financef" method="post" enctype="multipart/form-data">
-            	<input type="hidden" name="projectId" id="projectId">
-	            
-	            <table style="width: 98%;">
-	            	<tr>
-	            		<th>客户实付金额</th>
-	            		<td><input name="customerAmount" class="easyui-textbox" ></td>
-	            		<th>付给供应商金额</th>
-	            		<td><input name="providerAmount" class="easyui-textbox" ></td>
-	            	</tr>
-	            </table>
-	            
-				<div id="finance-buttons">
-					<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#financeDlg').dialog('close')" >取消</a>
-				</div>
-	        </form>
-	    </div>
+	<div id="financeDlg" class="easyui-dialog"
+		style="width: 560px; height: 400px; padding: 10px 20px" closed="true"
+		buttons="#finance-buttons" title="财务信息">
+		<div class="easyui-layout" data-options="fit:true">
+			<div data-options="region:'north',border:false" style="height: 50px">
+				<form id="financef" method="post" enctype="multipart/form-data">
+					<input type="hidden" name="projectId" id="projectId">
+
+					<table style="width: 98%;">
+						<tr>
+							<th>客户实付金额</th>
+							<td><input name="customerAmount" class="easyui-textbox"></td>
+							<!-- <th>付给供应商金额</th>
+	            		<td><input name="providerAmount" class="easyui-textbox" ></td> -->
+						</tr>
+					</table>
+
+				</form>
+			</div>
+			<div data-options="region:'center',border:false">
+				<table id="finalce-gride" data-options="fit:true,border:false"></table>
+			</div>
+		</div>
+		<div id="finance-buttons">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				iconCls="icon-cancel"
+				onclick="javascript:$('#financeDlg').dialog('close')">取消</a>
+		</div>
+	</div>
 </body>
 </html>
