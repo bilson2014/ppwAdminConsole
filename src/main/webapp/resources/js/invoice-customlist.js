@@ -324,12 +324,22 @@ function openDialog(id,data){
 				onSelect : function(record){
 					$('#projectName').val(record.projectName);
 					var id = $('#invoiceProjectId').combobox('getValue');
-					loadData(function(flag){
-						var userId = flag.customerId;
-						$('#invoiceUserId').combobox('setValue',userId);
-					}, getContextPath() + '/project/get-projectInfo', $.toJSON({
-						id : id
-					}));
+					if(id<20170000){
+						loadData(function(flag){
+							var userId = flag.customerId;
+							$('#invoiceUserId').combobox('setValue',userId);
+						}, getContextPath() + '/project/get-projectInfo', $.toJSON({
+							id : id
+						}));
+					}else{
+						loadData(function(flag){
+							var userId = flag.userId;
+							$('#invoiceUserId').combobox('setValue',userId);
+						}, getContextPath() + '/portal/projectflow/user', $.toJSON({
+							projectId : id
+						}));
+					}
+					
 				}
 			});
 			

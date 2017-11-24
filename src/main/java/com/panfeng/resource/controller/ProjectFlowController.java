@@ -43,6 +43,8 @@ import com.paipianwang.pat.facade.right.entity.PmsTree;
 import com.paipianwang.pat.workflow.entity.PmsProjectFlow;
 import com.paipianwang.pat.workflow.entity.PmsProjectMessage;
 import com.paipianwang.pat.workflow.entity.PmsProjectResource;
+import com.paipianwang.pat.workflow.entity.PmsProjectTeam;
+import com.paipianwang.pat.workflow.entity.PmsProjectUser;
 import com.paipianwang.pat.workflow.entity.ProjectColumn;
 import com.paipianwang.pat.workflow.enums.ProjectRoleType;
 import com.paipianwang.pat.workflow.facade.PmsProjectFlowFacade;
@@ -52,9 +54,12 @@ import com.paipianwang.pat.workflow.facade.PmsProjectGroupResourceUpdateFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectMessageFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectResourceFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectResourceRightFacade;
+import com.paipianwang.pat.workflow.facade.PmsProjectTeamFacade;
+import com.paipianwang.pat.workflow.facade.PmsProjectUserFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.persist.ActivitiMemberShipMapper;
 import com.panfeng.resource.model.ActivitiMember;
+import com.panfeng.resource.model.IndentProject;
 import com.panfeng.resource.view.ProjectFlowView;
 import com.panfeng.service.ProjectFlowService;
 
@@ -83,6 +88,11 @@ public class ProjectFlowController extends BaseController {
 	private PmsProjectGroupResourceUpdateFacade pmsProjectGroupResourceUpdateFacade;
 	@Autowired
 	private PmsProjectResourceRightFacade pmsProjectResourceRightFacade;
+	
+	@Autowired
+	private PmsProjectTeamFacade pmsProjectTeamFacade;
+	@Autowired
+	private PmsProjectUserFacade pmsProjectUserFacade;
 	
 	/**
 	 * 项目管理页面
@@ -437,6 +447,12 @@ public class ProjectFlowController extends BaseController {
 		return result;
 	}
 	
+	/**
+	 * 项目角色授权
+	 * @param roleId
+	 * @param resourceIds
+	 * @return
+	 */
 	@RequestMapping("/project-right/grant")
 	public String grantProjectRoleRight(final String roleId,final String[] resourceIds){
 		Group group=new GroupEntity(roleId);
@@ -537,4 +553,29 @@ public class ProjectFlowController extends BaseController {
 		return columnChildren;
 	}
 	
+	/**
+	 * 获取项目供应商
+	 * @param pmsProjectFlow
+	 * @return
+	 */
+	@RequestMapping("/projectflow/team")
+	public List<PmsProjectTeam> getProjectTeam(@RequestBody final PmsProjectFlow pmsProjectFlow) {
+		List<String> metaData=new ArrayList<>();
+		metaData.add("teamId");
+		List<PmsProjectTeam> teams=pmsProjectTeamFacade.getProjectsTeamByProjectId(metaData, pmsProjectFlow.getProjectId());
+		return teams;
+	}
+	
+	/**
+	 * 获取项目客户
+	 * @param pmsProjectFlow
+	 * @return
+	 */
+	@RequestMapping("/projectflow/user")
+	public PmsProjectUser getProjectUser(@RequestBody final PmsProjectFlow pmsProjectFlow){
+		List<String> metaData=new ArrayList<>();
+		metaData.add("userId");
+		PmsProjectUser user=pmsProjectUserFacade.getProjectUserByProjectId(metaData, pmsProjectFlow.getProjectId());
+		return user;
+	}
 }

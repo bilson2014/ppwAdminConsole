@@ -327,12 +327,35 @@ function openDialog(id,data){
 				},
 				onSelect : function(record){
 					var id = $('#invoiceProjectId').combobox('getValue');
-					loadData(function(flag){
-						var teamId = flag.teamId;
-						$('#invoiceTeamId').combobox('setValue',teamId);
-					}, getContextPath() + '/project/get-projectInfo', $.toJSON({
-						id : id
-					}));
+					
+					if(id<20170000){
+						loadData(function(flag){
+							var teamId = flag.teamId;
+							$('#invoiceTeamId').combobox('setValue',teamId);
+						}, getContextPath() + '/project/get-projectInfo', $.toJSON({
+							id : id
+						}));
+					}else{
+						loadData(function(flag){
+							if(null!=flag && undefined!=flag && flag.length>0){
+								var teamId = $('#invoiceTeamId').combobox('getValue');
+								var rewrite=true;
+								for(var i=0;i<flag.length;i++){
+									if(teamId==flag[i].teamId){
+										rewrite=false;
+										break;
+									}
+								}
+								if(rewrite){
+									$('#invoiceTeamId').combobox('setValue',flag[0].teamId);
+								}
+							}
+							
+						}, getContextPath() + '/portal/projectflow/team', $.toJSON({
+							projectId : id
+						}));
+					}
+					
 				}
 			});
 			

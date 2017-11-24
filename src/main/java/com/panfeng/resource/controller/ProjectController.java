@@ -394,8 +394,9 @@ public class ProjectController extends BaseController {
 	 * @return list
 	 */
 	@RequestMapping("/all")
-	public List<IndentProject> all() {
-		final List<IndentProject> list = indentProjectService.all();
+	public List<PmsProjectFlow> all() {
+//		final List<IndentProject> list = indentProjectService.all();
+		List<PmsProjectFlow> list = flowFacade.getProjectsByRelationView();
 		return list;
 	}
 
