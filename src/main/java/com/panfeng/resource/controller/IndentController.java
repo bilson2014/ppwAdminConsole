@@ -214,11 +214,11 @@ public class IndentController extends BaseController {
 		// 完成数据csv文件的封装
 		String displayColNames = "订单名称,订单编号,下单时间,订单金额,订单状态,客户电话,订单备注,CRM备注,分销渠道,订单来源"
 				+ ",处理人员,客户联系人,客户公司,推荐人,视频分钟数,项目经理,微信号,职位";
-		String matchColNames = "indentName,indentId,orderDate,indentPrice,indentTypeName,indent_tele,indent_recomment,cSRecomment,salesmanUniqueId,indentSourceName"
+		String matchColNames = "indentName,id,orderDate,indentPrice,indentTypeName,indent_tele,indent_recomment,cSRecomment,salesmanUniqueId,indentSourceName"
 				+ ",employeeRealName,realName,userCompany,referrerRealName,second,pMRealName,wechat,position";
 		List<Map<String, Object>> datas=JsonUtil.getValueListMap(list);
 		//数据处理
-		editExportData(datas);
+		editExportData(datas,list);
 		
 		String fileName = "indent_report_";
 		String content = CsvWriter.formatCsvData(datas, displayColNames, matchColNames);
@@ -235,11 +235,14 @@ public class IndentController extends BaseController {
 	 * 处理导出数据--显示值
 	 * @param datas
 	 */
-	private void editExportData(List<Map<String, Object>> datas) {
+	private void editExportData(List<Map<String, Object>> datas,List<PmsIndent> list) {
 		// 数据处理
 		List<PmsEmployee> employeeList = pmsEmployeeFacad.findEmployeeToSynergy();
 //		List<PmsUser> userList = pmsUserFacade.all();
-		for (Map<String, Object> data : datas) {
+		for (int j=0;j<datas.size();j++) {
+			Map<String, Object> data = datas.get(j);
+			data.put("id",list.get(j).getId());
+			
 			Long employeeId = data.get("employeeId") == null ? null : Long.parseLong((String) data.get("employeeId"));
 //			Long userId = data.get("userId") == null ? null : Long.parseLong((String) data.get("userId"));
 			Long referrerId = data.get("referrerId") == null ? null : Long.parseLong((String) data.get("referrerId"));

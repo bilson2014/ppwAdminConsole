@@ -178,7 +178,12 @@ function editFuc(){
 		$('#fm').form('clear');
 		$('#fm').form('load',rows[0]);
 		loadData(function(data){
-			$("#diff_container").empty().html(juicer(teamTmp_tpl.diffList,{list:data}));
+			if(data!=null && data.length == 0){
+				$("#diff_container").empty().html("供应商申请改回至原始数据");
+			}else if(data!=null &&  data.length > 0){
+				$("#diff_container").empty().html(juicer(teamTmp_tpl.diffList,{list:data}));
+			}
+			
 		}, getContextPath() + '/portal/teamTmp/find/diff/'+rows[0].teamId,null);
 		
 		formUrl = getContextPath() + '/portal/teamTmp/update';

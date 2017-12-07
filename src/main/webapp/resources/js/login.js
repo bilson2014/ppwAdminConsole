@@ -1,5 +1,7 @@
 $().ready(function(){
 	
+	if(window.top!==window.self){window.top.location=window.location};
+	
 	$('#login-btn').on('click',login);
 	
 	$('body').keydown(function(event){

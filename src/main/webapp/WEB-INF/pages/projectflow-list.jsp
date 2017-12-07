@@ -106,8 +106,8 @@
             <form id="teamf" method="post" enctype="multipart/form-data">
             	<input type="hidden" name="projectId" id="projectId">
 	            
-	            <table style="width: 98%;">
-	            	<tr><th colspan="4">策划供应商</th></tr>
+	            <table style="width: 98%;" id="teamTabel">
+	            	<!-- <tr><th colspan="4">策划供应商</th></tr>
 	            	<tr>
 	            		<th>名称</th>
 	            		<td><input name="scheme_teamName" id="scheme_teamName" class="easyui-textbox" ></td>
@@ -120,8 +120,8 @@
 	            		<th>金额</th>
 	            		<td><input name="actualPrice" id="scheme_actualPrice" class="easyui-textbox" ></td>
 	            	</tr>
-	            	<tr><th colspan="4">制作供应商</th></tr>
-	            	<tr>
+	            	<tr><th colspan="4">制作供应商</th></tr> 
+	            	 <tr>
 	            		<th>名称</th>
 	            		<td><input name="teamName" id="produce_teamName" class="easyui-textbox" ></td>
 	            		<th>联系人</th>
@@ -132,7 +132,15 @@
 	            		<td><input name="telephone" id="produce_telephone" class="easyui-textbox" ></td>
 	            		<th>金额</th>
 	            		<td><input name="actualPrice" id="produce_actualPrice" class="easyui-textbox" ></td>
-	            	</tr>
+	            	</tr> -->
+	            	<!-- <tr>
+	            	 
+	            	 <td colspan="4">
+	            	 	<div class="otherTeam"> 					
+						</div>
+					<hr/>
+	            	 </td>
+	            	</tr> -->
 	            </table>
 	            
 				<div id="team-buttons">
@@ -164,22 +172,22 @@
 	           <tr>
 	           		<th>销售总监</th>
 	            	<td><input name="saleDirector" id="saleDirector" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
-	            	<th>财务主管</th>
-	            	<td><input name="financeDirector" id="financeDirector" style="width: 135px;"  class="easyui-combobox" disabled="disabled" ></td>
-	           </tr>
-	            <tr>
+	            	<!-- <th>财务主管</th>
+	            	<td><input name="financeDirector" id="financeDirector" style="width: 135px;"  class="easyui-combobox" disabled="disabled" ></td> -->
+	          
 	           		<th>供应商总监</th>
 	            	<td><input name="teamDirector" id="teamDirector" style="width: 135px;"  class="easyui-combobox" disabled="disabled" ></td>
+	            </tr>
+	            <tr>
 	            	<th>监制总监</th>
 	            	<td><input name="superviseDirector" id="superviseDirector" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
-	           </tr>
-	           <tr>
+	           
 	           		<th>财务</th>
 	            	<td><input name="finance" id="finance" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
-	            	<th>策划</th>
-	            	<td><input name="scheme" id="scheme" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
 	           </tr>
 	           <tr>
+	            	<th>策划</th>
+	            	<td><input name="scheme" id="scheme" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
 	           		<th>监制</th>
 	            	<td><input name="supervise" id="supervise" style="width: 135px;"  class="easyui-combobox" editable="false"></td>
 	           </tr>

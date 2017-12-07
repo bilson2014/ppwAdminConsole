@@ -315,21 +315,63 @@ function teamDetail() {
 	}
 	
 	$('#teamf').form('clear');
+	$('#teamTabel tbody').html("");//.empty();
 	
 	$('#teamDlg').dialog({
 		modal : true,
 		onOpen : function(event, ui) {
-			var teams=rows[0].teamList;
-			for(var i=0;i<teams.length;i++){
-				for(var key in teams[i]){
-					$("#"+teams[i].teamType+"_"+key).textbox("setValue", teams[i][key]);
-				}
-			}
-			$('#teamf').find("input").each(function () {
-                $(this).attr("disabled",true)
-            });
 		}
 	}).dialog('open').dialog('center');
+	
+	var tab=document.getElementById("teamTabel");
+    //添加行
+	var teams=rows[0].teamList;
+	var productFlag=true;
+	var schemeFlag=true;
+	for(var i=0;i<teams.length;i++){
+		if(teams[i].teamType=='produce' && productFlag){
+			tab.insertRow(tab.rows.length).innerHTML='<tr><th colspan="4">制作供应商</th></tr>';
+			productFlag=false;
+		}else if(teams[i].teamType=='scheme' && schemeFlag){
+			tab.insertRow(tab.rows.length).innerHTML='<tr><th colspan="4">策划供应商</th></tr>';
+			schemeFlag=false;
+		}
+		
+		tab.insertRow(tab.rows.length).innerHTML='<tr>'+
+			'<th>名称</th>'+
+			'<td><input name="teamName" id="'+teams[i].teamType+'_teamName_'+i+'" class="easyui-textbox" value="'+teams[i].teamName+'"></td>'+
+			'<th>联系人</th>'+
+			'<td><input name="linkman" id="'+teams[i].teamType+'_linkman_'+i+'" class="easyui-textbox" value="'+teams[i].linkman+'"></td>'+
+			'<hr/>'+
+		'</tr>';
+		tab.insertRow(tab.rows.length).innerHTML='<tr>'+
+			'<th>电话</th>'+
+			'<td><input name="telephone" id="'+teams[i].teamType+'_telephone_'+i+'" class="easyui-textbox" value="'+teams[i].telephone+'"></td>'+
+			'<th>金额</th>'+
+			'<td><input name="actualPrice" id="'+teams[i].teamType+'_actualPrice_'+i+'" class="easyui-textbox" value="'+teams[i].actualPrice+'"></td>'+
+			'<hr/>'+
+		'</tr>';
+		if(teams[i].teamType=='produce'){
+			tab.insertRow(tab.rows.length).innerHTML='<tr>'+
+			'<th>状态</th>'+
+			'<td><select id="'+teams[i].teamType+'_flag_'+i+'" name="flag" style="width: 155px;"  class="easyui-combobox" disabled="disabled" value="'+teams[i].flag+'">'+
+				'<option value="0">正常</option>'+
+				'<option value="1">已删除</option>'+
+			'</select></td></td>'+
+			'</tr>';
+			tab.insertRow(tab.rows.length).innerHTML='<tr><td colspan="4"><hr/></td></tr>';
+		}
+		
+	}
+	
+	if(teams.length==0){
+		tab.insertRow(tab.rows.length).innerHTML='<tr><th colspan="4">未分配供应商</th></tr>';
+	}
+    
+	$('#teamf').find("input").each(function () {
+        $(this).attr("disabled",true)
+    });
+	$.parser.parse($(tab));
 }
 //客户信息
 function userDetail() {

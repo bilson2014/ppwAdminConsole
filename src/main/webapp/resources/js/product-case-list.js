@@ -189,7 +189,7 @@ function openDialog(id, data) {
 				}
 			});
 			$("#productId").combobox({
-				url:getContextPath()+'/portal/service/productSelect',
+				url:getContextPath()+'/portal/service/productService',
 				valueField:'productId',
 				textField:'productName',
 				filter: function(q, row){
