@@ -1,0 +1,166 @@
+var treegrid;
+var formUrl;
+$().ready(
+				function() {
+					$('#grade').combobox(
+						{
+							onSelect : function(record) {
+								$('#parentId').combotree('clear');
+								$('#parentId').combotree('reload',
+												getContextPath()+ '/portal/quotationtype/selectlist/'+ record.value);
+						}
+					});
+
+					treegrid = $("#treeGride").treegrid({
+						url : getContextPath() + '/portal/quotationtype/list',
+						idField : 'typeId',
+						treeField : 'typeName',
+						parentField : 'parentId',
+						fit : true,
+						fitColumns : false,
+						border : false,
+						onLoadSuccess : function(data) {
+							// treegrid.treegrid('collapseAll');
+						},
+						columns : [ [ {
+							field : 'typeName',
+							title : '类型名称',
+							width : 300
+						}, {
+							field : 'unitPrice',
+							title : '单价',
+							width : 100
+						}, {
+							field : 'costPrice',
+							title : '成本价',
+							width : 100
+						}, {
+							field : 'description',
+							title : '描述',
+							width : 400
+						}, {
+							field : 'updateDate',
+							title : '维护时间',
+							width : 200
+						}, {
+							field : 'grade',
+							title : '类型级别',
+							width : 200,
+							hidden : true
+						} ] ],
+						toolbar : '#toolbar',
+					});
+				});
+
+// 添加页
+function addFun() {
+	var node = treegrid.treegrid('getSelected');
+	$('#fm').form('clear');
+	
+	if (node && node.grade<3) {
+		//如果选择非叶子类型，默认父类型为选中类型
+		openDialog('dlg', node.grade+1);
+		$('#parentId').combotree('setValue',node.typeId);
+		$('#grade').combobox('setValue',node.grade+1);
+	}else{
+		openDialog('dlg', null);
+	}
+	
+	formUrl = getContextPath() + '/portal/quotationtype/save';
+}
+// 修改页
+function editFun() {
+	var node = treegrid.treegrid('getSelected');
+	if (node) {
+		openDialog('dlg', node.grade);
+		$('#fm').form('clear');
+		$('#fm').form('load', node);
+		formUrl = getContextPath() + '/portal/quotationtype/update';
+	} else {
+		$.message('只能选择一条记录进行修改!');
+	}
+}
+// 添加
+function saveFun() {
+	progressLoad();
+	$('#fm').form('submit', {
+		url : formUrl,
+		onSubmit : function() {
+			var flag = $(this).form('validate');
+			if (!flag) {
+				progressClose();
+			}
+			return flag;
+		},
+		success : function(result) {
+			$('#dlg').dialog('close');
+			treegrid.treegrid('reload');
+			progressClose();
+			$.message('操作成功!');
+		}
+	});
+}
+// 修改
+// 删除
+function delFun() {
+	var node = treegrid.treegrid('getSelected');
+	if (node) {
+		if(node.grade==1){
+			$.message('大类不可删除!');
+			return;
+		}
+		var msg='确认删除?';
+		if(node.grade==2){
+			msg='将删除 '+node.typeName+' 下所有明细数据，确认删除?';
+		}
+		$.messager.confirm('提示信息', msg, function(r) {
+			if (r) {
+				var ids = node.typeId;
+				$.post(getContextPath() + '/portal/quotationtype/delete', {
+					ids : ids
+				}, function(result) {
+					// 刷新数据
+					treegrid.treegrid('clearSelections');
+					treegrid.treegrid('reload');
+					$.message('操作成功!');
+				});
+			} else {
+				return;
+			}
+		});
+	}
+}
+// 数据校验
+// 打开Dlg
+function openDialog(id, grade) {
+	$('#' + id).dialog(
+			{
+				modal : true,
+				onOpen : function(event, ui) {
+					if(grade>1){
+						$('#parentId').combotree(
+								{
+									url : getContextPath()
+											+ '/portal/quotationtype/selectlist/'
+											+ grade,
+									lines : true,
+									cascadeCheck : false,
+									parentField : 'pid',
+									idField : 'id',
+									treeField : 'text'
+//									editable :true,//后期加上搜索
+//									filter:{}
+						});
+					}else{
+						$('#parentId').combotree(
+								{
+									lines : true,
+									cascadeCheck : false,
+									parentField : 'pid',
+									idField : 'id',
+									treeField : 'text'
+						});
+					}
+				}
+			}).dialog('open').dialog('center');
+}
