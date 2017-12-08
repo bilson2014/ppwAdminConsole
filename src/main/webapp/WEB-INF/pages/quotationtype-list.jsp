@@ -80,28 +80,28 @@
 		<form id="fm" method="post" >
 			<input name="typeId" type="hidden" >
 			<div class="fitem">
-				<label>类型名称</label>
+				<label>名称</label>
 				<input name="typeName" class="easyui-textbox" required="true">
 			</div>
 			<div class="fitem">
-	            <label>类型级别:</label>
+	            <label>级别:</label>
 	               <select id="grade" name="grade" class="easyui-combobox" required="true" style="width: 46%;">
-	                	<option value="1">大类</option>
+	                	<option value="1">类别</option>
 	                	<option value="2">子类</option>
-	                	<option value="3">明细</option>
+	                	<option value="3">项目</option>
 	               </select>
 	            </div>
 			<div class="fitem">
-				<label>上级类型</label>
+				<label>直属上级</label>
 				<select id="parentId" name="parentId"  style="width: 70%;"></select>
 			</div>
 			<div class="fitem">
 				<label>单价</label>
-				<input name=unitPrice class="easyui-textbox" >
+				<input name=unitPrice class="easyui-numberbox" data-options="precision:2">
 			</div>
 			<div class="fitem">
 				<label>成本价</label>
-				<input name="costPrice" class="easyui-textbox" >
+				<input name="costPrice" class="easyui-numberbox" data-options="precision:2">
 			</div>
 			<div class="fitem">
 				<label>描述</label>

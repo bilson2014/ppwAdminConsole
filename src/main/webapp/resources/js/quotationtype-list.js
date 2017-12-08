@@ -24,7 +24,7 @@ $().ready(
 						},
 						columns : [ [ {
 							field : 'typeName',
-							title : '类型名称',
+							title : '名称',
 							width : 300
 						}, {
 							field : 'unitPrice',
@@ -89,6 +89,11 @@ function saveFun() {
 			var flag = $(this).form('validate');
 			if (!flag) {
 				progressClose();
+				return flag;
+			}
+			if(!validate()){
+				progressClose();
+				return false;
 			}
 			return flag;
 		},
@@ -131,6 +136,34 @@ function delFun() {
 	}
 }
 // 数据校验
+function validate(){
+	var typeName=$("input[name='typeName']").val() ;//$('#typeName').val();
+	if (typeName == null || typeName == '') {
+		$.message('请输入名称!');
+		return false;
+	}
+	var grade =$('#grade').combobox('getValue') ;
+	if (grade == null || grade == '') {
+		$.message('请选择等级!');
+		return false;
+	}
+	if(grade>1){
+		//子类/项目
+		var parentId =$('#parentId').combobox('getValue') ;
+		if (parentId == null || parentId == '') {
+			$.message('请选择直属上级!');
+			return false;
+		}
+	}
+	if(grade==3){
+		var unitPrice=$("input[name='unitPrice']").val() ;//$('#unitPrice').val();
+		if (unitPrice == null || unitPrice == '') {
+			$.message('请输入单价!');
+			return false;
+		}
+	}
+	return true;
+}
 // 打开Dlg
 function openDialog(id, grade) {
 	$('#' + id).dialog(
