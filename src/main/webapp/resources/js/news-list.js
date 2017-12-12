@@ -125,7 +125,7 @@ function createEditor(name){
 		height : '350px',
 		resizeType:0,
 		allowImageUpload : true,
-		items : [ 'undo','redo','plainpaste','wordpaste','indent','outdent','fontname', 'fontsize', 'formatblock','|', 'forecolor', 'hilitecolor',
+		items : ['source', 'undo','redo','plainpaste','wordpaste','indent','outdent','fontname', 'fontsize', 'formatblock','|', 'forecolor', 'hilitecolor',
 					'bold', 'italic', 'underline', 'removeformat', '|',
 					'justifyleft', 'justifycenter', 'justifyright',
 					'insertorderedlist', 'insertunorderedlist', '|',
