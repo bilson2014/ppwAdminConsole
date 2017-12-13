@@ -110,13 +110,13 @@ function saveFun() {
 function delFun() {
 	var node = treegrid.treegrid('getSelected');
 	if (node) {
-		if(node.grade==1){
+		/*if(node.grade==1){
 			$.message('大类不可删除!');
 			return;
-		}
+		}*/
 		var msg='确认删除?';
-		if(node.grade==2){
-			msg='将删除 '+node.typeName+' 下所有明细数据，确认删除?';
+		if(node.grade==1 || node.grade==2){
+			msg='将删除 "'+node.typeName+'"下所有类型，确认删除?';
 		}
 		$.messager.confirm('提示信息', msg, function(r) {
 			if (r) {
@@ -180,9 +180,14 @@ function openDialog(id, grade) {
 									cascadeCheck : false,
 									parentField : 'pid',
 									idField : 'id',
-									treeField : 'text'
+									treeField : 'text',
 //									editable :true,//后期加上搜索
 //									filter:{}
+									onBeforeSelect: function(node) {  //只能选择叶子节点
+							            if (!$(this).tree('isLeaf', node.target)) {  
+							                return false;  
+							            }  
+							        }
 						});
 					}else{
 						$('#parentId').combotree(

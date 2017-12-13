@@ -56,9 +56,14 @@ public class QuotationController extends BaseController {
 		//校验
 		
 		//删除
-		long result=pmsQuotationTypeFacade.deleteByIds(ids);
+		long result=0;;
 		PmsResult pmsResult=new PmsResult();
-		pmsResult.setResult(result>0?true:false);
+		for(long id:ids){
+			result=pmsQuotationTypeFacade.delete(id);
+			if(result<=0){
+				pmsResult.setResult(false);
+			}
+		}
 		return pmsResult;
 	}
 	/**
