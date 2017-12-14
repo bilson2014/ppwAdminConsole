@@ -11,6 +11,7 @@
 	var="easyuiCss" />
 <spring:url value="/resources/lib/jquery.easyui/themes/icon.css"
 	var="iconCss" />
+<spring:url value="/resources/css/quotationtype-list.css" var="quotationTypeCss" />
 <%-- import JS --%>
 <%-- <spring:url value="/resources/lib/html5shiv/html5shiv.js" var="html5shivJs" /> --%>
 <spring:url value="/resources/lib/jquery/jquery-2.0.3.min.js"
@@ -39,6 +40,7 @@
 <link rel="stylesheet" href="${commonCss }">
 <link rel="stylesheet" href="${easyuiCss }">
 <link rel="stylesheet" href="${iconCss }">
+<link rel="stylesheet" href="${quotationTypeCss}">
 <!--[if lt IE 9]>
 		<script>window.html5 || document.write('<script src="html5shivJs"><\/script>')</script>
 	<![endif]-->
@@ -94,6 +96,11 @@
 			<div class="fitem">
 				<label>直属上级</label>
 				<select id="parentId" name="parentId"  style="width: 70%;"></select>
+			</div>
+			<div class="fitem">
+				<label>是否整包</label>
+				<label><input name="fullJob" type="radio" value="1" />是 </label> 
+				<label><input name="fullJob" type="radio" value="0" checked="checked"/>否 </label> 
 			</div>
 			<div class="fitem">
 				<label>单价</label>

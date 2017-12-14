@@ -1,0 +1,7 @@
+@CHARSET "UTF-8";
+.fitem label{
+            display:inline-block;
+            width:50px;
+            position:relative;
+  			margin-right: 2px;
+ }
