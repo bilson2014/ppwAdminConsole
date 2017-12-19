@@ -1,9 +1,13 @@
 package com.panfeng.resource.controller;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +45,9 @@ import com.paipianwang.pat.facade.user.service.PmsUserFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.domain.Result;
 import com.panfeng.mq.service.SmsMQService;
+import com.panfeng.poi.GenerateExcel;
+import com.panfeng.poi.IndentPoiAdapter;
+import com.panfeng.poi.ProjectPoiAdapter;
 import com.panfeng.resource.model.Indent;
 import com.panfeng.resource.view.IndentView;
 import com.panfeng.util.CsvWriter;
@@ -211,23 +218,43 @@ public class IndentController extends BaseController {
 		SessionInfo sessionInfo = getCurrentInfo(request);
 		final List<PmsIndent> list = pmsIndentFacade.listWithCondition(JsonUtil.objectToMap(view));
 
-		// 完成数据csv文件的封装
-		String displayColNames = "订单名称,订单编号,下单时间,订单金额,订单状态,客户电话,订单备注,CRM备注,分销渠道,订单来源"
-				+ ",处理人员,客户联系人,客户公司,推荐人,视频分钟数,项目经理,微信号,职位";
-		String matchColNames = "indentName,id,orderDate,indentPrice,indentTypeName,indent_tele,indent_recomment,cSRecomment,salesmanUniqueId,indentSourceName"
-				+ ",employeeRealName,realName,userCompany,referrerRealName,second,pMRealName,wechat,position";
 		List<Map<String, Object>> datas=JsonUtil.getValueListMap(list);
 		//数据处理
 		editExportData(datas,list);
-		
-		String fileName = "indent_report_";
-		String content = CsvWriter.formatCsvData(datas, displayColNames, matchColNames);
+
+		OutputStream outputStream=null;
 		try {
-			Log.error("indent list export success ...", sessionInfo);
-			CsvWriter.exportCsv(fileName, content, response);
+			 // 设置文件后缀  
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhh24mmss");  
+	        String fn = URLEncoder.encode("indent_report_".concat(sdf.format(new Date()).toString() + ".xlsx"), "UTF-8");
+	        // 设置响应  
+	        response.setCharacterEncoding("UTF-8");  
+//	        response.setContentType("text/csv; charset=UTF-8"); 
+	        response.setContentType("application/octet-stream");
+	        response.setHeader("Pragma", "public");  
+	        response.setHeader("Cache-Control", "max-age=30");  
+	        response.setHeader("Content-Disposition", "attachment; filename=" + fn);  
 			
+	        //文件导出
+	        IndentPoiAdapter projectPoiAdapter = new IndentPoiAdapter();
+			GenerateExcel ge = new GenerateExcel();
+			projectPoiAdapter.setData(datas);
+	        
+			outputStream=response.getOutputStream();
+			ge.generate(projectPoiAdapter, outputStream);
+			outputStream.flush();
+			Log.error("indent list export success ...", sessionInfo);
 		} catch (IOException e) {
-			Log.error("indent list export error ...", sessionInfo);
+			e.printStackTrace();
+			Log.error("indent list export success ...", sessionInfo);
+		}finally {
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
