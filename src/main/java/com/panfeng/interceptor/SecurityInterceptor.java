@@ -116,7 +116,12 @@ public class SecurityInterceptor implements HandlerInterceptor {
 			if(info == null){
 				// 未登录
 				req.setAttribute("message", "您还没有登录或登录已超时，请重新登录，然后再刷新本功能！");
-				req.getRequestDispatcher("/login").forward(req, resp);
+				if("apaipian.com".equals(req.getServerName()) || "www.apaipian.com".equals(req.getServerName())){//生产管理端或者上一访问为https?此时服务的接收不到cookie
+					resp.sendRedirect("https://"+req.getServerName()+":7071"+"/login");
+				}else{
+					req.getRequestDispatcher("/login").forward(req, resp);
+				}
+				
 				return false;
 			}else {
 				

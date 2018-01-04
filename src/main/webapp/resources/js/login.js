@@ -28,8 +28,15 @@ function login(){
 		},
 	    success:function(result){
 	    	result = $.parseJSON(result);
-	    	if (result.ret) {
-	    		window.location.href= getContextPath() + '/index';
+	    	if (result.ret) {    		
+	    		var port=document.location.port;
+	    		if(document.location.protocol=="https:" || port=='7071'){
+	    			port='8081';
+	    			window.location.href="http://"+document.location.hostname+":"+port+ '/index';
+	    		}else{
+	    			window.location.href= getContextPath() + '/index';
+	    		}
+	    		
 	    	}else{
 	    		$.message('<div class="light-info"><div class="light-tip icon-tip"></div><div>'+result.message+'</div></div>');
 	    	}
