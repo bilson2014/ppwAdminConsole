@@ -70,6 +70,7 @@
 	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsProjectUserFacade" id="pmsProjectUserFacade" retries="1" check="false" timeout="5000" />
 	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsQuotationTypeFacade" id="pmsQuotationTypeFacade" retries="1" check="false" timeout="5000" />
 	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsQuotationFacade" id="pmsQuotationFacade" retries="1" check="false" timeout="5000" />
+	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsQuotationTemplateFacade" id="pmsQuotationTemplateFacade" retries="1" check="false" timeout="5000" />
 	
 </beans>
 
