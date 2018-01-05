@@ -42,6 +42,8 @@ public class ProductView extends Pagination{
 	
 	private String tags = null; // 标签
 	
+	private String teamFlag;//供应商审核状态
+	
 	public String getVisible() {
 		return visible;
 	}
@@ -192,6 +194,14 @@ public class ProductView extends Pagination{
 
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+
+	public String getTeamFlag() {
+		return teamFlag;
+	}
+
+	public void setTeamFlag(String teamFlag) {
+		this.teamFlag = teamFlag;
 	}
 	
 }

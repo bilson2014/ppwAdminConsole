@@ -103,6 +103,7 @@ public class ProductController extends BaseController {
 		paramMap.put("hret", view.getHret());
 		paramMap.put("recommend", view.getRecommend());
 		paramMap.put("tags", ValidateUtil.isValid(view.getTags()) ? view.getTags().trim() : null);
+		paramMap.put("teamFlag",view.getTeamFlag());
 		final DataGrid<PmsProduct> dataGrid = pmsProductFacade.listWithPagination(param,paramMap);
 		return dataGrid;
 	}

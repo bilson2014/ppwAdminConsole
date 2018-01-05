@@ -35,12 +35,12 @@
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
-	<div data-options="region:'north',border:false" style="height: 66px; overflow: hidden;background-color: #fff">
+	<div data-options="region:'north',border:false" style="height: 100px; overflow: hidden;background-color: #fff">
 		<form id="searchForm">
 			<table>
 				<tr>
 					<th>所属团队:</th>
-					<td><input id="search-teamName" name="teamName" placeholder="请输入团队名称"/></td>
+					<td><input id="search-teamName" name="teamName" placeholder="请输入团队名称" style="width:160px"/></td>
 					<th>项目名称:</th>
 					<td><input id="search-productName" name="productName" class="easyui-textbox" placeholder="请填写作品名称" /></td>
 					<th>上传时间:</th>
@@ -57,8 +57,18 @@
 							<option value="2">未审核通过</option>
 						</select>
 					</td>
+					
 				</tr>
 				<tr>
+					<th>团队审核状态：</th>
+						<td>
+							<select  name="teamFlag" class="easyui-combobox">
+								<option value="" selected="selected">-- 请选择 --</option>
+								<option value="0">审核中</option>
+								<option value="1">审核通过</option>
+								<option value="2">未通过审核</option>
+							</select>
+						</td>
 					<th>是否可见：</th>
 					<td>
 						<select name="visible" class="easyui-combobox" editable="false">
@@ -85,9 +95,15 @@
 							<option value="3">推荐视频</option>
 						</select>
 					</td>
+					
+				</tr>
+				<tr>
 					<th>标签：</th>
 					<td>
 						<input id="search-tags" name="tags" class="easyui-textbox" placeholder="请填写标签" />
+					</td>
+					<th></th>
+					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
 					</td>
