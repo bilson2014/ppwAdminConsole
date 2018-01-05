@@ -38,7 +38,18 @@ $().ready(
 							field : 'description',
 							title : '描述',
 							width : 400
-						}, {
+						},{
+							field : 'fullJob',
+							title : '是否整包',
+							width : 80,
+							formatter : function(value , record , index){
+								if(value == 0){
+									return '' ;
+								} else if( value == 1){
+									return '整包' ; 
+								}
+							}
+						} , {
 							field : 'updateDate',
 							title : '维护时间',
 							width : 200
@@ -47,7 +58,7 @@ $().ready(
 							title : '类型级别',
 							width : 200,
 							hidden : true
-						} ] ],
+						}] ],
 						toolbar : '#toolbar',
 					});
 				});

@@ -4,6 +4,7 @@ var itemgrid;
 var formUrl;
 var quotationTypeCache;
 var productLineCache;
+var lastIndex;//编辑行
 
 //验证
 var isadd = false;
@@ -73,8 +74,6 @@ $().ready(function(){
 						width : 150,
 						align : 'center' ,
 						formatter : function(value , record , index){
-							console.log(productLineCache);
-							console.log(value);
 							if(productLineCache!=null){
 								for(var i=0;i<productLineCache.length;i++){
 									if(productLineCache[i].children!=null){
@@ -187,6 +186,16 @@ function save(){
 	var discount=$('#discount').val();
 	var total= $('#total').val();
 	var subTotal = itemgrid.datagrid('getFooterRows')[0].sum;
+	var items=itemgrid.datagrid("getRows");
+	
+	$.each(items,function(index,item){
+        if(item.days=="整包"){
+        	item.days="-1";
+        } 
+        if(item.quantity=="整包"){
+        	item.quantity="-1";
+        }
+	});
 	
 	progressLoad();
 	syncLoadData(function(res) {
@@ -200,7 +209,7 @@ function save(){
 			$.message(res.err);
 		}
 	}, formUrl, $.toJSON({
-		items : itemgrid.datagrid("getRows"),
+		items : items,
 		templateId : $('#templateId').val(),
 		templateName : templateName,
 		chanpinconfigId:chanpinconfigId,
@@ -247,6 +256,8 @@ function add(){
 		$.message('请选择收费项');
 		return;
 	}
+	//是否添加过
+	
 	//value
 	var row=new Object();
 	row.quantity=$("#quantity").val();
@@ -258,6 +269,12 @@ function add(){
 			row.detailName=quotationTypeCache[i].typeName;
 			row.description=quotationTypeCache[i].description;
 			row.unitPrice=quotationTypeCache[i].unitPrice;
+			row.fullJob=quotationTypeCache[i].fullJob;
+			//整包
+			if(quotationTypeCache[i].fullJob==1){
+				row.quantity="整包";
+				row.days="整包";
+			}
 		}
 		if(type==quotationTypeCache[i].typeId){
 			row.typeId=quotationTypeCache[i].typeId;
@@ -297,6 +314,7 @@ function openDialog(data){
 	$('#dlg').dialog({
 		modal : true,
 		onOpen : function(event, ui) {
+			$(".fullJob").hide();
 		},
 	}).dialog('open').dialog('center');
 }
@@ -357,8 +375,17 @@ function initItemIdSelect(){
 		    		if(node.id==quotationTypeCache[i].typeId){
 		    			$('#unitPrice').html(quotationTypeCache[i].unitPrice);
 		    			$('#description').html(quotationTypeCache[i].description);
-		    			$("#days").textbox("setValue", "");
-		    			$("#quantity").textbox("setValue", "");
+		    			if(quotationTypeCache[i].fullJob==1){
+		    				$(".fullJob").show();
+		    				$("#days").numberbox("disable",true);
+		    				$("#quantity").numberbox("disable",true);
+		    			}else{
+		    				$(".fullJob").hide();
+		    				$("#days").numberbox("enable",true);
+		    				$("#quantity").numberbox("enable",true);
+		    			}
+		    			$("#days").numberbox("setValue", "");
+		    			$("#quantity").numberbox("setValue", "");
 		    			break;
 		    		}
 		    	}
@@ -430,7 +457,10 @@ function initItem(data){
 				editor: {  
 	                type: 'numberbox',  
 	                options: {  
-	                    precision: 0  
+	                    precision: 2,
+	                    min:0,
+						required:true , 
+	                    missingMessage:'单价必填!'
 	                }  
 	            }
 			}, {
@@ -438,23 +468,23 @@ function initItem(data){
 				title : '数量 ',
 				align : 'center' ,
 				width : 50,
-				editor: {  
-	                type: 'numberbox',  
-	                options: {  
-	                    precision: 0  
-	                }  
-	            }
+				formatter:function(value,row,index){
+					if(value=="-1" || value==-1){
+						return "整包";
+					}
+					return value;
+				}
 			}, {
 				field : 'days' ,
 				title : '天数',
 				align : 'center' ,
 				width : 50,
-				editor: {  
-	                type: 'numberbox',  
-	                options: {  
-	                    precision: 0  
-	                }  
-	            }
+				formatter:function(value,row,index){
+					if(value=="-1" || value==-1){
+						return "整包";
+					}
+					return value;
+				}
 			}, {
 				field : 'sum' ,
 				title : '总价',
@@ -505,9 +535,48 @@ function getRowIndex(target){
     var tr = $(target).closest('tr.datagrid-row');
     return parseInt(tr.attr('datagrid-row-index'));
 }
-function editrow(target){
-	itemgrid.datagrid('beginEdit', getRowIndex(target));
+function editrow(target) {
+	var rowIndex = getRowIndex(target);
+
+	if (lastIndex != rowIndex) {
+		itemgrid.datagrid('endEdit', lastIndex);
+	}
+
+	var row = itemgrid.datagrid('getRows')[rowIndex];
+	if (row.fullJob == 0) {
+		// 数量、天数添加编辑框
+		itemgrid.datagrid('addEditor', [ // 添加cardNo列editor
+		{
+			field : 'quantity',
+			editor : {
+				type : 'numberbox',
+				options : {
+					precision : 0,
+					min:1,
+					required:true , 
+                    missingMessage:'数量必填!'
+				}
+			}
+		}, {
+			field : 'days',
+			editor : {
+				type : 'numberbox',
+				options : {
+					precision : 0,
+					min:1,
+					required:true , 
+                    missingMessage:'天数必填!'
+				}
+			}
+		} ]);
+	}else{
+		itemgrid.datagrid('removeEditor',['quantity','days']);
+	}
+
+	itemgrid.datagrid('beginEdit', rowIndex);
+	lastIndex = rowIndex;
 }
+
 function deleterow(target){
     $.messager.confirm('删除','确认删除?',function(r){
         if (r){
@@ -534,7 +603,11 @@ function cancelrow(target){
 //计算一行合计
 function computeRowSum(rowIndex){
 	var row=itemgrid.datagrid('getRows')[rowIndex];
-	var sum=Number(row.unitPrice)*Number(row.quantity)*Number(row.days);
+	var sum=Number(row.unitPrice);
+	if(row.fullJob==0){
+		sum=Number(row.unitPrice)*Number(row.quantity)*Number(row.days);
+	}
+	
 	row.sum = sum;  
 }
 //计算最终价格
@@ -611,6 +684,28 @@ $.extend($.fn.datagrid.methods, {
             }
             return sumNum.toFixed(2);
         }
-    }
+    },
+    addEditor : function(jq, param) { 
+    	if (param instanceof Array) { 
+    		$.each(param, function(index, item) { 
+    			var e = $(jq).datagrid('getColumnOption', item.field); 
+    			e.editor = item.editor; 
+    		}); 
+    	} else { 
+    		var e = $(jq).datagrid('getColumnOption', param.field); 
+    		e.editor = param.editor; 
+    	} 
+	}, 
+	removeEditor : function(jq, param) { 
+		if (param instanceof Array) { 
+			$.each(param, function(index, item) { 
+				var e = $(jq).datagrid('getColumnOption', item); 
+				e.editor = {}; 
+			}); 
+		} else { 
+			var e = $(jq).datagrid('getColumnOption', param);
+			e.editor = {}; 
+		} 
+	}
 });
 

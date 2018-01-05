@@ -4,7 +4,7 @@
 
 <spring:url value="/resources/lib/My97DatePicker/WdatePicker.js"
 	var="WdatePickerJs" />
-<spring:url value="/resources/css/project-list.css" var="projectListCss" />
+<spring:url value="/resources/css/quotationtemplate-list.css" var="qtemplateListCss" />
 <spring:url value="/resources/js/quotationtemplate-list.js"
 	var="quotationtemplateListJs" />
 
@@ -17,7 +17,7 @@
 <!--<![endif]-->
 <head>
 <jsp:include page="common.jsp" />
-<link rel="stylesheet" href="${projectListCss }">
+<link rel="stylesheet" href="${qtemplateListCss }">
 <script src="${WdatePickerJs }"></script>
 <script src="${quotationtemplateListJs }"></script>
 </head>
@@ -102,11 +102,14 @@
 							<th>收费类</th>
 							<td><input name="typeId" id="typeId" class="easyui-combobox"></td>
 							<th>收费项</th>
-							<td><select name="itemId" id="itemId" style="width: 160px" class="easyui-combotree"></select></td>
+							<td><select name="itemId" id="itemId" style="width: 180px" class="easyui-combotree"></select></td>
+							
 							<th>天数</th>
-							<td><input name="days" id="days" class="easyui-textbox"></td>
+							<td><input name="days" id="days" style="width: 60px" class="easyui-numberbox" data-options="min:0,precision:0"></td>
 							<th>数量</th>
-							<td><input name="quantity" id="quantity" class="easyui-textbox"></td>
+							<td><input name="quantity" id="quantity" style="width: 60px" class="easyui-numberbox" data-options="min:0,precision:0"></td>
+							
+							<th class="fullJob">整包</th>
 							
 							<td>
 								<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="add()" >添加</a>
@@ -116,7 +119,7 @@
 						<tr>
 							<th>单价：</th>
 							<td id="unitPrice"></td>
-							<th>收费项描述：</th>
+							<th style="width: 100px">收费项描述：</th>
 							<td colspan="5" id="description"></td>
 						</tr>
 					</table>
