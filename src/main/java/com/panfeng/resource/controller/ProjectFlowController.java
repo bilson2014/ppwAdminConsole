@@ -30,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONArray;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.common.entity.PmsResult;
 import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.enums.FileType;
 import com.paipianwang.pat.common.util.JsonUtil;
@@ -577,5 +578,14 @@ public class ProjectFlowController extends BaseController {
 		metaData.add("userId");
 		PmsProjectUser user=pmsProjectUserFacade.getProjectUserByProjectId(metaData, pmsProjectFlow.getProjectId());
 		return user;
+	}
+	/**
+	 * 删除项目流程
+	 * @param pmsProjectFlow
+	 * @return
+	 */
+	@RequestMapping("/projectflow/delete")
+	public PmsResult deleteProject(String[] projectIds){
+		return projectFlowService.deleteProjectFlow(projectIds);
 	}
 }

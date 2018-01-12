@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.panfeng.persist.ActivitiCleanMapper">
+
+	<delete id="deleteAll" parameterType="java.util.Map">
+			<!-- 留言 -->
+			DELETE FROM PROJECT_MESSAGE  where projectId = #{projectId};
+			<!-- 文件 -->
+			DELETE from PROJECT_RESOURCE  where projectId = #{projectId};
+			<!-- 协同人 -->
+			DELETE FROM PROJECT_SYNERGY  where projectId = #{projectId};
+			<!-- 供应商 -->
+			DELETE FROM PROJECT_TEAM  where projectId = #{projectId};
+			<!-- 客户 -->
+			DELETE FROM PROJECT_USER  where projectId = #{projectId};
+			<!-- 发票 -->
+			DELETE FROM TEAM_INVOICE  where invoice_projectId = #{projectId};
+			DELETE from USER_INVOICE  where invoice_projectId = #{projectId};
+			<!-- 转账记录 -->
+			DELETE from DEAL_LOG  where DL_PROJECT_ID = #{projectId};
+			
+			<!-- 流程 -->
+			DELETE  from activiti.ACT_HI_ACTINST where    PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_HI_COMMENT  where TASK_ID_ IN (select ID_ from  activiti.ACT_HI_TASKINST where PROC_INST_ID_ = #{processInstanceId});
+			DELETE  from activiti.ACT_HI_DETAIL   where   PROC_INST_ID_  = #{processInstanceId};
+			DELETE  from activiti.ACT_HI_IDENTITYLINK where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_HI_VARINST  where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_RU_IDENTITYLINK where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_RU_VARIABLE where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_RU_TASK where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_HI_TASKINST where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_HI_PROCINST where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_RU_EXECUTION    where   PROC_INST_ID_ = #{processInstanceId} ORDER BY PARENT_ID_ DESC;
+			<!-- 项目 -->
+			DELETE FROM  PROJECT_FLOW  where  projectId = #{projectId};
+	</delete>
+<!-- 	 留言
+	<delete id="deleteMessage" parameterType="java.util.Map">
+			DELETE FROM PROJECT_MESSAGE  where projectId = #{projectId};
+	</delete>
+	文件
+	<delete id="deleteMessage" parameterType="java.util.Map">
+			DELETE from PROJECT_RESOURCE  where projectId = #{projectId};
+	</delete>
+	<delete id="deleteMessage" parameterType="java.util.Map">
+			协同人
+			DELETE FROM PROJECT_SYNERGY  where projectId = #{projectId};
+	</delete>
+	<delete id="deleteMessage" parameterType="java.util.Map">
+			供应商
+			DELETE FROM PROJECT_TEAM  where projectId = #{projectId};
+	</delete>
+	<delete id="deleteMessage" parameterType="java.util.Map">
+			客户
+			DELETE FROM PROJECT_USER  where projectId = #{projectId};
+	</delete>
+	<delete id="deleteMessage" parameterType="java.util.Map">
+			发票
+			DELETE FROM TEAM_INVOICE  where invoice_projectId = #{projectId};
+			DELETE from USER_INVOICE  where invoice_projectId = #{projectId};
+	</delete>
+	<delete id="deleteMessage" parameterType="java.util.Map">
+			转账
+			DELETE from DEAL_LOG  where DL_PROJECT_ID = #{projectId};
+	</delete>
+	流程
+	<delete id="deleteMessage" parameterType="java.util.Map">
+			DELETE  from activiti.ACT_HI_ACTINST where    PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_HI_COMMENT  where TASK_ID_ IN (select ID_ from  activiti.ACT_HI_TASKINST where PROC_INST_ID_ = #{processInstanceId});
+			DELETE  from activiti.ACT_HI_DETAIL   where   PROC_INST_ID_  = #{processInstanceId};
+			DELETE  from activiti.ACT_HI_IDENTITYLINK where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_HI_VARINST  where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_RU_IDENTITYLINK where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_RU_VARIABLE where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_RU_TASK where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_HI_TASKINST where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_HI_PROCINST where   PROC_INST_ID_ = #{processInstanceId};
+			DELETE  from activiti.ACT_RU_EXECUTION    where   PROC_INST_ID_ = #{processInstanceId};
+	</delete>
+	<delete id="deleteMessage" parameterType="java.util.Map">
+			项目
+			DELETE FROM  PROJECT_FLOW  where  projectId = #{projectId};
+	</delete> -->
+</mapper>

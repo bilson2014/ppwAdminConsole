@@ -747,6 +747,37 @@ function exportInfo(){
 	});
 }
 
+function delFuc(){
+	var rows = datagrid.datagrid('getSelections');
+	
+	if(rows.length <= 0 ){
+		$.message('请选择进行删除操作!');
+	} else {
+		$.messager.confirm('提示信息' , '确认删除?' , function(r){
+			if(r){
+				var ids = '';
+				for(var i = 0 ; i < rows.length ; i++){
+					ids += rows[i].projectId + ',';
+				}
+				ids = ids.substring(0,ids.length-1);
+				$.post(getContextPath() + '/portal/projectflow/delete', {projectIds:ids},function(result){
+					if(result.result){
+						// 刷新数据
+						datagrid.datagrid('clearSelections');
+						datagrid.datagrid('reload');
+						$.message('操作成功!');
+					}else{
+						$.message(result.err);
+					}
+					
+				});
+			} else {
+				 return ;
+			}
+		});
+	}
+}
+
 
 function searchFun(){
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));

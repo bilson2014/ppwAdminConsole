@@ -17,8 +17,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.paipianwang.pat.common.entity.PmsResult;
 import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.common.web.poi.util.PoiReportUtils;
 import com.paipianwang.pat.facade.indent.entity.IndentSource;
 import com.paipianwang.pat.facade.right.entity.PmsEmployee;
@@ -33,9 +35,11 @@ import com.paipianwang.pat.workflow.enums.ProjectRoleType;
 import com.paipianwang.pat.workflow.enums.ProjectTeamType;
 import com.paipianwang.pat.workflow.facade.PmsProjectFlowFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectMessageFacade;
+import com.paipianwang.pat.workflow.facade.PmsProjectResourceFacade;
 import com.paipianwang.pat.workflow.facade.PmsProjectSynergyFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.mq.service.ProjectSynergyChangeMQService;
+import com.panfeng.persist.ActivitiCleanMapper;
 import com.panfeng.service.ProjectFlowService;
 import com.panfeng.util.Log;
 
@@ -51,6 +55,11 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 	private ProjectSynergyChangeMQService projectSynergyChangeMQService;
 	@Autowired
 	private PmsProjectMessageFacade pmsProjectMessageFacade;
+
+	@Autowired
+	private ActivitiCleanMapper activitiCleanMapper;
+	@Autowired
+	private PmsProjectResourceFacade pmsProjectResourceFacade;
 
 
 	/**
@@ -523,6 +532,50 @@ public class ProjectFlowServiceImpl implements ProjectFlowService {
 		xssfCell.setCellType(XSSFCell.CELL_TYPE_STRING);
 		xssfCell.setCellValue(team.getCreateDate());
 		return j;
+	}
+
+	/**
+	 * 删除项目流程
+	 */
+	@Override
+	public PmsResult deleteProjectFlow(String[] projectIds) {
+		PmsResult result=new PmsResult();
+		for(String projectId:projectIds){
+			//获取项目信息
+			PmsProjectFlow project=pmsProjectFlowFacade.getProjectFlowByProjectId(projectId);
+			if(project==null){
+				result.setResult(false);
+				result.setErr("项目不存在");
+				return result;
+			}
+			//进行中的项目不允许删除
+			if(project.getProjectStatus()==null){
+				result.setResult(false);
+				result.setErr("进行中的项目不允许删除");
+				return result;
+			}
+			//检查项目是否被作品引用--不需要
+			
+			//查询文件信息
+			List<PmsProjectResource> resources=pmsProjectResourceFacade.getResourceByProjectId(projectId);
+			//删除项目
+			Map<String,Object> paramMap=new HashMap<>();
+			paramMap.put("projectId", projectId);
+			paramMap.put("processInstanceId", project.getProcessInstanceId());
+			activitiCleanMapper.deleteAll(paramMap);
+			
+			//删除文件服务器上文件
+			for(PmsProjectResource resource:resources){
+				if(ValidateUtil.isValid(resource.getResourcePath())){
+					FastDFSClient.deleteFile(resource.getResourcePath());
+				}
+				if(ValidateUtil.isValid(resource.getPreviewPath())){
+					FastDFSClient.deleteFile(resource.getPreviewPath());
+				}
+			}
+		}
+
+		return result;
 	}
 
 }

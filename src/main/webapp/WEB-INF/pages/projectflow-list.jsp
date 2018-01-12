@@ -98,7 +98,9 @@
 				<a onclick="fileDetail();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">文件列表</a>
 				<a onclick="logDetail();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">项目日志</a>
 				<a onclick="financeDetail();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">财务信息</a>
-				
+				<r:permission uri="/portal/projectflow/delete">
+					<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
+				</r:permission>
 		</div>
 	    
 		<div id="teamDlg" class="easyui-dialog" style="width:500px; height:300px;padding:10px 20px"
