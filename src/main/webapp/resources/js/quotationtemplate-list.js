@@ -247,6 +247,7 @@ function add(){
 
 	var detail = $('#itemId').combotree('tree').tree('getSelected');	
 	
+	
 	//校验
 	if(type==null || type==undefined){
 		$.message('请选择收费类');
@@ -256,12 +257,21 @@ function add(){
 		$.message('请选择收费项');
 		return;
 	}
-	//是否添加过
 	
+	//是否添加过
+	var rows=itemgrid.datagrid('getRows');
+	for(var i=0;i<rows.length;i++){
+		if(rows[i].detailId==detail.id){
+			$.message('不允许重复添加');
+			return;
+		}
+	}
 	//value
 	var row=new Object();
 	row.quantity=$("#quantity").val();
 	row.days=$("#days").val();
+	
+	var isFullJob=false;
 	
 	for(var i=0;i<quotationTypeCache.length;i++){
 		if(detail.id==quotationTypeCache[i].typeId){
@@ -274,6 +284,7 @@ function add(){
 			if(quotationTypeCache[i].fullJob==1){
 				row.quantity="整包";
 				row.days="整包";
+				isFullJob=true;
 			}
 		}
 		if(type==quotationTypeCache[i].typeId){
@@ -285,17 +296,34 @@ function add(){
 			row.itemName=quotationTypeCache[i].typeName;
 		}
 	}
+	
+	if(!isFullJob){
+		if(row.days==null || row.days==""){
+			$.message('请输入天数');
+			return;
+		}
+		if(row.quantity==null || row.quantity==""){
+			$.message('请输入数量');
+			return;
+		}
+	}
+	
 	//index-type或item（优先）相同的下面
 	var rows = itemgrid.datagrid("getRows");
 	var newIndex=rows.length;
 	for(var i=newIndex-1;i>=0;i--){
 		if(rows[i].typeId==row.typeId){
 			newIndex=i+1;
-			if(rows[i].itemId==row.itemId){
-				break;
-			}	
+			for(var j=i-1;j>=0;j--){
+				if(rows[j].itemId==row.itemId){
+					newIndex=j+1;
+					break;
+				}
+			}
+			break;
 		}
 	}
+	
 	
 	itemgrid.datagrid('insertRow',{  
         index:newIndex,  
@@ -494,12 +522,12 @@ function initItem(data){
                 formatter:function(value,row,index){
                 	if(!row.footer){
                 		if (row.editing){
-                            var s = '<a href="javascript:void(0)" onclick="saverow(this)">Save</a> ';
-                            var c = '<a href="javascript:void(0)" onclick="cancelrow(this)">Cancel</a>';
+                            var s = '<a href="javascript:void(0)" onclick="saverow(this)">保存</a> ';
+                            var c = '<a href="javascript:void(0)" onclick="cancelrow(this)">取消</a>';
                             return s+c;
                         } else {
-                            var e = '<a href="javascript:void(0)" onclick="editrow(this)">Edit</a> ';
-                            var d = '<a href="javascript:void(0)" onclick="deleterow(this)">Delete</a>';
+                            var e = '<a href="javascript:void(0)" onclick="editrow(this)">编辑</a> ';
+                            var d = '<a href="javascript:void(0)" onclick="deleterow(this)">删除</a>';
                             return e+d;
                         }
                 	}
@@ -514,7 +542,7 @@ function initItem(data){
         onAfterEdit:function(index,row){
             row.editing = false;
             itemgrid.datagrid('refreshRow', index);
-            mergeItemGrid();
+//            mergeItemGrid();
         },
         onCancelEdit:function(index,row){
             row.editing = false;
@@ -580,7 +608,16 @@ function editrow(target) {
 function deleterow(target){
     $.messager.confirm('删除','确认删除?',function(r){
         if (r){
-        	itemgrid.datagrid('deleteRow', getRowIndex(target));
+        	var index=getRowIndex(target);
+        	//取消合并
+        	var rows=itemgrid.datagrid('getRows');
+        	for(var begin=0;begin<rows.length;begin++){
+        		itemgrid.datagrid('refreshRow', begin);
+        	}
+        	
+        	var row=itemgrid.datagrid('getRows')[1];
+        	itemgrid.datagrid('deleteRow', index);
+        	
         	mergeItemGrid();
         	itemgrid.datagrid('statistics'); //合计
         	//计算总价格
@@ -589,11 +626,14 @@ function deleterow(target){
     });
 }
 function saverow(target){
-	//计算总价
 	var rowIndex=getRowIndex(target);
-	computeRowSum(rowIndex)
 	itemgrid.datagrid('endEdit', rowIndex);
-	itemgrid.datagrid('statistics'); //合计
+	//计算总价
+	computeRowSum(rowIndex)
+	itemgrid.datagrid('refreshRow', rowIndex);
+	mergeItemGrid();
+	//合计
+	itemgrid.datagrid('statistics'); 
 	//计算总价格
 	computeTotal();
 }

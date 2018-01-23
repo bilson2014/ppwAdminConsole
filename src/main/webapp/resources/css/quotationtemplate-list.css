@@ -17,3 +17,12 @@
 	position: relative;
 	right: 10px;
 } */
+
+.wrap {  
+	width:500px;
+    text-overflow: ellipsis; /* for IE */  
+    -moz-text-overflow: ellipsis; /* for Firefox,mozilla */  
+    overflow: hidden;  
+    white-space: nowrap;
+    text-align: left  
+}  

@@ -120,7 +120,7 @@
 							<th>单价：</th>
 							<td id="unitPrice"></td>
 							<th style="width: 100px">收费项描述：</th>
-							<td colspan="5" id="description"></td>
+							<td colspan="5" ><div id="description" class="wrap"></div></td>
 						</tr>
 					</table>
 				</form>
@@ -133,7 +133,7 @@
 					<table style="width: 98%;">
 						<tr>
 							<th>税率(%)</th>
-							<td><input name="taxRate" id="taxRate" class="easyui-numberbox" required="true" data-options="min:0,precision:2, onChange: function (a, b) {computeTotal(); }"></td>
+							<td><input name="taxRate" id="taxRate" class="easyui-numberbox" required="true" data-options="min:0,precision:0, onChange: function (a, b) {computeTotal(); }"></td>
 							<th>优惠(元)</th>
 							<td><input name="discount" id="discount" class="easyui-numberbox" data-options="min:0,precision:2, onChange: function (a, b) {computeTotal(); }" ></td>
 							<th>含税总价格</th>
