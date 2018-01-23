@@ -41,12 +41,12 @@
 					<td>
 						<select style="width:140px" name="clientLevel" id="clientLevel" class="easyui-combobox" editable="false">
 					        <option value="-1" selected>-- 请选择 --</option>
-					        <option value="">未分级</option>
 					        <option value="3">S</option>
 					        <option value="0">A</option>
 					        <option value="1">B</option>
 					        <option value="2">C</option>
 					        <option value="4">D</option>
+					        <option value="">E</option><!-- 未分级 -->
 					    </select>
 					</td>
 					<th>购买频次</th>

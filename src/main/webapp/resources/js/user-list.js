@@ -63,13 +63,13 @@ $().ready(function(){
 							} else if( value == 4){
 								return '<span style=color:orange; >D</span>' ;
 							}else{
-								return '<span style=color:orange; >未分级</span>' ;
+								return '<span style=color:orange; >E</span>' ;//未分级
 							}
 						},
 						editor:{
 							type:'combobox' , 
 							options:{
-								data:[{id:'-1' , val:'未分级'},{id:3 , val:'S'},{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'},{id:4 , val:'D'}] ,
+								data:[{id:'-1' , val:'E'},{id:3 , val:'S'},{id:0 , val:'A'},{id:1 , val:'B'},{id:2 , val:'C'},{id:4 , val:'D'}] ,
 								valueField:'id' , 
 								textField:'val' ,
 								required:true , 

@@ -104,7 +104,7 @@ $().ready(function(){
 							} else if( value == 4){
 								return '<span style=color:orange; >D</span>' ;
 							}else{
-								return '<span style=color:orange; >未分级</span>' ;
+								return '<span style=color:orange; >E</span>' ;//未分级
 							}
 						}
 					},{
