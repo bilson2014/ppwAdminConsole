@@ -55,6 +55,7 @@
 							<option value="0">审核中</option>
 							<option value="1">审核通过</option>
 							<option value="2">未审核通过</option>
+							<option value="3">编辑中</option>
 						</select>
 					</td>
 					
@@ -238,6 +239,7 @@
 							<option value="0">审核中</option>
 							<option value="1" selected>审核通过</option>
 							<option value="2">未通过审核</option>
+							<option value="3">编辑中</option>
 						</select>
 					</div>
 					
