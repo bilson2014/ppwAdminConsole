@@ -49,6 +49,17 @@ $().ready(
 									return '整包' ; 
 								}
 							}
+						},{
+							field : 'status',
+							title : '是否禁用',
+							width : 80,
+							formatter : function(value , record , index){
+								if(value == 0){
+									return '禁用' ;
+								} else if( value == 1){
+									return '' ; 
+								}
+							}
 						} , {
 							field : 'updateDate',
 							title : '维护时间',
@@ -86,6 +97,9 @@ function editFun() {
 		openDialog('dlg', node.grade);
 		$('#fm').form('clear');
 		$('#fm').form('load', node);
+		if(node.parentId==null || node.parentId==undefined || node.parentId==""){
+			$('#parentId').combotree("clear");
+		}
 		formUrl = getContextPath() + '/portal/quotationtype/update';
 	} else {
 		$.message('只能选择一条记录进行修改!');

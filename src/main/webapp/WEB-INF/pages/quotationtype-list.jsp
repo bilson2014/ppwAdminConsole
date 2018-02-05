@@ -66,9 +66,9 @@
 			<a onclick="editFun();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">修改</a>
 		</r:permission>
 		
-		<r:permission uri="/portal/quotationtype/delete">
+		<%-- <r:permission uri="/portal/quotationtype/delete">
 			<a onclick="delFun();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
-		</r:permission>
+		</r:permission> --%>
 	</div>
 	
 	<div class="easyui-layout" data-options="fit:true,border:false">
@@ -86,7 +86,7 @@
 				<input name="typeName" class="easyui-textbox" required="true">
 			</div>
 			<div class="fitem">
-	            <label>级别:</label>
+	            <label>级别</label>
 	               <select id="grade" name="grade" class="easyui-combobox" required="true" style="width: 46%;">
 	                	<option value="1">类别</option>
 	                	<option value="2">子类</option>
@@ -101,6 +101,11 @@
 				<label>是否整包</label>
 				<label><input name="fullJob" type="radio" value="1" />是 </label> 
 				<label><input name="fullJob" type="radio" value="0" checked="checked"/>否 </label> 
+			</div>
+			<div class="fitem">
+				<label>状态</label>
+				<label><input name="status" type="radio" value="1" checked="checked"/>启用 </label> 
+				<label><input name="status" type="radio" value="0" />禁用 </label> 
 			</div>
 			<div class="fitem">
 				<label>单价</label>

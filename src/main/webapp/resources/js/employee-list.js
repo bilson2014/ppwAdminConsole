@@ -30,6 +30,7 @@ $().ready(function(){
 					},{
 						field : 'hireDate',
 						title : '入职日期',
+						width : 50,
 						align : 'center',
 						formatter : function(value,row,index){
 							var time = new Date(value); 
@@ -38,14 +39,17 @@ $().ready(function(){
 					},{
 						field : 'phoneNumber' ,
 						title : '手机号码',
+						width : 50,
 						align : 'left'
 					},{
 						field : 'email' ,
 						title : '邮箱',
+						width : 80,
 						align : 'left'
 					},{
 						field : 'roleNameGroup' ,
 						title : '角色',
+						width : 160,
 						align : 'left'
 					},{
 						field : 'roleIds' ,
@@ -55,6 +59,7 @@ $().ready(function(){
 					},{
 						field : 'dimissionStatus' ,
 						title : '离职状态',
+						width : 30,
 						align : 'center',
 						formatter : function(value , record , index){
 							if(value == 0){

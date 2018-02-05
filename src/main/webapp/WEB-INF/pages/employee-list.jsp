@@ -38,7 +38,7 @@
 						
 						<th>在职状态:</th>
 						<td>
-							<select name="dimissionStatus" class="easyui-combobox" id="dimissionStatus" style="width: 100px;" editable="false" >
+							<select name="dimissionStatus" class="easyui-combobox" style="width: 100px;" editable="false" >
 								<option value="" selected>-- 请选择 --</option>
 			               		<option value="0">在职</option>
 			                	<option value="1">离职</option>
