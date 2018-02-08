@@ -24,6 +24,7 @@ $().ready(function(){
 						title : '标题',
 						width : 150,
 						align : 'center' ,
+						sortable : true ,
 						editor : {
 							type : 'validatebox' ,
 							options : {
