@@ -297,7 +297,7 @@ function add(){
 		}
 	}
 	
-	if(!isFullJob){
+	/*if(!isFullJob){
 		if(row.days==null || row.days==""){
 			$.message('请输入天数');
 			return;
@@ -306,7 +306,7 @@ function add(){
 			$.message('请输入数量');
 			return;
 		}
-	}
+	}*/
 	
 	//index-type或item（优先）相同的下面
 	var rows = itemgrid.datagrid("getRows");
@@ -580,7 +580,7 @@ function editrow(target) {
 				type : 'numberbox',
 				options : {
 					precision : 0,
-					min:1,
+					min:0,
 					required:true , 
                     missingMessage:'数量必填!'
 				}
@@ -591,7 +591,7 @@ function editrow(target) {
 				type : 'numberbox',
 				options : {
 					precision : 0,
-					min:1,
+					min:0,
 					required:true , 
                     missingMessage:'天数必填!'
 				}

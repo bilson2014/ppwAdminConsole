@@ -16,11 +16,12 @@
 	<script src="${salesmanListJs }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
+	<input type="hidden" id='sourceCombobox' value='${sourceCombobox }'> 
 	<div data-options="region:'north',border:false" style="height: 40px; overflow: hidden;background-color: #fff">
 		<form id="searchForm">
 			<table>
 				<tr>
-					<th>分销人姓名:</th>
+					<th>名称:</th>
 					<td><input id="search-name" name="salesmanName" class="easyui-textbox" placeholder="分销人名称"/></td>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a><a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="cleanFun();">清空</a>
@@ -75,32 +76,47 @@
 	            </div>
 	            <div class="fitem">
 	                <label>作用范围:</label>
-	                <select name="belongs" class="easyui-combobox" editable="true">
+	                <select name="belongs" class="easyui-combobox" editable="true" required="true">
 							<option value="网站" selected>网站</option>
 							<option value="活动">活动</option>
-							<option value="新媒体">新媒体</option>
 							<option value="分销">分销</option>
+							<option value="视频名片">视频名片</option>
 						</select>
 	            </div>
 	            <div class="fitem">
 	                <label>受众平台:</label>
-	                <select name="platform" class="easyui-combobox" editable="true">
+	                <select name="platform" class="easyui-combobox" editable="true" required="true">
 						<option value="PC" selected>PC</option>
 						<option value="移动端">移动端</option>
+						<option value="今日头条">今日头条</option>
+						<option value="微信">微信</option>
 					</select>
 	            </div>
-	            <div class="fitem">
-	                <label>访问地址:</label>
-					<input name="accessurl" id="accessurl" class="easyui-textbox" >
-	            </div>
+	           
 	            <div class="fitem">
 	                <label>唯一标识:</label>
-	                <select name="uniqueId" class="easyui-combobox" editable="true">
-							<option value="" selected>-- 分销人 --</option>
-							<option value="weixin">微信下单</option>
-							<option value="toutiao">头条下单</option>
-						</select>
+	                <input name="uniqueId" id="uniqueId" class="easyui-textbox" required="true">
 	            </div>
+	             <div class="fitem">
+	                <label>网站类型:</label>
+	                <select name="type" class="easyui-combobox" editable="true" required="true">
+						<option value="0" selected>PC</option>
+						<option value="1">移动端</option>
+					</select>
+	            </div>
+	             <div class="fitem">
+	                <label>产品地址:</label>
+					<input name="accessurl" id="accessurl" class="easyui-textbox" >
+	            </div>
+	             <div class="fitem">
+	                <label>下单地址:</label>
+					<input name="orderUrl" id="orderUrl" class="easyui-textbox" >
+	            </div>
+	            <div class="fitem">
+            	 	<label>订单来源:</label>
+            	 	<select id="indentSource" name="indentSource" class="easyui-combobox" style="width: 46%;">
+                	</select>
+           		</div>
 	            <div class="fitem">
 	                <label>备注:</label>
 	                <input name="salesmanDescription" class="easyui-textbox" >

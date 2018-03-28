@@ -223,3 +223,10 @@
 	height: 28px;
 	line-height: 28px;
 }
+
+.fitem label{
+            display:inline-block;
+            width:60px;
+            position:relative;
+  			margin-right: 2px;
+ }

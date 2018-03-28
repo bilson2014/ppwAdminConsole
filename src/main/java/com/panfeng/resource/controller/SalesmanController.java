@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,16 +14,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.facade.indent.entity.IndentSource;
 import com.paipianwang.pat.facade.indent.service.PmsIndentFacade;
 import com.paipianwang.pat.facade.sales.entity.PmsSalesman;
 import com.paipianwang.pat.facade.sales.service.PmsSalesmanFacade;
@@ -42,7 +46,17 @@ public class SalesmanController extends BaseController {
 	@Autowired
 	private PmsSalesmanFacade pmsSalesmanFacade = null;
 	@RequestMapping("/salesman-list")
-	public ModelAndView view(){
+	public ModelAndView view(final ModelMap model) {
+		// 处理数据字典
+		List<Map<String, Object>> emlist = new ArrayList<Map<String, Object>>();
+		for (IndentSource source : IndentSource.values()) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("value", source.getValue());
+			map.put("text", source.getName());
+			emlist.add(map);
+		}
+		Object json = JSONArray.toJSON(emlist);
+		model.put("sourceCombobox", json);
 		return new ModelAndView("salesman-list");
 	}
 	
@@ -129,8 +143,9 @@ public class SalesmanController extends BaseController {
 		final StringBuffer url = new StringBuffer();
 		url.append("http://qr.liantu.com/api.php?text=");
 		
-		url.append("http://www.apaipian.com/phone/salesman/order/");
-		url.append(sale.getUniqueId());
+		/*url.append("http://www.apaipian.com/phone/salesman/order/");
+		url.append(sale.getUniqueId());*/
+		url.append(sale.getAccessurl());
 
 		File image=(File) HttpUtil.httpGetFile(url.toString(), null)[1];
 		try{

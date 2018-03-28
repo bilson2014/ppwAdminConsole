@@ -27,6 +27,8 @@ public class Salesman extends BaseEntity {
 	private long total = 0l;
 	
 	private double sumPrice = 0.0d;
+	
+	private String accessurl;//访问地址
 
 	public Long getSalesmanId() {
 		return salesmanId;
@@ -98,6 +100,14 @@ public class Salesman extends BaseEntity {
 
 	public void setSumPrice(double sumPrice) {
 		this.sumPrice = sumPrice;
+	}
+
+	public String getAccessurl() {
+		return accessurl;
+	}
+
+	public void setAccessurl(String accessurl) {
+		this.accessurl = accessurl;
 	}
 	
 }
