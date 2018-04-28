@@ -246,6 +246,12 @@ $().ready(function(){
 								return '<span style=color:blue; >直客-线上-公众号-直接下单</span>' ;
 							case 33:
 								return '<span style=color:blue; >直客-线上-公众号-作品</span>' ;
+							case 34:
+								return '<span style=color:blue; >直客-线上-SEM</span>' ;
+							case 35:
+								return '<span style=color:blue; >直客-线上-钉钉</span>' ;
+							case 36:
+								return '<span style=color:blue; >直客-线上-分销</span>' ;
 							}
 						},
 						editor:{
