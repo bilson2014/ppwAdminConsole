@@ -138,6 +138,17 @@ $().ready(function(){
 				title : '分销总额',
 				width : 200,
 				align : 'center'
+			},{
+				field : 'realTotal' ,
+				title : '分销总提交单数',
+				width : 200,
+				align : 'center'
+					
+			},{
+				field : 'realSumPrice' ,
+				title : '分销提交总额',
+				width : 200,
+				align : 'center'
 			}]],
 		pagination: true ,
 		pageSize : 20,

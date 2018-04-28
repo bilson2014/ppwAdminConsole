@@ -159,7 +159,7 @@
 	<!-------------------------------------------------------------->
 
 	<div id="dlg2" class="easyui-dialog"
-		style="padding: 5px 5px; width: 350px; height: 360px;" closed="true"
+		style="padding: 5px 5px; width: 350px;" closed="true"
 		buttons="#dlg-buttons2" title="订单信息">
 		<form id="fm2" method="post">
 			<input type="hidden" name="id">
@@ -223,6 +223,10 @@
 	        <div class="fitem">
                 <label>分销渠道:</label>
                 <input name="salesmanUniqueId" id='salesmanUnique' class="easyui-combobox">
+	        </div>
+	         <div class="fitem">
+                <label style="padding-left:24px;">微信:</label>
+                <input name="wechat" id='wechat' class="easyui-textbox">
 	        </div>
 		</form>
 	</div>

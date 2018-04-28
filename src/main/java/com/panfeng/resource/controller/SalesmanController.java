@@ -27,6 +27,7 @@ import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.facade.indent.entity.IndentSource;
+import com.paipianwang.pat.facade.indent.entity.PmsIndent;
 import com.paipianwang.pat.facade.indent.service.PmsIndentFacade;
 import com.paipianwang.pat.facade.sales.entity.PmsSalesman;
 import com.paipianwang.pat.facade.sales.service.PmsSalesmanFacade;
@@ -76,14 +77,26 @@ public class SalesmanController extends BaseController {
  		// 装载订单总数及总金额
 		for (final PmsSalesman salesman : list) {
 			final String salesmanUniqueId = salesman.getUniqueId();
-			final long total = pmsIndentFacade.countBySalesmanUniqueId(salesmanUniqueId);
-			final Double price = pmsIndentFacade.sumPriceBySalesmanUniqueId(salesmanUniqueId);
+			final long total = pmsIndentFacade.countBySalesmanUniqueId(salesmanUniqueId,null);
+			final Double price = pmsIndentFacade.sumPriceBySalesmanUniqueId(salesmanUniqueId,null);
 			if(price != null){
 				salesman.setSumPrice(price);
 			}else{
 				salesman.setSumPrice(0);
 			}
 			salesman.setTotal(total);
+			//真实金额
+			List<Integer> real=new ArrayList<>();
+			real.add(PmsIndent.ORDER_SUBMIT);
+			real.add(PmsIndent.ORDER_DONE);
+			final long realTotal = pmsIndentFacade.countBySalesmanUniqueId(salesmanUniqueId,real);
+			final Double realPrice = pmsIndentFacade.sumPriceBySalesmanUniqueId(salesmanUniqueId,real);
+			if(realPrice != null){
+				salesman.setRealSumPrice(realPrice);
+			}else{
+				salesman.setRealSumPrice(0);
+			}
+			salesman.setRealTotal(realTotal);
 		}
 		dataGrid.setRows(list);
 		return dataGrid;
