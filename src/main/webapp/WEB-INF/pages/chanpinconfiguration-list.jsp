@@ -63,8 +63,8 @@
 	                <input id="tags" name="tags" class="easyui-textbox" required="true">
 	            </div>
 	            <div class="fitem">
-	                <label>基础价格：</label>
-	                <input id="basePrice" name="basePrice" class="easyui-textbox">
+	                <label>起步价格：</label>
+	                <input id="initiatePrice" name="initiatePrice" class="easyui-textbox">
 	            </div>
 	            <div>
 	            	<label>配置描述：</label><br/>

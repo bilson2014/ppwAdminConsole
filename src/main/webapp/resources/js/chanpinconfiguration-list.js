@@ -168,7 +168,7 @@ function save() {
 		"pmsProductModule":buildModuleParam(),
 		"pmsDimensions":buildDimensionParam(),
 		"chanpinconfigurationId":$('#chanpinconfigurationId').val(),
-		"basePrice":$('#basePrice').val()
+		"initiatePrice":$('#initiatePrice').val()
 	}));
 }
 function searchFun() {
