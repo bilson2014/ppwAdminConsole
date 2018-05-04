@@ -62,6 +62,10 @@
 	                <label>标签：</label>
 	                <input id="tags" name="tags" class="easyui-textbox" required="true">
 	            </div>
+	            <div class="fitem">
+	                <label>基础价格：</label>
+	                <input id="basePrice" name="basePrice" class="easyui-textbox">
+	            </div>
 	            <div>
 	            	<label>配置描述：</label><br/>
 	                <textarea class="easyui-textbox" id="chanpinconfigurationDescription" name="chanpinconfigurationDescription" multiline="true" style="width:256px;height: 50px;"></textarea>
@@ -85,6 +89,7 @@
 				<a onclick="addDimensionModule()" id="add-Module" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">添加维度</a>
 				<div class="dimensionmodule">
 				</div>
+				 
 	        </form>
 	    </div>
 	    
