@@ -60,6 +60,13 @@ public class QuotationController extends BaseController {
 		
 		long result=pmsQuotationTypeFacade.insert(pmsQuotationType);
 		PmsResult pmsResult=new PmsResult();
+		if(result>0) {
+			pmsResult.setResult(true);
+			pmsResult.setMsg("添加成功");
+		}else {
+			pmsResult.setResult(false);
+			pmsResult.setMsg("添加失败");
+		}
 		pmsResult.setResult(result>0?true:false);
 		return pmsResult;
 	}
@@ -76,9 +83,32 @@ public class QuotationController extends BaseController {
 			String path = FastDFSClient.uploadFile(uploadFile);
 			pmsQuotationType.setPhoto(path);
 		}
-		long result=pmsQuotationTypeFacade.update(pmsQuotationType);
+		List<PmsQuotationTemplate> editTemplates=pmsQuotationTypeFacade.update(pmsQuotationType);
 		PmsResult pmsResult=new PmsResult();
-		pmsResult.setResult(result>0?true:false);
+		if(editTemplates!=null) {
+			pmsResult.setResult(true);
+			
+			String msg="";
+			if(!editTemplates.isEmpty() && pmsQuotationType.getStatus().equals(0)) {
+				
+				for(PmsQuotationTemplate template:editTemplates) {
+					if(template.getType()==PmsQuotationTemplate.TYPE_PRODUCT) {
+						msg+=template.getTemplateName()+",";
+					}
+				}
+				if(msg!="") {
+					msg="该报价单项目已被禁用，但会影响到报价单模板（"+msg+"）。请到报价单模板管理中更新相关项目";
+				}
+			
+			}
+			
+			pmsResult.setMsg("修改成功!"+msg);
+
+			
+		}else {
+			pmsResult.setResult(false);
+			pmsResult.setMsg("修改失败!");
+		}
 		return pmsResult;
 	}
 	

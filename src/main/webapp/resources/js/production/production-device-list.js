@@ -4,6 +4,7 @@ var storage_node;
 var typeList;
 var min=1,max=4;
 var statusList;
+var typeIdList;
 
 
 $().ready(function(){
@@ -15,6 +16,8 @@ $().ready(function(){
 		{'value':5,'text':'灯光附件'},{'value':6,'text':'录音设备'},
 		{'value':7,'text':'特种设备'},{'value':8,'text':'其他设备'}];*/
 	typeList=JSON.parse($('#typeList').val());
+	
+	init('device');
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -30,23 +33,23 @@ $().ready(function(){
 		]],
 		columns:[[
 					{
-						field : 'name',
-						title : '名称',
-						width : 150,
+						field : 'typeId' ,
+						title : '名称' ,
 						align : 'center' ,
+						width : 200,
+						formatter : function(value,row,index){
+							for(var i=0;i<typeIdList.length;i++){
+								if(typeIdList[i].id==value){
+									return typeIdList[i].text;
+								}
+							}							
+						}
 					},{
 						field : 'type' ,
 						title : '类型' ,
 						align : 'center' ,
 						width : 200,
 						formatter : function(value,row,index){
-							/*if(value=="1"){
-								return "摄影设备";
-							}else if(value=="2"){
-								return "灯光设备";
-							}else if(value=="3"){
-								return "录音设备";
-							}*/
 							for(var i=0;i<typeList.length;i++){
 							if(typeList[i].key==value){
 								return typeList[i].name;
@@ -59,7 +62,7 @@ $().ready(function(){
 						align : 'center' ,
 					},{
 						field : 'price',
-						title : '价格',
+						title : '报价(元/天)',
 						width : 150,
 						align : 'center' ,
 					},{
@@ -94,30 +97,22 @@ $().ready(function(){
 		toolbar : '#toolbar'
 	});
 	
-	/*$('#type').combobox({
-		data : typeList,
-		valueField : 'key',
-		textField : 'name',
-		onChange : function(n,o) {
-			var type = $('#typeId').combotree('getValue');
-			if(type != '' && type != null) {
-				// 清空
-				$('#typeId').combotree('setValue','');
-			}
-			$('#typeId').combotree('reload',getContextPath()
-					+ '/portal/quotationtype/production/select?productionType=device'+'&subType='+n);
-		}
-	});*/
-	
 	var s_typeList=JSON.parse(JSON.stringify(typeList));
 	s_typeList.unshift({'key':'','name':'--请选择--'});
 	$('#search-type').combobox({
 		data : s_typeList,
 		valueField : 'key',
-		textField : 'name'
+		textField : 'name',
+		onChange : function(n,o) {
+			var type = $('#search-typeId').combotree('getValue');
+			if(type != '' && type != null) {
+				// 清空
+				$('#search-typeId').combotree('setValue','');
+			}
+			$('#search-typeId').combotree('reload',getContextPath()
+					+ '/portal/quotationtype/production/select?productionType=device'+'&subType='+n);
+		}
 	});
-	
-	init('device');
 
 });
 

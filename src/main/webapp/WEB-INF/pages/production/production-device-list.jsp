@@ -47,26 +47,26 @@
 		<form id="searchForm">
 			<table>
 				<tr>
-					<!-- <th>名称：</th>
-					<td>
-						<input id="search-name" name="name" class="easyui-textbox"/>
-					</td> -->
 					<th>类型：</th>
 					<td>
 						<input id="search-type" name="type" class="easyui-combobox" />
 					</td>
+					<th>名称：</th>
+					<td>
+						<input id="search-typeId" name="typeId" class="easyui-combotree" style="width:156px" />
+					</td>
 
-					<th>价格：</th>
+					<th>报价(元/天)：</th>
 					<td>
 						<input name="beginPrice" class="easyui-numberbox" style="width: 76px;"/>~
 						<input name="endPrice" class="easyui-numberbox" style="width: 76px;"/>
 					</td>
+				</tr>
+				<tr>
 					<th>供应商：</th>
 					<td>
 						<input id="search-teamId" name="teamId" class="easyui-combobox" />
 					</td>
-				</tr>
-				<tr>
 					<th>推荐人：</th>
 					<td>
 						<input id="search-referrer" name="referrer" class="easyui-combobox" />
@@ -75,8 +75,6 @@
 					<td>
 						<input id="search-status" name="status" class="easyui-combobox" />
 					</td>
-					
-					
 					<th></th>
 					<td>
 						<a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="searchFun();">查询</a>

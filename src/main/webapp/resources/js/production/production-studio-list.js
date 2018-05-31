@@ -4,11 +4,13 @@ var imgNo=1;
 var storage_node;
 var min=1,max=4;
 var statusList;
+var typeIdList;
 
 
 $().ready(function(){
 	storage_node=$('#storage_node').val();
 	statusList=JSON.parse($('#statusList').val());
+	init('studio');
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -41,13 +43,25 @@ $().ready(function(){
 							}
 						}
 					},{
+						field : 'typeId' ,
+						title : '标准化元素' ,
+						align : 'center' ,
+						width : 200,
+						formatter : function(value,row,index){
+							for(var i=0;i<typeIdList.length;i++){
+								if(typeIdList[i].id==value){
+									return typeIdList[i].text;
+								}
+							}							
+						}
+					},{
 						field : 'area' ,
 						title : '面积' ,
 						align : 'center' ,
 						width : 200
 					},{
 						field : 'price',
-						title : '价格',
+						title : '报价(元/天)',
 						width : 150,
 						align : 'center' ,
 					},{
@@ -87,7 +101,7 @@ $().ready(function(){
 	     
 	     $("#videoFile").click();          
 	 }); */
-	init('studio');
+	
 	
 });
 

@@ -3,6 +3,7 @@ var teamList;
 var referrerList;
 
 
+
 function init(type){
 	
 	//statusList=[{'value':2,'text':'审核中'},{'value':1,'text':'审核通过'},{'value':0,'text':'审核未通过'}];
@@ -62,23 +63,45 @@ function init(type){
 		textField : 'text'
 	});
 
-	$('#typeId').combotree(
-			{
-				url : getContextPath()
-						+ '/portal/quotationtype/production/select?productionType='+type,
-				lines : true,
-				cascadeCheck : false,
-				parentField : 'pid',
-				idField : 'id',
-				treeField : 'text',
-//				editable :true,//后期加上搜索
-//				filter:{}
-				onBeforeSelect: function(node) {  //只能选择叶子节点
-		            if (!$(this).tree('isLeaf', node.target)) {  
-		                return false;  
-		            }  
-		        }
-	});
+	syncLoadData(function(res) {
+		typeIdList = res;
+		
+		$('#typeId').combotree(
+				{
+					data :typeIdList,
+					lines : true,
+					cascadeCheck : false,
+					parentField : 'pid',
+					idField : 'id',
+					treeField : 'text',
+//					editable :true,//后期加上搜索
+//					filter:{}
+					onBeforeSelect: function(node) {  //只能选择叶子节点
+			            if (!$(this).tree('isLeaf', node.target)) {  
+			                return false;  
+			            }  
+			        }
+		});
+		
+		$('#search-typeId').combotree(
+				{
+					data :typeIdList,
+					lines : true,
+					cascadeCheck : false,
+					parentField : 'pid',
+					idField : 'id',
+					treeField : 'text',
+//					editable :true,//后期加上搜索
+//					filter:{}
+					onBeforeSelect: function(node) {  //只能选择叶子节点
+			            if (!$(this).tree('isLeaf', node.target)) {  
+			                return false;  
+			            }  
+			        }
+		});
+		
+	}, getContextPath() + '/portal/quotationtype/production/select?productionType='+type, null);
+	
 	
 	 $("#uploadDiv").on("click",function(){  
 	     var uploadFile = '<input type="file" id="videoFile" style="width:100%" name="uploadFiles" class="p-file" multiple="multiple" onchange="addImg(this)" accept="image/gif,image/jpeg,image/jpg,image/png"/>';  

@@ -486,7 +486,7 @@ function initItem(data){
 	                type: 'numberbox',  
 	                options: {  
 	                    precision: 2,
-	                    min:0,
+	                    min:1,
 						required:true , 
 	                    missingMessage:'单价必填!'
 	                }  

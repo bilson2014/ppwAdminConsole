@@ -45,9 +45,13 @@
 					<td>
 						<input id="search-name" name="name" class="easyui-textbox"/>
 					</td>
+					<th>标准化元素：</th>
+					<td>
+						<input id="search-typeId" name="typeId" class="easyui-combotree" style="width:156px" />
+					</td>
 					<th>性别：</th>
 					<td>
-						<select name="sex" id='search-sex' class="easyui-combobox" style="width:146px" editable="false">
+						<select name="sex" id='search-sex' class="easyui-combobox" style="width:156px" editable="false">
 							<option value="">--请选择--</option>
 							<option value="1">男</option>
 							<option value="2">女</option>
@@ -58,6 +62,22 @@
 						<input name="beginAge" class="easyui-numberbox"  style="width: 76px;"/>~
 						<input name="endAge"  class="easyui-numberbox" style="width: 76px;"/>
 					</td>
+					<th>报价(元/天)：</th>
+					<td>
+						<input name="beginPrice" class="easyui-numberbox" style="width: 76px;"/>~
+						<input name="endPrice" class="easyui-numberbox" style="width: 76px;"/>
+					</td>
+				</tr>
+				<tr>
+					<th>种族：</th>
+					<td>
+						<select name="zone" id='search-zone' class="easyui-combobox" style="width:156px" >	
+						</select>
+					</td>
+					<th>城市：</th>
+					<td>
+						<input id="search-city" name="city" class="easyui-combobox" />
+					</td>
 					<th>供应商：</th>
 					<td>
 						<input id="search-teamId" name="teamId" class="easyui-combobox" />
@@ -65,30 +85,12 @@
 					<th>推荐人：</th>
 					<td>
 						<input id="search-referrer" name="referrer" class="easyui-combobox" />
-					</td>
-					
-				</tr>
-				<tr>					
-					<th>种族：</th>
-					<td>
-						<select name="zone" id='search-zone' class="easyui-combobox" style="width:156px" >
-							
-							
-						</select>
-					</td>
-					<th>城市：</th>
-					<td>
-						<input id="search-city" name="city" class="p-textbox-small" />
-					</td>
-					<th>价格：</th>
-					<td>
-						<input name="beginPrice" class="easyui-numberbox" style="width: 76px;"/>~
-						<input name="endPrice" class="easyui-numberbox" style="width: 76px;"/>
-					</td>
+					</td>			
 					<th>审核状态：</th>
 					<td>
 						<input id="search-status" name="status" class="easyui-combobox" />
 					</td>
+					
 					
 					<th></th>
 					<td>
@@ -190,7 +192,7 @@
 				</div>
 				
 				<div class="online">
-					备注(请完善演员体重、三维、特殊技能、擅长角色、作品等信息)
+					备注  ：请完善演员体重、三维、特殊技能、擅长角色、作品等信息
 				</div>
 				<div class="textarea-position">
 					<input name="remark" class="easyui-textbox" data-options="prompt:'请完善演员体重、三维、特殊技能、擅长角色、作品...',multiline:true" style="height: 100px;width: 500px">

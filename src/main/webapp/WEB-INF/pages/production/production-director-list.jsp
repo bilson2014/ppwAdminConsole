@@ -47,22 +47,25 @@
 					<td>
 						<input id="search-name" name="name" class="easyui-textbox"/>
 					</td>
-					<th>擅长领域：</th>
+					<th>标准化元素：</th>
 					<td>
-						<input id="search-specialty" name="specialty" class="p-textbox-small" />						
+						<input id="search-typeId" name="typeId" class="easyui-combotree" style="width:156px" />
 					</td>
-					<th>城市：</th>
-					<td>
-						<input id="search-city" name="city" class="p-textbox-small" />
-					</td>
-					
-					<th>价格：</th>
+					<th>报价(元/天)：</th>
 					<td>
 						<input name="beginPrice" class="easyui-numberbox" style="width: 76px;"/>~
 						<input name="endPrice" class="easyui-numberbox" style="width: 76px;"/>
 					</td>
+					<th>擅长领域：</th>
+					<td>
+						<input id="search-specialty" name="specialty" class="easyui-combobox" />						
+					</td>
 				</tr>
-				<tr>			
+				<tr>
+					<th>城市：</th>
+					<td>
+						<input id="search-city" name="city" class="easyui-combobox" />
+					</td>
 					<th>供应商：</th>
 					<td>
 						<input id="search-teamId" name="teamId" class="easyui-combobox" />
@@ -75,6 +78,7 @@
 					<td>
 						<input id="search-status" name="status" class="easyui-combobox"/>
 					</td>
+					
 					
 					<th></th>
 					<td>
@@ -158,7 +162,7 @@
 					</div>
 				</div>
 				<div class="online">
-				备注(请完善导演简历及作品)
+				备注  ：请完善导演简历及作品
 				</div>			
 				<div class="textarea-position">
 					<input name="remark" class="easyui-textbox" data-options="prompt:'请完善导演简历及作品等...',multiline:true" style="height: 100px;width: 500px">

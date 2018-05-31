@@ -60,7 +60,11 @@
 							<option value="2">外景</option>
 						</select>
 					</td>
-					<th>价格：</th>
+					<th>标准化元素：</th>
+					<td>
+						<input id="search-typeId" name="typeId" class="easyui-combotree" style="width:156px" />
+					</td>
+					<th>报价(元/天)：</th>
 					<td>
 						<input name="beginPrice" class="easyui-numberbox" style="width: 76px;"/>~
 						<input name="endPrice" class="easyui-numberbox" style="width: 76px;"/>
@@ -79,6 +83,7 @@
 					<td>
 						<input id="search-status" name="status" class="easyui-combobox" />
 					</td>
+					
 					
 					<th></th>
 					<td>

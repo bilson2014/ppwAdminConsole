@@ -132,7 +132,8 @@ function saveFun() {
 			$('#dlg').dialog('close');
 			treegrid.treegrid('reload');
 			progressClose();
-			$.message('操作成功!');
+
+			$.messager.alert('消息提示',JSON.parse(result).msg,'info');
 		}
 	});
 }

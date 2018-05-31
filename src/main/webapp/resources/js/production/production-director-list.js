@@ -6,6 +6,7 @@ var citys;
 var specialtyList;
 var min=1,max=1;
 var statusList;
+var typeIdList;
 
 $().ready(function(){
 	storage_node=$('#storage_node').val();
@@ -21,6 +22,8 @@ $().ready(function(){
 		{'value':5,'text':'短视频'},{'value':6,'text':'剧情长篇'},
 		{'value':7,'text':'纪录片'},{'value':8,'text':'栏目（节目）'},
 		{'value':9,'text':'话剧（舞台）'},{'value':10,'text':'演出（活动）'}];
+	
+	init('director');
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -41,8 +44,20 @@ $().ready(function(){
 						width : 150,
 						align : 'center' ,
 					},{
+						field : 'typeId' ,
+						title : '标准化元素' ,
+						align : 'center' ,
+						width : 200,
+						formatter : function(value,row,index){
+							for(var i=0;i<typeIdList.length;i++){
+								if(typeIdList[i].id==value){
+									return typeIdList[i].text;
+								}
+							}							
+						}
+					},{
 						field : 'price',
-						title : '价格',
+						title : '报价(元/天)',
 						width : 150,
 						align : 'center' ,
 					},{
@@ -151,7 +166,7 @@ $().ready(function(){
 	     
 	     $("#videoFile").click();          
 	 }); */
-	init('director');
+	
 });
 
 

@@ -6,6 +6,7 @@ var citys;
 var zoneList;
 var min=1,max=6;
 var statusList;
+var typeIdList;
 
 $().ready(function(){
 	storage_node=$('#storage_node').val();
@@ -22,6 +23,7 @@ $().ready(function(){
 		{'value':8,'text':'北美裔'},{'value':9,'text':'拉丁裔'},
 		{'value':10,'text':'非洲裔'},{'value':11,'text':'澳洲裔'}];
 	
+	init('actor');
 	
 	
 	// 初始化DataGrid
@@ -43,6 +45,18 @@ $().ready(function(){
 						width : 150,
 						align : 'center' ,
 					},{
+						field : 'typeId' ,
+						title : '标准化元素' ,
+						align : 'center' ,
+						width : 200,
+						formatter : function(value,row,index){
+							for(var i=0;i<typeIdList.length;i++){
+								if(typeIdList[i].id==value){
+									return typeIdList[i].text;
+								}
+							}							
+						}
+					},{
 						field : 'sex' ,
 						title : '性别' ,
 						align : 'center' ,
@@ -61,7 +75,7 @@ $().ready(function(){
 						align : 'center' ,
 					},{
 						field : 'price',
-						title : '价格',
+						title : '报价(元/天)',
 						width : 150,
 						align : 'center' ,
 					},{
@@ -140,7 +154,7 @@ $().ready(function(){
 		textField : 'text'
 	});
 	
-	init('actor');
+	
 	
 	
 	/* $("#uploadDiv").on("click",function(){  
