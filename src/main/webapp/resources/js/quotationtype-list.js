@@ -76,6 +76,7 @@ $().ready(
 
 // 添加页
 function addFun() {
+	document.getElementById('displayFileImg').setAttribute('src',"/resources/img/portal/user/default.png");
 	var node = treegrid.treegrid('getSelected');
 	$('#fm').form('clear');
 	
@@ -99,6 +100,11 @@ function editFun() {
 		$('#fm').form('load', node);
 		if(node.parentId==null || node.parentId==undefined || node.parentId==""){
 			$('#parentId').combotree("clear");
+		}
+		if(node.photo==undefined || node.photo=='' || node.photo==null){
+			document.getElementById('displayFileImg').setAttribute('src',"/resources/img/portal/user/default.png");
+		}else{
+			document.getElementById('displayFileImg').setAttribute('src',getDfsHostName()+node.photo);
 		}
 		formUrl = getContextPath() + '/portal/quotationtype/update';
 	} else {
@@ -226,4 +232,16 @@ function openDialog(id, grade) {
 					}
 				}
 			}).dialog('open').dialog('center');
+}
+
+function changeImg(obj) {
+    var windowURL = window.URL || window.webkitURL;
+    var loadImg = windowURL.createObjectURL(obj.files[0]);
+    document.getElementById('displayFileImg').setAttribute('src',loadImg);
+} 
+
+function removeFileFuc(obj){
+	$('#displayFileImg').attr('src','/resources/img/portal/user/default.png');
+	$('#uploadFile').val('');
+	$('#photo').val('');
 }

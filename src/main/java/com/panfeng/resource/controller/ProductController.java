@@ -155,6 +155,10 @@ public class ProductController extends BaseController {
 					// 删除 视频
 					final String videoUrl = product.getVideoUrl();
 					FastDFSClient.deleteFile(videoUrl);
+					//删除 转码原视频
+					final String videoPreUrl=product.getVideoPreUrl();
+					FastDFSClient.deleteFile(videoPreUrl);
+
 					// 待修改成分解富文本编辑器，删除图片
 					final String description = product.getVideoDescription();
 					if (ValidateUtil.isValid(description)) {
@@ -343,6 +347,11 @@ public class ProductController extends BaseController {
 				final String videoUrl = product.getVideoUrl();
 				if (StringUtils.isNotBlank(videoUrl))
 					FastDFSClient.deleteFile(videoUrl);
+				
+				//删除 转码原视频
+				final String videoPreUrl=product.getVideoPreUrl();
+				if(StringUtils.isNotBlank(videoPreUrl))
+					FastDFSClient.deleteFile(videoPreUrl);
 
 				// 待修改成分解富文本，删除图片
 				final String description = product.getVideoDescription();

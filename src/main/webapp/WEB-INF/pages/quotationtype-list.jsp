@@ -79,8 +79,9 @@
 	</div>
 	
 	<div id="dlg" class="easyui-dialog" style="width:400px;padding:10px 20px" title="报价单类型信息" closed="true" buttons="#dlg-buttons">
-		<form id="fm" method="post" >
+		<form id="fm" method="post"  enctype="multipart/form-data">
 			<input name="typeId" type="hidden" >
+			<input name="photo" id="photo" type="hidden">
 			<div class="fitem">
 				<label>名称</label>
 				<input name="typeName" class="easyui-textbox" required="true">
@@ -114,6 +115,14 @@
 			<div class="fitem">
 				<label>成本价</label>
 				<input name="costPrice" class="easyui-numberbox" data-options="precision:2">
+			</div>
+			<div class="fitem">
+				<label>图片</label>			
+				<input name="uploadFile" id="uploadFile" type="file" onchange="changeImg(this)" />			
+			</div>
+			<div class="fitem">
+				<img src="" id="displayFileImg" class="aptimg">
+				<button id="remove-btn" onclick="removeFileFuc();" class='removeBtn'>移除文件</button>
 			</div>
 			<div class="fitem">
 				<label>描述</label>

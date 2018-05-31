@@ -5,3 +5,13 @@
             position:relative;
   			margin-right: 2px;
  }
+ 
+ 
+ .aptimg{
+ 	display:inline-block;
+ 	position:relative;
+  	margin-right: 10px;
+  	margin-left:50px;
+	width: 100px; 
+	height: 100px;
+}

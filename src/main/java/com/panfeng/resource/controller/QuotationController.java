@@ -8,7 +8,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.paipianwang.pat.common.entity.ComboTreeModel;
@@ -17,13 +19,14 @@ import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.PmsResult;
 import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.common.util.ValidateUtil;
-import com.paipianwang.pat.facade.indent.entity.PmsIndent;
+import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.workflow.entity.PmsQuotationItem;
 import com.paipianwang.pat.workflow.entity.PmsQuotationTemplate;
 import com.paipianwang.pat.workflow.entity.PmsQuotationType;
+import com.paipianwang.pat.workflow.enums.ProductionDeviceType;
+import com.paipianwang.pat.workflow.enums.ProductionResource;
 import com.paipianwang.pat.workflow.facade.PmsQuotationTemplateFacade;
 import com.paipianwang.pat.workflow.facade.PmsQuotationTypeFacade;
-import com.panfeng.resource.view.IndentView;
 
 /**
  * 报价单
@@ -48,7 +51,13 @@ public class QuotationController extends BaseController {
 	}
 	
 	@RequestMapping("/quotationtype/save")
-	public PmsResult save(PmsQuotationType pmsQuotationType){
+	public PmsResult save(PmsQuotationType pmsQuotationType,@RequestParam final MultipartFile uploadFile){
+		
+		if (!uploadFile.isEmpty()) {
+			String path = FastDFSClient.uploadFile(uploadFile);
+			pmsQuotationType.setPhoto(path);
+		}		
+		
 		long result=pmsQuotationTypeFacade.insert(pmsQuotationType);
 		PmsResult pmsResult=new PmsResult();
 		pmsResult.setResult(result>0?true:false);
@@ -56,7 +65,17 @@ public class QuotationController extends BaseController {
 	}
 	
 	@RequestMapping("/quotationtype/update")
-	public PmsResult update(PmsQuotationType pmsQuotationType){
+	public PmsResult update(PmsQuotationType pmsQuotationType,@RequestParam final MultipartFile uploadFile){
+		
+		PmsQuotationType old=pmsQuotationTypeFacade.getById(pmsQuotationType.getTypeId());
+		if(ValidateUtil.isValid(old.getPhoto()) && !ValidateUtil.isValid(pmsQuotationType.getPhoto())) {
+			FastDFSClient.deleteFile(old.getPhoto());
+		}
+		
+		if (!uploadFile.isEmpty()) {			
+			String path = FastDFSClient.uploadFile(uploadFile);
+			pmsQuotationType.setPhoto(path);
+		}
 		long result=pmsQuotationTypeFacade.update(pmsQuotationType);
 		PmsResult pmsResult=new PmsResult();
 		pmsResult.setResult(result>0?true:false);
@@ -64,14 +83,18 @@ public class QuotationController extends BaseController {
 	}
 	
 	@RequestMapping("/quotationtype/delete")
-	public PmsResult delete(final long[] ids){
-		//校验
-		
+	public PmsResult delete(final long[] ids){	
 		//删除
 		long result=0;;
 		PmsResult pmsResult=new PmsResult();
 		for(long id:ids){
+			//删除图片
+			PmsQuotationType old=pmsQuotationTypeFacade.getById(id);			
 			result=pmsQuotationTypeFacade.delete(id);
+			
+			if(ValidateUtil.isValid(old.getPhoto())) {
+				FastDFSClient.deleteFile(old.getPhoto());
+			}
 			if(result<=0){
 				pmsResult.setResult(false);
 			}
@@ -87,7 +110,13 @@ public class QuotationController extends BaseController {
 	public List<ComboTreeModel> selectList(@PathVariable("grade")Integer grade){
 		List<ComboTreeModel> result=new ArrayList<ComboTreeModel>();
 		if(grade>1){
-			List<PmsQuotationType> types=pmsQuotationTypeFacade.findSelectionByGrade(grade);
+			List<PmsQuotationType> types=null;
+			if(grade==4) {
+				types=pmsQuotationTypeFacade.findAll();
+			}else {
+				types=pmsQuotationTypeFacade.findSelectionByGrade(grade);
+			}			
+			
 			for(PmsQuotationType type:types){
 				result.add(new ComboTreeModel(type.getTypeId()+"", type.getParentId()+"", type.getTypeName()));
 			}
@@ -113,6 +142,44 @@ public class QuotationController extends BaseController {
 				}
 			}
 		}
+		return result;
+	}
+	/**
+	 * 获取制片工具资源对应报价单类型
+	 * 			配置类型及其所有下级节点
+	 * @param typeId
+	 * @return
+	 */
+	@RequestMapping("/quotationtype/production/select")
+	public List<ComboTreeModel> listByProduction(String productionType,String subType){
+		List<ComboTreeModel> result=new ArrayList<ComboTreeModel>();
+		
+		Long[] typeIds;
+		
+		if(ProductionResource.device.getKey().equals(productionType) && ValidateUtil.isValid(subType)) {
+			typeIds=ProductionDeviceType.getEnum(Integer.parseInt(subType)).getQuotationType();
+		}else {
+			ProductionResource relation=ProductionResource.getEnum(productionType);
+			typeIds=relation.getQuotationType();
+		}
+		
+		for(Long typeId:typeIds) {
+			PmsQuotationType self=pmsQuotationTypeFacade.getById(typeId);
+			if(self!=null) {
+				result.add(new ComboTreeModel(self.getTypeId()+"", self.getParentId()+"", self.getTypeName()));
+				List<PmsQuotationType> types= pmsQuotationTypeFacade.findByParent(typeId);
+				for(PmsQuotationType type:types){
+					result.add(new ComboTreeModel(type.getTypeId()+"", type.getParentId()+"", type.getTypeName()));
+					if(ValidateUtil.isValid(type.getChildren())){
+						for(PmsQuotationType child:type.getChildren()){
+							result.add(new ComboTreeModel(child.getTypeId()+"", child.getParentId()+"", child.getTypeName()));
+						}
+					}
+				}
+			}
+			
+		}
+	
 		return result;
 	}
 	

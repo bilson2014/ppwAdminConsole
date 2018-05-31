@@ -72,5 +72,10 @@
 	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsQuotationFacade" id="pmsQuotationFacade" retries="1" check="false" timeout="5000" />
 	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsQuotationTemplateFacade" id="pmsQuotationTemplateFacade" retries="1" check="false" timeout="5000" />
 	
+	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsProductionActorFacade" id="pmsProductionActorFacade" retries="1" check="false" timeout="5000" />
+	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsProductionDirectorFacade" id="pmsProductionDirectorFacade" retries="1" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsProductionStudioFacade" id="pmsProductionStudioFacade" retries="1" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsProductionDeviceFacade" id="pmsProductionDeviceFacade" retries="1" check="false" timeout="5000"/>
+	
 </beans>
 
