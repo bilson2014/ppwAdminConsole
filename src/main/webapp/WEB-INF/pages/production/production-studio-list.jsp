@@ -60,7 +60,7 @@
 							<option value="2">外景</option>
 						</select>
 					</td>
-					<th>标准化元素：</th>
+					<th>标准化分级：</th>
 					<td>
 						<input id="search-typeId" name="typeId" class="easyui-combotree" style="width:156px" />
 					</td>
@@ -153,7 +153,7 @@
 					<div class="d-float f-width">
 						<input id="address" name="address" class="easyui-textbox" required="true"/>
 					</div>
-					<div class="lable l-width">标准化元素</div>
+					<div class="lable l-width">标准化分级</div>
 					<div class="d-float f-width1">
 					<input id="typeId" name="typeId" class="easyui-combotree" style="width:156px" required="true"/>
 					</div>

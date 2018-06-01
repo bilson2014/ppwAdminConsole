@@ -45,7 +45,7 @@
 					<td>
 						<input id="search-name" name="name" class="easyui-textbox"/>
 					</td>
-					<th>标准化元素：</th>
+					<th>标准化分级：</th>
 					<td>
 						<input id="search-typeId" name="typeId" class="easyui-combotree" style="width:156px" />
 					</td>
@@ -171,7 +171,7 @@
 					</div>
 				</div>
 				<div class="online">
-					<div class="lable l-width">标准化元素</div>
+					<div class="lable l-width">标准化分级</div>
 					<div class="d-float f-width">
 					<input id="typeId" name="typeId" class="easyui-combotree" style="width:156px" required="true"/>
 					</div>
@@ -192,10 +192,10 @@
 				</div>
 				
 				<div class="online">
-					备注  ：请完善演员体重、三维、特殊技能、擅长角色、作品等信息
+					备注  ：请完善演员身高、体重、三维、特殊技能、擅长角色、作品等信息
 				</div>
 				<div class="textarea-position">
-					<input name="remark" class="easyui-textbox" data-options="prompt:'请完善演员体重、三维、特殊技能、擅长角色、作品...',multiline:true" style="height: 100px;width: 500px">
+					<input name="remark" class="easyui-textbox" data-options="prompt:'请完善演员身高体重、三维、特殊技能、擅长角色、作品...',multiline:true" style="height: 100px;width: 500px">
 				<!-- 	<textarea class="easyui-textbox" id="remark" name="remark" multiline="true" style="height: 100px;width: 422px" placeholder="请在此处介绍自己..."> </textarea> -->
 				</div>
 				

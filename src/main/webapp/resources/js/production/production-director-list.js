@@ -45,7 +45,7 @@ $().ready(function(){
 						align : 'center' ,
 					},{
 						field : 'typeId' ,
-						title : '标准化元素' ,
+						title : '标准化分级' ,
 						align : 'center' ,
 						width : 200,
 						formatter : function(value,row,index){

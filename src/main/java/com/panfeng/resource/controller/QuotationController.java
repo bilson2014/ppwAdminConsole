@@ -263,7 +263,7 @@ public class QuotationController extends BaseController {
 	}
 	@RequestMapping("/quotationtemplate/get")
 	public List<PmsQuotationItem> listTemplateItem(final Long templateId){
-		if(templateId==null){
+		if(templateId==null || templateId==0){
 			return new ArrayList<>();
 		}
 		PmsQuotationTemplate template=pmsQuotationTemplateFacade.getById(templateId);

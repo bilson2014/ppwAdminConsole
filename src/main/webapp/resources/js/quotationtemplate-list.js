@@ -427,15 +427,21 @@ function initItemIdSelect(){
 function initItem(data){
 	var templateId;
 	if(data==null){
-		templateId=null;
+		templateId=0;
 	}else{
 		templateId=data.templateId;
 	}
 	
+	//加载数据
+	syncLoadData(function(res) {
+		//排序
+		sortItem(res);
+	
 	itemgrid=$('#item-gride').datagrid({  
-        url:getContextPath() + '/portal/quotationtemplate/get',
+//        url:getContextPath() + '/portal/quotationtemplate/get',
+		//data:res,
         idField : 'detailId',
-        queryParams:{templateId:templateId},
+//        queryParams:{templateId:templateId},
         striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
 		rownumbers : true , 
@@ -449,7 +455,7 @@ function initItem(data){
 				title : '类别id',
 				width : 10,
 				align : 'center',
-				hidden : true
+				hidden : true  
 			},
         	{
 				field : 'typeName',
@@ -555,8 +561,42 @@ function initItem(data){
         	
         	itemgrid.datagrid('statistics'); //合计
         }
+        
     });  
 	
+	itemgrid.datagrid('loadData', res);
+	
+	}, getContextPath() + '/portal/quotationtemplate/get?templateId='+templateId, null);
+	
+	
+}
+
+function sortItem(resources){
+	var temp;
+	for(var i=0;i<resources.length;i++){
+		for(var j=i;j<resources.length;j++){
+			if(compare(resources[i],resources[j])>0){
+				temp=resources[i];
+				resources[i]=resources[j];
+				resources[j]=temp;
+			}
+		}
+	}
+}
+
+function compare(nodeA,nodeB){
+	if(nodeA.typeId > nodeB.typeId){
+		return 1;
+	}else if(nodeA.typeId < nodeB.typeId){
+		return -1;
+	}else{
+		if(nodeA.itemId > nodeB.itemId){
+			return 1;
+		}else if(nodeA.itemId < nodeB.itemId){
+			return -1;
+		}
+	}
+	return 0;
 }
 
 function getRowIndex(target){
