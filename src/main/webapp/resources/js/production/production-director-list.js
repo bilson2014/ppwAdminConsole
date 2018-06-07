@@ -2,7 +2,7 @@ var formUrl;
 var datagrid;
 var imgNo=1; 
 var storage_node;
-var citys;
+//var citys;
 var specialtyList;
 var min=1,max=1;
 var statusList;
@@ -12,9 +12,9 @@ $().ready(function(){
 	storage_node=$('#storage_node').val();
 	statusList=JSON.parse($('#statusList').val());
 	
-	syncLoadData(function(res) {
-		citys = res;
-	}, getContextPath() + '/portal/all/citys', null);
+//	syncLoadData(function(res) {
+//		citys = res;
+//	}, getContextPath() + '/portal/all/citys', null);
 	
 	//擅长领域
 	specialtyList=[{'value':1,'text':'宣传片'},{'value':2,'text':'广告'},
@@ -69,10 +69,12 @@ $().ready(function(){
 							if(value!=null && value!=''){
 								var values=value.split(',');
 								var text='';
-								for(var each in values){
+								for(var j=0;j<values.length;j++){
+									var each=values[j];
 									for(var i=0;i<specialtyList.length;i++){
 										if(each==specialtyList[i].value){
 											text+=specialtyList[i].text+',';
+											continue;
 										}
 									}
 								}
@@ -123,16 +125,7 @@ $().ready(function(){
 		toolbar : '#toolbar'
 	});
 	
-	$('#city').combobox({
-		data : citys,
-		valueField : 'cityID',
-		textField : 'city'
-	});
-	$('#search-city').combobox({
-		data : citys,
-		valueField : 'cityID',
-		textField : 'city'
-	});
+	
 	$('#specialty').combobox({
 		data : specialtyList,
 		valueField : 'value',

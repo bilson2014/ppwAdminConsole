@@ -1,13 +1,24 @@
 var imgNo=1; 
 var teamList;
 var referrerList;
+var citys;
 
 
 
 function init(type){
 	
-	//statusList=[{'value':2,'text':'审核中'},{'value':1,'text':'审核通过'},{'value':0,'text':'审核未通过'}];
 	syncLoadData(function(res) {
+		citys = res;
+	}, getContextPath() + '/portal/all/citys', null);
+	
+	syncLoadData(function(res) {
+		typeIdList = res;	
+	}, getContextPath() + '/portal/quotationtype/production/select?productionType='+type, null);
+	
+	
+	
+	//statusList=[{'value':2,'text':'审核中'},{'value':1,'text':'审核通过'},{'value':0,'text':'审核未通过'}];
+	loadData(function(res) {
 		teamList = res;
 		$('#teamId').combobox({
 			data : teamList,
@@ -32,7 +43,7 @@ function init(type){
 		});
 	}, getContextPath() + '/portal/product/init', null);
 	
-	syncLoadData(function(res) {
+	loadData(function(res) {
 		referrerList = res;
 		
 		$('#referrer').combobox({
@@ -49,6 +60,17 @@ function init(type){
 		}); 
 	}, getContextPath() + '/portal/employee/getAll', null);
 	
+	$('#city').combobox({
+		data : citys,
+		valueField : 'cityID',
+		textField : 'city'
+	});
+	$('#search-city').combobox({
+		data : citys,
+		valueField : 'cityID',
+		textField : 'city'
+	});
+	
 	$('#status').combobox({
 		data : statusList,
 		valueField : 'value',
@@ -62,45 +84,40 @@ function init(type){
 		valueField : 'value',
 		textField : 'text'
 	});
-
-	syncLoadData(function(res) {
-		typeIdList = res;
-		
-		$('#typeId').combotree(
-				{
-					data :typeIdList,
-					lines : true,
-					cascadeCheck : false,
-					parentField : 'pid',
-					idField : 'id',
-					treeField : 'text',
-//					editable :true,//后期加上搜索
-//					filter:{}
-					onBeforeSelect: function(node) {  //只能选择叶子节点
-			            if (!$(this).tree('isLeaf', node.target)) {  
-			                return false;  
-			            }  
-			        }
-		});
-		
-		$('#search-typeId').combotree(
-				{
-					data :typeIdList,
-					lines : true,
-					cascadeCheck : false,
-					parentField : 'pid',
-					idField : 'id',
-					treeField : 'text',
-//					editable :true,//后期加上搜索
-//					filter:{}
-					onBeforeSelect: function(node) {  //只能选择叶子节点
-			            if (!$(this).tree('isLeaf', node.target)) {  
-			                return false;  
-			            }  
-			        }
-		});
-		
-	}, getContextPath() + '/portal/quotationtype/production/select?productionType='+type, null);
+	
+	$('#typeId').combotree(
+			{
+				data :typeIdList,
+				lines : true,
+				cascadeCheck : false,
+				parentField : 'pid',
+				idField : 'id',
+				treeField : 'text',
+//				editable :true,//后期加上搜索
+//				filter:{}
+				onBeforeSelect: function(node) {  //只能选择叶子节点
+		            if (!$(this).tree('isLeaf', node.target)) {  
+		                return false;  
+		            }  
+		        }
+	});
+	
+	$('#search-typeId').combotree(
+			{
+				data :typeIdList,
+				lines : true,
+				cascadeCheck : false,
+				parentField : 'pid',
+				idField : 'id',
+				treeField : 'text',
+//				editable :true,//后期加上搜索
+//				filter:{}
+				onBeforeSelect: function(node) {  //只能选择叶子节点
+		            if (!$(this).tree('isLeaf', node.target)) {  
+		                return false;  
+		            }  
+		        }
+	});
 	
 	
 	 $("#uploadDiv").on("click",function(){  

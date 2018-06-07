@@ -61,6 +61,10 @@
 						<input name="beginPrice" class="easyui-numberbox" style="width: 76px;"/>~
 						<input name="endPrice" class="easyui-numberbox" style="width: 76px;"/>
 					</td>
+					<th>城市：</th>
+					<td>
+						<input id="search-city" name="city" class="easyui-combobox" />
+					</td>
 				</tr>
 				<tr>
 					<th>供应商：</th>
@@ -139,22 +143,25 @@
 					</div>
 				</div>		
 				<div class="online">
+					<div class="lable l-width">所在城市</div>
+					<div class="d-float f-width">
+					<input id="city" name="city" class="easyui-combobox" required="true"/>
+					</div>
 					
 					<div class="lable l-width">供应商</div>
-					<div class="d-float f-width">
-						<input id="teamId" name="teamId" class="easyui-combobox" required="true"/>
-					</div>
-					
-					<div class="lable l-width">推荐人</div>
 					<div class="d-float f-width1">
-						<input id="referrer" name="referrer" class="easyui-combobox"/>
-					</div>
+						<input id="teamId" name="teamId" class="easyui-combobox" required="true"/>
+					</div>				
 					
 				</div>
 				<div class="online">
+					<div class="lable l-width">推荐人</div>
+					<div class="d-float f-width">
+						<input id="referrer" name="referrer" class="easyui-combobox"/>
+					</div>
 					
 					<div class="lable l-width">审核状态</div>
-					<div class="d-float f-width">
+					<div class="d-float f-width1">
 					<input id="status" name="status" class="easyui-combobox" required="true" />
 					</div>
 				</div>

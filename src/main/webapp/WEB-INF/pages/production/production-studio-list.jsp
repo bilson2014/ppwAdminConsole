@@ -70,7 +70,11 @@
 						<input name="endPrice" class="easyui-numberbox" style="width: 76px;"/>
 					</td>	
 				</tr>
-				<tr>				
+				<tr>		
+					<th>城市：</th>
+					<td>
+						<input id="search-city" name="city" class="easyui-combobox" />
+					</td>		
 					<th>供应商：</th>
 					<td>
 						<input id="search-teamId" name="teamId" class="easyui-combobox" />
@@ -149,29 +153,35 @@
 					</div>
 				</div>
 				<div class="online">
-					<div class="lable l-width">地址</div>
+				
+					<div class="lable l-width">所在城市</div>
 					<div class="d-float f-width">
-						<input id="address" name="address" class="easyui-textbox" required="true"/>
+					<input id="city" name="city" class="easyui-combobox" required="true"/>
 					</div>
-					<div class="lable l-width">标准化分级</div>
+					
+					<div class="lable l-width">地址</div>
 					<div class="d-float f-width1">
+						<input id="address" name="address" class="easyui-textbox" required="true"/>
+					</div>					
+				</div>	
+				<div class="online">				
+					<div class="lable l-width">标准化分级</div>
+					<div class="d-float f-width">
 					<input id="typeId" name="typeId" class="easyui-combotree" style="width:156px" required="true"/>
 					</div>
 					
+					<div class="lable l-width">供应商</div>
+					<div class="d-float f-width1">
+						<input id="teamId" name="teamId" class="easyui-combobox" required="true"/>
+					</div>					
 				</div>	
 				<div class="online">
-					<div class="lable l-width">供应商</div>
-					<div class="d-float f-width">
-						<input id="teamId" name="teamId" class="easyui-combobox" required="true"/>
-					</div>
 					<div class="lable l-width">推荐人</div>
-					<div class="d-float f-width1">
+					<div class="d-float f-width">
 						<input id="referrer" name="referrer" class="easyui-combobox"/>
 					</div>
-				</div>	
-				<div class="online">
 					<div class="lable l-width">审核状态</div>
-					<div class="d-float f-width">
+					<div class="d-float f-width1">
 					<input id="status" name="status" class="easyui-combobox" required="true" />
 					</div>
 				</div>

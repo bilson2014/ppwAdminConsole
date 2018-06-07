@@ -2,7 +2,7 @@ var formUrl;
 var datagrid;
 var imgNo=1; 
 var storage_node;
-var citys;
+//var citys;
 var zoneList;
 var min=1,max=6;
 var statusList;
@@ -11,9 +11,9 @@ var typeIdList;
 $().ready(function(){
 	storage_node=$('#storage_node').val();
 	statusList=JSON.parse($('#statusList').val());
-	syncLoadData(function(res) {
-		citys = res;
-	}, getContextPath() + '/portal/all/citys', null);
+//	syncLoadData(function(res) {
+//		citys = res;
+//	}, getContextPath() + '/portal/all/citys', null);
 	
 
 	zoneList=[{'value':1,'text':'中国汉族'},{'value':2,'text':'中国其他少数民族'},
@@ -133,16 +133,6 @@ $().ready(function(){
 		toolbar : '#toolbar'
 	});
 	
-	$('#city').combobox({
-		data : citys,
-		valueField : 'cityID',
-		textField : 'city'
-	});
-	$('#search-city').combobox({
-		data : citys,
-		valueField : 'cityID',
-		textField : 'city'
-	});
 	$('#search-zone').combobox({
 		data : zoneList,
 		valueField : 'value',

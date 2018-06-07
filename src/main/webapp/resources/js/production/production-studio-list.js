@@ -65,6 +65,18 @@ $().ready(function(){
 						width : 150,
 						align : 'center' ,
 					},{
+						field : 'city' ,
+						title : '城市' ,
+						align : 'center' ,
+						width : 200,
+						formatter : function(value,row,index){
+							for(var i=0;i<citys.length;i++){
+								if(citys[i].cityID==value){
+									return citys[i].city;
+								}
+							}
+						}
+					},{
 						field : 'teamName' ,
 						title : '供应商' ,
 						align : 'center' ,
