@@ -124,8 +124,7 @@ function init(type){
 	
 	 $("#uploadDiv").on("click",function(){  
 	     var uploadFile = '<input type="file" id="videoFile" style="width:100%" name="uploadFiles" class="p-file" multiple="multiple" onchange="addImg(this)" accept="image/gif,image/jpeg,image/jpg,image/png"/>';  
-	     $("#fileDiv").append($(uploadFile));  
-	     
+	     $("#fileDiv").append($(uploadFile));  	     
 	     $("#videoFile").click();          
 	 }); 
 }
@@ -147,22 +146,38 @@ function validatePhoto(){
 
 
 function addImg(obj) {
-    var windowURL = window.URL || window.webkitURL;
+	
+	
+	$('#dlgCut').dialog({
+		title : '裁剪图片',
+		modal : true,
+		width : 530,
+		height : 400,
+		onOpen : function(event, ui) {
+			
+		},
+		onBeforeClose: function (event, ui) {
+		
+		}
+	}).dialog('open').dialog('center');
+	
+	
+  /*  var windowURL = window.URL || window.webkitURL;
 
     for(var i=0;i<obj.files.length;i++){
     	//校验：是否是图片 大小是否满足
     	//
-    	/*
+    	
 		var type = file.type.split('/')[0];
 		if (type !='image') {
 			alert('请上传图片');
 			return;
-		}*/
-    	/*var file = obj.files[i];
+		}
+    	var file = obj.files[i];
 		var size = Math.floor(file.size / 1024 /1024);
 		if (size > 3) {
 			$.message('图片大小不得超过3M');
-		}*/
+		}
     	
     	var loadImg = windowURL.createObjectURL(obj.files[i]);
         imgNo=imgNo+1;
@@ -170,7 +185,7 @@ function addImg(obj) {
     }
     $(obj).removeAttr("id"); 
     
-    validatePhoto();
+    validatePhoto();*/
 } 
 
 function displayImg(loadImg,url,type){ 

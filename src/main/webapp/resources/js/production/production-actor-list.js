@@ -304,6 +304,7 @@ function openDialog(data){
 		
 		}
 	}).dialog('open').dialog('center');
+		
 }
 
 //查询
