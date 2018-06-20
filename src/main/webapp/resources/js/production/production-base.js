@@ -177,7 +177,7 @@ function displayImg(loadImg,url,type){
 	'data-options="plain:true,iconCls:\'icon-cancel\'"></a></div>';
 	
 	var newImg = $(html).appendTo("#imgDisplay");
-	 //渲染easyUI
+	 //渲染easyUIxc
 	 $.parser.parse($(newImg));
 }
 

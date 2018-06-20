@@ -205,17 +205,15 @@
 					<div class="lable l-width">照片</div>
 					<div class="d-float f-width"  style="margin-top:0px !important;">
 						<div id="uploadDiv" class="easyui-linkbutton c6">选择文件</div>
-						请选择1~6张照片
-						
+						请选择1~6张照片						
 						<div id="fileDiv" style="display: none"></div> 
 						<!-- <input type="file" id="videoFile" style="width:100%" name="uploadFiles" class="p-file" multiple="multiple" onchange="addImg(this)" accept="image/gif,image/jpeg,image/jpg,image/png"/> -->
 					</div>
-				</div>
+				</div>				
 				<div class="online disPlay" id="imgDisplay">
 				</div>
 				<input id="photo" name="photo" type="hidden"/>	
-				<input id="delImg" name="delImg" type="hidden">
-	            
+				<input id="delImg" name="delImg" type="hidden">	            
 	        </form>
 	    </div>
 	    <div id="dlg-buttons">	    
