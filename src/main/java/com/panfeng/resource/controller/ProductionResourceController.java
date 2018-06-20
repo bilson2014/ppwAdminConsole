@@ -1,5 +1,6 @@
 package com.panfeng.resource.controller;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +23,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONArray;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
+import com.paipianwang.pat.common.entity.PhotoCutParam;
 import com.paipianwang.pat.common.entity.SessionInfo;
 import com.paipianwang.pat.common.util.DateUtils;
+import com.paipianwang.pat.common.util.FileUtils;
 import com.paipianwang.pat.common.util.JsonUtil;
+import com.paipianwang.pat.common.util.PhotoUtil;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.workflow.entity.PmsProductionActor;
@@ -38,6 +42,7 @@ import com.paipianwang.pat.workflow.facade.PmsProductionDeviceFacade;
 import com.paipianwang.pat.workflow.facade.PmsProductionDirectorFacade;
 import com.paipianwang.pat.workflow.facade.PmsProductionStudioFacade;
 import com.panfeng.domain.BaseMsg;
+import com.panfeng.util.Log;
 
 /**
  * 制片资源管理
@@ -364,18 +369,21 @@ public class ProductionResourceController extends BaseController {
 		}
 
 		// 上传图片
-		for (int i = 0; i < uploadFiles.length; i++) {
-			final MultipartFile multipartFile = uploadFiles[i];
-			if (!multipartFile.isEmpty()) {
+		if(uploadFiles!=null && uploadFiles.length>0) {
+			for (int i = 0; i < uploadFiles.length; i++) {
+				final MultipartFile multipartFile = uploadFiles[i];
+				if (!multipartFile.isEmpty()) {
 
-				if (delImgList.contains(multipartFile.getOriginalFilename())) {
-					delImgList.remove(delImgList.indexOf(multipartFile.getOriginalFilename()));
-				} else {
-					String path = FastDFSClient.uploadFile(multipartFile);
-					pathList += path + ";";
+					if (delImgList.contains(multipartFile.getOriginalFilename())) {
+						delImgList.remove(delImgList.indexOf(multipartFile.getOriginalFilename()));
+					} else {
+						String path = FastDFSClient.uploadFile(multipartFile);
+						pathList += path + ";";
+					}
 				}
 			}
 		}
+		
 		// 删除图片
 		for (String delImg : delImgList) {
 			if (ValidateUtil.isValid(delImg) && delImg.startsWith("group1/")) {
@@ -409,6 +417,41 @@ public class ProductionResourceController extends BaseController {
 	private void setStatusList(final ModelMap model) {
 		ProductionConstants[] statusList=ProductionConstants.statusList;
 		model.put("statusList", JsonUtil.toJson(statusList));		
+	}
+	
+	@RequestMapping("/production/cutPhoto")
+	public BaseMsg uploadAndCutImg(final HttpServletRequest request,@RequestParam MultipartFile file,final PhotoCutParam param )
+			throws Exception {
+		BaseMsg result=new BaseMsg();
+		if (param != null && !"".equals(param.getImgUrl())) {
+
+			final String imgPath = param.getImgUrl();
+			InputStream inputStream =null;
+			String extName = null;
+			
+			if(ValidateUtil.isValid(imgPath)) {
+				inputStream = FastDFSClient.downloadFile(imgPath);
+				extName = FileUtils.getExtName(imgPath, ".");
+			}else {
+				inputStream=file.getInputStream();
+				extName=file.getOriginalFilename();
+			}
+
+			SessionInfo sessionInfo = getCurrentInfo(request);
+			Log.error(" cut photo begin", sessionInfo);
+
+			// cut photo
+			inputStream = PhotoUtil.cutPhoto(inputStream, param, extName);
+			Log.error(" cut photo - success", sessionInfo);
+
+			String path = FastDFSClient.uploadFile(inputStream, imgPath);
+			
+			if(ValidateUtil.isValid(path)) {
+				result.setCode(BaseMsg.NORMAL);
+				result.setResult(path);
+			}			
+		}
+		return result;
 	}
 	
 }

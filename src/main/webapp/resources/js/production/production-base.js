@@ -14,8 +14,7 @@ function init(type){
 	syncLoadData(function(res) {
 		typeIdList = res;	
 	}, getContextPath() + '/portal/quotationtype/production/select?productionType='+type, null);
-	
-	
+		
 	
 	//statusList=[{'value':2,'text':'审核中'},{'value':1,'text':'审核通过'},{'value':0,'text':'审核未通过'}];
 	loadData(function(res) {
@@ -85,39 +84,42 @@ function init(type){
 		textField : 'text'
 	});
 	
-	$('#typeId').combotree(
-			{
-				data :typeIdList,
-				lines : true,
-				cascadeCheck : false,
-				parentField : 'pid',
-				idField : 'id',
-				treeField : 'text',
-//				editable :true,//后期加上搜索
-//				filter:{}
-				onBeforeSelect: function(node) {  //只能选择叶子节点
-		            if (!$(this).tree('isLeaf', node.target)) {  
-		                return false;  
-		            }  
-		        }
-	});
+	if(type!='device'){
+		$('#typeId').combotree(
+				{
+					data :typeIdList,
+					lines : true,
+					cascadeCheck : false,
+					parentField : 'pid',
+					idField : 'id',
+					treeField : 'text',
+//					editable :true,//后期加上搜索
+//					filter:{}
+					onBeforeSelect: function(node) {  //只能选择叶子节点
+			            if (!$(this).tree('isLeaf', node.target)) {  
+			                return false;  
+			            }  
+			        }
+		});
+		
+		$('#search-typeId').combotree(
+				{
+					data :typeIdList,
+					lines : true,
+					cascadeCheck : false,
+					parentField : 'pid',
+					idField : 'id',
+					treeField : 'text',
+//					editable :true,//后期加上搜索
+//					filter:{}
+					onBeforeSelect: function(node) {  //只能选择叶子节点
+			            if (!$(this).tree('isLeaf', node.target)) {  
+			                return false;  
+			            }  
+			        }
+		});
+	}
 	
-	$('#search-typeId').combotree(
-			{
-				data :typeIdList,
-				lines : true,
-				cascadeCheck : false,
-				parentField : 'pid',
-				idField : 'id',
-				treeField : 'text',
-//				editable :true,//后期加上搜索
-//				filter:{}
-				onBeforeSelect: function(node) {  //只能选择叶子节点
-		            if (!$(this).tree('isLeaf', node.target)) {  
-		                return false;  
-		            }  
-		        }
-	});
 	
 	
 	 $("#uploadDiv").on("click",function(){  

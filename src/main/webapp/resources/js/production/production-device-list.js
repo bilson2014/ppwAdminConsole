@@ -15,9 +15,10 @@ $().ready(function(){
 		{'value':3,'text':'镜头设备'},{'value':4,'text':'灯光设备'},
 		{'value':5,'text':'灯光附件'},{'value':6,'text':'录音设备'},
 		{'value':7,'text':'特种设备'},{'value':8,'text':'其他设备'}];*/
-	typeList=JSON.parse($('#typeList').val());
+//	typeList=JSON.parse($('#typeList').val());
 	
 	init('device');
+	
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -50,9 +51,9 @@ $().ready(function(){
 						align : 'center' ,
 						width : 200,
 						formatter : function(value,row,index){
-							for(var i=0;i<typeList.length;i++){
-							if(typeList[i].key==value){
-								return typeList[i].name;
+							for(var i=0;i<typeIdList.length;i++){
+							if(typeIdList[i].id==value){
+								return typeIdList[i].text;
 							}}
 						}
 					},{
@@ -109,22 +110,41 @@ $().ready(function(){
 		toolbar : '#toolbar'
 	});
 	
-	var s_typeList=JSON.parse(JSON.stringify(typeList));
-	s_typeList.unshift({'key':'','name':'--请选择--'});
-	$('#search-type').combobox({
-		data : s_typeList,
+
+	$('#search-typeId').combobox({
+		data : [],
 		valueField : 'key',
-		textField : 'name',
-		onChange : function(n,o) {
-			var type = $('#search-typeId').combotree('getValue');
-			if(type != '' && type != null) {
-				// 清空
-				$('#search-typeId').combotree('setValue','');
+		textField : 'value'
+	});	
+	$('#typeId').combobox({
+		data : [],
+		valueField : 'key',
+		textField : 'value'
+	});	
+	
+	loadData(function(res) {
+		typeList = res;
+		
+		var s_typeList=JSON.parse(JSON.stringify(typeList));
+		s_typeList.unshift({'key':'','name':'--请选择--'});
+		$('#search-type').combobox({
+			data : s_typeList,
+			valueField : 'key',
+			textField : 'value',
+			onChange : function(n,o) {
+				var type = $('#search-typeId').combobox('getValue');
+				if(type != '' && type != null) {
+					// 清空
+					$('#search-typeId').combobox('setValue','');
+				}
+				$('#search-typeId').combobox('reload',getContextPath()
+						+ '/portal/quotationtype/production/children?typeId='+n);
 			}
-			$('#search-typeId').combotree('reload',getContextPath()
-					+ '/portal/quotationtype/production/select?productionType=device'+'&subType='+n);
-		}
-	});
+		});
+		 
+	}, getContextPath() + '/portal/quotationtype/production/children?productionType=device', null);
+	
+	
 
 });
 
@@ -138,15 +158,15 @@ function addFuc(){
 	$('#type').combobox({
 		data : typeList,
 		valueField : 'key',
-		textField : 'name',
+		textField : 'value',
 		onChange : function(n,o) {
-			var type = $('#typeId').combotree('getValue');
+			var type = $('#typeId').combobox('getValue');
 			if(type != '' && type != null) {
 				// 清空
-				$('#typeId').combotree('setValue','');
+				$('#typeId').combobox('setValue','');
 			}
-			$('#typeId').combotree('reload',getContextPath()
-					+ '/portal/quotationtype/production/select?productionType=device'+'&subType='+n);
+			$('#typeId').combobox('reload',getContextPath()
+					+ '/portal/quotationtype/production/children?typeId='+n);
 		}
 	});
 	//默认审核通过
@@ -167,20 +187,20 @@ function editFuc(){
 		$('#type').combobox({
 			data : typeList,
 			valueField : 'key',
-			textField : 'name',
+			textField : 'value',
 			onChange : function(n,o) {
-				var type = $('#typeId').combotree('getValue');
+				var type = $('#typeId').combobox('getValue');
 				if(type != '' && type != null) {
 					// 清空
-					$('#typeId').combotree('setValue','');
+					$('#typeId').combobox('setValue','');
 				}
-				$('#typeId').combotree('reload',getContextPath()
-						+ '/portal/quotationtype/production/select?productionType=device'+'&subType='+n);
+				$('#typeId').combobox('reload',getContextPath()
+						+ '/portal/quotationtype/production/children?typeId='+n);
 			}
 		});
 		$('#type').combobox('setValue',
 				rows[0].type);
-		$('#typeId').combotree('setValue',
+		$('#typeId').combobox('setValue',
 				rows[0].typeId);
 		
 		formUrl = getContextPath() + '/portal/production/device/update';
