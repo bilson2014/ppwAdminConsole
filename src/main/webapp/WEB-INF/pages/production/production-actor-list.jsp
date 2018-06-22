@@ -160,10 +160,7 @@
 				<div class="online">
 					<div class="lable l-width">种族</div>
 					<div class="d-float f-width">
-						<select name="zone" id='zone' class="easyui-combobox" style="width:156px" editable="false">
-							
-							
-						</select>
+						<select name="zone" id='zone' class="easyui-combobox" style="width:156px" editable="false"></select>
 					</div>
 					<div class="lable l-width">所在城市</div>
 					<div class="d-float f-width1">

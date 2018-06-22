@@ -238,3 +238,16 @@
 	display: flex;
 	flex-wrap: wrap;
 }
+
+#setFile{
+width:100%;height:auto;
+}
+
+.jcrop-holder {
+            margin: auto;
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+}

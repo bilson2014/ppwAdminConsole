@@ -10,8 +10,7 @@ var typeIdList;
 
 $().ready(function(){
 	storage_node=$('#storage_node').val();
-	statusList=JSON.parse($('#statusList').val());
-	
+	statusList=JSON.parse($('#statusList').val());	
 //	syncLoadData(function(res) {
 //		citys = res;
 //	}, getContextPath() + '/portal/all/citys', null);
@@ -162,7 +161,6 @@ $().ready(function(){
 	
 });
 
-
 //增加
 function addFuc(){
 	imgNo=1;
@@ -189,8 +187,7 @@ function editFuc(){
 	if(rows.length == 1){
 		$('#fm').form('clear');
 		$("#imgDisplay").empty();
-		$("#fileDiv").empty();
-		
+		$("#fileDiv").empty();		
 		$('#fm').form('load',rows[0]);
 		
 		if(rows[0].photo!=undefined && rows[0].photo!=null){
