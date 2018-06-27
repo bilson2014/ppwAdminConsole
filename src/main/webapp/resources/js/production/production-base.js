@@ -45,7 +45,9 @@ function init(type){
 				return row.teamName.indexOf(q) >= 0;
 			}
 		});
-	}, getContextPath() + '/portal/product/init', null);
+	}, getContextPath() + '/portal/team/listByName', $.toJSON({
+		teamName : ''
+	}));
 	
 	loadData(function(res) {
 		referrerList = res;
@@ -62,7 +64,7 @@ function init(type){
 			valueField:'employeeId',
 			textField:'employeeRealName'
 		}); 
-	}, getContextPath() + '/portal/employee/getAll', null);
+	}, getContextPath() + '/portal/getEmployeeList', null);
 	
 	$('#city').combobox({
 		data : citys,

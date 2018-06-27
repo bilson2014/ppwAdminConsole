@@ -557,4 +557,9 @@ public class TeamController extends BaseController {
 		return pmsTeamFacade.teamRecommendList();
 	}
 
+	@RequestMapping(value = "/team/listByName", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public List<PmsTeam> listByName(@RequestBody PmsTeam team) {
+		final List<PmsTeam> list = pmsTeamFacade.listByTeamName(team.getTeamName());
+		return list;
+	}
 }

@@ -146,6 +146,10 @@ function editFuc(){
 		
 		$('#fm').form('load',rows[0]);
 		
+		if(rows[0].typeId==null || rows[0].typeId==undefined || rows[0].typeId==""){
+			$('#typeId').combotree("clear");
+		}
+		
 		if(rows[0].photo!=undefined && rows[0].photo!=null){
 			var photos=rows[0].photo.split(";");
 			for(var i=0;i<photos.length;i++){

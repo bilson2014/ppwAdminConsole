@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.paipianwang.pat.common.entity.ComboTreeModel;
 import com.paipianwang.pat.common.entity.DataGrid;
+import com.paipianwang.pat.common.entity.KeyValue;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.PmsResult;
 import com.paipianwang.pat.common.util.JsonUtil;
@@ -23,7 +24,6 @@ import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.workflow.entity.PmsQuotationItem;
 import com.paipianwang.pat.workflow.entity.PmsQuotationTemplate;
 import com.paipianwang.pat.workflow.entity.PmsQuotationType;
-import com.paipianwang.pat.workflow.enums.ProductionDeviceType;
 import com.paipianwang.pat.workflow.enums.ProductionResource;
 import com.paipianwang.pat.workflow.facade.PmsQuotationTemplateFacade;
 import com.paipianwang.pat.workflow.facade.PmsQuotationTypeFacade;
@@ -155,7 +155,7 @@ public class QuotationController extends BaseController {
 	}
 	
 	/**
-	 * 根据id获取下级子节点
+	 * 根据id获取下级子节点（多级子节点）
 	 * 		即根据选项获取下级报价单类型下拉框值
 	 * @param typeId
 	 * @return
@@ -175,6 +175,34 @@ public class QuotationController extends BaseController {
 		return result;
 	}
 	/**
+	 * 获取下一级子节点
+	 * @param typeId
+	 * @return
+	 */
+	@RequestMapping("/quotationtype/production/children")
+	public List<KeyValue> getChildren(String productionType,Long typeId){
+		Long[] typeIds;
+		
+		if(ValidateUtil.isValid(productionType)) {
+			ProductionResource relation=ProductionResource.getEnum(productionType);
+			typeIds=relation.getQuotationType();
+		}else {
+			typeIds=new Long[] {typeId};
+		}
+		
+		List<KeyValue> result=new ArrayList<KeyValue>();
+		for(Long id:typeIds) {
+			List<PmsQuotationType> types= pmsQuotationTypeFacade.findByParent(id);
+			for(PmsQuotationType type:types){
+				KeyValue keyValue=new KeyValue();
+				keyValue.setKey(type.getTypeId()+"");
+				keyValue.setValue(type.getTypeName());
+				result.add(keyValue);		
+			}
+		}	
+		return result;
+	}
+	/**
 	 * 获取制片工具资源对应报价单类型
 	 * 			配置类型及其所有下级节点
 	 * @param typeId
@@ -187,7 +215,7 @@ public class QuotationController extends BaseController {
 		Long[] typeIds;
 		
 		if(ProductionResource.device.getKey().equals(productionType) && ValidateUtil.isValid(subType)) {
-			typeIds=ProductionDeviceType.getEnum(Integer.parseInt(subType)).getQuotationType();
+			typeIds=new Long[] {Long.parseLong(subType)};
 		}else {
 			ProductionResource relation=ProductionResource.getEnum(productionType);
 			typeIds=relation.getQuotationType();

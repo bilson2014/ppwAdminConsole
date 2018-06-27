@@ -71,8 +71,12 @@ $().ready(function(){
 								for(var j=0;j<values.length;j++){
 									var each=values[j];
 									for(var i=0;i<specialtyList.length;i++){
-										if(each==specialtyList[i].value){
-											text+=specialtyList[i].text+',';
+										if(each==specialtyList[i].value){										
+											if(j==values.length-1){
+												text+=specialtyList[i].text;
+											}else{
+												text+=specialtyList[i].text+',';
+											}
 											continue;
 										}
 									}
@@ -189,6 +193,10 @@ function editFuc(){
 		$("#imgDisplay").empty();
 		$("#fileDiv").empty();		
 		$('#fm').form('load',rows[0]);
+		
+		if(rows[0].typeId==null || rows[0].typeId==undefined || rows[0].typeId==""){
+			$('#typeId').combotree("clear");
+		}
 		
 		if(rows[0].photo!=undefined && rows[0].photo!=null){
 			var photos=rows[0].photo.split(";");

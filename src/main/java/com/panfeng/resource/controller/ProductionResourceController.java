@@ -2,7 +2,6 @@ package com.panfeng.resource.controller;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSONArray;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.PhotoCutParam;
@@ -36,7 +34,6 @@ import com.paipianwang.pat.workflow.entity.PmsProductionDevice;
 import com.paipianwang.pat.workflow.entity.PmsProductionDirector;
 import com.paipianwang.pat.workflow.entity.PmsProductionStudio;
 import com.paipianwang.pat.workflow.entity.ProductionConstants;
-import com.paipianwang.pat.workflow.enums.ProductionDeviceType;
 import com.paipianwang.pat.workflow.facade.PmsProductionActorFacade;
 import com.paipianwang.pat.workflow.facade.PmsProductionDeviceFacade;
 import com.paipianwang.pat.workflow.facade.PmsProductionDirectorFacade;
@@ -149,7 +146,7 @@ public class ProductionResourceController extends BaseController {
 		setDefaultReferrer(request, model);
 		setStatusList(model);
 		//设备类型
-		ProductionDeviceType[] types=ProductionDeviceType.values();		
+		/*ProductionDeviceType[] types=ProductionDeviceType.values();		
 		List<Map<String,Object>> typesList=new ArrayList<>();
 		for(ProductionDeviceType type:types) {
 			Map<String,Object> map=new HashMap<>();
@@ -159,7 +156,7 @@ public class ProductionResourceController extends BaseController {
 			typesList.add(map);
 		}
 		
-		model.put("typeList", JSONArray.toJSON(typesList));
+		model.put("typeList", JSONArray.toJSON(typesList));*/
 		
 		
 		return new ModelAndView("production/production-device-list", model);
@@ -420,7 +417,7 @@ public class ProductionResourceController extends BaseController {
 	}
 	
 	@RequestMapping("/production/cutPhoto")
-	public BaseMsg uploadAndCutImg(final HttpServletRequest request,@RequestParam MultipartFile file,final PhotoCutParam param )
+	public BaseMsg uploadAndCutImg(final HttpServletRequest request,@RequestParam MultipartFile uploadFile,final PhotoCutParam param )
 			throws Exception {
 		BaseMsg result=new BaseMsg();
 		if (param != null && !"".equals(param.getImgUrl())) {
@@ -433,8 +430,8 @@ public class ProductionResourceController extends BaseController {
 				inputStream = FastDFSClient.downloadFile(imgPath);
 				extName = FileUtils.getExtName(imgPath, ".");
 			}else {
-				inputStream=file.getInputStream();
-				extName=file.getOriginalFilename();
+				inputStream=uploadFile.getInputStream();
+				extName=uploadFile.getOriginalFilename();
 			}
 
 			SessionInfo sessionInfo = getCurrentInfo(request);
