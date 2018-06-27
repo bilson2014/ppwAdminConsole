@@ -1,6 +1,9 @@
 package com.panfeng.resource.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -417,10 +420,14 @@ public class ProductionResourceController extends BaseController {
 	}
 	
 	@RequestMapping("/production/cutPhoto")
-	public BaseMsg uploadAndCutImg(final HttpServletRequest request,@RequestParam MultipartFile uploadFile,final PhotoCutParam param )
+	public BaseMsg uploadAndCutImg(final HttpServletRequest request,@RequestParam MultipartFile uploadFile, final PhotoCutParam param )
 			throws Exception {
 		BaseMsg result=new BaseMsg();
 		if (param != null && !"".equals(param.getImgUrl())) {
+			
+			if(uploadFile.isEmpty()) {
+				return result;
+			}
 
 			final String imgPath = param.getImgUrl();
 			InputStream inputStream =null;
@@ -438,10 +445,10 @@ public class ProductionResourceController extends BaseController {
 			Log.error(" cut photo begin", sessionInfo);
 
 			// cut photo
-			inputStream = PhotoUtil.cutPhoto(inputStream, param, extName);
+			inputStream = PhotoUtil.cutPhoto(inputStream, param, FileUtils.getExtName(extName, "."));
 			Log.error(" cut photo - success", sessionInfo);
-
-			String path = FastDFSClient.uploadFile(inputStream, imgPath);
+			
+			String path = FastDFSClient.uploadFile(inputStream, extName);
 			
 			if(ValidateUtil.isValid(path)) {
 				result.setCode(BaseMsg.NORMAL);

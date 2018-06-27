@@ -130,7 +130,7 @@ function init(type){
 	
 	
 	 $("#uploadDiv").on("click",function(){  
-	     var uploadFile = '<input type="file" id="videoFile" style="width:100%" name="file" class="p-file"  onchange="addImg(this)" accept="image/gif,image/jpeg,image/jpg,image/png"/>';  
+	     var uploadFile = '<input type="file" id="videoFile" style="width:100%" name="uploadFile" class="p-file"  onchange="addImg(this)" accept="image/gif,image/jpeg,image/jpg,image/png"/>';  
 	     $("#fileDiv").append($(uploadFile));  	     
 	     $("#videoFile").click();
 		// addImg();
