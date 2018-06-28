@@ -7,6 +7,9 @@ var zoneList;
 var min=1,max=6;
 var statusList;
 var typeIdList;
+var imgRatio=162/216;
+var displayWidth=81;
+var displayHeight=108;
 
 $().ready(function(){
 	storage_node=$('#storage_node').val();
@@ -191,7 +194,7 @@ function editFuc(){
 			var photos=rows[0].photo.split(";");
 			for(var i=0;i<photos.length;i++){
 				if(photos[i]!=null && photos[i]!=''){
-					displayImg(storage_node+photos[i],photos[i],2);
+					displayImg(photos[i],2);
 					imgNo++;
 				}	
 			}

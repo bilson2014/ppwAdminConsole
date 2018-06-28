@@ -9,6 +9,7 @@ var jcrop_api;
 
 
 
+
 function init(type){
 	
 	syncLoadData(function(res) {
@@ -130,77 +131,74 @@ function init(type){
 	
 	
 	 $("#uploadDiv").on("click",function(){  
-	     var uploadFile = '<input type="file" id="videoFile" style="width:100%" name="uploadFile" class="p-file"  onchange="addImg(this)" accept="image/gif,image/jpeg,image/jpg,image/png"/>';  
+		 if(!validatePhoto(true)){
+			 return ;
+		 }
+		 $("div").remove(".p-file");
+		 
+	     var uploadFile = '<div class="p-file"><input type="file" id="videoFile" style="width:100%" name="uploadFile" class="p-file"  onchange="addImg(this)" accept="image/gif,image/jpeg,image/jpg,image/png"/></div>';  
 	     $("#fileDiv").append($(uploadFile));  	     
 	     $("#videoFile").click();
+	     //$('#videoFile').removeAttr('id');
 		// addImg();
 	 }); 
 }
 
-function validatePhoto(){
+function validatePhoto(init){
 	//function validatePhoto(min,max){
 	var imgCount=$('.aptimg').length;
-	if(imgCount<min){
-		$.message('至少选择'+min+'张照片！');
-		return false;
-	}
-	if(imgCount>max){
-		$.message('最多选择'+max+'张照片！');
-		return false;
+	
+	if(init){
+		if(imgCount>=max){
+			$.message('最多选择'+max+'张照片！');
+			return false;
+		}
+	}else{
+		if(imgCount<min){
+			$.message('至少选择'+min+'张照片！');
+			return false;
+		}
+		if(imgCount>max){
+			$.message('最多选择'+max+'张照片！');
+			return false;
+		}
 	}
 	return true;
 }
 
-
-
 function addImg(obj) {
+	
+	//销毁
+	if(jcrop_api!= undefined){
+		jcrop_api.destroy();
+	}
+	
+	$('.imgDivSize').empty();
+	 var setFile = ' <img id="setFile" style="width:100%;height:auto">';  //如果不每次清除，setFile会加载两次，而剪切时取得其width是真实图片大小　１５０
+     $(".imgDivSize").append($(setFile));
+     $('#showImg').removeAttr('src');
+	/*$('#showImg').removeAttr('src');*/
+	/*$('#showImg').removeAttr('src');
+	$('#setFile').removeAttr('src');
+	$('#setFile').attr('style','');*/
 	
 	$('#dlgCut').dialog({
 		title : '裁剪图片',
 		modal : true,
-		width : 700,
-		height : 700,
+		width : 335,
+		height : 500,
 	}).dialog('open').dialog('center');
 	
-	$(obj).addClass('ss');
+	
+//	$(obj).addClass('ss');
+	
+	
 	
 	 var windowURL = window.URL || window.webkitURL;
 	 var loadImg = windowURL.createObjectURL(obj.files[0]);
 	 document.getElementById('setFile').setAttribute('src',loadImg);
 	 initImgSize();
-
-
-	 
-	 
-	 $('#uploadConfirmBt').bind('click',function(){
-			if(x == 0 && y == 0 && x2 ==0 && y2 ==0){
-				return;
-			}
-		     $("#fileDiv").append('<input type="hidden" name="x" value="'+x+'" />');
-		     $("#fileDiv").append('<input type="hidden" name="y" value="'+y+'" />'); 
-		     $("#fileDiv").append('<input type="hidden" name="x2" value="'+x2+'" />'); 
-		     $("#fileDiv").append('<input type="hidden" name="y2" value="'+y2+'" />'); 
-		     $("#fileDiv").append('<input type="hidden" name="width" value="'+w+'" />'); 
-		     $("#fileDiv").append('<input type="hidden" name="height" value="'+h+'" />');
-		     $("#fileDiv").append('<input type="hidden" name="originalWidth" value="'+$("#setFile").width()+'" />'); 
-		     $("#fileDiv").append('<input type="hidden" name="originalHeight" value="'+$("#setFile").height()+'" />'); 
-		     
-		     
-		     $('#fileDiv').form('submit',{
-		 		onSubmit : function() {
-		 			var flag = $(this).form('validate');
-		 			
-		 			return flag;
-		 		},
-		 		success : function(result) {
-
-		 			$.message('操作成功!');
-		 		}
-		 	});
-
-	 });
-	 
-	
+	 console.log(obj.files[0]);
 	
   /*  var windowURL = window.URL || window.webkitURL;
 
@@ -229,6 +227,50 @@ function addImg(obj) {
     
 } 
 
+
+function cutImg(){
+
+	if(x == 0 && y == 0 && x2 ==0 && y2 ==0){
+		return;
+	}
+	
+	$('#x').val(x);
+	$('#y').val(y);
+	$('#x2').val(x2);
+	$('#y2').val(y2);
+	$('#width').val(w);
+	$('#height').val(h);
+	$('#originalWidth').val($("#setFile").width());
+	$('#originalHeight').val($("#setFile").height());
+     
+     $('#fileDiv').form('submit',{
+ 		onSubmit : function() {
+ 			var flag = $(this).form('validate');
+ 			
+ 			return flag;
+ 		},
+ 		success : function(result) {
+ 			
+ 			var msg=$.parseJSON( result );
+ 			
+ 			if(msg.code=='200'){
+ 				//预览
+ 				$('#photo').val($('#photo').val()+msg.result+";");				
+ 				displayImg(msg.result,1);
+ 				
+ 				$('#dlgCut').dialog('close');
+ 				
+ 				progressClose();
+ 				$.message('操作成功!');
+ 			}else{
+ 				progressClose();
+ 				$.message('剪切失败!');
+ 			}
+ 		}
+ 	});
+}
+
+//貌似无用
 function convertImgToBase64(url, callback, outputFormat){
     var canvas = document.createElement('CANVAS'),
         ctx = canvas.getContext('2d'),
@@ -246,9 +288,9 @@ function convertImgToBase64(url, callback, outputFormat){
 }
   
 
-function displayImg(loadImg,url,type){ 
-	var html = '<div><img src='+loadImg+' id="displayImg'+imgNo+'" class="aptimg">'+
-	'<a onclick="delFuc('+imgNo+',\''+url+'\','+type+');" href="javascript:void(0);" id="displayRemove'+imgNo+'" class="easyui-linkbutton aptDel" '+
+function displayImg(url,type){ 
+	var html = '<div><img src='+storage_node+url+' id="displayImg'+imgNo+'" style="margin-left:10px;width: '+displayWidth+'px;height: '+displayHeight+'px;" class="aptimg">'+
+	'<a onclick="delFuc('+imgNo+',\''+url+'\','+type+');" href="javascript:void(0);" id="displayRemove'+imgNo+'" style="margin-left:-20px;margin-top: '+(displayHeight-10)+'px;" class="easyui-linkbutton aptDel" '+
 	'data-options="plain:true,iconCls:\'icon-cancel\'"></a></div>';
 	
 	var newImg = $(html).appendTo("#imgDisplay");
@@ -267,36 +309,20 @@ function initImgSize(){
 					$(this).css('height',needHeight).css('width','auto');
 				}else{
 					$(this).css('height','auto').css('width',needWidth);
-				}
+				}	
+				
 			JcropFunction();
 		});
-    
 }
 
 
 var delImg="";
 
-function delFuc(no,url,type){
+function delFuc(no,url,type){//TODO type可以去掉了
 
 	if(url!=undefined && url != null && url!=''){
 		delImg=delImg+";"+url;
-		$('#delImg').val(delImg);
-		/*if(type==2){
-			delImg=delImg+";"+url;
-			$('#delImg').val(delImg);
-		}else{
-			var files=$('#videoFile').get(0).files;
-			
-			console.log($('#videoFile').get(0));
-			
-			for(var i=0;i<files.length;i++){
-				if(url==files[i].name){
-					delete files.i;
-					console.log(files);
-				}
-			}
-
-		}*/	
+		$('#delImg').val(delImg);	
 	}
 	//移除预览
 	$('#displayImg'+no).remove();
@@ -316,10 +342,9 @@ function JcropFunction(){
 	// 初始化Jcrop
 	jcrop_api = $.Jcrop('#setFile',{
 		bgOpacity : 0.2,
-		aspectRatio : 162/216,//选框宽高比。说明：width/height
-//		aspectRatio : 248/140,//选框宽高比。说明：width/height
+		aspectRatio : imgRatio,//选框宽高比。说明：width/height
 		onSelect : updateCoords // 当选择完成时执行的函数
-	});
+	});	
 }
 
 function updateCoords(coords){
@@ -329,6 +354,7 @@ function updateCoords(coords){
 	y2=coords.y2;//坐标y结束位置
 	w=coords.w;//实际宽
 	h=coords.h;//实际高
+	
 	if(parseInt(coords.w) > 0){
 		//计算预览区域图片缩放的比例，通过计算显示区域的宽度(与高度)与剪裁的宽度(与高度)之比得到 
 		var rx = $("#showImgSize").width() / coords.w;
@@ -344,3 +370,4 @@ function updateCoords(coords){
 		});
 	}
 }
+

@@ -114,11 +114,11 @@ public class ProductionResourceController extends BaseController {
 
 	@RequestMapping(value = "/production/actor/save", method = RequestMethod.POST)
 	public BaseMsg actorSave(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam final MultipartFile[] uploadFiles, final PmsProductionActor actor) throws Exception {
+			final PmsProductionActor actor) throws Exception {
 		BaseMsg msg = new BaseMsg();
 
 		String pathList = "";
-		pathList = editFile(uploadFiles, pathList, actor.getDelImg());
+		pathList = editFile(null, pathList, actor.getDelImg());
 
 		actor.setPhoto(pathList);
 		actor.setCreator(getCreator(request));
@@ -130,12 +130,12 @@ public class ProductionResourceController extends BaseController {
 
 	@RequestMapping(value = "/production/actor/update", method = RequestMethod.POST)
 	public BaseMsg actorUpdate(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam final MultipartFile[] uploadFiles, final PmsProductionActor actor) throws Exception {
+			final PmsProductionActor actor) throws Exception {
 		BaseMsg msg = new BaseMsg();
 
 		String pathList = actor.getPhoto();
 		// 上传图片
-		pathList = editFile(uploadFiles, pathList, actor.getDelImg());
+		pathList = editFile(null, pathList, actor.getDelImg());
 
 		actor.setPhoto(pathList);
 		pmsProductionActorFacade.update(actor);
@@ -189,7 +189,7 @@ public class ProductionResourceController extends BaseController {
 
 	@RequestMapping(value = "/production/device/save", method = RequestMethod.POST)
 	public BaseMsg deviceSave(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam final MultipartFile[] uploadFiles, final PmsProductionDevice device) throws Exception {
+			final PmsProductionDevice device) throws Exception {
 		BaseMsg msg = new BaseMsg();
 		device.setCreator(getCreator(request));
 		pmsProductionDeviceFacade.insert(device);
@@ -198,7 +198,7 @@ public class ProductionResourceController extends BaseController {
 
 	@RequestMapping(value = "/production/device/update", method = RequestMethod.POST)
 	public BaseMsg deviceUpdate(final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam final MultipartFile[] uploadFiles, final PmsProductionDevice device) throws Exception {
+			 final PmsProductionDevice device) throws Exception {
 		BaseMsg msg = new BaseMsg();
 
 		pmsProductionDeviceFacade.update(device);
@@ -249,10 +249,10 @@ public class ProductionResourceController extends BaseController {
 
 		@RequestMapping(value = "/production/director/save", method = RequestMethod.POST)
 		public BaseMsg directorSave(final HttpServletRequest request, final HttpServletResponse response,
-				@RequestParam final MultipartFile[] uploadFiles, final PmsProductionDirector director) throws Exception {
+				final PmsProductionDirector director) throws Exception {
 			BaseMsg msg = new BaseMsg();
-			String pathList = "";
-			pathList = editFile(uploadFiles, pathList, director.getDelImg());
+			String pathList = director.getPhoto();
+			pathList = editFile(null, pathList, director.getDelImg());
 
 			director.setPhoto(pathList);
 			director.setCreator(getCreator(request));
@@ -262,12 +262,12 @@ public class ProductionResourceController extends BaseController {
 
 		@RequestMapping(value = "/production/director/update", method = RequestMethod.POST)
 		public BaseMsg directorUpdate(final HttpServletRequest request, final HttpServletResponse response,
-				@RequestParam final MultipartFile[] uploadFiles, final PmsProductionDirector director) throws Exception {
+				final PmsProductionDirector director) throws Exception {
 			BaseMsg msg = new BaseMsg();
 
 			String pathList = director.getPhoto();
 			// 上传图片
-			pathList = editFile(uploadFiles, pathList, director.getDelImg());
+			pathList = editFile(null, pathList, director.getDelImg());
 
 			director.setPhoto(pathList);
 			
@@ -319,11 +319,11 @@ public class ProductionResourceController extends BaseController {
 
 		@RequestMapping(value = "/production/studio/save", method = RequestMethod.POST)
 		public BaseMsg studioSave(final HttpServletRequest request, final HttpServletResponse response,
-				@RequestParam final MultipartFile[] uploadFiles, final PmsProductionStudio studio) throws Exception {
+				 final PmsProductionStudio studio) throws Exception {
 			BaseMsg msg = new BaseMsg();
 
-			String pathList = "";
-			pathList = editFile(uploadFiles, pathList, studio.getDelImg());
+			String pathList = studio.getPhoto();
+			pathList = editFile(null, pathList, studio.getDelImg());
 
 			studio.setPhoto(pathList);
 			studio.setCreator(getCreator(request));
@@ -335,12 +335,12 @@ public class ProductionResourceController extends BaseController {
 
 		@RequestMapping(value = "/production/studio/update", method = RequestMethod.POST)
 		public BaseMsg studioUpdate(final HttpServletRequest request, final HttpServletResponse response,
-				@RequestParam final MultipartFile[] uploadFiles, final PmsProductionStudio studio) throws Exception {
+				 final PmsProductionStudio studio) throws Exception {
 			BaseMsg msg = new BaseMsg();
 
 			String pathList = studio.getPhoto();
 			// 上传图片
-			pathList = editFile(uploadFiles, pathList, studio.getDelImg());
+			pathList = editFile(null, pathList, studio.getDelImg());
 
 			studio.setPhoto(pathList);
 			pmsProductionStudioFacade.update(studio);

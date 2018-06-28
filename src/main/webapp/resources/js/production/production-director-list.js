@@ -7,6 +7,9 @@ var specialtyList;
 var min=1,max=1;
 var statusList;
 var typeIdList;
+var imgRatio=162/216;
+var displayWidth=81;
+var displayHeight=108;
 
 $().ready(function(){
 	storage_node=$('#storage_node').val();
@@ -171,7 +174,7 @@ function addFuc(){
 	delImg='';
 	$('#fm').form('clear');
 	$("#imgDisplay").empty();
-	$("#fileDiv").empty();
+	//$("#fileDiv").empty();
 	
 	//默认推荐人
 	$("#referrer").combobox("setValue", $('#default_referrer').val());
@@ -191,7 +194,7 @@ function editFuc(){
 	if(rows.length == 1){
 		$('#fm').form('clear');
 		$("#imgDisplay").empty();
-		$("#fileDiv").empty();		
+	//	$("#fileDiv").empty();		
 		$('#fm').form('load',rows[0]);
 		
 		if(rows[0].typeId==null || rows[0].typeId==undefined || rows[0].typeId==""){
@@ -202,7 +205,8 @@ function editFuc(){
 			var photos=rows[0].photo.split(";");
 			for(var i=0;i<photos.length;i++){
 				if(photos[i]!=null && photos[i]!=''){
-					displayImg(storage_node+photos[i],photos[i],2);
+//					displayImg(storage_node+photos[i],photos[i],2);
+					displayImg(photos[i],2);
 					imgNo++;
 				}	
 			}

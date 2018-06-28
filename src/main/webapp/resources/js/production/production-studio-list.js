@@ -5,6 +5,9 @@ var storage_node;
 var min=1,max=4;
 var statusList;
 var typeIdList;
+var imgRatio=248/140;
+var displayWidth=124;
+var displayHeight=70;
 
 
 $().ready(function(){
@@ -154,7 +157,7 @@ function editFuc(){
 			var photos=rows[0].photo.split(";");
 			for(var i=0;i<photos.length;i++){
 				if(photos[i]!=null && photos[i]!=''){
-					displayImg(storage_node+photos[i],photos[i],2);
+					displayImg(photos[i],2);
 					imgNo++;
 				}	
 			}

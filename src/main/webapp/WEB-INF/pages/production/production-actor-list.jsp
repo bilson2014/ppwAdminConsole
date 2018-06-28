@@ -12,6 +12,8 @@
 <spring:url value="/resources/lib/kindeditor/plugins/code/prettify.js" var="prettifyJs" />
 <spring:url value="/resources/lib/kindeditor/lang/zh_CN.js" var="kindeditorzhJs" /> --%>
 <spring:url value="/resources/lib/My97DatePicker/WdatePicker.js" var="WdatePickerJs" />
+<spring:url value="/resources/lib/jcrop/jquery.Jcrop.min.js" var="jcropJs"/>
+<spring:url value="/resources/lib/jcrop/jquery.color.js" var="jcropColorJs"/>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -32,6 +34,8 @@
 <script src="${productionBaseJs }"></script>
 <script src="${actorListJs }"></script>
 <script src="${WdatePickerJs }" ></script>
+<script src="${jcropJs }" ></script>
+<script src="${jcropColorJs }" ></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
@@ -203,7 +207,7 @@
 					<div class="d-float f-width"  style="margin-top:0px !important;">
 						<div id="uploadDiv" class="easyui-linkbutton c6">选择文件</div>
 						请选择1~6张照片						
-						<div id="fileDiv" style="display: none"></div> 
+						<!-- <div id="fileDiv" style="display: none"></div>  -->
 						<!-- <input type="file" id="videoFile" style="width:100%" name="uploadFiles" class="p-file" multiple="multiple" onchange="addImg(this)" accept="image/gif,image/jpeg,image/jpg,image/png"/> -->
 					</div>
 				</div>				
@@ -211,6 +215,17 @@
 				</div>
 				<input id="photo" name="photo" type="hidden"/>	
 				<input id="delImg" name="delImg" type="hidden">	            
+	        </form>
+	        
+	         <form  method="post" action="/portal/production/cutPhoto" enctype="multipart/form-data" id="fileDiv" style="display:none" >
+	         	<input type="hidden" id="x" name="x" />
+		     	<input type="hidden" id="y" name="y"  /> 
+		     	<input type="hidden" id="x2" name="x2" /> 
+		     	<input type="hidden" id="y2" name="y2" /> 
+		    	<input type="hidden" id="width" name="width" /> 
+		     	<input type="hidden" id="height" name="height"  />
+		    	<input type="hidden" id="originalWidth" name="originalWidth"  /> 
+		     	<input type="hidden" id="originalHeight" name="originalHeight" /> 
 	        </form>
 	    </div>
 	    <div id="dlg-buttons">	    
@@ -221,13 +236,18 @@
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
 	    
-	    <div id="dlgCut" class="easyui-dialog" style="padding:5px 5px;width: 500px;height: 400px;"closed="cutTrue" buttons="#dlgCut-buttons" title="演员信息">
-	    	       
-	    	       <div class="" style="height:300px;width: 214px;">
-	    	            <img >
-	    	       </div>     
-	    	       
+	    <div id="dlgCut" class="easyui-dialog" style="padding:5px 5px;width: 350px;height: 700px;" closed="true" buttons="#dlgCut-buttons" title="裁剪图片">
+	    	       <div class="imgDivSize" style="height:300px;width:300px;background:#eee;overflow: hidden;text-align:center;position:relative">
+	    	            <!-- <img id="setFile" style="width:100%;height:auto"> -->
+	    	       </div>
+	    	       <div id="showImgSize" style="width:81px;height:108px;overflow:hidden;" class="preview">
+	    	            <img id="showImg">  
+	    	       </div>  	       
 	    </div>
+	    
+	    <div id="dlgCut-buttons">
+	    	<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="cutImg()" >确定</a>
+	    </div> 
 
  	
 </body>

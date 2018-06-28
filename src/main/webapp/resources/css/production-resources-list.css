@@ -225,15 +225,16 @@
 	line-height: 28px;
 }
 
-.aptimg{
+/* .aptimg{
 	margin-left:20px;
 	width: 100px; 
 	height: 100px;
-}
-.aptDel{
+} */
+/* .aptDel{
 	margin-top: 90px;
+	margin-bottom:10px;
 	margin-left:-35px;
-}
+} */
 .disPlay{
 	display: flex;
 	flex-wrap: wrap;
@@ -250,4 +251,14 @@ width:100%;height:auto;
             left: 0;
             bottom: 0;
             right: 0;
+}
+
+.preview{
+	margin-top: 10px;
+	margin-left:10px;
+}
+
+.imgDivSize{
+	margin-top: 5px;
+	margin-left:10px;
 }

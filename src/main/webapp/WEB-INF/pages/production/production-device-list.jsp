@@ -115,7 +115,7 @@
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 500px;height: 400px;"
-            closed="true" buttons="#dlg-buttons" title="演员信息">
+            closed="true" buttons="#dlg-buttons" title="设备信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input id="id" name="id" type="hidden" />
 	        	<div class="online">
@@ -182,13 +182,6 @@
 	    	
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
-	    
-	    <div id="dlgCut" class="easyui-dialog" style="padding:5px 5px;width: 500px;height: 400px;"closed="cutTrue" buttons="#dlgCut-buttons" title="演员信息">
-	    	       <div class="" style="height:300px;width: 214px;">
-	    	            <img >
-	    	       </div>     
-	    </div>
-
  	
 </body>
 </html>

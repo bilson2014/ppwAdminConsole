@@ -194,7 +194,20 @@
 	            
 	        </form>
 	        
-	        <form  method="post" action="/portal/production/cutPhoto" enctype="multipart/form-data" id="fileDiv" style="display:none" ></form>
+	        <form  method="post" action="/portal/production/cutPhoto" enctype="multipart/form-data" id="fileDiv" style="display:none" >
+	         	<input type="hidden" id="x" name="x" />
+		     	<input type="hidden" id="y" name="y"  /> 
+		     	<input type="hidden" id="x2" name="x2" /> 
+		     	<input type="hidden" id="y2" name="y2" /> 
+		    	<input type="hidden" id="width" name="width" /> 
+		     	<input type="hidden" id="height" name="height"  />
+		    	<input type="hidden" id="originalWidth" name="originalWidth"  /> 
+		     	<input type="hidden" id="originalHeight" name="originalHeight" /> 
+		     
+		     	<!-- 使用新加的，上一个清空id，否则无法再次上传同一张图片 -->
+		    	<!-- <input type="file" id="videoFile" style="width:100%" name="uploadFile" class="p-file"  onchange="addImg(this)" accept="image/gif,image/jpeg,image/jpg,image/png"/> -->
+		     	
+	        </form>
 	        
 	    </div>
 	    <div id="dlg-buttons">	    
@@ -205,19 +218,18 @@
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
 	        
-	    <div id="dlgCut" class="easyui-dialog" style="padding:5px 5px;width: 700px;height: 700px;" closed="true" buttons="#dlgCut-buttons" title="裁剪图片">
+	    <div id="dlgCut" class="easyui-dialog" style="padding:5px 5px;width: 350px;height: 700px;" closed="true" buttons="#dlgCut-buttons" title="裁剪图片">
 	    	       <div class="imgDivSize" style="height:300px;width:300px;background:#eee;overflow: hidden;text-align:center;position:relative">
-	    	            <img id="setFile" style="width:100%;height:auto">
+	    	            <!-- <img id="setFile" style="width:100%;height:auto"> -->
 	    	       </div>
-	    	       <div id="showImgSize" style="width:100px;height:100px;overflow:hidden">
+	    	       <div id="showImgSize" style="width:81px;height:108px;overflow:hidden;" class="preview">
 	    	            <img id="showImg">  
-	    	       </div>
-	    	       <div id="uploadConfirmBt" >
-	    	                             确定
 	    	       </div>
 	    </div>
 	    
-	    <div id="#dlgCut-buttons"></div> 
+	    <div id="dlgCut-buttons">
+	    	<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="cutImg()" >确定</a>
+	    </div> 
 	    
 	    <div id="uploadImg"></div>
 
