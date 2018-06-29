@@ -1,20 +1,19 @@
 package com.panfeng.resource.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,15 +30,21 @@ import com.paipianwang.pat.common.util.FileUtils;
 import com.paipianwang.pat.common.util.JsonUtil;
 import com.paipianwang.pat.common.util.PhotoUtil;
 import com.paipianwang.pat.common.util.ValidateUtil;
+import com.paipianwang.pat.common.web.exception.WebException;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.workflow.entity.PmsProductionActor;
+import com.paipianwang.pat.workflow.entity.PmsProductionCameraman;
 import com.paipianwang.pat.workflow.entity.PmsProductionDevice;
 import com.paipianwang.pat.workflow.entity.PmsProductionDirector;
+import com.paipianwang.pat.workflow.entity.PmsProductionPersonnel;
 import com.paipianwang.pat.workflow.entity.PmsProductionStudio;
 import com.paipianwang.pat.workflow.entity.ProductionConstants;
+import com.paipianwang.pat.workflow.enums.ProductionResource;
 import com.paipianwang.pat.workflow.facade.PmsProductionActorFacade;
+import com.paipianwang.pat.workflow.facade.PmsProductionCameramanFacade;
 import com.paipianwang.pat.workflow.facade.PmsProductionDeviceFacade;
 import com.paipianwang.pat.workflow.facade.PmsProductionDirectorFacade;
+import com.paipianwang.pat.workflow.facade.PmsProductionPersonnelFacade;
 import com.paipianwang.pat.workflow.facade.PmsProductionStudioFacade;
 import com.panfeng.domain.BaseMsg;
 import com.panfeng.util.Log;
@@ -61,6 +66,10 @@ public class ProductionResourceController extends BaseController {
 	private PmsProductionDirectorFacade pmsProductionDirectorFacade;
 	@Autowired
 	private PmsProductionStudioFacade pmsProductionStudioFacade;
+	@Autowired
+	private PmsProductionPersonnelFacade pmsProductionPersonnelFacade;
+	@Autowired
+	private PmsProductionCameramanFacade pmsProductionCameramanFacade;
 
 	// --------------------演员--------------------------
 	@RequestMapping(value = "/production/actor-list")
@@ -276,16 +285,202 @@ public class ProductionResourceController extends BaseController {
 			return msg;
 		}
 		
-		// --------------------场地--------------------------
-		@RequestMapping(value = "/production/studio-list")
-		public ModelAndView studioView(final HttpServletRequest request,final ModelMap model) {
-			setDefaultReferrer(request, model);
-			setStatusList(model);
-			return new ModelAndView("production/production-studio-list", model);
+		
+	// --------------------场地--------------------------
+	@RequestMapping(value = "/production/studio-list")
+	public ModelAndView studioView(final HttpServletRequest request, final ModelMap model) {
+		setDefaultReferrer(request, model);
+		setStatusList(model);
+		return new ModelAndView("production/production-studio-list", model);
+	}
+
+	@RequestMapping(value = "/production/studio/list", method = RequestMethod.POST)
+	public DataGrid<PmsProductionStudio> studioList(@RequestParam final Map<String, Object> paramMap,
+			final PageParam param) {
+
+		final long page = param.getPage();
+		final long rows = param.getRows();
+		param.setBegin((page - 1) * rows);
+		param.setLimit(rows);
+
+		paramMap.remove("page");
+		paramMap.remove("rows");
+
+		final DataGrid<PmsProductionStudio> dataGrid = pmsProductionStudioFacade.listWithPagination(param, paramMap);
+		return dataGrid;
+	}
+
+	@RequestMapping(value = "/production/studio/delete", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public void studioDelete(final long[] ids, HttpServletRequest request) {
+		List<PmsProductionStudio> deletes = pmsProductionStudioFacade.deleteByIds(ids);
+		// 删除图片
+		if (ValidateUtil.isValid(deletes)) {
+			for (PmsProductionStudio studio : deletes) {
+				String delImgStr = studio.getPhoto();
+				if (ValidateUtil.isValid(delImgStr)) {
+					String[] delImgs = delImgStr.split(";");
+					for (String delImg : delImgs) {
+						FastDFSClient.deleteFile(delImg);
+					}
+				}
+			}
+		}
+	}
+
+	@RequestMapping(value = "/production/studio/save", method = RequestMethod.POST)
+	public BaseMsg studioSave(final HttpServletRequest request, final HttpServletResponse response,
+			final PmsProductionStudio studio) throws Exception {
+		BaseMsg msg = new BaseMsg();
+
+		String pathList = studio.getPhoto();
+		pathList = editFile(null, pathList, studio.getDelImg());
+
+		studio.setPhoto(pathList);
+		studio.setCreator(getCreator(request));
+		pmsProductionStudioFacade.insert(studio);
+		// TODO 或者是先添加，再更新照片
+
+		return msg;
+	}
+
+	@RequestMapping(value = "/production/studio/update", method = RequestMethod.POST)
+	public BaseMsg studioUpdate(final HttpServletRequest request, final HttpServletResponse response,
+			final PmsProductionStudio studio) throws Exception {
+		BaseMsg msg = new BaseMsg();
+
+		String pathList = studio.getPhoto();
+		// 上传图片
+		pathList = editFile(null, pathList, studio.getDelImg());
+
+		studio.setPhoto(pathList);
+		pmsProductionStudioFacade.update(studio);
+
+		return msg;
+	}
+
+	// --------------------人员--------------------------
+	@RequestMapping(value = "/production/{position}-list")
+	public ModelAndView personnelView(final HttpServletRequest request, final ModelMap model,@PathVariable("position") final String position) {
+		setDefaultReferrer(request, model);
+		setStatusList(model);
+		
+		ProductionResource resource=ProductionResource.getEnum(position);
+		if(resource==null) {
+			//全部加上职位校验
+			throw new WebException("职位不存在", "001");
+		}
+		
+		model.put("position",position);
+		model.put("positionName", resource.getName());
+		return new ModelAndView("production/production-personnel-list", model);
+	}
+
+	@RequestMapping(value = "/production/{position}/list", method = RequestMethod.POST)
+	public DataGrid<PmsProductionPersonnel> personnelList(@RequestParam final Map<String, Object> paramMap,
+			final PageParam param,@PathVariable("position") final String position) {
+		
+		ProductionResource resource=ProductionResource.getEnum(position);
+		if(resource==null) {
+			//全部加上职位校验
+			throw new WebException("职位不存在", "001");
 		}
 
-		@RequestMapping(value = "/production/studio/list", method = RequestMethod.POST)
-		public DataGrid<PmsProductionStudio> studioList(@RequestParam final Map<String, Object> paramMap,
+		final long page = param.getPage();
+		final long rows = param.getRows();
+		param.setBegin((page - 1) * rows);
+		param.setLimit(rows);
+
+		paramMap.remove("page");
+		paramMap.remove("rows");
+		
+		paramMap.put("profession",position);
+
+		final DataGrid<PmsProductionPersonnel> dataGrid = pmsProductionPersonnelFacade.listWithPagination(param, paramMap);
+		return dataGrid;
+	}
+
+	@RequestMapping(value = "/production/{position}/delete", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	public BaseMsg personnelDelete(final long[] ids, HttpServletRequest request,@PathVariable("position") final String position) {
+		BaseMsg msg=new BaseMsg();
+		ProductionResource resource=ProductionResource.getEnum(position);
+		if(resource==null) {
+			//全部加上职位校验
+			msg.setErrorMsg("职位不存在");
+			return msg;
+		}
+		
+		List<PmsProductionPersonnel> deletes = pmsProductionPersonnelFacade.deleteByIds(ids);
+		// 删除图片
+		if (ValidateUtil.isValid(deletes)) {
+			for (PmsProductionPersonnel personnel : deletes) {
+				String delImgStr = personnel.getPhoto();
+				if (ValidateUtil.isValid(delImgStr)) {
+					String[] delImgs = delImgStr.split(";");
+					for (String delImg : delImgs) {
+						FastDFSClient.deleteFile(delImg);
+					}
+				}
+			}
+		}
+		msg.setCode(BaseMsg.NORMAL);
+		
+		return msg;
+	}
+
+	@RequestMapping(value = "/production/{position}/save", method = RequestMethod.POST)
+	public BaseMsg personnelSave(final HttpServletRequest request, final HttpServletResponse response,
+			final PmsProductionPersonnel personnel,@PathVariable("position") final String position) throws Exception {
+		BaseMsg msg = new BaseMsg();
+		ProductionResource resource=ProductionResource.getEnum(position);
+		if(resource==null) {
+			//全部加上职位校验
+			msg.setErrorMsg("职位不存在");
+			return msg;
+		}
+
+		String pathList = personnel.getPhoto();
+		pathList = editFile(null, pathList, personnel.getDelImg());
+
+		personnel.setPhoto(pathList);
+		personnel.setCreator(getCreator(request));
+		personnel.setProfession(position);
+		pmsProductionPersonnelFacade.insert(personnel);
+		return msg;
+	}
+
+	@RequestMapping(value = "/production/{position}/update", method = RequestMethod.POST)
+	public BaseMsg personnelUpdate(final HttpServletRequest request, final HttpServletResponse response,
+			final PmsProductionPersonnel personnel,@PathVariable("position") final String position) throws Exception {
+		BaseMsg msg = new BaseMsg();
+		ProductionResource resource=ProductionResource.getEnum(position);
+		if(resource==null) {
+			//全部加上职位校验
+			msg.setErrorMsg("职位不存在");
+			return msg;
+		}
+
+		String pathList = personnel.getPhoto();
+		// 上传图片
+		pathList = editFile(null, pathList, personnel.getDelImg());
+
+		personnel.setPhoto(pathList);
+		personnel.setProfession(position);
+		pmsProductionPersonnelFacade.update(personnel);
+
+		return msg;
+	}
+
+	
+	// --------------------摄影师--------------------------
+		@RequestMapping(value = "/production/cameraman-list")
+		public ModelAndView cameramanView(final HttpServletRequest request, final ModelMap model) {
+			setDefaultReferrer(request, model);
+			setStatusList(model);
+			return new ModelAndView("production/production-cameraman-list", model);
+		}
+
+		@RequestMapping(value = "/production/cameraman/list", method = RequestMethod.POST)
+		public DataGrid<PmsProductionCameraman> cameramanList(@RequestParam final Map<String, Object> paramMap,
 				final PageParam param) {
 
 			final long page = param.getPage();
@@ -296,59 +491,55 @@ public class ProductionResourceController extends BaseController {
 			paramMap.remove("page");
 			paramMap.remove("rows");
 
-			final DataGrid<PmsProductionStudio> dataGrid = pmsProductionStudioFacade.listWithPagination(param, paramMap);
+			final DataGrid<PmsProductionCameraman> dataGrid = pmsProductionCameramanFacade.listWithPagination(param, paramMap);
 			return dataGrid;
 		}
 
-		@RequestMapping(value = "/production/studio/delete", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-		public void studioDelete(final long[] ids, HttpServletRequest request) {
-			List<PmsProductionStudio> deletes=pmsProductionStudioFacade.deleteByIds(ids);
-			//删除图片
-			if(ValidateUtil.isValid(deletes)) {
-				for(PmsProductionStudio studio:deletes) {
-					String delImgStr=studio.getPhoto();
-					if(ValidateUtil.isValid(delImgStr)) {
+		@RequestMapping(value = "/production/cameraman/delete", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+		public void cameramanDelete(final long[] ids, HttpServletRequest request) {
+			List<PmsProductionCameraman> deletes = pmsProductionCameramanFacade.deleteByIds(ids);
+			// 删除图片
+			if (ValidateUtil.isValid(deletes)) {
+				for (PmsProductionCameraman cameraman : deletes) {
+					String delImgStr = cameraman.getPhoto();
+					if (ValidateUtil.isValid(delImgStr)) {
 						String[] delImgs = delImgStr.split(";");
-						for(String delImg:delImgs) {
+						for (String delImg : delImgs) {
 							FastDFSClient.deleteFile(delImg);
 						}
-					}			
+					}
 				}
 			}
 		}
 
-		@RequestMapping(value = "/production/studio/save", method = RequestMethod.POST)
-		public BaseMsg studioSave(final HttpServletRequest request, final HttpServletResponse response,
-				 final PmsProductionStudio studio) throws Exception {
+		@RequestMapping(value = "/production/cameraman/save", method = RequestMethod.POST)
+		public BaseMsg cameramanSave(final HttpServletRequest request, final HttpServletResponse response,
+				final PmsProductionCameraman cameraman) throws Exception {
 			BaseMsg msg = new BaseMsg();
 
-			String pathList = studio.getPhoto();
-			pathList = editFile(null, pathList, studio.getDelImg());
+			String pathList = cameraman.getPhoto();
+			pathList = editFile(null, pathList, cameraman.getDelImg());
 
-			studio.setPhoto(pathList);
-			studio.setCreator(getCreator(request));
-			pmsProductionStudioFacade.insert(studio);
-			// TODO 或者是先添加，再更新照片
-
+			cameraman.setPhoto(pathList);
+			cameraman.setCreator(getCreator(request));
+			pmsProductionCameramanFacade.insert(cameraman);
 			return msg;
 		}
 
-		@RequestMapping(value = "/production/studio/update", method = RequestMethod.POST)
-		public BaseMsg studioUpdate(final HttpServletRequest request, final HttpServletResponse response,
-				 final PmsProductionStudio studio) throws Exception {
+		@RequestMapping(value = "/production/cameraman/update", method = RequestMethod.POST)
+		public BaseMsg cameramanUpdate(final HttpServletRequest request, final HttpServletResponse response,
+				final PmsProductionCameraman cameraman) throws Exception {
 			BaseMsg msg = new BaseMsg();
 
-			String pathList = studio.getPhoto();
+			String pathList = cameraman.getPhoto();
 			// 上传图片
-			pathList = editFile(null, pathList, studio.getDelImg());
+			pathList = editFile(null, pathList, cameraman.getDelImg());
 
-			studio.setPhoto(pathList);
-			pmsProductionStudioFacade.update(studio);
+			cameraman.setPhoto(pathList);
+			pmsProductionCameramanFacade.update(cameraman);
 
 			return msg;
 		}
-
-
 	/**
 	 * 图片上传
 	 * 

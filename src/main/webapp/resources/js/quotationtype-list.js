@@ -1,7 +1,19 @@
 var treegrid;
 var formUrl;
+
+var imgNo=1; 
+var storage_node;
+var min=0,max=1;
+var imgRatio=248/140;
+var displayWidth=124;
+var displayHeight=70;
+
 $().ready(
+		
 				function() {
+					storage_node=$('#storage_node').val();
+					initCutPhoto('uploadDiv');
+					
 					$('#grade').combobox(
 						{
 							onSelect : function(record) {
@@ -76,9 +88,10 @@ $().ready(
 
 // 添加页
 function addFun() {
-	document.getElementById('displayFileImg').setAttribute('src',"/resources/img/portal/user/default.png");
+	//document.getElementById('displayFileImg').setAttribute('src',"/resources/img/portal/user/default.png");
 	var node = treegrid.treegrid('getSelected');
 	$('#fm').form('clear');
+	$("#imgDisplay").empty();
 	
 	if (node && node.grade<3) {
 		//如果选择非叶子类型，默认父类型为选中类型
@@ -97,14 +110,17 @@ function editFun() {
 	if (node) {
 		openDialog('dlg', node.grade);
 		$('#fm').form('clear');
+		$("#imgDisplay").empty();
 		$('#fm').form('load', node);
 		if(node.parentId==null || node.parentId==undefined || node.parentId==""){
 			$('#parentId').combotree("clear");
 		}
 		if(node.photo==undefined || node.photo=='' || node.photo==null){
-			document.getElementById('displayFileImg').setAttribute('src',"/resources/img/portal/user/default.png");
+//			document.getElementById('displayFileImg').setAttribute('src',"/resources/img/portal/user/default.png");
 		}else{
-			document.getElementById('displayFileImg').setAttribute('src',getDfsHostName()+node.photo);
+//			document.getElementById('displayFileImg').setAttribute('src',getDfsHostName()+node.photo);
+			displayImg(node.photo,2);
+			imgNo++;
 		}
 		formUrl = getContextPath() + '/portal/quotationtype/update';
 	} else {
@@ -235,14 +251,14 @@ function openDialog(id, grade) {
 			}).dialog('open').dialog('center');
 }
 
-function changeImg(obj) {
+/*function changeImg(obj) {
     var windowURL = window.URL || window.webkitURL;
     var loadImg = windowURL.createObjectURL(obj.files[0]);
     document.getElementById('displayFileImg').setAttribute('src',loadImg);
-} 
+} */
 
-function removeFileFuc(obj){
+/*function removeFileFuc(obj){
 	$('#displayFileImg').attr('src','/resources/img/portal/user/default.png');
 	$('#uploadFile').val('');
 	$('#photo').val('');
-}
+}*/

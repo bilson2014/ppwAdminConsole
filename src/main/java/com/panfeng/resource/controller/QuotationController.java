@@ -3,6 +3,8 @@ package com.panfeng.resource.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,12 +53,8 @@ public class QuotationController extends BaseController {
 	}
 	
 	@RequestMapping("/quotationtype/save")
-	public PmsResult save(PmsQuotationType pmsQuotationType,@RequestParam final MultipartFile uploadFile){
-		
-		if (!uploadFile.isEmpty()) {
-			String path = FastDFSClient.uploadFile(uploadFile);
-			pmsQuotationType.setPhoto(path);
-		}		
+	public PmsResult save(PmsQuotationType pmsQuotationType){
+		pmsQuotationType.setPhoto(editFile(pmsQuotationType.getPhoto(), pmsQuotationType.getDelImg()));	
 		
 		long result=pmsQuotationTypeFacade.insert(pmsQuotationType);
 		PmsResult pmsResult=new PmsResult();
@@ -72,17 +70,10 @@ public class QuotationController extends BaseController {
 	}
 	
 	@RequestMapping("/quotationtype/update")
-	public PmsResult update(PmsQuotationType pmsQuotationType,@RequestParam final MultipartFile uploadFile){
+	public PmsResult update(PmsQuotationType pmsQuotationType){
 		
-		PmsQuotationType old=pmsQuotationTypeFacade.getById(pmsQuotationType.getTypeId());
-		if(ValidateUtil.isValid(old.getPhoto()) && !ValidateUtil.isValid(pmsQuotationType.getPhoto())) {
-			FastDFSClient.deleteFile(old.getPhoto());
-		}
+		pmsQuotationType.setPhoto(editFile(pmsQuotationType.getPhoto(), pmsQuotationType.getDelImg()));
 		
-		if (!uploadFile.isEmpty()) {			
-			String path = FastDFSClient.uploadFile(uploadFile);
-			pmsQuotationType.setPhoto(path);
-		}
 		List<PmsQuotationTemplate> editTemplates=pmsQuotationTypeFacade.update(pmsQuotationType);
 		PmsResult pmsResult=new PmsResult();
 		if(editTemplates!=null) {
@@ -110,6 +101,23 @@ public class QuotationController extends BaseController {
 			pmsResult.setMsg("修改失败!");
 		}
 		return pmsResult;
+	}
+	
+	//单张
+	private String editFile( String pathList, String delImgStr) {
+		List<String> delImgList = new ArrayList<>();
+		if (ValidateUtil.isValid(delImgStr)) {
+			String[] delImgs = delImgStr.split(";");
+			CollectionUtils.addAll(delImgList, delImgs);
+		}		
+		// 删除图片
+		for (String delImg : delImgList) {
+			if (ValidateUtil.isValid(delImg) && delImg.startsWith("group1/")) {
+				FastDFSClient.deleteFile(delImg);
+				pathList = StringUtils.remove(pathList, delImg + ";");
+			}
+		}
+		return pathList.replaceAll(";", "");
 	}
 	
 	@RequestMapping("/quotationtype/delete")

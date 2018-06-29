@@ -29,6 +29,9 @@
 <spring:url value="/resources/js/common.js" var="commonJs" />
 <spring:url value="/resources/js/quotationtype-list.js"
 	var="quotationtypeJs" />
+<<spring:url value="/resources/js/cutphoto-common.js" var="cutphoto"></spring:url>
+<spring:url value="/resources/lib/jcrop/jquery.Jcrop.min.js" var="jcropJs"/>
+<spring:url value="/resources/lib/jcrop/jquery.color.js" var="jcropColorJs"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,6 +55,9 @@
 <script src="${zhJs }"></script>
 <script src="${commonJs }"></script>
 <script src="${quotationtypeJs }"></script>
+<script src="${cutphoto }"></script>
+<script src="${jcropJs }" ></script>
+<script src="${jcropColorJs }" ></script>
 </head>
 <body>
 	<input type="hidden" id="storage_node"
@@ -82,6 +88,7 @@
 		<form id="fm" method="post"  enctype="multipart/form-data">
 			<input name="typeId" type="hidden" >
 			<input name="photo" id="photo" type="hidden">
+			<input id="delImg" name="delImg" type="hidden">
 			<div class="fitem">
 				<label>名称</label>
 				<input name="typeName" class="easyui-textbox" required="true">
@@ -118,11 +125,12 @@
 			</div>
 			<div class="fitem">
 				<label>图片</label>			
-				<input name="uploadFile" id="uploadFile" type="file" onchange="changeImg(this)" />			
+				<!-- <input name="uploadFile" id="uploadFile" type="file" onchange="changeImg(this)" /> -->		
+				<div id="uploadDiv" class="easyui-linkbutton">选择文件</div>  
 			</div>
-			<div class="fitem">
-				<img src="" id="displayFileImg" class="aptimg">
-				<button id="remove-btn" onclick="removeFileFuc();" class='removeBtn'>移除文件</button>
+			<div class="fitem" id="imgDisplay">
+				<!-- <img src="" id="displayFileImg" class="aptimg">
+				<button id="remove-btn" onclick="removeFileFuc();" class='removeBtn'>移除文件</button> -->
 			</div>
 			<div class="fitem">
 				<label>描述</label>
