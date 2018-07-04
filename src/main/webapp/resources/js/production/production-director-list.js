@@ -1,6 +1,5 @@
 var formUrl;
 var datagrid;
-var imgNo=1; 
 var storage_node;
 //var citys;
 var specialtyList;
@@ -18,12 +17,13 @@ $().ready(function(){
 //		citys = res;
 //	}, getContextPath() + '/portal/all/citys', null);
 	
-	//擅长领域
-	specialtyList=[{'value':1,'text':'宣传片'},{'value':2,'text':'广告'},
-		{'value':3,'text':'MV'},{'value':4,'text':'剧情微电影'},
-		{'value':5,'text':'短视频'},{'value':6,'text':'剧情长篇'},
-		{'value':7,'text':'纪录片'},{'value':8,'text':'栏目（节目）'},
-		{'value':9,'text':'话剧（舞台）'},{'value':10,'text':'演出（活动）'}];
+	//擅长领域 
+	specialtyList=JSON.parse($('#specialtyList').val());	
+	/*[{'value':'01','text':'宣传片'},{'value':'02','text':'广告'},
+		{'value':'03','text':'MV'},{'value':'04','text':'剧情微电影'},
+		{'value':'05','text':'短视频'},{'value':'06','text':'剧情长篇'},
+		{'value':'07','text':'纪录片'},{'value':'08','text':'栏目（节目）'},
+		{'value':'09','text':'话剧（舞台）'},{'value':'10','text':'演出（活动）'}];*/
 	
 	init('director');
 	
@@ -207,7 +207,6 @@ function editFuc(){
 				if(photos[i]!=null && photos[i]!=''){
 //					displayImg(storage_node+photos[i],photos[i],2);
 					displayImg(photos[i],2);
-					imgNo++;
 				}	
 			}
 		}

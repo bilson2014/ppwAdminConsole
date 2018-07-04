@@ -2,31 +2,41 @@ var formUrl;
 var datagrid;
 var storage_node;
 var min=0,max=1;
-var statusList;
-var typeIdList;
-var imgRatio=162/216;
-var displayWidth=81;
-var displayHeight=108;
+var statusList=[];
+var typeIdList=[];
+var typeList=[];
+var accreditList=[];
+var imgRatio=248/140;
+var displayWidth=124;
+var displayHeight=70;
 
-var position;
-var positionName;
+var nature;
+var natureName;
 
 
 $().ready(function(){
 	storage_node=$('#storage_node').val();
 	statusList=JSON.parse($('#statusList').val());	
 	
-	position=$('#position').val();
-	positionName=$('#positionName').val();
+	nature=$('#nature').val();
+	natureName=$('#natureName').val();
 	
 	
-	init(position);
+	accreditList=JSON.parse($('#accreditList').val());
+	
+	if(nature=='clothing'){
+		typeList=JSON.parse($('#clothingTypeList').val());
+	}else{
+		typeList=[];
+	}
+	
+	init(nature);
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
-		url : getContextPath() + '/portal/production/'+position+'/list',
+		url : getContextPath() + '/portal/production/costume-'+nature+'/list',
 		idField : 'id' ,
-		title : positionName+'列表' ,
+		title : natureName+'列表' ,
 		fitColumns : true ,
 		striped : true ,
 		loadMsg : '数据正在加载,请耐心的等待...' ,
@@ -52,6 +62,35 @@ $().ready(function(){
 								}
 							}							
 						}
+					},{
+						field : 'type' ,
+						title : natureName+'类别' ,
+						align : 'center' ,
+						width : 200,
+						formatter : function(value,row,index){	
+							for(var i=0;i<typeList.length;i++){
+								if(typeList[i].value==value){
+									return typeList[i].text;
+								}
+							}
+						}
+					},{
+						field : 'accredit' ,
+						title : '授权方式' ,
+						align : 'center' ,
+						width : 200,
+						formatter : function(value,row,index){
+							for(var i=0;i<accreditList.length;i++){
+								if(accreditList[i].value==value){
+									return accreditList[i].text;
+								}
+							}							
+						}
+					},{
+						field : 'stockNumber',
+						title : '库存/套',
+						width : 150,
+						align : 'center' ,
 					},{
 						field : 'price',
 						title : '报价(元/天)',
@@ -103,6 +142,36 @@ $().ready(function(){
 		toolbar : '#toolbar'
 	});
 	
+	
+	$('#type').combobox({
+		data : typeList,
+		valueField : 'value',
+		textField : 'text'
+	});
+	
+	var s_typeList=JSON.parse(JSON.stringify(typeList));
+	s_typeList.unshift({'value':'','text':'--请选择--'});
+	$('#search-type').combobox({
+		data : s_typeList,
+		valueField : 'value',
+		textField : 'text'
+	});
+	
+	$('#accredit').combobox({
+		data : accreditList,
+		valueField : 'value',
+		textField : 'text'
+	});
+	
+	var s_accreditList=JSON.parse(JSON.stringify(accreditList));
+	s_accreditList.unshift({'value':'','text':'--请选择--'});
+	$('#search-accredit').combobox({
+		data : s_accreditList,
+		valueField : 'value',
+		textField : 'text'
+	});
+	
+	
 });
 
 //增加
@@ -117,7 +186,7 @@ function addFuc(){
 	//默认审核通过
 	$('#status').combobox('setValue',1);
 	
-	formUrl = getContextPath() + '/portal/production/'+position+'/save';
+	formUrl = getContextPath() + '/portal/production/costume-'+nature+'/save';
 	openDialog(null);
 	$('#id').val(0);
 }
@@ -144,7 +213,7 @@ function editFuc(){
 				}	
 			}
 		}
-		formUrl = getContextPath() + '/portal/production/'+position+'/update';
+		formUrl = getContextPath() + '/portal/production/costume-'+nature+'/update';
 		openDialog(rows[0]);
 	} else {
 		$.message('只能选择一条记录进行修改!');
@@ -163,7 +232,7 @@ function delFuca(){
 					ids += arr[i].id + ',';
 				}
 				ids = ids.substring(0,ids.length-1);
-				$.post(getContextPath() + '/portal/production/'+position+'/delete', {ids:ids},function(result){
+				$.post(getContextPath() + '/portal/production/costume-'+nature+'/delete', {ids:ids},function(result){
 					console.log(result);
 					// 刷新数据
 					datagrid.datagrid('clearSelections');
@@ -216,7 +285,7 @@ function save(){
 
 function openDialog(data){
 	$('#dlg').dialog({
-		title : positionName+'信息',
+		title : natureName+'信息',
 		modal : true,
 		width : 530,
 		height : 530,

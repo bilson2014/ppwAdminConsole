@@ -88,6 +88,7 @@ $().ready(
 
 // 添加页
 function addFun() {
+	imgNo=1;
 	//document.getElementById('displayFileImg').setAttribute('src',"/resources/img/portal/user/default.png");
 	var node = treegrid.treegrid('getSelected');
 	$('#fm').form('clear');
@@ -106,6 +107,7 @@ function addFun() {
 }
 // 修改页
 function editFun() {
+	imgNo=1;
 	var node = treegrid.treegrid('getSelected');
 	if (node) {
 		openDialog('dlg', node.grade);
@@ -120,7 +122,7 @@ function editFun() {
 		}else{
 //			document.getElementById('displayFileImg').setAttribute('src',getDfsHostName()+node.photo);
 			displayImg(node.photo,2);
-			imgNo++;
+			$('#photo').val(node.photo+";");
 		}
 		formUrl = getContextPath() + '/portal/quotationtype/update';
 	} else {
@@ -217,6 +219,8 @@ function openDialog(id, grade) {
 	$('#' + id).dialog(
 			{
 				modal : true,
+				width : 400,
+				height : 590,
 				onOpen : function(event, ui) {
 					if(grade>1){
 						$('#parentId').combotree(

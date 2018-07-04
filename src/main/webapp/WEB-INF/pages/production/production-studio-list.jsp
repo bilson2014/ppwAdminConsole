@@ -15,6 +15,8 @@
 <spring:url value="/resources/lib/My97DatePicker/WdatePicker.js" var="WdatePickerJs" />
 <spring:url value="/resources/lib/jcrop/jquery.Jcrop.min.js" var="jcropJs"/>
 <spring:url value="/resources/lib/jcrop/jquery.color.js" var="jcropColorJs"/>
+<spring:url value="/resources/lib/jcrop/jquery.Jcrop.min.css" var="jcropCss"/>
+<spring:url value="/resources/js/cutphoto-common.js" var="cutphoto"></spring:url>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -27,6 +29,7 @@
 <%-- <link rel="stylesheet" href="${defaultCss }">
 <link rel="stylesheet" href="${prettifyCss }"> --%>
 <link rel="stylesheet" href="${productListCss }">
+<link rel="stylesheet" href="${jcropCss }">
 <!-- <script type="text/javascript" src="http://player.youku.com/jsapi"></script> -->
 <script src="${jquerybase64Js }"></script>
 <%-- <script src="${kindeditorJs }"></script>
@@ -38,6 +41,7 @@
 <script src="${WdatePickerJs }" ></script>
 <script src="${jcropJs }" ></script>
 <script src="${jcropColorJs }" ></script>
+<script src="${cutphoto }"></script>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
@@ -213,7 +217,7 @@
 	            
 	        </form>
 	        
-	         <form  method="post" action="/portal/production/cutPhoto" enctype="multipart/form-data" id="fileDiv" style="display:none" >
+	        <!--  <form  method="post" action="/portal/production/cutPhoto" enctype="multipart/form-data" id="fileDiv" style="display:none" >
 	         	<input type="hidden" id="x" name="x" />
 		     	<input type="hidden" id="y" name="y"  /> 
 		     	<input type="hidden" id="x2" name="x2" /> 
@@ -222,7 +226,7 @@
 		     	<input type="hidden" id="height" name="height"  />
 		    	<input type="hidden" id="originalWidth" name="originalWidth"  /> 
 		     	<input type="hidden" id="originalHeight" name="originalHeight" /> 
-	        </form>
+	        </form> -->
 	    </div>
 	    <div id="dlg-buttons">	    
 	    	<r:mulparampermission uri2="/portal/production/studio/save" uri="/portal/production/studio/update">
@@ -232,9 +236,9 @@
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
 
-	<div id="dlgCut" class="easyui-dialog" style="padding:5px 5px;width: 350px;height: 700px;" closed="true" buttons="#dlgCut-buttons" title="裁剪图片">
+	<!-- <div id="dlgCut" class="easyui-dialog" style="padding:5px 5px;width: 350px;height: 700px;" closed="true" buttons="#dlgCut-buttons" title="裁剪图片">
 	    	       <div class="imgDivSize" style="height:300px;width:300px;background:#eee;overflow: hidden;text-align:center;position:relative">
-	    	            <!-- <img id="setFile" style="width:100%;height:auto"> -->
+	    	            <img id="setFile" style="width:100%;height:auto">
 	    	       </div>
 	    	       <div id="showImgSize" style="width:124px;height:70px;overflow:hidden;" class="preview">
 	    	            <img id="showImg">  
@@ -243,7 +247,7 @@
 	    
 	    <div id="dlgCut-buttons">
 	    	<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="cutImg()" >确定</a>
-	    </div> 
+	    </div>  -->
  	
 </body>
 </html>

@@ -1,6 +1,5 @@
 var formUrl;
 var datagrid;
-var imgNo=1; 
 var storage_node;
 //var citys;
 var zoneList;
@@ -53,6 +52,9 @@ $().ready(function(){
 						align : 'center' ,
 						width : 200,
 						formatter : function(value,row,index){
+							if(typeIdList==null){
+								return '';
+							}
 							for(var i=0;i<typeIdList.length;i++){
 								if(typeIdList[i].id==value){
 									return typeIdList[i].text;
@@ -87,6 +89,9 @@ $().ready(function(){
 						align : 'center' ,
 						width : 200,
 						formatter : function(value,row,index){
+							if(zoneList==null){
+								return '';
+							}
 							for(var i=0;i<zoneList.length;i++){
 								if(zoneList[i].value==value){
 									return zoneList[i].text;
@@ -99,6 +104,9 @@ $().ready(function(){
 						align : 'center' ,
 						width : 200,
 						formatter : function(value,row,index){
+							if(citys==null){
+								return '';
+							}
 							for(var i=0;i<citys.length;i++){
 								if(citys[i].cityID==value){
 									return citys[i].city;
@@ -195,7 +203,6 @@ function editFuc(){
 			for(var i=0;i<photos.length;i++){
 				if(photos[i]!=null && photos[i]!=''){
 					displayImg(photos[i],2);
-					imgNo++;
 				}	
 			}
 		}

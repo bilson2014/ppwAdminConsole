@@ -5,6 +5,8 @@ var typeList;
 var min=1,max=4;
 var statusList;
 var typeIdList;
+var displayWidth=81;
+var displayHeight=108;
 
 
 $().ready(function(){
@@ -211,7 +213,7 @@ function editFuc(){
 }
 
 // 删除
-function delFuc(){
+function delFuc1(){
 	var arr = datagrid.datagrid('getSelections');
 	if(arr.length <= 0 ){
 		$.message('请选择进行删除操作!');

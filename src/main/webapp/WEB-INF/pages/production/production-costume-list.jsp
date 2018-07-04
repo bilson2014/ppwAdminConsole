@@ -5,7 +5,7 @@
 <%-- import JS --%>
 <spring:url value="/resources/lib/jquery/jquery.base64.js" var="jquerybase64Js" />
 <spring:url value="/resources/js/production/production-base.js" var="productionBaseJs" />
-<spring:url value="/resources/js/production/production-cameraman-list.js" var="cameramanListJs" />
+<spring:url value="/resources/js/production/production-costume-list.js" var="costumeListJs" />
 <spring:url value="/resources/lib/My97DatePicker/WdatePicker.js" var="WdatePickerJs" />
 <spring:url value="/resources/lib/jcrop/jquery.Jcrop.min.js" var="jcropJs"/>
 <spring:url value="/resources/lib/jcrop/jquery.color.js" var="jcropColorJs"/>
@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="${jcropCss }">
 <script src="${jquerybase64Js }"></script>
 <script src="${productionBaseJs }"></script>
-<script src="${cameramanListJs }"></script>
+<script src="${costumeListJs }"></script>
 <script src="${WdatePickerJs }" ></script>
 <script src="${jcropJs }" ></script>
 <script src="${jcropColorJs }" ></script>
@@ -35,6 +35,11 @@
 	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
 	<input type="hidden" id="default_referrer" value="${referrer }">
 	<input type="hidden" id="statusList" value='${statusList }'>
+	<input type="hidden" id="nature" value='${nature}'>
+	<input type="hidden" id="natureName" value="${natureName }">
+	<input type="hidden" id="clothingTypeList" value='${clothingTypeList }'>
+	<input type="hidden" id="accreditList" value='${accreditList }'>
+	
 	<div data-options="region:'north',border:false" style="height: 80px; overflow: hidden;background-color: #fff">
 		<form id="searchForm">
 			<table>
@@ -52,10 +57,17 @@
 						<input name="beginPrice" class="easyui-numberbox" style="width: 76px;"/>~
 						<input name="endPrice" class="easyui-numberbox" style="width: 76px;"/>
 					</td>
-					<th>特殊技能：</th>
+					
+					<th>${natureName }类别：</th>
 					<td>
-						<input id="search-specialSkill" name="specialSkill" class="easyui-combobox" />						
+						<input id="search-type" name="type" class="easyui-combobox" style="width:156px" />
 					</td>
+					<th>授权方式：</th>
+					<td>
+						<input id="search-accredit" name="accredit" class="easyui-combobox" style="width:156px" />
+					</td>
+					
+					
 				</tr>
 				<tr>
 					<th>城市：</th>
@@ -91,51 +103,66 @@
 		</div>
 
 		<div id="toolbar" style="display: none;">
-			<r:permission uri="/portal/production/cameraman/save">
+			<r:permission uri="/portal/production/costume-${nature}/save">
 				<a onclick="addFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">添加</a>
 				<script type="text/javascript">
 					$.canSave = true;
 				</script>
 			</r:permission>
 			
-			<r:mulparampermission uri2="/portal/production/cameraman/update" uri="/portal/product/cameraman/update">
+			<r:mulparampermission uri2="/portal/production/costume-${nature}/update" uri="/portal/product/costume-${nature}/update">
 				<a onclick="editFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">修改</a>
 				<script type="text/javascript">
 					$.canUpdate = true;
 				</script>
 			</r:mulparampermission>
 			
-			<r:permission uri="/portal/production/cameraman/delete">
+			<r:permission uri="/portal/production/costume-${nature}/delete">
 				<a onclick="delFuca();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
 			</r:permission>
 	
 		</div>
 		
 		<div id="dlg" class="easyui-dialog" style="padding:5px 5px;width: 500px;height: 400px;"
-            closed="true" buttons="#dlg-buttons" title="摄影师信息">
+            closed="true" buttons="#dlg-buttons" title="${positionName }信息">
 	        <form id="fm" method="post" enctype="multipart/form-data">
 	        	<input id="id" name="id" type="hidden" />
+	        	
 	        	<div class="online">
 					<div class="lable l-width">姓名</div>
 					<div class="d-float f-width">
 						<input id="name" name="name" class="easyui-textbox" required="true" />
 					</div>
-					<div class="lable l-width">报价(元/天)</div>
+					
+					<div class="lable l-width">类别</div>
 					<div class="d-float f-width1">
-						<input id="price" name="price" class="easyui-numberbox" required="true" />
+						<input id="type" name="type" class="easyui-combobox" required="true" />
 					</div>
+					
 				</div>
-				
 				<div class="online">
-					<div class="lable l-width">特殊技能</div>
+					<div class="lable l-width">授权方式</div>
 					<div class="d-float f-width">
-						<input id="specialSkill" name="specialSkill"  class="easyui-combobox" />
+						<input id="accredit" name="accredit" class="easyui-combobox" required="true" />
+					</div>
+					
+					<div class="lable l-width">库存/套</div>
+					<div class="d-float f-width1">
+						<input id="stockNumber" name="stockNumber" class="easyui-numberbox" required="true" />
+					</div>
+					
+				</div>
+				<div class="online">
+					<div class="lable l-width">报价(元/天)</div>
+					<div class="d-float f-width">
+						<input id="price" name="price" class="easyui-numberbox" required="true" />
 					</div>
 					<div class="lable l-width">所在城市</div>
 					<div class="d-float f-width1">
 					<input id="city" name="city"  class="easyui-combobox" required="true"/>
 					</div>
 				</div>
+				
 				<div class="online">
 					<div class="lable l-width">标准化分级</div>
 					<div class="d-float f-width">
@@ -145,9 +172,8 @@
 					<div class="d-float f-width1">
 						<input id="teamId" name="teamId" class="easyui-combobox" required="true"/>
 					</div>
-					
 				</div>
-				<div class="online">
+				<div class="online">				
 					<div class="lable l-width">推荐人</div>
 					<div class="d-float f-width">
 						<input id="referrer" name="referrer" class="easyui-combobox"/>
@@ -158,10 +184,10 @@
 					</div>
 				</div>
 				<div class="online">
-				备注  ：请完善摄影师简历、作品、熟练使用设备等
+				备注  ：请完善${positionName }尺寸、用途
 				</div>			
 				<div class="textarea-position">
-					<input name="remark" class="easyui-textbox" data-options="prompt:'请完善摄影师简历、作品、熟练使用设备等...',multiline:true" style="height: 100px;width: 500px">
+					<input name="remark" class="easyui-textbox" data-options="prompt:'请完善${positionName }尺寸、用途等信息...',multiline:true" style="height: 100px;width: 500px">
 				</div>
 							
 				<div class="online">
@@ -178,46 +204,13 @@
 				<input id="delImg" name="delImg" type="hidden">
 	            
 	        </form>
-	        
-	      <!--   <form  method="post" action="/portal/production/cutPhoto" enctype="multipart/form-data" id="fileDiv" style="display:none" >
-	         	<input type="hidden" id="x" name="x" />
-		     	<input type="hidden" id="y" name="y"  /> 
-		     	<input type="hidden" id="x2" name="x2" /> 
-		     	<input type="hidden" id="y2" name="y2" /> 
-		    	<input type="hidden" id="width" name="width" /> 
-		     	<input type="hidden" id="height" name="height"  />
-		    	<input type="hidden" id="originalWidth" name="originalWidth"  /> 
-		     	<input type="hidden" id="originalHeight" name="originalHeight" /> 
-		     
-		     	使用新加的，上一个清空id，否则无法再次上传同一张图片
-		    	<input type="file" id="videoFile" style="width:100%" name="uploadFile" class="p-file"  onchange="addImg(this)" accept="image/gif,image/jpeg,image/jpg,image/png"/>
-		     	
-	        </form> -->
-	        
 	    </div>
 	    <div id="dlg-buttons">	    
-	    	<r:mulparampermission uri2="/portal/production/cameraman/save" uri="/portal/production/cameraman/update">
+	    	<r:mulparampermission uri2="/portal/production/costume-${nature}/save" uri="/portal/production/costume-${nature}/update">
 		        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="save()" >保存</a>
 	    	</r:mulparampermission>
 	    	
 	        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" >取消</a>
 	    </div>
-	        
-	   <!--  <div id="dlgCut" class="easyui-dialog" style="padding:5px 5px;width: 350px;height: 700px;" closed="true" buttons="#dlgCut-buttons" title="裁剪图片">
-	    	       <div class="imgDivSize" style="height:300px;width:300px;background:#eee;overflow: hidden;text-align:center;position:relative">
-	    	            <img id="setFile" style="width:100%;height:auto">
-	    	       </div>
-	    	       <div id="showImgSize" style="width:81px;height:108px;overflow:hidden;" class="preview">
-	    	            <img id="showImg">  
-	    	       </div>
-	    </div>
-	    
-	    <div id="dlgCut-buttons">
-	    	<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="cutImg()" >确定</a>
-	    </div>  -->
-	    
-	   <!--  <div id="uploadImg"></div>
- -->
- 	
 </body>
 </html>

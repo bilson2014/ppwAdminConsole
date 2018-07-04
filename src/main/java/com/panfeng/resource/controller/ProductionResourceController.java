@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.paipianwang.pat.common.entity.DataGrid;
 import com.paipianwang.pat.common.entity.PageParam;
 import com.paipianwang.pat.common.entity.PhotoCutParam;
@@ -34,6 +34,7 @@ import com.paipianwang.pat.common.web.exception.WebException;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.workflow.entity.PmsProductionActor;
 import com.paipianwang.pat.workflow.entity.PmsProductionCameraman;
+import com.paipianwang.pat.workflow.entity.PmsProductionCostume;
 import com.paipianwang.pat.workflow.entity.PmsProductionDevice;
 import com.paipianwang.pat.workflow.entity.PmsProductionDirector;
 import com.paipianwang.pat.workflow.entity.PmsProductionPersonnel;
@@ -42,6 +43,7 @@ import com.paipianwang.pat.workflow.entity.ProductionConstants;
 import com.paipianwang.pat.workflow.enums.ProductionResource;
 import com.paipianwang.pat.workflow.facade.PmsProductionActorFacade;
 import com.paipianwang.pat.workflow.facade.PmsProductionCameramanFacade;
+import com.paipianwang.pat.workflow.facade.PmsProductionCostumeFacade;
 import com.paipianwang.pat.workflow.facade.PmsProductionDeviceFacade;
 import com.paipianwang.pat.workflow.facade.PmsProductionDirectorFacade;
 import com.paipianwang.pat.workflow.facade.PmsProductionPersonnelFacade;
@@ -70,6 +72,8 @@ public class ProductionResourceController extends BaseController {
 	private PmsProductionPersonnelFacade pmsProductionPersonnelFacade;
 	@Autowired
 	private PmsProductionCameramanFacade pmsProductionCameramanFacade;
+	@Autowired
+	private PmsProductionCostumeFacade pmsProductionCostumeFacade;
 
 	// --------------------演员--------------------------
 	@RequestMapping(value = "/production/actor-list")
@@ -126,7 +130,7 @@ public class ProductionResourceController extends BaseController {
 			final PmsProductionActor actor) throws Exception {
 		BaseMsg msg = new BaseMsg();
 
-		String pathList = "";
+		String pathList = actor.getPhoto();
 		pathList = editFile(null, pathList, actor.getDelImg());
 
 		actor.setPhoto(pathList);
@@ -220,6 +224,10 @@ public class ProductionResourceController extends BaseController {
 		public ModelAndView directorView(final HttpServletRequest request,final ModelMap model) {
 			setDefaultReferrer(request, model);
 			setStatusList(model);
+			
+			ProductionConstants[] specialtyList=ProductionConstants.specialtyList;
+			model.put("specialtyList", JSONArray.toJSON(specialtyList));
+			
 			return new ModelAndView("production/production-director-list", model);
 		}
 
@@ -540,6 +548,127 @@ public class ProductionResourceController extends BaseController {
 
 			return msg;
 		}
+		
+		// --------------------服装道具--------------------------
+		@RequestMapping(value = "/production/costume-{nature}-list")
+		public ModelAndView costumeView(final HttpServletRequest request, final ModelMap model,@PathVariable("nature") final String nature) {
+			setDefaultReferrer(request, model);
+			setStatusList(model);
+			
+			ProductionResource resource=ProductionResource.getEnum(nature);
+			if(resource==null) {
+				//全部加上职位校验
+				throw new WebException("请求不存在", "001");
+			}
+			
+			model.put("nature",nature);
+			model.put("natureName", resource.getName());
+			
+			ProductionConstants[] clothingTypeList=ProductionConstants.clothingTypeList;
+			model.put("clothingTypeList", JsonUtil.toJson(clothingTypeList));
+			
+			ProductionConstants[] accreditList=ProductionConstants.accreditList;
+			model.put("accreditList", JsonUtil.toJson(accreditList));
+			
+			return new ModelAndView("production/production-costume-list", model);
+		}
+
+		@RequestMapping(value = "/production/costume-{nature}/list", method = RequestMethod.POST)
+		public DataGrid<PmsProductionCostume> costumeList(@RequestParam final Map<String, Object> paramMap,
+				final PageParam param,@PathVariable("nature") final String nature) {
+			
+			ProductionResource resource=ProductionResource.getEnum(nature);
+			if(resource==null) {
+				//全部加上职位校验
+				throw new WebException("请求不存在", "001");
+			}
+
+			final long page = param.getPage();
+			final long rows = param.getRows();
+			param.setBegin((page - 1) * rows);
+			param.setLimit(rows);
+
+			paramMap.remove("page");
+			paramMap.remove("rows");
+			
+			paramMap.put("nature",nature);
+
+			final DataGrid<PmsProductionCostume> dataGrid = pmsProductionCostumeFacade.listWithPagination(param, paramMap);
+			return dataGrid;
+		}
+
+		@RequestMapping(value = "/production/costume-{nature}/delete", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+		public BaseMsg costumeDelete(final long[] ids, HttpServletRequest request,@PathVariable("nature") final String nature) {
+			BaseMsg msg=new BaseMsg();
+			ProductionResource resource=ProductionResource.getEnum(nature);
+			if(resource==null) {
+				//全部加上职位校验
+				msg.setErrorMsg("请求不存在");
+				return msg;
+			}
+			
+			List<PmsProductionCostume> deletes = pmsProductionCostumeFacade.deleteByIds(ids);
+			// 删除图片
+			if (ValidateUtil.isValid(deletes)) {
+				for (PmsProductionCostume costume : deletes) {
+					String delImgStr = costume.getPhoto();
+					if (ValidateUtil.isValid(delImgStr)) {
+						String[] delImgs = delImgStr.split(";");
+						for (String delImg : delImgs) {
+							FastDFSClient.deleteFile(delImg);
+						}
+					}
+				}
+			}
+			msg.setCode(BaseMsg.NORMAL);
+			
+			return msg;
+		}
+
+		@RequestMapping(value = "/production/costume-{nature}/save", method = RequestMethod.POST)
+		public BaseMsg costumeSave(final HttpServletRequest request, final HttpServletResponse response,
+				final PmsProductionCostume costume,@PathVariable("nature") final String nature) throws Exception {
+			BaseMsg msg = new BaseMsg();
+			ProductionResource resource=ProductionResource.getEnum(nature);
+			if(resource==null) {
+				//全部加上职位校验
+				msg.setErrorMsg("请求不存在");
+				return msg;
+			}
+
+			String pathList = costume.getPhoto();
+			pathList = editFile(null, pathList, costume.getDelImg());
+
+			costume.setPhoto(pathList);
+			costume.setCreator(getCreator(request));
+			costume.setNature(nature);
+			pmsProductionCostumeFacade.insert(costume);
+			return msg;
+		}
+
+		@RequestMapping(value = "/production/costume-{nature}/update", method = RequestMethod.POST)
+		public BaseMsg costumeUpdate(final HttpServletRequest request, final HttpServletResponse response,
+				final PmsProductionCostume costume,@PathVariable("nature") final String nature) throws Exception {
+			BaseMsg msg = new BaseMsg();
+			ProductionResource resource=ProductionResource.getEnum(nature);
+			if(resource==null) {
+				//全部加上职位校验
+				msg.setErrorMsg("请求不存在");
+				return msg;
+			}
+
+			String pathList = costume.getPhoto();
+			// 上传图片
+			pathList = editFile(null, pathList, costume.getDelImg());
+
+			costume.setPhoto(pathList);
+			costume.setNature(nature);
+			pmsProductionCostumeFacade.update(costume);
+
+			return msg;
+		}
+
+		
 	/**
 	 * 图片上传
 	 * 

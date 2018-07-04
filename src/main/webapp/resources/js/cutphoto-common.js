@@ -3,8 +3,6 @@ var image_max_size = 1024*1024; // 250KB
 var image_err_msg = '图片大小超出1MB上限,请重新上传!';
 var jcrop_api;
 
-//upload  Form：fileDiv<videoFile,x,y,x2,y2,width,height,originalWidth,originalHeight>
-//cutPhone sources:imgDivSize<setFile>   result:showImgSize<showImg>
 //需要封装一下：参数传入 初始化后页面加入dlg  如果需要预览，传入预览位置
 //uploadDiv imgDisplay  min max  imgNo
 //#photo 所有图片 #delImg 待删除图片
@@ -24,10 +22,11 @@ function initCutPhoto(uploadBtn){
 	
 	//剪切弹出框
 	var cutDlg='<div id="dlgCut" class="easyui-dialog" style="padding:5px 5px;width: 350px;height: 700px;" closed="true" buttons="#dlgCut-buttons" title="裁剪图片">'+
-	       			'<div class="imgDivSize" style="height:300px;width:300px;background:#eee;overflow: hidden;text-align:center;position:relative">'+
+	       			'<div class="imgDivSize" style="height:300px;width:300px;background:#eee;overflow: hidden;text-align:center;position:relative;margin-top: 5px;margin-left:10px;display: none;">'+
 	       		//   ' <!-- <img id="setFile" style="width:100%;height:auto"> -->'+
 	       			'</div>'+
-	       			'<div id="showImgSize" style="width:'+displayWidth+'px;height:'+displayHeight+'px;overflow:hidden;" class="preview">'+
+	       			'<div id="showImgSize" style="width:'+displayWidth+'px;height:'+displayHeight+'px;overflow:hidden;'+
+	       				'margin-top: 10px;margin-left:10px;" class="preview">'+
 	       			'   <img id="showImg">  '+
 	       			'</div>'+
 	       			cutForm+
@@ -36,7 +35,14 @@ function initCutPhoto(uploadBtn){
 	       		'<div id="dlgCut-buttons">'+
 	       			'<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="cutImg()" >确定</a>'+
 	       		'</div> ';
-	 $("body").append($(cutDlg)); 
+	/* $("body").append($(cutDlg)); 
+	 
+	 //渲染easyUIxc
+	 $.parser.parse($(cutDlg));*/
+	 
+	 var newDlg = $(cutDlg).appendTo("body");
+	 //渲染easyUIxc
+	 $.parser.parse($(newDlg));
 	 
 	
 //	 $("#uploadDiv").on("click",function(){ 
@@ -87,6 +93,8 @@ function addImg(obj) {
 	 var setFile = ' <img id="setFile" style="width:100%;height:auto">';  //如果不每次清除，setFile会加载两次，而剪切时取得其width是真实图片大小　１５０
      $(".imgDivSize").append($(setFile));
      $('#showImg').removeAttr('src');
+     
+    
 	
 	$('#dlgCut').dialog({
 		title : '裁剪图片',
@@ -94,6 +102,8 @@ function addImg(obj) {
 		width : 335,
 		height : 500,
 	}).dialog('open').dialog('center');
+	
+	 $('.imgDivSize')[0].style.display="block";
 		
 	 var windowURL = window.URL || window.webkitURL;
 	 var loadImg = windowURL.createObjectURL(obj.files[0]);
@@ -158,7 +168,6 @@ function cutImg(){
  				//预览 
  				$('#photo').val($('#photo').val()+msg.result+";");//如果是单张图片，可以直接替换	
  				displayImg(msg.result,1);
- 				imgNo++;
  				
  				$('#dlgCut').dialog('close');
  				
@@ -168,6 +177,8 @@ function cutImg(){
  				progressClose();
  				$.message('剪切失败!');
  			}
+ 			
+ 			 $('.imgDivSize')[0].style.display="none";
  		}
  	});
 }
@@ -180,6 +191,8 @@ function displayImg(url,type){
 	var newImg = $(html).appendTo("#imgDisplay");
 	 //渲染easyUIxc
 	 $.parser.parse($(newImg));
+	 
+	 imgNo++;
 }
 
 function initImgSize(){
@@ -189,7 +202,7 @@ function initImgSize(){
 	changeImg.load(function(){
 			var realHeight = $(this).height();
 			var realWidth  = $(this).width();			
-				if(realWidth/realHeight < imgRatio){
+				if(realWidth/realHeight < 1){
 					$(this).css('height',needHeight).css('width','auto');
 				}else{
 					$(this).css('height','auto').css('width',needWidth);

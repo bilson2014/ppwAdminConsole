@@ -7,6 +7,7 @@
 <spring:url value="/resources/js/production/production-base.js" var="productionBaseJs" />
 <spring:url value="/resources/js/production/production-device-list.js" var="deviceListJs" />
 <spring:url value="/resources/lib/My97DatePicker/WdatePicker.js" var="WdatePickerJs" />
+<spring:url value="/resources/js/cutphoto-common.js" var="cutphoto"></spring:url>
 
 <%-- <spring:url value="/resources/lib/normalize/normalize.css"
 	var="normalizeCss" />
@@ -27,10 +28,12 @@
 <head>
 <jsp:include page="../common.jsp" />
 <link rel="stylesheet" href="${productListCss }">
+<link rel="stylesheet" href="${jcropCss }">
 <script src="${jquerybase64Js }"></script>
 <script src="${productionBaseJs }"></script>
 <script src="${deviceListJs }"></script>
 <script src="${WdatePickerJs }" ></script>
+<script src="${cutphoto }"></script>
 
 <%-- <link rel="stylesheet" href="${normalizeCss }">
 <link rel="stylesheet" href="${h5bpCss }">
@@ -109,7 +112,7 @@
 			</r:mulparampermission>
 			
 			<r:permission uri="/portal/production/device/delete">
-				<a onclick="delFuc();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
+				<a onclick="delFuc1();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
 			</r:permission>
 	
 		</div>

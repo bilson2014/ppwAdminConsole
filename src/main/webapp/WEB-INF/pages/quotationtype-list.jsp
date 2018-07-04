@@ -29,9 +29,10 @@
 <spring:url value="/resources/js/common.js" var="commonJs" />
 <spring:url value="/resources/js/quotationtype-list.js"
 	var="quotationtypeJs" />
-<<spring:url value="/resources/js/cutphoto-common.js" var="cutphoto"></spring:url>
+<spring:url value="/resources/js/cutphoto-common.js" var="cutphoto"></spring:url>
 <spring:url value="/resources/lib/jcrop/jquery.Jcrop.min.js" var="jcropJs"/>
 <spring:url value="/resources/lib/jcrop/jquery.color.js" var="jcropColorJs"/>
+<spring:url value="/resources/lib/jcrop/jquery.Jcrop.min.css" var="jcropCss"/>
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,6 +45,7 @@
 <link rel="stylesheet" href="${easyuiCss }">
 <link rel="stylesheet" href="${iconCss }">
 <link rel="stylesheet" href="${quotationTypeCss}">
+<link rel="stylesheet" href="${jcropCss }">
 <!--[if lt IE 9]>
 		<script>window.html5 || document.write('<script src="html5shivJs"><\/script>')</script>
 	<![endif]-->
@@ -123,6 +125,11 @@
 				<label>成本价</label>
 				<input name="costPrice" class="easyui-numberbox" data-options="precision:2">
 			</div>
+			
+			<div class="fitem">
+				<label>描述</label>
+				<textarea class="easyui-textbox" id="description" name="description" multiline="true" style="width:256px;height: 150px;"></textarea>
+			</div>
 			<div class="fitem">
 				<label>图片</label>			
 				<!-- <input name="uploadFile" id="uploadFile" type="file" onchange="changeImg(this)" /> -->		
@@ -131,10 +138,6 @@
 			<div class="fitem" id="imgDisplay">
 				<!-- <img src="" id="displayFileImg" class="aptimg">
 				<button id="remove-btn" onclick="removeFileFuc();" class='removeBtn'>移除文件</button> -->
-			</div>
-			<div class="fitem">
-				<label>描述</label>
-				<textarea class="easyui-textbox" id="description" name="description" multiline="true" style="width:256px;height: 160px;"></textarea>
 			</div>
 		</form>
 	</div>

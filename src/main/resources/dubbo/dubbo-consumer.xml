@@ -78,6 +78,7 @@
 	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsProductionDeviceFacade" id="pmsProductionDeviceFacade" retries="1" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsProductionPersonnelFacade" id="pmsProductionPersonnelFacade" retries="1" check="false" timeout="5000"/>
 	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsProductionCameramanFacade" id="pmsProductionCameramanFacade" retries="1" check="false" timeout="5000"/>
+	<dubbo:reference interface="com.paipianwang.pat.workflow.facade.PmsProductionCostumeFacade" id="pmsProductionCostumeFacade" retries="1" check="false" timeout="5000"/>
 	
 	
 </beans>

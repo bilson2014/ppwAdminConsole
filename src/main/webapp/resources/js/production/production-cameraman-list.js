@@ -1,6 +1,5 @@
 var formUrl;
 var datagrid;
-var imgNo=1; 
 var storage_node;
 var specialtyList;
 var min=1,max=1;
@@ -167,7 +166,6 @@ function editFuc(){
 			for(var i=0;i<photos.length;i++){
 				if(photos[i]!=null && photos[i]!=''){
 					displayImg(photos[i],2);
-					imgNo++;
 				}	
 			}
 		}
