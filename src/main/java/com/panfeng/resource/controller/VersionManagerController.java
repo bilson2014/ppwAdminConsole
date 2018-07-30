@@ -118,6 +118,9 @@ public class VersionManagerController extends BaseController {
 		for (final PmsRole r : e.getRoles()) {
 			final PmsRole role = pmsRoleFacade.findRoleById(r.getRoleId());
 			roles.add(role);
+			if("1".equals(role.getRoleValue())) {
+				info.setUserRank(1);
+			}
 		}
 		e.setRoles(roles);
 

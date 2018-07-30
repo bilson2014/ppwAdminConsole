@@ -2,8 +2,8 @@ var formUrl;
 var datagrid;
 var storage_node;
 var min=1,max=4;
-var statusList;
-var typeIdList;
+var statusList=[];
+var typeIdList=[];
 var imgRatio=248/140;
 var displayWidth=124;
 var displayHeight=70;
@@ -12,7 +12,7 @@ var displayHeight=70;
 $().ready(function(){
 	storage_node=$('#storage_node').val();
 	statusList=JSON.parse($('#statusList').val());
-	init('studio');
+	
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -106,8 +106,19 @@ $().ready(function(){
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar'
+		toolbar : '#toolbar',
+		onBeforeLoad: function (param) {
+            var firstLoad = $(this).attr("firstLoad");
+            if (firstLoad == "false" || typeof (firstLoad) == "undefined")
+            {
+                $(this).attr("firstLoad","true");
+                return false;
+            }
+            return true;
+		}
 	});
+	
+	init('studio');
 	
 	/* $("#uploadDiv").on("click",function(){  
 	     var uploadFile = '<input type="file" id="videoFile" style="width:100%" name="uploadFiles" class="p-file" multiple="multiple" onchange="addImg(this)" accept="image/gif,image/jpeg,image/jpg,image/png"/>';  
@@ -209,6 +220,8 @@ function save(){
 				progressClose();
 				return false;
 			}
+			setRef();
+			
 			return flag;
 		},
 		success : function(result) {

@@ -2,8 +2,8 @@ var formUrl;
 var datagrid;
 var storage_node;
 var min=0,max=1;
-var statusList;
-var typeIdList;
+var statusList=[];
+var typeIdList=[];
 var imgRatio=162/216;
 var displayWidth=81;
 var displayHeight=108;
@@ -20,7 +20,7 @@ $().ready(function(){
 	positionName=$('#positionName').val();
 	
 	
-	init(position);
+	
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -100,9 +100,19 @@ $().ready(function(){
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar'
+		toolbar : '#toolbar',
+		onBeforeLoad: function (param) {
+            var firstLoad = $(this).attr("firstLoad");
+            if (firstLoad == "false" || typeof (firstLoad) == "undefined")
+            {
+                $(this).attr("firstLoad","true");
+                return false;
+            }
+            return true;
+		}
 	});
 	
+	init(position);
 });
 
 //增加
@@ -197,6 +207,7 @@ function save(){
 				progressClose();
 				return false;
 			}
+			setRef();
 			
 			return flag;
 		},

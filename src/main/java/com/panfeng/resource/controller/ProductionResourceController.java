@@ -78,13 +78,12 @@ public class ProductionResourceController extends BaseController {
 	// --------------------演员--------------------------
 	@RequestMapping(value = "/production/actor-list")
 	public ModelAndView actorView(final HttpServletRequest request,final ModelMap model) {
-		setDefaultReferrer(request, model);
-		setStatusList(model);
+		setPageParameter(request, model);
 		return new ModelAndView("production/production-actor-list", model);
 	}
 
 	@RequestMapping(value = "/production/actor/list", method = RequestMethod.POST)
-	public DataGrid<PmsProductionActor> actorList(@RequestParam final Map<String, Object> paramMap,
+	public DataGrid<PmsProductionActor> actorList(final HttpServletRequest request,@RequestParam final Map<String, Object> paramMap,
 			final PageParam param) {
 
 		final long page = param.getPage();
@@ -103,6 +102,7 @@ public class ProductionResourceController extends BaseController {
 			paramMap.put("endBirthDay", DateUtils.getAgeByYear(Integer.parseInt((String)paramMap.get("endAge")))+"");
 			paramMap.remove("endAge");
 		}
+		setDataLevel(request, paramMap);
 
 		final DataGrid<PmsProductionActor> dataGrid = pmsProductionActorFacade.listWithPagination(param, paramMap);
 		return dataGrid;
@@ -159,8 +159,7 @@ public class ProductionResourceController extends BaseController {
 	// --------------------设备--------------------------
 	@RequestMapping(value = "/production/device-list")
 	public ModelAndView deviceView(final HttpServletRequest request,final ModelMap model) {
-		setDefaultReferrer(request, model);
-		setStatusList(model);
+		setPageParameter(request, model);
 		//设备类型
 		/*ProductionDeviceType[] types=ProductionDeviceType.values();		
 		List<Map<String,Object>> typesList=new ArrayList<>();
@@ -173,7 +172,6 @@ public class ProductionResourceController extends BaseController {
 		}
 		
 		model.put("typeList", JSONArray.toJSON(typesList));*/
-		
 		
 		return new ModelAndView("production/production-device-list", model);
 	}
@@ -222,8 +220,7 @@ public class ProductionResourceController extends BaseController {
 	// --------------------导演--------------------------
 		@RequestMapping(value = "/production/director-list")
 		public ModelAndView directorView(final HttpServletRequest request,final ModelMap model) {
-			setDefaultReferrer(request, model);
-			setStatusList(model);
+			setPageParameter(request, model);
 			
 			ProductionConstants[] specialtyList=ProductionConstants.specialtyList;
 			model.put("specialtyList", JSONArray.toJSON(specialtyList));
@@ -297,8 +294,7 @@ public class ProductionResourceController extends BaseController {
 	// --------------------场地--------------------------
 	@RequestMapping(value = "/production/studio-list")
 	public ModelAndView studioView(final HttpServletRequest request, final ModelMap model) {
-		setDefaultReferrer(request, model);
-		setStatusList(model);
+		setPageParameter(request, model);
 		return new ModelAndView("production/production-studio-list", model);
 	}
 
@@ -369,8 +365,7 @@ public class ProductionResourceController extends BaseController {
 	// --------------------人员--------------------------
 	@RequestMapping(value = "/production/{position}-list")
 	public ModelAndView personnelView(final HttpServletRequest request, final ModelMap model,@PathVariable("position") final String position) {
-		setDefaultReferrer(request, model);
-		setStatusList(model);
+		setPageParameter(request, model);
 		
 		ProductionResource resource=ProductionResource.getEnum(position);
 		if(resource==null) {
@@ -482,8 +477,7 @@ public class ProductionResourceController extends BaseController {
 	// --------------------摄影师--------------------------
 		@RequestMapping(value = "/production/cameraman-list")
 		public ModelAndView cameramanView(final HttpServletRequest request, final ModelMap model) {
-			setDefaultReferrer(request, model);
-			setStatusList(model);
+			setPageParameter(request, model);
 			return new ModelAndView("production/production-cameraman-list", model);
 		}
 
@@ -552,8 +546,7 @@ public class ProductionResourceController extends BaseController {
 		// --------------------服装道具--------------------------
 		@RequestMapping(value = "/production/costume-{nature}-list")
 		public ModelAndView costumeView(final HttpServletRequest request, final ModelMap model,@PathVariable("nature") final String nature) {
-			setDefaultReferrer(request, model);
-			setStatusList(model);
+			setPageParameter(request, model);
 			
 			ProductionResource resource=ProductionResource.getEnum(nature);
 			if(resource==null) {
@@ -569,6 +562,9 @@ public class ProductionResourceController extends BaseController {
 			
 			ProductionConstants[] accreditList=ProductionConstants.accreditList;
 			model.put("accreditList", JsonUtil.toJson(accreditList));
+			
+			ProductionConstants[] propsTypeList=ProductionConstants.propsTypeList;
+			model.put("propsTypeList", JsonUtil.toJson(propsTypeList));
 			
 			return new ModelAndView("production/production-costume-list", model);
 		}
@@ -726,17 +722,50 @@ public class ProductionResourceController extends BaseController {
 	}
 	
 	/**
-	 * 设置默认推荐人为当前用户
+	 * 设置页面公共参数：默认推荐人、审核状态、数据等级
 	 * @param request
 	 * @param model
 	 */
-	private void setDefaultReferrer(final HttpServletRequest request,final ModelMap model) {
+	private void setPageParameter(final HttpServletRequest request,final ModelMap model) {
+		//设置默认推荐人
 		SessionInfo session=this.getCurrentInfo(request);
 		model.put("referrer", session.getReqiureId());
+		model.put("referrer_name", session.getRealName());
+		
+		//设置审核状态
+		ProductionConstants[] statusList=ProductionConstants.statusList;
+		model.put("statusList", JsonUtil.toJson(statusList));
+		
+		//设置数据等级
+		if(session.isSuperAdmin() || session.getUserRank()==1) {//管理员、联合创始人
+			model.put("dataLevel","1");
+		}else {
+			model.put("dataLevel","0");
+		}
+		
 	}
-	private void setStatusList(final ModelMap model) {
+/*	private void setStatusList(final ModelMap model) {
 		ProductionConstants[] statusList=ProductionConstants.statusList;
 		model.put("statusList", JsonUtil.toJson(statusList));		
+	}
+	
+	private void setPageDataLevel(final HttpServletRequest request,final ModelMap model) {
+		SessionInfo session=this.getCurrentInfo(request);
+		if(session.isSuperAdmin()) {//TODO || session.is联合创始人
+			model.put("dataLevel","1");
+		}else {
+			model.put("dataLevel","0");
+		}
+	}*/
+	
+	private void setDataLevel(final HttpServletRequest request,Map<String, Object> paramMap) {
+		SessionInfo session=this.getCurrentInfo(request);
+		if(session.isSuperAdmin() || session.getUserRank()==1) {//管理员、联合创始人
+			paramMap.put("dataLevel", 1);
+		}else {
+			paramMap.put("current_user",session.getReqiureId());
+			paramMap.put("dataLevel", 0);
+		}
 	}
 	
 	@RequestMapping("/production/cutPhoto")
@@ -777,5 +806,6 @@ public class ProductionResourceController extends BaseController {
 		}
 		return result;
 	}
+	
 	
 }

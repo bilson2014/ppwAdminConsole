@@ -4,8 +4,8 @@ var storage_node;
 //var citys;
 var zoneList;
 var min=1,max=6;
-var statusList;
-var typeIdList;
+var statusList=[];
+var typeIdList=[];
 var imgRatio=162/216;
 var displayWidth=81;
 var displayHeight=108;
@@ -25,7 +25,7 @@ $().ready(function(){
 		{'value':8,'text':'北美裔'},{'value':9,'text':'拉丁裔'},
 		{'value':10,'text':'非洲裔'},{'value':11,'text':'澳洲裔'}];
 	
-	init('actor');
+	
 	
 	
 	// 初始化DataGrid
@@ -141,8 +141,21 @@ $().ready(function(){
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar'
+		toolbar : '#toolbar',
+		onBeforeLoad: function (param) {
+		                var firstLoad = $(this).attr("firstLoad");
+		                if (firstLoad == "false" || typeof (firstLoad) == "undefined")
+		                {
+		                    $(this).attr("firstLoad","true");
+		                    return false;
+		                }
+		                return true;
+		}
+		            
 	});
+	
+	init('actor');
+	
 	
 	$('#search-zone').combobox({
 		data : zoneList,
@@ -270,12 +283,15 @@ function save(){
 	$('#fm').form('submit',{
 		url : formUrl,
 		onSubmit : function() {
-			var flag = $(this).form('validate');			
+			var flag = $(this).form('validate');
+			
 			if(!flag){
 				progressClose();
 				return false;
 			}
 			
+			setRef();
+
 			var time=$('#birthDay').val();
 			var now = new Date();
 			var endYear=now.getFullYear(); 

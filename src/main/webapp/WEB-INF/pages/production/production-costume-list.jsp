@@ -34,11 +34,13 @@
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
 	<input type="hidden" id="default_referrer" value="${referrer }">
+	<input type="hidden" id="default_referrer_name" value="${referrer_name }">
 	<input type="hidden" id="statusList" value='${statusList }'>
 	<input type="hidden" id="nature" value='${nature}'>
 	<input type="hidden" id="natureName" value="${natureName }">
 	<input type="hidden" id="clothingTypeList" value='${clothingTypeList }'>
 	<input type="hidden" id="accreditList" value='${accreditList }'>
+	<input type="hidden" id="propsTypeList" value='${propsTypeList }'>
 	
 	<div data-options="region:'north',border:false" style="height: 80px; overflow: hidden;background-color: #fff">
 		<form id="searchForm">
@@ -46,13 +48,14 @@
 				<tr>
 					<th>姓名：</th>
 					<td>
+						<input type="hidden" id="dataLevel" name="dataLevel" value="${dataLevel }">
 						<input id="search-name" name="name" class="easyui-textbox"/>
 					</td>
 					<th>标准化分级：</th>
 					<td>
 						<input id="search-typeId" name="typeId" class="easyui-combotree" style="width:156px" />
 					</td>
-					<th>报价(元/天)：</th>
+					<th>报价：</th>
 					<td>
 						<input name="beginPrice" class="easyui-numberbox" style="width: 76px;"/>~
 						<input name="endPrice" class="easyui-numberbox" style="width: 76px;"/>
@@ -146,14 +149,14 @@
 						<input id="accredit" name="accredit" class="easyui-combobox" required="true" />
 					</div>
 					
-					<div class="lable l-width">库存/套</div>
+					<div class="lable l-width">库存(套)</div>
 					<div class="d-float f-width1">
 						<input id="stockNumber" name="stockNumber" class="easyui-numberbox" required="true" />
 					</div>
 					
 				</div>
 				<div class="online">
-					<div class="lable l-width">报价(元/天)</div>
+					<div class="lable l-width" id="priceLabel">报价(元/天)</div>
 					<div class="d-float f-width">
 						<input id="price" name="price" class="easyui-numberbox" required="true" />
 					</div>

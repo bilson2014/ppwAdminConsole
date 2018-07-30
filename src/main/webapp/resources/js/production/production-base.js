@@ -1,18 +1,72 @@
-var teamList;
-var referrerList;
-var citys;
+var teamList=[];
+var referrerList=[];
+var citys=[];
 var upload_Video;
 
 
 function init(type){
 	
-	syncLoadData(function(res) {
+	loadData(function(res) {
 		citys = res;
+		
+		loadData(function(res) {
+			typeIdList = res;	
+			
+			searchFun();
+			
+			if(type!='device'){
+				$('#typeId').combotree(
+						{
+							data :typeIdList,
+							lines : true,
+							cascadeCheck : false,
+							parentField : 'pid',
+							idField : 'id',
+							treeField : 'text',
+//							editable :true,//后期加上搜索
+//							filter:{}
+							onBeforeSelect: function(node) {  //只能选择叶子节点
+					            if (!$(this).tree('isLeaf', node.target)) {  
+					                return false;  
+					            }  
+					        }
+				});
+				
+				$('#search-typeId').combotree(
+						{
+							data :typeIdList,
+							lines : true,
+							cascadeCheck : false,
+							parentField : 'pid',
+							idField : 'id',
+							treeField : 'text',
+//							editable :true,//后期加上搜索
+//							filter:{}
+							onBeforeSelect: function(node) {  //只能选择叶子节点
+					            if (!$(this).tree('isLeaf', node.target)) {  
+					                return false;  
+					            }  
+					        }
+				});
+			}
+			
+		}, getContextPath() + '/portal/quotationtype/production/select?productionType='+type, null);
+		
+
+		$('#city').combobox({
+			data : citys,
+			valueField : 'cityID',
+			textField : 'city'
+		});
+		$('#search-city').combobox({
+			data : citys,
+			valueField : 'cityID',
+			textField : 'city'
+		});
+		
 	}, getContextPath() + '/portal/all/citys', null);
 	
-	syncLoadData(function(res) {
-		typeIdList = res;	
-	}, getContextPath() + '/portal/quotationtype/production/select?productionType='+type, null);
+	
 
 		
 	
@@ -53,24 +107,31 @@ function init(type){
 			textField:'employeeRealName'
 		}); 
 		
+		var dataLevel=$('#dataLevel').val();
 		
-		$('#search-referrer').combobox({
-			data :referrerList,
-			valueField:'employeeId',
-			textField:'employeeRealName'
-		}); 
+		
+		if(dataLevel!=undefined && dataLevel!=null && dataLevel=='1'){
+			var s_referrerList=JSON.parse(JSON.stringify(referrerList));
+			s_referrerList.unshift({'employeeId':'-1','employeeRealName':'无推荐人'});
+			
+			$('#search-referrer').combobox({
+				data :s_referrerList,
+				valueField:'employeeId',
+				textField:'employeeRealName'
+			});
+		}else{
+			$('#search-referrer').combobox({
+				data :[{'employeeId':'-1','employeeRealName':'无推荐人'},
+					{'employeeId':$('#default_referrer').val(),'employeeRealName':$('#default_referrer_name').val()}],
+				valueField:'employeeId',
+				textField:'employeeRealName'
+			}); 
+		}
+		
+		
+		
 	}, getContextPath() + '/portal/getEmployeeList', null);
 	
-	$('#city').combobox({
-		data : citys,
-		valueField : 'cityID',
-		textField : 'city'
-	});
-	$('#search-city').combobox({
-		data : citys,
-		valueField : 'cityID',
-		textField : 'city'
-	});
 	
 	$('#status').combobox({
 		data : statusList,
@@ -86,45 +147,18 @@ function init(type){
 		textField : 'text'
 	});
 	
-	if(type!='device'){
-		$('#typeId').combotree(
-				{
-					data :typeIdList,
-					lines : true,
-					cascadeCheck : false,
-					parentField : 'pid',
-					idField : 'id',
-					treeField : 'text',
-//					editable :true,//后期加上搜索
-//					filter:{}
-					onBeforeSelect: function(node) {  //只能选择叶子节点
-			            if (!$(this).tree('isLeaf', node.target)) {  
-			                return false;  
-			            }  
-			        }
-		});
-		
-		$('#search-typeId').combotree(
-				{
-					data :typeIdList,
-					lines : true,
-					cascadeCheck : false,
-					parentField : 'pid',
-					idField : 'id',
-					treeField : 'text',
-//					editable :true,//后期加上搜索
-//					filter:{}
-					onBeforeSelect: function(node) {  //只能选择叶子节点
-			            if (!$(this).tree('isLeaf', node.target)) {  
-			                return false;  
-			            }  
-			        }
-		});
-		
+	if(type!='device'){		
 		initCutPhoto('uploadDiv');
 	}
-	
-	
-	
+		
+}
+
+//审核通过必有推荐人，默认当前用户
+function setRef(){
+	var status = $('#status').combobox('getValue');
+	var referrer = $("#referrer").combobox("getValue");
+	if(status==1 && referrer==''){
+		$("#referrer").combobox("setValue", $('#default_referrer').val());
+	}
 }
 

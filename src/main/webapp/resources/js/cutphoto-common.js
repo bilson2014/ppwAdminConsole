@@ -22,7 +22,7 @@ function initCutPhoto(uploadBtn){
 	
 	//剪切弹出框
 	var cutDlg='<div id="dlgCut" class="easyui-dialog" style="padding:5px 5px;width: 350px;height: 700px;" closed="true" buttons="#dlgCut-buttons" title="裁剪图片">'+
-	       			'<div class="imgDivSize" style="height:300px;width:300px;background:#eee;overflow: hidden;text-align:center;position:relative;margin-top: 5px;margin-left:10px;display: none;">'+
+	       			'<div class="imgDivSize" style="height:300px;width:300px;background:#eee;overflow: hidden;text-align:center;position:relative;margin-top: 5px;margin-left:10px;display: none;">'+//
 	       		//   ' <!-- <img id="setFile" style="width:100%;height:auto"> -->'+
 	       			'</div>'+
 	       			'<div id="showImgSize" style="width:'+displayWidth+'px;height:'+displayHeight+'px;overflow:hidden;'+
@@ -32,8 +32,8 @@ function initCutPhoto(uploadBtn){
 	       			cutForm+
 	       		'</div>'+
 
-	       		'<div id="dlgCut-buttons">'+
-	       			'<a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="cutImg()" >确定</a>'+
+	       		'<div id="dlgCut-buttons" style="display: none;">'+
+	       			'<a href="javascript:void(0)" class="easyui-linkbutton c6"  iconCls="icon-ok" onclick="cutImg()" >确定</a>'+
 	       		'</div> ';
 	/* $("body").append($(cutDlg)); 
 	 
@@ -58,6 +58,8 @@ function initCutPhoto(uploadBtn){
 	     //$('#videoFile').removeAttr('id');
 		// addImg();
 	 }); 
+	 
+	// $('#dlgCut').dialog('close');
 }
 
 function validatePhoto(init){
@@ -104,6 +106,7 @@ function addImg(obj) {
 	}).dialog('open').dialog('center');
 	
 	 $('.imgDivSize')[0].style.display="block";
+	 $('#dlgCut-buttons')[0].style.display="block";
 		
 	 var windowURL = window.URL || window.webkitURL;
 	 var loadImg = windowURL.createObjectURL(obj.files[0]);
@@ -179,6 +182,7 @@ function cutImg(){
  			}
  			
  			 $('.imgDivSize')[0].style.display="none";
+ 			 $('#dlgCut-buttons')[0].style.display="none";
  		}
  	});
 }

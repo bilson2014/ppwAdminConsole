@@ -80,6 +80,9 @@ public class LoginController extends BaseController {
 				
 				final PmsRole role = pmsRoleFacade.findRoleById(r.getRoleId());
 				roles.add(role);
+				if("1".equals(role.getRoleValue())) {
+					info.setUserRank(1);
+				}
 			}
 			e.setRoles(roles);
 

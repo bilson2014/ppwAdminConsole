@@ -27,10 +27,10 @@ $().ready(function(){
 	if(nature=='clothing'){
 		typeList=JSON.parse($('#clothingTypeList').val());
 	}else{
-		typeList=[];
+		typeList=JSON.parse($('#propsTypeList').val());
 	}
 	
-	init(nature);
+	
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -88,14 +88,20 @@ $().ready(function(){
 						}
 					},{
 						field : 'stockNumber',
-						title : '库存/套',
+						title : '库存(套)',
 						width : 150,
 						align : 'center' ,
 					},{
 						field : 'price',
-						title : '报价(元/天)',
+						title : '报价(元)',
 						width : 150,
 						align : 'center' ,
+						formatter : function(value,row,index){
+							if(row.accredit==2){
+								return value+'/天';
+							}
+							return value;
+						}
 					},{
 						field : 'city' ,
 						title : '城市' ,
@@ -139,9 +145,19 @@ $().ready(function(){
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar'
+		toolbar : '#toolbar',
+		onBeforeLoad: function (param) {
+            var firstLoad = $(this).attr("firstLoad");
+            if (firstLoad == "false" || typeof (firstLoad) == "undefined")
+            {
+                $(this).attr("firstLoad","true");
+                return false;
+            }
+            return true;
+		}
 	});
 	
+	init(nature);
 	
 	$('#type').combobox({
 		data : typeList,
@@ -160,7 +176,14 @@ $().ready(function(){
 	$('#accredit').combobox({
 		data : accreditList,
 		valueField : 'value',
-		textField : 'text'
+		textField : 'text',
+		onSelect: function(record){
+			if(record.value==2){
+				$('#priceLabel').html("报价(元/天)");
+			}else{
+				$('#priceLabel').html("报价(元)");
+			}
+		}
 	});
 	
 	var s_accreditList=JSON.parse(JSON.stringify(accreditList));
@@ -186,6 +209,8 @@ function addFuc(){
 	//默认审核通过
 	$('#status').combobox('setValue',1);
 	
+	$('#priceLabel').html("报价(元/天)");//默认报价标签
+	
 	formUrl = getContextPath() + '/portal/production/costume-'+nature+'/save';
 	openDialog(null);
 	$('#id').val(0);
@@ -203,6 +228,12 @@ function editFuc(){
 		
 		if(rows[0].typeId==null || rows[0].typeId==undefined || rows[0].typeId==""){
 			$('#typeId').combotree("clear");
+		}
+		
+		if(rows[0].accredit==2){
+			$('#priceLabel').html("报价(元/天)");
+		}else{
+			$('#priceLabel').html("报价(元)");
 		}
 		
 		if(rows[0].photo!=undefined && rows[0].photo!=null){
@@ -266,6 +297,8 @@ function save(){
 				progressClose();
 				return false;
 			}
+			
+			setRef();
 			
 			return flag;
 		},

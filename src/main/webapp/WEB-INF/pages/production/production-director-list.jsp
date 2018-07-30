@@ -49,6 +49,7 @@
 <body class="easyui-layout" data-options="fit:true,border:false">
 	<input type="hidden" id="storage_node" value="${file_locate_storage_path }" />
 	<input type="hidden" id="default_referrer" value="${referrer }">
+	<input type="hidden" id="default_referrer_name" value="${referrer_name }">
 	<input type="hidden" id="statusList" value='${statusList }'>
 	<input type="hidden" id="specialtyList" value='${specialtyList }'>
 	<div data-options="region:'north',border:false" style="height: 80px; overflow: hidden;background-color: #fff">
@@ -57,6 +58,7 @@
 				<tr>
 					<th>姓名：</th>
 					<td>
+						<input type="hidden" id="dataLevel" name="dataLevel" value="${dataLevel }">
 						<input id="search-name" name="name" class="easyui-textbox"/>
 					</td>
 					<th>标准化分级：</th>

@@ -2,10 +2,10 @@ var formUrl;
 var datagrid;
 var storage_node;
 //var citys;
-var specialtyList;
+var specialtyList=[];
 var min=1,max=1;
-var statusList;
-var typeIdList;
+var statusList=[];
+var typeIdList=[];
 var imgRatio=162/216;
 var displayWidth=81;
 var displayHeight=108;
@@ -25,7 +25,7 @@ $().ready(function(){
 		{'value':'07','text':'纪录片'},{'value':'08','text':'栏目（节目）'},
 		{'value':'09','text':'话剧（舞台）'},{'value':'10','text':'演出（活动）'}];*/
 	
-	init('director');
+
 	
 	// 初始化DataGrid
 	datagrid = $('#gride').datagrid({
@@ -51,6 +51,7 @@ $().ready(function(){
 						align : 'center' ,
 						width : 200,
 						formatter : function(value,row,index){
+							console.log(value);
 							for(var i=0;i<typeIdList.length;i++){
 								if(typeIdList[i].id==value){
 									return typeIdList[i].text;
@@ -128,9 +129,19 @@ $().ready(function(){
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar'
+		toolbar : '#toolbar',
+		onBeforeLoad: function (param) {
+            var firstLoad = $(this).attr("firstLoad");
+            if (firstLoad == "false" || typeof (firstLoad) == "undefined")
+            {
+                $(this).attr("firstLoad","true");
+                return false;
+            }
+            return true;
+		}
 	});
 	
+	init('director');
 	
 	$('#specialty').combobox({
 		data : specialtyList,
@@ -261,6 +272,7 @@ function save(){
 				progressClose();
 				return false;
 			}
+			setRef();
 			
 			return flag;
 		},

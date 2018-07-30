@@ -3,8 +3,8 @@ var datagrid;
 var storage_node;
 var typeList;
 var min=1,max=4;
-var statusList;
-var typeIdList;
+var statusList=[];
+var typeIdList=[];
 var displayWidth=81;
 var displayHeight=108;
 
@@ -19,7 +19,7 @@ $().ready(function(){
 		{'value':7,'text':'特种设备'},{'value':8,'text':'其他设备'}];*/
 //	typeList=JSON.parse($('#typeList').val());
 	
-	init('device');
+	
 	
 	
 	// 初始化DataGrid
@@ -109,9 +109,19 @@ $().ready(function(){
 		pageSize : 50,
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
-		toolbar : '#toolbar'
+		toolbar : '#toolbar',
+		onBeforeLoad: function (param) {
+            var firstLoad = $(this).attr("firstLoad");
+            if (firstLoad == "false" || typeof (firstLoad) == "undefined")
+            {
+                $(this).attr("firstLoad","true");
+                return false;
+            }
+            return true;
+		}
 	});
 	
+	init('device');
 
 	$('#search-typeId').combobox({
 		data : [],
@@ -248,6 +258,8 @@ function save(){
 			if(!flag){
 				progressClose();
 			}
+			setRef();
+			
 			return flag;
 		},
 		success : function(result) {
