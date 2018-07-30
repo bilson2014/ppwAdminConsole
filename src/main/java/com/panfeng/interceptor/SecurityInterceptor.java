@@ -21,6 +21,7 @@ import com.paipianwang.pat.common.util.Constants;
 import com.paipianwang.pat.common.util.ValidateUtil;
 import com.paipianwang.pat.common.web.file.FastDFSClient;
 import com.paipianwang.pat.facade.right.entity.PmsRight;
+import com.panfeng.dao.DataCacheDao;
 import com.panfeng.dao.RightDao;
 import com.panfeng.dao.StorageLocateDao;
 import com.panfeng.util.UrlResourceUtils;
@@ -37,6 +38,9 @@ public class SecurityInterceptor implements HandlerInterceptor {
 	
 	@Autowired
 	private final StorageLocateDao storageDao = null;
+	
+	@Autowired
+	private DataCacheDao dataCacheDao;
 	
 	private List<String> excludeUrls;
 	
@@ -83,6 +87,16 @@ public class SecurityInterceptor implements HandlerInterceptor {
 				sbf.append(PublicConfig.FDFS_BACKUP_SERVER_PATH);
 			}
 			mv.addObject(PmsConstant.FILE_LOCATE_STORAGE_PATH, sbf.toString());
+		}
+		
+		HttpSession session=req.getSession();
+		final SessionInfo info = (SessionInfo) session.getAttribute(PmsConstant.SESSION_INFO);
+		
+		if(info!=null && info.getCacheTab()!=null && info.getCacheTab()>0) {
+			try {
+				dataCacheDao.setExpire(session.getId()+PmsConstant.CACHE_KEYNAME, session.getMaxInactiveInterval());
+			} catch (Exception e) {
+			}
 		}
 	}
 
