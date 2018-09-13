@@ -155,6 +155,11 @@
 					<div class="d-float f-width">
 					<input id="status" name="status" class="easyui-combobox" required="true" />
 					</div>
+					
+					<div class="lable l-width">手机号码</div>
+					<div class="d-float f-width1">
+						<input class="easyui-validatebox easyui-textbox" data-options="validType:['mobile']"  name="phone"/>
+					</div>
 				</div>
 				<div class="online">
 				备注  ：请完善${positionName }简历

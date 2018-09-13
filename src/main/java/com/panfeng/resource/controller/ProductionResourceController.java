@@ -110,12 +110,13 @@ public class ProductionResourceController extends BaseController {
 
 	@RequestMapping(value = "/production/actor/delete", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public void actorDelete(final long[] ids, HttpServletRequest request) {		
+		//TODO 是否考虑审核不通过的真实删除包括图片；审核通过的做逻辑删除，图片保留
 		List<PmsProductionActor> deletes=pmsProductionActorFacade.deleteByIds(ids);
-		//删除图片
+		//删除图片  
 		if(ValidateUtil.isValid(deletes)) {
 			for(PmsProductionActor actor:deletes) {
 				String delImgStr=actor.getPhoto();
-				if(ValidateUtil.isValid(delImgStr)) {
+				if(actor.getStatus()!=1 && ValidateUtil.isValid(delImgStr)) {
 					String[] delImgs = delImgStr.split(";");
 					for(String delImg:delImgs) {
 						FastDFSClient.deleteFile(delImg);
@@ -178,7 +179,7 @@ public class ProductionResourceController extends BaseController {
 	
 
 	@RequestMapping(value = "/production/device/list", method = RequestMethod.POST)
-	public DataGrid<PmsProductionDevice> deviceList(@RequestParam final Map<String, Object> paramMap,
+	public DataGrid<PmsProductionDevice> deviceList(final HttpServletRequest request,@RequestParam final Map<String, Object> paramMap,
 			final PageParam param) {
 
 		final long page = param.getPage();
@@ -189,6 +190,7 @@ public class ProductionResourceController extends BaseController {
 		paramMap.remove("page");
 		paramMap.remove("rows");
 
+		setDataLevel(request, paramMap);
 		final DataGrid<PmsProductionDevice> dataGrid = pmsProductionDeviceFacade.listWithPagination(param, paramMap);
 		return dataGrid;
 	}
@@ -229,7 +231,7 @@ public class ProductionResourceController extends BaseController {
 		}
 
 		@RequestMapping(value = "/production/director/list", method = RequestMethod.POST)
-		public DataGrid<PmsProductionDirector> directorList(@RequestParam final Map<String, Object> paramMap,
+		public DataGrid<PmsProductionDirector> directorList(final HttpServletRequest request,@RequestParam final Map<String, Object> paramMap,
 				final PageParam param) {
 
 			final long page = param.getPage();
@@ -240,6 +242,7 @@ public class ProductionResourceController extends BaseController {
 			paramMap.remove("page");
 			paramMap.remove("rows");
 
+			setDataLevel(request, paramMap);
 			final DataGrid<PmsProductionDirector> dataGrid = pmsProductionDirectorFacade.listWithPagination(param, paramMap);
 			return dataGrid;
 		}
@@ -247,11 +250,11 @@ public class ProductionResourceController extends BaseController {
 		@RequestMapping(value = "/production/director/delete", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 		public void directorDelete(final long[] ids, HttpServletRequest request) {
 			List<PmsProductionDirector> deletes=pmsProductionDirectorFacade.deleteByIds(ids);
-			//删除图片
+			//删除图片 
 			if(ValidateUtil.isValid(deletes)) {
 				for(PmsProductionDirector director:deletes) {
 					String delImgStr=director.getPhoto();
-					if(ValidateUtil.isValid(delImgStr)) {
+					if(director.getStatus()!=1 && ValidateUtil.isValid(delImgStr)) {
 						String[] delImgs = delImgStr.split(";");
 						for(String delImg:delImgs) {
 							FastDFSClient.deleteFile(delImg);
@@ -299,7 +302,7 @@ public class ProductionResourceController extends BaseController {
 	}
 
 	@RequestMapping(value = "/production/studio/list", method = RequestMethod.POST)
-	public DataGrid<PmsProductionStudio> studioList(@RequestParam final Map<String, Object> paramMap,
+	public DataGrid<PmsProductionStudio> studioList(final HttpServletRequest request,@RequestParam final Map<String, Object> paramMap,
 			final PageParam param) {
 
 		final long page = param.getPage();
@@ -310,6 +313,7 @@ public class ProductionResourceController extends BaseController {
 		paramMap.remove("page");
 		paramMap.remove("rows");
 
+		setDataLevel(request, paramMap);
 		final DataGrid<PmsProductionStudio> dataGrid = pmsProductionStudioFacade.listWithPagination(param, paramMap);
 		return dataGrid;
 	}
@@ -321,7 +325,7 @@ public class ProductionResourceController extends BaseController {
 		if (ValidateUtil.isValid(deletes)) {
 			for (PmsProductionStudio studio : deletes) {
 				String delImgStr = studio.getPhoto();
-				if (ValidateUtil.isValid(delImgStr)) {
+				if (studio.getStatus()!=1 && ValidateUtil.isValid(delImgStr)) {
 					String[] delImgs = delImgStr.split(";");
 					for (String delImg : delImgs) {
 						FastDFSClient.deleteFile(delImg);
@@ -379,7 +383,7 @@ public class ProductionResourceController extends BaseController {
 	}
 
 	@RequestMapping(value = "/production/{position}/list", method = RequestMethod.POST)
-	public DataGrid<PmsProductionPersonnel> personnelList(@RequestParam final Map<String, Object> paramMap,
+	public DataGrid<PmsProductionPersonnel> personnelList(final HttpServletRequest request,@RequestParam final Map<String, Object> paramMap,
 			final PageParam param,@PathVariable("position") final String position) {
 		
 		ProductionResource resource=ProductionResource.getEnum(position);
@@ -397,6 +401,8 @@ public class ProductionResourceController extends BaseController {
 		paramMap.remove("rows");
 		
 		paramMap.put("profession",position);
+		
+		setDataLevel(request, paramMap);
 
 		final DataGrid<PmsProductionPersonnel> dataGrid = pmsProductionPersonnelFacade.listWithPagination(param, paramMap);
 		return dataGrid;
@@ -417,7 +423,7 @@ public class ProductionResourceController extends BaseController {
 		if (ValidateUtil.isValid(deletes)) {
 			for (PmsProductionPersonnel personnel : deletes) {
 				String delImgStr = personnel.getPhoto();
-				if (ValidateUtil.isValid(delImgStr)) {
+				if (personnel.getStatus()!=1 && ValidateUtil.isValid(delImgStr)) {
 					String[] delImgs = delImgStr.split(";");
 					for (String delImg : delImgs) {
 						FastDFSClient.deleteFile(delImg);
@@ -482,7 +488,7 @@ public class ProductionResourceController extends BaseController {
 		}
 
 		@RequestMapping(value = "/production/cameraman/list", method = RequestMethod.POST)
-		public DataGrid<PmsProductionCameraman> cameramanList(@RequestParam final Map<String, Object> paramMap,
+		public DataGrid<PmsProductionCameraman> cameramanList(final HttpServletRequest request,@RequestParam final Map<String, Object> paramMap,
 				final PageParam param) {
 
 			final long page = param.getPage();
@@ -492,6 +498,8 @@ public class ProductionResourceController extends BaseController {
 
 			paramMap.remove("page");
 			paramMap.remove("rows");
+			
+			setDataLevel(request, paramMap);
 
 			final DataGrid<PmsProductionCameraman> dataGrid = pmsProductionCameramanFacade.listWithPagination(param, paramMap);
 			return dataGrid;
@@ -504,7 +512,7 @@ public class ProductionResourceController extends BaseController {
 			if (ValidateUtil.isValid(deletes)) {
 				for (PmsProductionCameraman cameraman : deletes) {
 					String delImgStr = cameraman.getPhoto();
-					if (ValidateUtil.isValid(delImgStr)) {
+					if (cameraman.getStatus()!=1 && ValidateUtil.isValid(delImgStr)) {
 						String[] delImgs = delImgStr.split(";");
 						for (String delImg : delImgs) {
 							FastDFSClient.deleteFile(delImg);
@@ -570,7 +578,7 @@ public class ProductionResourceController extends BaseController {
 		}
 
 		@RequestMapping(value = "/production/costume-{nature}/list", method = RequestMethod.POST)
-		public DataGrid<PmsProductionCostume> costumeList(@RequestParam final Map<String, Object> paramMap,
+		public DataGrid<PmsProductionCostume> costumeList(final HttpServletRequest request,@RequestParam final Map<String, Object> paramMap,
 				final PageParam param,@PathVariable("nature") final String nature) {
 			
 			ProductionResource resource=ProductionResource.getEnum(nature);
@@ -588,6 +596,8 @@ public class ProductionResourceController extends BaseController {
 			paramMap.remove("rows");
 			
 			paramMap.put("nature",nature);
+			
+			setDataLevel(request, paramMap);
 
 			final DataGrid<PmsProductionCostume> dataGrid = pmsProductionCostumeFacade.listWithPagination(param, paramMap);
 			return dataGrid;
@@ -608,7 +618,7 @@ public class ProductionResourceController extends BaseController {
 			if (ValidateUtil.isValid(deletes)) {
 				for (PmsProductionCostume costume : deletes) {
 					String delImgStr = costume.getPhoto();
-					if (ValidateUtil.isValid(delImgStr)) {
+					if (costume.getStatus()!=1 && ValidateUtil.isValid(delImgStr)) {
 						String[] delImgs = delImgStr.split(";");
 						for (String delImg : delImgs) {
 							FastDFSClient.deleteFile(delImg);

@@ -197,6 +197,12 @@
 					<input id="status" name="status" class="easyui-combobox" required="true" />
 					</div>
 				</div>
+				<div class="online">
+					<div class="lable l-width">手机号码</div>
+					<div class="d-float f-width">
+						<input class="easyui-validatebox easyui-textbox" data-options="validType:['mobile']"  name="phone"/>
+					</div>
+				</div>
 				
 				<div class="online">
 					备注  ：请完善演员身高、体重、三维、特殊技能、擅长角色、作品等信息

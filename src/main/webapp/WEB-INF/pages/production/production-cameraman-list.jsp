@@ -160,6 +160,12 @@
 					</div>
 				</div>
 				<div class="online">
+					<div class="lable l-width">手机号码</div>
+					<div class="d-float f-width">
+						<input class="easyui-validatebox easyui-textbox" data-options="validType:['mobile']"  name="phone"/>
+					</div>
+				</div>
+				<div class="online">
 				备注  ：请完善摄影师简历、作品、熟练使用设备等
 				</div>			
 				<div class="textarea-position">
