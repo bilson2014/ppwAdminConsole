@@ -33,11 +33,16 @@ $().ready(
 						border : false,
 						onLoadSuccess : function(data) {
 							// treegrid.treegrid('collapseAll');
+							console.log(data);
 						},
 						columns : [ [ {
 							field : 'typeName',
 							title : '名称',
 							width : 300
+						},{
+							field : 'enName',
+							title : '英文名称',
+							width : 200
 						}, {
 							field : 'unitPrice',
 							title : '单价',
@@ -75,7 +80,7 @@ $().ready(
 						} , {
 							field : 'updateDate',
 							title : '维护时间',
-							width : 200
+							width : 150
 						}, {
 							field : 'grade',
 							title : '类型级别',

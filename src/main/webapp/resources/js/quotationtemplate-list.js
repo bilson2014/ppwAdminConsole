@@ -280,6 +280,7 @@ function add(){
 			row.description=quotationTypeCache[i].description;
 			row.unitPrice=quotationTypeCache[i].unitPrice;
 			row.fullJob=quotationTypeCache[i].fullJob;
+			row.detailDate=quotationTypeCache[i].createDate;
 			//整包
 			if(quotationTypeCache[i].fullJob==1){
 				row.quantity="整包";
@@ -290,10 +291,12 @@ function add(){
 		if(type==quotationTypeCache[i].typeId){
 			row.typeId=quotationTypeCache[i].typeId;
 			row.typeName=quotationTypeCache[i].typeName;
+			row.typeDate=quotationTypeCache[i].createDate;
 		}
 		if(detail.pid==quotationTypeCache[i].typeId){
 			row.itemId=quotationTypeCache[i].typeId;
 			row.itemName=quotationTypeCache[i].typeName;
+			row.itemDate=quotationTypeCache[i].createDate;
 		}
 	}
 	
@@ -310,20 +313,7 @@ function add(){
 	
 	//index-type或item（优先）相同的下面
 	var rows = itemgrid.datagrid("getRows");
-	var newIndex=rows.length;
-	for(var i=newIndex-1;i>=0;i--){
-		if(rows[i].typeId==row.typeId){
-			newIndex=i+1;
-			for(var j=i-1;j>=0;j--){
-				if(rows[j].itemId==row.itemId){
-					newIndex=j+1;
-					break;
-				}
-			}
-			break;
-		}
-	}
-	
+	var newIndex=getNewIndex(rows,rows.length,row);
 	
 	itemgrid.datagrid('insertRow',{  
         index:newIndex,  
@@ -335,6 +325,54 @@ function add(){
 	mergeItemGrid();
 	itemgrid.datagrid('statistics');
 	computeTotal();
+}
+
+function getNewIndex(rows, newIndex, row) {
+	for (var i = newIndex - 1; i >= 0; i--) {
+		if (rows[i].typeId == row.typeId) {
+			// 同一大类
+			if (rows[i].itemId == row.itemId) {
+				// 定位新detail
+				var compCurrent = compareDateAndId(row.detailDate,rows[i].detailDate, row.detailId, rows[i].detailId) < 0;
+				if (!compCurrent) {
+					return i + 1;
+				}
+				if (i == 0
+						|| rows[i - 1].itemId != row.itemId
+						|| compareDateAndId(row.detailDate,
+								rows[i - 1].detailDate, row.detailId,
+								rows[i - 1].detailId) > 0) {
+					return i;
+				}
+			} else {
+				// 定位新item 比当前小，继续往上
+				var compCurrent = compareDateAndId(row.itemDate,rows[i].itemDate, row.itemId, rows[i].itemId) < 0;
+				if (!compCurrent) {
+					return i + 1;
+				}
+				if (i == 0
+						|| rows[i - 1].typeId != row.typeId
+						|| compareDateAndId(row.itemDate, rows[i - 1].itemDate,
+								row.itemId, rows[i - 1].itemId) > 0) {
+					return i;
+				}
+
+			}
+		} else {
+			// 定位新type 比当前小，往上排
+			var compCurrent = compareDateAndId(row.typeDate, rows[i].typeDate,row.typeId, rows[i].typeId) < 0;
+			if (!compCurrent) {
+				return i + 1;
+			}
+			if (i == 0
+					|| compareDateAndId(row.typeDate, rows[i - 1].typeDate,
+							row.typeId, rows[i - 1].typeId) > 0) {
+				return i;
+			}
+		}
+	}
+
+	return newIndex;
 }
 
 //打开dialog
@@ -492,7 +530,7 @@ function initItem(data){
 	                type: 'numberbox',  
 	                options: {  
 	                    precision: 2,
-	                    min:1,
+	                    min:0,
 						required:true , 
 	                    missingMessage:'单价必填!'
 	                }  
@@ -503,6 +541,7 @@ function initItem(data){
 				align : 'center' ,
 				width : 50,
 				formatter:function(value,row,index){
+					console.log(row);
 					if(value=="-1" || value==-1){
 						return "整包";
 					}
@@ -584,8 +623,9 @@ function sortItem(resources){
 	}
 }
 
+//sort by createDate and id
 function compare(nodeA,nodeB){
-	if(nodeA.typeId > nodeB.typeId){
+/*	if(nodeA.typeId > nodeB.typeId){
 		return 1;
 	}else if(nodeA.typeId < nodeB.typeId){
 		return -1;
@@ -595,9 +635,38 @@ function compare(nodeA,nodeB){
 		}else if(nodeA.itemId < nodeB.itemId){
 			return -1;
 		}
+	}*/
+	
+	var typeSort=compareDateAndId(nodeA.typeDate,nodeB.typeDate,nodeA.typeId,nodeB.typeId);
+	if(typeSort==0){
+		var itemSort=compareDateAndId(nodeA.itemDate,nodeB.itemDate,nodeA.itemId,nodeB.itemId);
+		if(itemSort==0){
+			return compareDateAndId(nodeA.detailDate,nodeB.detailDate,nodeA.detailId,nodeB.detailId);
+		}else{
+			return itemSort;
+		}
+	}else{
+		return typeSort;
 	}
-	return 0;
 }
+
+function compareDateAndId(dateA,dateB,IdA,IdB){
+	if(dateA==null || dateB==null || dateA==dateB){
+		if(IdA > IdB){
+			return 1;
+		}else if(IdA < IdB){
+			return -1;
+		}else{
+			return 0;
+		}
+	}else if(dateA > dateB){
+		return 1;
+	}else{
+		return -1;
+	}
+}
+
+
 
 function getRowIndex(target){
     var tr = $(target).closest('tr.datagrid-row');

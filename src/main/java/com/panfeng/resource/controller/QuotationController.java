@@ -1,6 +1,7 @@
 package com.panfeng.resource.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -74,7 +75,12 @@ public class QuotationController extends BaseController {
 		
 		pmsQuotationType.setPhoto(editFile(pmsQuotationType.getPhoto(), pmsQuotationType.getDelImg()));
 		
-		List<PmsQuotationTemplate> editTemplates=pmsQuotationTypeFacade.update(pmsQuotationType);
+		pmsQuotationTypeFacade.update(pmsQuotationType);
+		
+		PmsResult pmsResult=new PmsResult();
+		pmsResult.setMsg("修改成功!");
+		
+		/*List<PmsQuotationTemplate> editTemplates=pmsQuotationTypeFacade.update(pmsQuotationType);
 		PmsResult pmsResult=new PmsResult();
 		if(editTemplates!=null) {
 			pmsResult.setResult(true);
@@ -99,7 +105,7 @@ public class QuotationController extends BaseController {
 		}else {
 			pmsResult.setResult(false);
 			pmsResult.setMsg("修改失败!");
-		}
+		}*/
 		return pmsResult;
 	}
 	

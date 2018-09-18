@@ -96,6 +96,10 @@
 				<input name="typeName" class="easyui-textbox" required="true">
 			</div>
 			<div class="fitem">
+				<label>英文名称</label>
+				<input name="enName" class="easyui-textbox">
+			</div>
+			<div class="fitem">
 	            <label>级别</label>
 	               <select id="grade" name="grade" class="easyui-combobox" required="true" style="width: 46%;">
 	                	<option value="1">类别</option>
