@@ -198,6 +198,18 @@ function save(){
 	});
 	
 	progressLoad();
+	//校验
+	if(!$('#fm').form('validate') || !$('#fm-2').form('validate')){
+		progressClose();
+		return;
+	}
+	if(items.length==0){
+		progressClose();
+		$.message("请添加数据后再保存");
+		return;
+	}
+	
+	
 	syncLoadData(function(res) {
 		progressClose();
 		if(res.result){
@@ -781,7 +793,7 @@ function mergeItemGrid(){
 	var itemSpan=1;
 	
 	for(var i=0;i<RowCount;i++){
-		if(i!=RowCount-1 && datas[i].typeName==datas[i+1].typeName){
+		if(i!=RowCount-1 && datas[i].typeId==datas[i+1].typeId){
 			span++;
 		}else{
 			if(span>1){
@@ -795,7 +807,7 @@ function mergeItemGrid(){
 			span=1;
 		}
 		
-		if(i!=RowCount-1 && datas[i].itemName==datas[i+1].itemName){
+		if(i!=RowCount-1 && datas[i].itemId==datas[i+1].itemId){
 			itemSpan++;
 		}else{
 			if(itemSpan>1){
