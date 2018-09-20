@@ -342,8 +342,29 @@ function add(){
 function getNewIndex(rows, newIndex, row) {
 	for (var i = newIndex - 1; i >= 0; i--) {
 		if (rows[i].typeId == row.typeId) {
+			//如果名称不同
+			if(rows[i].typeName != row.typeName){
+				if (compareName(row.typeName,rows[i].typeName)>=0) {
+					return i+1;
+				}else if (i == 0
+						|| rows[i - 1].typeId != row.typeId) {
+					return i;
+				}
+			}
 			// 同一大类
-			if (rows[i].itemId == row.itemId) {
+			else if (rows[i].itemId == row.itemId) {
+				//如果名称不同
+				if(rows[i].itemName != row.itemName){
+					if (compareName(row.itemName,rows[i].itemName)>=0) {
+						return i+1;
+					}else if (i == 0
+							|| rows[i - 1].typeId != row.typeId
+							|| rows[i - 1].itemId != row.itemId) {
+						return i;
+					}
+					continue;
+				}
+				
 				// 定位新detail
 				var compCurrent = compareDateAndId(row.detailDate,rows[i].detailDate, row.detailId, rows[i].detailId) < 0;
 				if (!compCurrent) {
@@ -651,14 +672,32 @@ function compare(nodeA,nodeB){
 	
 	var typeSort=compareDateAndId(nodeA.typeDate,nodeB.typeDate,nodeA.typeId,nodeB.typeId);
 	if(typeSort==0){
+		var typeNameSort=compareName(nodeA.typeName,nodeB.typeName);
+		if(typeNameSort!=0){
+			return typeNameSort;
+		}
 		var itemSort=compareDateAndId(nodeA.itemDate,nodeB.itemDate,nodeA.itemId,nodeB.itemId);
 		if(itemSort==0){
+			var itemNameSort=compareName(nodeA.itemName,nodeB.itemName);
+			if(itemNameSort!=0){
+				return itemNameSort;
+			}
 			return compareDateAndId(nodeA.detailDate,nodeB.detailDate,nodeA.detailId,nodeB.detailId);
 		}else{
 			return itemSort;
 		}
 	}else{
 		return typeSort;
+	}
+}
+
+function compareName(nameA,nameB){
+	if(nameA==null || nameB==null || nameA==nameB){
+		return 0;
+	}else if(nameA > nameB){
+		return 1;
+	}else{
+		return -1;
 	}
 }
 
@@ -793,7 +832,7 @@ function mergeItemGrid(){
 	var itemSpan=1;
 	
 	for(var i=0;i<RowCount;i++){
-		if(i!=RowCount-1 && datas[i].typeId==datas[i+1].typeId){
+		if(i!=RowCount-1 && datas[i].typeId==datas[i+1].typeId && datas[i].typeName==datas[i+1].typeName){
 			span++;
 		}else{
 			if(span>1){
@@ -807,7 +846,7 @@ function mergeItemGrid(){
 			span=1;
 		}
 		
-		if(i!=RowCount-1 && datas[i].itemId==datas[i+1].itemId){
+		if(i!=RowCount-1 && datas[i].itemId==datas[i+1].itemId && datas[i].itemName==datas[i+1].itemName){
 			itemSpan++;
 		}else{
 			if(itemSpan>1){
