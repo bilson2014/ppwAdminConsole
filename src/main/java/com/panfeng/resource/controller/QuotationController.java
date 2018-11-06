@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -314,5 +316,80 @@ public class QuotationController extends BaseController {
 		}
 		return template.getItems();
 	}
+	/**
+	 * 校验模板过期情况
+	 * @param template
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/quotationtemplate/validate")
+	public PmsResult validateTemplate(@RequestBody final PmsQuotationTemplate template,HttpServletRequest request){
+		return validateTemplate(template);
+	}
+	@RequestMapping("/quotationtemplate/validate/{id}")
+	public PmsResult validateTemplate(@PathVariable("id")Long id,HttpServletRequest request){
+		PmsQuotationTemplate template=pmsQuotationTemplateFacade.getById(id);
+		if(template==null) {
+			PmsResult result=new PmsResult();
+			result.setCode("1");
+			result.setMsg("数据已过期，请刷新重试");
+			return result;
+		}
+		
+		return validateTemplate(template);
+	}
 	
+	private PmsResult validateTemplate(final PmsQuotationTemplate template){
+		PmsResult result=new PmsResult();
+		result.setCode("0");
+		
+		List<PmsQuotationItem> items=template.getItems();
+		List<PmsQuotationType> types=pmsQuotationTypeFacade.findAll();
+		
+		int reDate=0;
+		int reName=0;
+		
+		for(PmsQuotationItem item:items) {
+			for(PmsQuotationType type:types) {
+				if(item.getDetailId().equals(type.getTypeId())) {
+					if(item.getDetailDate()!=null && !item.getDetailDate().equals(type.getCreateDate())){
+						reDate++;
+					}
+					if(item.getDetailName()!=null && !item.getDetailName().equals(type.getTypeName())) {
+						reName++;
+					}
+				}
+				if(item.getItemId().equals(type.getTypeId())) {
+					if(item.getItemDate()!=null && !item.getItemDate().equals(type.getCreateDate())){
+						reDate++;
+					}
+					if(item.getItemName()!=null && !item.getItemName().equals(type.getTypeName())) {
+						reName++;
+					}
+				}
+				if(item.getTypeId().equals(type.getTypeId())) {
+					if(item.getTypeDate()!=null && !item.getTypeDate().equals(type.getCreateDate())){
+						reDate++;
+					}
+					if(item.getTypeName()!=null && !item.getTypeName().equals(type.getTypeName())) {
+						reName++;
+					}
+				}
+			}
+		}
+		result.setMsg("");
+		if(reDate>0) {
+			result.setResult(false);
+			result.setMsg(reDate+"项顺序变更;");
+		}
+		if(reName>0) {
+			result.setResult(false);
+			result.setMsg(result.getMsg()+reName+"项名称变更;");
+		}
+		if(!result.isResult()) {
+			result.setCode("2");
+			result.setMsg("报价单类型发生了调整，此模板中"+result.getMsg());
+		}		
+		return result;
+	}
 }

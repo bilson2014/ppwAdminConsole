@@ -145,11 +145,14 @@ function save(){
 	});
 }
 function searchFun(){
+	datagrid.datagrid('clearSelections');
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
 function cleanFun(){
+	datagrid.datagrid('clearSelections');
 	$('#searchFormactivityName').val('');
 }
+
 function initScene(id) {
 	var root = $(".sceneTag");
 	root.html("");

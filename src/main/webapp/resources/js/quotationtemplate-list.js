@@ -144,6 +144,13 @@ function editFuc(){
 		}else{
 			$('#saveBtn').show();
 		}
+		//获取模板状态校验结果
+		$.post(getContextPath() + '/portal/quotationtemplate/validate/'+rows[0].templateId, null,function(result){
+			if(result.code!='0'){
+				$.message(result.msg);
+			}		
+		});
+		
 		
 		formUrl = getContextPath() + '/portal/quotationtemplate/update';
 	} else {
@@ -210,7 +217,44 @@ function save(){
 	}
 	
 	
-	syncLoadData(function(res) {
+			
+	var params=$.toJSON({
+		items : items,
+		templateId : $('#templateId').val(),
+		templateName : templateName,
+		chanpinconfigId:chanpinconfigId,
+		taxRate: taxRate,
+		discount:discount,
+		subTotal:subTotal,
+        total: total	
+	});
+	
+	if(formUrl==getContextPath() + '/portal/quotationtemplate/update'){
+		syncLoadData(function(res) {
+			if(res.code!='0'){
+				progressClose();
+				$.messager.confirm('提示信息' , res.msg , function(r){				
+					if(r){		
+						progressLoad();
+						syncSaveData(formUrl,params);
+					} else {
+						 return ;
+					}
+				});
+			}else{
+				syncSaveData(formUrl,params);
+			}
+		}, getContextPath() + '/portal/quotationtemplate/validate',params );
+	}else{
+		//添加
+		syncSaveData(formUrl,params);	
+	}
+	
+	
+		
+	
+	
+	/*syncLoadData(function(res) {
 		progressClose();
 		if(res.result){
 			$('#dlg').dialog('close');
@@ -229,7 +273,21 @@ function save(){
 		discount:discount,
 		subTotal:subTotal,
         total: total	
-	}));
+	}));*/
+}
+
+function syncSaveData(formUrl,params){
+	syncLoadData(function(res) {
+		progressClose();
+		if(res.result){
+			$('#dlg').dialog('close');
+			datagrid.datagrid('clearSelections');
+			datagrid.datagrid('reload');
+			$.message("保存成功");
+		}else{
+			$.message(res.err);
+		}
+	}, formUrl, params);
 }
 
 // 取消

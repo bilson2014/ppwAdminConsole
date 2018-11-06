@@ -268,6 +268,9 @@ $().ready(function(){
 		pageList : [ 10, 20, 30, 40, 50, 100, 200, 300, 400, 500 ],
 		showFooter : false,
 		toolbar : '#toolbar',
+		onLoadSuccess:function(){
+			   $(this).datagrid('clearSelections');
+		},
 		onDblClickCell:function(index,field,value){
 			if(field == 'productName'){
 				var row = $('#gride').datagrid('getData').rows[index];
@@ -527,12 +530,14 @@ function searchFun(){
 	//清空点击表的排序操作,例如按时间排序等
 	$('#gride').datagrid('options').sortName = null;
 	$('#gride').datagrid('options').sortOrder = null;
+	datagrid.datagrid('clearSelections');
 	datagrid.datagrid('load', $.serializeObject($('#searchForm')));
 }
 
 // 清除
 function cleanFun() {
 	$('#searchForm').form('clear');
+	datagrid.datagrid('clearSelections');
 	datagrid.datagrid('load', {});
 }
 //设置代表作
